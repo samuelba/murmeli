@@ -6,6 +6,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
+import { RetryAfterException } from '../errors/api-exception';
 import { errorMessage } from '../errors/error-message';
 import { toErrorBody } from '../errors/error-body';
 
@@ -33,6 +34,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
       this.logError(exception);
     }
 
+    if (exception instanceof RetryAfterException) {
+      response.setHeader(
+        'Retry-After',
+        String(Math.max(1, Math.ceil(exception.retryAfterSeconds))),
+      );
+    }
     response.status(body.statusCode).json({ ...body, requestId });
   }
 

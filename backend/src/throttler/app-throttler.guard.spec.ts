@@ -8,7 +8,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { ThrottlerException, type ThrottlerStorage } from '@nestjs/throttler';
 import { AppThrottlerGuard } from './app-throttler.guard';
-import { AuthThrottle } from './auth-throttle.decorator';
+import { AuthThrottle, EmailThrottle } from './auth-throttle.decorator';
 import { buildThrottlerOptions } from './throttler.options';
 
 @Controller()
@@ -19,6 +19,10 @@ class RoutesController {
   @AuthThrottle()
   @Post()
   login(): void {}
+
+  @EmailThrottle()
+  @Post()
+  register(): void {}
 }
 
 function context(handler: () => void, res = { header: jest.fn() }) {
@@ -44,6 +48,8 @@ function guard(increment: jest.Mock): AppThrottlerGuard {
         RATE_LIMIT_LIMIT: 2,
         RATE_LIMIT_AUTH_TTL_SECONDS: 300,
         RATE_LIMIT_AUTH_LIMIT: 1,
+        RATE_LIMIT_EMAIL_TTL_SECONDS: 3600,
+        RATE_LIMIT_EMAIL_LIMIT: 5,
       },
       storage,
     ),
@@ -118,5 +124,32 @@ describe('AppThrottlerGuard', () => {
     expect((error as ServiceUnavailableException).getResponse()).toMatchObject({
       errorCode: 'RATE_LIMIT_UNAVAILABLE',
     });
+  });
+
+  it('fails closed for email routes when the store is down', async () => {
+    const increment = jest
+      .fn()
+      .mockImplementation((_k, _t, _l, _b, name: string) =>
+        name === 'email'
+          ? Promise.reject(new Error('ECONNREFUSED'))
+          : Promise.resolve(allowed),
+      );
+    const { context: ctx } = context(RoutesController.prototype.register);
+
+    await expect(guard(increment).canActivate(ctx)).rejects.toBeInstanceOf(
+      ServiceUnavailableException,
+    );
+  });
+
+  it('counts email routes against the default and email throttlers', async () => {
+    const increment = jest.fn().mockResolvedValue(allowed);
+    const { context: ctx } = context(RoutesController.prototype.register);
+
+    await guard(increment).canActivate(ctx);
+
+    expect(increment.mock.calls.map((call) => call[4] as string)).toEqual([
+      'default',
+      'email',
+    ]);
   });
 });

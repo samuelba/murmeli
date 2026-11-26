@@ -4,6 +4,7 @@ import {
   REDACTED_PATHS,
   buildLoggerOptions,
   resolveRequestId,
+  maskSecretPath,
   serializeRequest,
   stripQuery,
 } from './logger.options';
@@ -95,7 +96,7 @@ describe('request serialization', () => {
         url: '/api/invites/x?token=secret',
         query: { token: 'secret' },
       }),
-    ).toEqual({ method: 'GET', url: '/api/invites/x' });
+    ).toEqual({ method: 'GET', url: '/api/invites/:token' });
   });
 
   it('is installed as the req serializer', () => {
@@ -105,5 +106,25 @@ describe('request serialization', () => {
     }).pinoHttp as Options;
 
     expect(options.serializers?.req).toBe(serializeRequest);
+  });
+
+  describe('maskSecretPath', () => {
+    it.each([
+      ['/api/invites/abc_DEF-123', '/api/invites/:token'],
+      ['/api/invites/abc/accept', '/api/invites/:token/accept'],
+      ['/api/kids/123', '/api/kids/123'],
+      [undefined, undefined],
+    ])('masks %s', (path, expected) => {
+      expect(maskSecretPath(path)).toBe(expected);
+    });
+
+    it('drops route params from the logged request', () => {
+      expect(
+        serializeRequest({
+          url: '/api/invites/secret/accept',
+          params: { token: 'secret' },
+        }),
+      ).toEqual({ url: '/api/invites/:token/accept' });
+    });
   });
 });

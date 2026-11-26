@@ -4,7 +4,7 @@ import request from 'supertest';
 import { DataSource } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/bootstrap/configure-app';
-import { AppSettingsBootstrap } from '../src/settings/app-settings.bootstrap';
+import { AppSettingsBootstrap } from '../src/modules/settings/app-settings.bootstrap';
 
 const describeWithDb = process.env.E2E_DB === '1' ? describe : describe.skip;
 
@@ -40,7 +40,7 @@ describeWithDb('Readiness (e2e, real Postgres and Redis)', () => {
 
     expect(await dataSource.showMigrations()).toBe(false);
     const [uuid] = await dataSource.query<{ id: string }[]>(
-      'SELECT uuid_generate_v7() AS id',
+      'SELECT uuidv7() AS id',
     );
     expect(uuid.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-7/);
   });

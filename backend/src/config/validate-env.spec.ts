@@ -184,6 +184,16 @@ describe('validateEnv', () => {
       expect(silent.warn).not.toHaveBeenCalled();
     });
 
+    it.each(['JWT_SECRET', 'ENCRYPTION_KEY', 'ALTCHA_HMAC_KEY'])(
+      'refuses to start with a %s shorter than 32 characters',
+      (name) => {
+        const almost = 'Qw3rTy-uIoP_aSdF-gHjK_lZxC-vBnM9'.slice(0, 31);
+        expect(() =>
+          validateEnv(productionRawEnv({ [name]: almost }), silent),
+        ).toThrow(new RegExp(`${name} is shorter than 32`));
+      },
+    );
+
     it('lists every production problem at once without echoing secrets', () => {
       const problems = problemsOf(
         productionRawEnv({

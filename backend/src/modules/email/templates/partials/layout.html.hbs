@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>{{subject}}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#FBF7EE;font-family:'Nunito','Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1E2A3E;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#FBF7EE;">
+<tr><td align="center" style="padding:24px 12px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:#FFFFFF;border-radius:20px;border:1px solid #E4DCCB;">
+<tr><td align="center" style="padding:28px 28px 8px 28px;">
+<img src="{{logoUrl}}" width="72" height="72" alt="{{brandName}}" style="display:block;border:0;width:72px;height:72px;">
+<div style="margin-top:8px;font-size:22px;font-weight:800;color:#2E7D4F;">{{brandName}}</div>
+</td></tr>
+<tr><td style="padding:8px 28px 28px 28px;font-size:16px;line-height:1.6;">
+{{> @partial-block }}
+</td></tr>
+</table>
+<p style="max-width:560px;margin:16px auto 0 auto;font-size:12px;line-height:1.5;color:#566179;text-align:center;">{{brandName}} · <a href="{{appUrl}}" style="color:#566179;">{{appUrl}}</a></p>
+</td></tr>
+</table>
+</body>
+</html>

@@ -46,19 +46,32 @@ export function stripQuery(url: string | undefined): string | undefined {
   return url?.split('?', 1)[0];
 }
 
+/** Routes whose path segments carry secrets, with the segment's log label. */
+export const SECRET_PATH_SEGMENTS: readonly (readonly [RegExp, string])[] = [
+  [/^(\/api\/invites\/)[^/]+/, '$1:token'],
+];
+
+export function maskSecretPath(path: string | undefined): string | undefined {
+  return SECRET_PATH_SEGMENTS.reduce(
+    (masked, [pattern, label]) => masked?.replace(pattern, label),
+    path,
+  );
+}
+
 export interface SerializedRequest {
   readonly url?: string;
   readonly query?: unknown;
+  readonly params?: unknown;
   readonly [key: string]: unknown;
 }
 
 /**
- * Query strings can carry tokens (e.g. email verification links), so they are
- * never logged.
+ * Query strings and some path segments (invite tokens) carry secrets, so
+ * neither they nor the parsed params are logged.
  */
 export function serializeRequest(req: SerializedRequest): SerializedRequest {
-  const { query: _query, ...rest } = req;
-  return { ...rest, url: stripQuery(req.url) };
+  const { query: _query, params: _params, ...rest } = req;
+  return { ...rest, url: maskSecretPath(stripQuery(req.url)) };
 }
 
 const HEALTH_PATH = /^\/api\/health(\/|$|\?)/;

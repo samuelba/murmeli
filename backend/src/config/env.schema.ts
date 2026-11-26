@@ -78,6 +78,24 @@ export function checkMigrationCredentials(
   }
 }
 
+export const identifierRateLimitShape = {
+  RATE_LIMIT_EMAIL_TTL_SECONDS: envInt(3600, 1, 86_400),
+  RATE_LIMIT_EMAIL_LIMIT: envInt(5, 1, 10_000),
+  RATE_LIMIT_LOGIN_ACCOUNT_LIMIT: envInt(5, 1, 1000),
+  RATE_LIMIT_LOGIN_ACCOUNT_WINDOW_SECONDS: envInt(300, 1, 86_400),
+  RATE_LIMIT_LOGIN_ACCOUNT_LOCK_SECONDS: envInt(900, 1, 86_400),
+  RATE_LIMIT_PARENT_GATE_LIMIT: envInt(5, 1, 1000),
+  RATE_LIMIT_PARENT_GATE_WINDOW_SECONDS: envInt(300, 1, 86_400),
+  RATE_LIMIT_LOGIN_EMAIL_LIMIT: envInt(50, 1, 100_000),
+  RATE_LIMIT_LOGIN_EMAIL_WINDOW_SECONDS: envInt(3600, 1, 86_400),
+  RATE_LIMIT_TOTP_ATTEMPTS: envInt(5, 1, 100),
+  RATE_LIMIT_TOTP_USER_LIMIT: envInt(10, 1, 1000),
+  RATE_LIMIT_TOTP_USER_WINDOW_SECONDS: envInt(900, 1, 86_400),
+  RATE_LIMIT_EMAIL_RECIPIENT_LIMIT: envInt(3, 1, 1000),
+  RATE_LIMIT_KID_PIN_LIMIT: envInt(5, 1, 1000),
+  RATE_LIMIT_KID_PIN_WINDOW_SECONDS: envInt(900, 1, 86_400),
+};
+
 export const backupEnvShape = {
   BACKUP_DIR: z.string().trim().min(1).default('/app/backups'),
   BACKUP_MANDATORY: envBoolean(true),
@@ -125,6 +143,10 @@ export const baseEnvSchema = z.object({
   RATE_LIMIT_LIMIT: envInt(120, 1, 1_000_000),
   RATE_LIMIT_AUTH_TTL_SECONDS: envInt(300, 1, 86_400),
   RATE_LIMIT_AUTH_LIMIT: envInt(10, 1, 10_000),
+  ...identifierRateLimitShape,
+
+  PASSWORD_HIBP_CHECK: envBoolean(false),
+  SETUP_TOKEN: optionalText,
 
   ...backupEnvShape,
 });

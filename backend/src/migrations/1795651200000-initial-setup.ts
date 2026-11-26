@@ -1,14 +1,11 @@
 import type { MigrationInterface, QueryRunner } from 'typeorm';
-import { REGISTRATION_ENABLED_SETTING } from '../settings/app-setting.keys';
-import { UUID_GENERATE_V7_FUNCTION_SQL } from './utils/uuid-v7-function';
+import { REGISTRATION_ENABLED_SETTING } from '../modules/settings/app-setting.keys';
 
 export class InitialSetup1795651200000 implements MigrationInterface {
   name = 'InitialSetup1795651200000';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`CREATE EXTENSION IF NOT EXISTS citext`);
-    await queryRunner.query(`CREATE EXTENSION IF NOT EXISTS pgcrypto`);
-    await queryRunner.query(UUID_GENERATE_V7_FUNCTION_SQL);
     await queryRunner.query(`
       CREATE TABLE "app_settings" (
         "key" text NOT NULL,
@@ -29,6 +26,5 @@ export class InitialSetup1795651200000 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`DROP TABLE "app_settings"`);
-    await queryRunner.query(`DROP FUNCTION IF EXISTS uuid_generate_v7()`);
   }
 }

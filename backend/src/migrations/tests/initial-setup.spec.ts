@@ -7,17 +7,16 @@ function runner() {
 }
 
 describe('InitialSetup1795651200000', () => {
-  it('enables the extensions and creates uuid_generate_v7 and app_settings', async () => {
+  it('enables citext and creates app_settings', async () => {
     const { query, queryRunner } = runner();
 
     await new InitialSetup1795651200000().up(queryRunner);
 
     const sql = query.mock.calls.map(([statement]) => String(statement));
     expect(sql[0]).toContain('CREATE EXTENSION IF NOT EXISTS citext');
-    expect(sql[1]).toContain('CREATE EXTENSION IF NOT EXISTS pgcrypto');
-    expect(sql[2]).toContain('CREATE OR REPLACE FUNCTION uuid_generate_v7()');
-    expect(sql[3]).toContain('CREATE TABLE "app_settings"');
-    expect(sql[3]).toContain(`CHECK ("source" IN ('env', 'admin'))`);
+    expect(sql[1]).toContain('CREATE TABLE "app_settings"');
+    expect(sql[1]).toContain(`CHECK ("source" IN ('env', 'admin'))`);
+    expect(sql.join('\n')).not.toMatch(/pgcrypto|uuid_generate_v7/);
   });
 
   it('seeds registration_enabled with a fixed false, independent of env', async () => {
@@ -46,6 +45,7 @@ describe('InitialSetup1795651200000', () => {
 
     await new InitialSetup1795651200000().down(queryRunner);
 
-    expect(query).toHaveBeenCalledTimes(2);
+    expect(query).toHaveBeenCalledTimes(1);
+    expect(query).toHaveBeenCalledWith('DROP TABLE "app_settings"');
   });
 });

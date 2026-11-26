@@ -39,7 +39,8 @@ export function typeOrmSsl(mode: Env['DATABASE_SSL']): PostgresOptions['ssl'] {
 /**
  * Connection options shared by the app, the TypeORM CLI, the migrate script
  * and the backup. `migrationsRun` is deliberately absent: initialize() would
- * run the migrations itself, before the backup has been taken.
+ * run the migrations itself, before the backup has been taken. Extensions are
+ * created by the migrations, never by TypeORM at connect time.
  */
 export function buildDataSourceOptions(env: ConnectionEnv): PostgresOptions {
   return {
@@ -54,6 +55,7 @@ export function buildDataSourceOptions(env: ConnectionEnv): PostgresOptions {
     migrations: [MIGRATIONS_GLOB],
     migrationsTableName: 'migrations',
     synchronize: false,
+    installExtensions: false,
   };
 }
 

@@ -27,6 +27,55 @@ All cookies are httpOnly, Secure (when `COOKIE_SECURE`) and SameSite=Strict.
 
 `fam` binds `mu_pg` and `mu_kid` to the refresh family, so logging out or a detected theft invalidates them too. Each cookie type is signed with its own key, derived with HKDF from `JWT_SECRET` (the dmarc `jwt-keys.ts` pattern).
 
+## Clarifications (agreed during milestone 2)
+- **Parent gate:** a gated endpoint without a valid `mu_pg` returns `403 PARENT_GATE_REQUIRED`. The frontend then shows the gate dialog and retries.
+- **When the frontend refreshes:** on any 401 from a non-public endpoint, except when the code is `INVALID_CREDENTIALS`, `PIN_INVALID` or `TOTP_INVALID`.
+  - A wrong current password returns `401 INVALID_CREDENTIALS`.
+  - A wrong TOTP code returns `401 TOTP_INVALID`.
+  - A missing or expired access token returns `401 UNAUTHORIZED`.
+- **`GET /auth/me`** returns the current, renewed `parentGateExpiresAt`.
+- **`User`** may carry `theme: "light"|"dark"|"system"`, which is set with `PATCH /account`.
+- **Kid activation:** `POST /kids/:id/activate` sends `{}` for a kid without a PIN.
+- **Kid create and edit:** both send every editable field. For `pin`, leaving it out keeps the PIN, `null` removes it, and `number[4]` sets it. `dailyLimitMinutes: null` means no limit. `birthYear` is never sent.
+- **ALTCHA:** the backend uses altcha-lib v2 with SHA-256, and the frontend uses the `altcha` widget v3. The `altcha` field holds the widget's base64 payload.
+- **Email logo:** `${APP_URL}/brand/murmeli-mark.png`.
+- **`Retry-After`:** also sent with `429 PIN_LOCKED`.
+
+### Backend decisions (milestone 2)
+- **Access token:** missing, expired or revoked returns `401 UNAUTHORIZED`. `SESSION_EXPIRED` and `SESSION_COMPROMISED` come only from `/auth/refresh`. Two refreshes with the same token count as theft, so the frontend serializes refreshes across tabs (Web Locks).
+- **`KidGuard`:** without a kid session it returns `403 KID_SESSION_REQUIRED`.
+- **TOTP:**
+  - Setting it up while it's already enabled returns `409 TOTP_ALREADY_ENABLED`.
+  - A missing or expired `mu_totp` returns `401 TOTP_INVALID`.
+  - The 5th wrong code returns `429 RATE_LIMITED` and clears `mu_totp`.
+  - `totp/disable` accepts either a TOTP code or a recovery code.
+- **Lockouts:** the 5th failed attempt locks immediately and already answers 429. Login failures are counted per email, whether the account exists or not.
+- **ALTCHA:** forgot-password and resend-verification can return `400 ALTCHA_INVALID`.
+- **Invites:**
+  - Inviting an existing user returns `409 EMAIL_TAKEN`. A new invite replaces the pending one for the same email.
+  - `createdBy` is the creator's email or null.
+  - `emailStatus` is `queued` or `disabled`.
+  - Revoking an unknown invite returns `404 INVITE_INVALID`.
+- **Admin:** an unknown user returns `404 USER_NOT_FOUND`. `PATCH /admin/settings` returns the full settings.
+- **Account:**
+  - `DELETE /account` by the last active admin returns `400 LAST_ADMIN`.
+  - The export is `{ exportedAt, user, kids, progress }`.
+  - Confirming an email change doesn't revoke sessions.
+  - A password reset also counts as email verification.
+- **Kids:**
+  - `dailyLimitMinutes` is null or 5 to 240.
+  - The nickname is NFC-normalized and must match `^[\p{L}\p{M}\p{N} -]{1,20}$`.
+  - PIN digits may repeat.
+
+### Review round decisions (milestone 2)
+- **Setup token:** `GET /auth/config` adds `setupTokenRequired`. When `SETUP_TOKEN` is set, `POST /auth/setup` takes `setupToken` and returns `403 SETUP_TOKEN_INVALID` on a mismatch.
+- **Malformed ids:** a malformed `:id` returns `400 VALIDATION_FAILED`.
+- **Lockouts:** attempts are reserved before the secret is checked, so the first refused attempt is the 6th. The strict login lock is keyed on email plus network (IPv4, or IPv6 /64). A looser per-email ceiling (50 per hour) applies across all networks.
+- **TOTP limit:** a per-user limit (10 per 15 min, doubling) survives re-login.
+- **Parent gate cap:** the gate never extends beyond 30 minutes after the password was entered.
+- **Access token:** carries no `role`. Role changes, disabling and deletion revoke the user's sessions.
+- **New email:** `email-changed` goes to the old address. A per-recipient email limit (3 per hour per kind) silently drops extra requests and still returns 202.
+
 ## Roles and guards
 - **Roles:** `parent` (the default) and `admin`. An admin can also have kids.
 - **`AuthGuard`:** a valid `mu_at` is required. This is the default for every route; `@Public()` opts a route out.

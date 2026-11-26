@@ -4,6 +4,7 @@ import {
   HttpException,
   Logger,
 } from '@nestjs/common';
+import { RetryAfterException } from '../errors/api-exception';
 import { AllExceptionsFilter } from './all-exceptions.filter';
 
 function hostFor(request: Record<string, unknown> = { id: 'req-1' }) {
@@ -87,5 +88,45 @@ describe('AllExceptionsFilter', () => {
     new AllExceptionsFilter(false).catch('plain string', host);
 
     expect(errorSpy).toHaveBeenCalledWith('plain string');
+  });
+
+  it('sets Retry-After for RetryAfterException', () => {
+    const json = jest.fn();
+    const status = jest.fn().mockReturnValue({ json });
+    const setHeader = jest.fn();
+    const host = {
+      switchToHttp: () => ({
+        getRequest: () => ({ id: 'r' }),
+        getResponse: () => ({ status, setHeader }),
+      }),
+    } as unknown as ArgumentsHost;
+
+    new AllExceptionsFilter(true).catch(
+      new RetryAfterException(12.2, 'PIN_LOCKED', 'Locked'),
+      host,
+    );
+
+    expect(setHeader).toHaveBeenCalledWith('Retry-After', '13');
+    expect(status).toHaveBeenCalledWith(429);
+    expect(json).toHaveBeenCalledWith(
+      expect.objectContaining({ errorCode: 'PIN_LOCKED' }),
+    );
+  });
+
+  it('never sends a Retry-After below one second', () => {
+    const setHeader = jest.fn();
+    const host = {
+      switchToHttp: () => ({
+        getRequest: () => ({}),
+        getResponse: () => ({
+          status: () => ({ json: jest.fn() }),
+          setHeader,
+        }),
+      }),
+    } as unknown as ArgumentsHost;
+
+    new AllExceptionsFilter(true).catch(new RetryAfterException(0), host);
+
+    expect(setHeader).toHaveBeenCalledWith('Retry-After', '1');
   });
 });

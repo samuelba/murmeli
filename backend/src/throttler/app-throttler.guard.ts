@@ -11,7 +11,7 @@ import {
   type ThrottlerRequest,
 } from '@nestjs/throttler';
 import { errorMessage } from '../common/errors/error-message';
-import { AUTH_THROTTLER } from './auth-throttle.decorator';
+import { FAIL_CLOSED_THROTTLERS } from './auth-throttle.decorator';
 
 export const RATE_LIMIT_UNAVAILABLE = 'RATE_LIMIT_UNAVAILABLE';
 
@@ -32,7 +32,7 @@ export class AppThrottlerGuard extends ThrottlerGuard {
         throw error;
       }
       const name = requestProps.throttler.name ?? 'default';
-      if (name === AUTH_THROTTLER) {
+      if (FAIL_CLOSED_THROTTLERS.has(name)) {
         this.logger.error(
           `Rate limit store unavailable, rejecting auth request: ${errorMessage(error)}`,
         );

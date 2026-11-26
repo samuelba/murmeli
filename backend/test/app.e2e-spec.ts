@@ -8,7 +8,12 @@ import { configureApp } from '../src/bootstrap/configure-app';
 import { DatabaseModule } from '../src/database/database.module';
 import { REDIS_CLIENT } from '../src/redis/redis.options';
 
-const fakeDataSource = { query: jest.fn() };
+const fakeDataSource = {
+  query: jest.fn(),
+  options: { type: 'postgres' },
+  entityMetadatas: [],
+  getRepository: jest.fn(() => ({})),
+};
 const fakeRedis = {
   status: 'ready',
   ping: jest.fn(),

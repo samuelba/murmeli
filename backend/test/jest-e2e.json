@@ -4,6 +4,9 @@
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "setupFiles": ["<rootDir>/setup-e2e-env.ts"],
+  "globalSetup": "<rootDir>/support/global-setup.ts",
+  "testSequencer": "<rootDir>/support/sequencer.cjs",
+  "testTimeout": 30000,
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   }

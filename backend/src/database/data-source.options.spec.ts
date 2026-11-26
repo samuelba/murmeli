@@ -19,6 +19,7 @@ describe('buildDataSourceOptions', () => {
       database: 'murmeli',
       ssl: false,
       synchronize: false,
+      installExtensions: false,
       migrations: [MIGRATIONS_GLOB],
       entities: [ENTITIES_GLOB],
     });
