@@ -1,0 +1,197 @@
+:host {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+
+  --sc-sky-top: #8fd3f7;
+  --sc-sky-bottom: #e9f7ff;
+  --sc-far: #9fc3dd;
+  --sc-snow: #ffffff;
+  --sc-hill: #7cc96a;
+  --sc-hill2: #5fb453;
+  --sc-rock: #8c9aa8;
+  --sc-water: #5bb8e8;
+  --sc-wave: #e9f7ff;
+  --sc-fir: #2e7d4f;
+  --sc-tree: #4fa84a;
+  --sc-trunk: #8a5a30;
+  --sc-cloud: #ffffff;
+  --sc-star: transparent;
+  --sc-wood: #c98a4b;
+  --sc-roof: #b23a2b;
+  --sc-window: #fff1a0;
+
+  background: linear-gradient(180deg, var(--sc-sky-top), var(--sc-sky-bottom) 60%);
+}
+
+:host([data-scene='forest']) {
+  --sc-hill: #5fae58;
+  --sc-hill2: #3f8f45;
+}
+
+:host([data-scene='mountain']),
+:host([data-scene='peak']) {
+  --sc-sky-top: #6fb6ea;
+  --sc-hill: #8fc67a;
+  --sc-hill2: #6fae5e;
+}
+
+:host([data-scene='bay']) {
+  --sc-hill: #f2dca4;
+}
+
+:host-context([data-theme='dark']) {
+  --sc-sky-top: #0e1a33;
+  --sc-sky-bottom: #233a63;
+  --sc-far: #2f4670;
+  --sc-snow: #c9d6ea;
+  --sc-hill: #2f5e46;
+  --sc-hill2: #244c38;
+  --sc-rock: #4a5a70;
+  --sc-water: #2c5f8a;
+  --sc-wave: #8ec5ff;
+  --sc-fir: #1d4a33;
+  --sc-tree: #2f6b45;
+  --sc-trunk: #5a3c22;
+  --sc-cloud: rgb(255 255 255 / 0.12);
+  --sc-star: #fff1a0;
+  --sc-wood: #7a5434;
+  --sc-roof: #7a2a22;
+  --sc-window: #ffd52e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :host-context(html:not([data-theme='light'])) {
+    --sc-sky-top: #0e1a33;
+    --sc-sky-bottom: #233a63;
+    --sc-far: #2f4670;
+    --sc-snow: #c9d6ea;
+    --sc-hill: #2f5e46;
+    --sc-hill2: #244c38;
+    --sc-rock: #4a5a70;
+    --sc-water: #2c5f8a;
+    --sc-wave: #8ec5ff;
+    --sc-fir: #1d4a33;
+    --sc-tree: #2f6b45;
+    --sc-trunk: #5a3c22;
+    --sc-cloud: rgb(255 255 255 / 0.12);
+    --sc-star: #fff1a0;
+    --sc-wood: #7a5434;
+    --sc-roof: #7a2a22;
+    --sc-window: #ffd52e;
+  }
+}
+
+svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.stars {
+  fill: var(--sc-star);
+}
+
+.clouds {
+  fill: var(--sc-cloud);
+}
+
+.far {
+  fill: var(--sc-far);
+}
+
+.snow {
+  fill: var(--sc-snow);
+}
+
+.rock {
+  fill: var(--sc-rock);
+}
+
+.hill {
+  fill: var(--sc-hill);
+}
+
+.hill2 {
+  fill: var(--sc-hill2);
+}
+
+.water {
+  fill: var(--sc-water);
+}
+
+.wave {
+  fill: none;
+  stroke: var(--sc-wave);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.fir path {
+  fill: var(--sc-fir);
+}
+
+.tree circle {
+  fill: var(--sc-tree);
+}
+
+.trunk {
+  fill: var(--sc-trunk);
+}
+
+.cross {
+  stroke: var(--sc-trunk);
+  stroke-width: 4;
+}
+
+.bridge {
+  fill: none;
+  stroke: var(--sc-wood);
+  stroke-width: 12;
+}
+
+.bridge-rail {
+  fill: none;
+  stroke: var(--sc-trunk);
+  stroke-width: 4;
+}
+
+.sail {
+  fill: #fff;
+}
+
+.boat,
+.chalet .wall {
+  fill: var(--sc-wood);
+}
+
+.chalet .roof {
+  fill: var(--sc-roof);
+}
+
+.chalet .door {
+  fill: var(--sc-trunk);
+}
+
+.chalet .window {
+  fill: var(--sc-window);
+}
+
+.gear {
+  fill: none;
+  stroke: var(--sc-snow);
+  stroke-width: 6;
+  stroke-dasharray: 5 4;
+}
+
+.stem {
+  stroke: var(--sc-fir);
+  stroke-width: 2;
+}
+
+.flower__center {
+  fill: #f7c600;
+}

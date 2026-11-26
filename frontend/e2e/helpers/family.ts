@@ -1,4 +1,6 @@
 import { type Page } from '@playwright/test';
+import { routeAudio } from './audio';
+import { LearnBackend, type LearnOptions } from './learn-fixtures';
 import { MockBackend, type MockRequest, altchaChallenge, apiError } from './mock-api';
 
 export const PASSWORD = 'correct horse battery';
@@ -75,6 +77,10 @@ export interface FamilyOptions {
   pins?: Record<string, number[]>;
   /** Kid ids whose PIN is locked out (429). */
   lockedKids?: string[];
+  /** The learning API fake (map, runs, answers). */
+  learn?: LearnOptions;
+  /** Serve the e2e narration fixtures under /audio (default true). */
+  audio?: boolean;
 }
 
 export interface FamilyState {
@@ -93,6 +99,9 @@ const gateTime = () => new Date(Date.now() + 10 * 60_000).toISOString();
 /** A stateful fake of the accounts API (docs/internal/api-accounts.md). */
 export class FamilyBackend extends MockBackend {
   readonly state: FamilyState;
+  readonly learn: LearnBackend;
+  /** Narration files the page requested, in order. */
+  audioRequests: string[] = [];
 
   constructor(private readonly options: FamilyOptions = {}) {
     super();
@@ -109,6 +118,15 @@ export class FamilyBackend extends MockBackend {
     this.registerAuth();
     this.registerKids();
     this.registerAdmin();
+    this.learn = new LearnBackend(options.learn).install(this);
+  }
+
+  override async install(page: Page): Promise<this> {
+    await super.install(page);
+    if (this.options.audio !== false) {
+      this.audioRequests = await routeAudio(page);
+    }
+    return this;
   }
 
   private me() {

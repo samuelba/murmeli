@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { byTestId, renderComponent, type } from '../../testing/app-testing';
@@ -36,6 +36,35 @@ describe('shared components', () => {
 
     expect(button.getAttribute('aria-label')).toBe('Vorlesen: Wer lernt heute?');
     expect(speak).toHaveBeenCalledWith('Wer lernt heute?');
+  });
+
+  it('Speak stays hidden until the provider has a clip and then plays the segments', async () => {
+    const speak = vi.fn();
+    const available = signal(false);
+    const prepare = vi.fn();
+    TestBed.overrideProvider(SPEAK_PROVIDER, {
+      useValue: {
+        speak,
+        available,
+        prepare,
+        canSpeak: (input: readonly string[]) => available() && input.includes('7'),
+      },
+    });
+    const { element, fixture } = await renderComponent(Speak, {
+      text: 'Wie viel ist 7?',
+      segments: ['Wie viel ist', '7'],
+    });
+    expect(prepare).toHaveBeenCalled();
+    expect(element.querySelector('button')).toBeNull();
+
+    available.set(true);
+    await fixture.whenStable();
+    byTestId(element, 'speak').click();
+    expect(speak).toHaveBeenCalledWith(['Wie viel ist', '7']);
+
+    fixture.componentRef.setInput('segments', ['Wie viel ist']);
+    await fixture.whenStable();
+    expect(element.querySelector('button')).toBeNull();
   });
 
   it('FormError announces translated messages', async () => {

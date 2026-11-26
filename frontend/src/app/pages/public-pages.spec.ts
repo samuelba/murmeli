@@ -19,6 +19,7 @@ import { Invite } from './invite/invite';
 import { Legal } from './legal/legal';
 import { ResetPassword } from './reset-password/reset-password';
 import { Setup } from './setup/setup';
+import { AuthService } from '../core/auth/auth.service';
 import { VerifyEmail } from './verify-email/verify-email';
 
 describe('public pages', () => {
@@ -76,9 +77,42 @@ describe('public pages', () => {
   };
 
   describe('Setup', () => {
+    it('asks for the setup code when the server requires one', async () => {
+      setup();
+      const loading = TestBed.inject(AuthService).loadConfig();
+      http.expectOne('/api/auth/config').flush({
+        registrationEnabled: true,
+        emailEnabled: true,
+        setupRequired: true,
+        setupTokenRequired: true,
+      });
+      await loading;
+      const { element, fixture } = await renderComponent(Setup);
+      type(byTestId<HTMLInputElement>(element, 'setup-email'), 'admin@example.com');
+      fillPasswords(element);
+      submit(element);
+      http.expectNone('/api/auth/setup');
+
+      type(byTestId<HTMLInputElement>(element, 'setup-token'), ' secret-token ');
+      submit(element);
+      const req = http.expectOne('/api/auth/setup');
+      expect(req.request.body).toEqual({
+        email: 'admin@example.com',
+        password: 'a long password 42',
+        locale: 'de-CH',
+        setupToken: 'secret-token',
+      });
+      req.flush(errorBody('SETUP_TOKEN_INVALID', 403), { status: 403, statusText: 'x' });
+      await settle(fixture);
+      expect(byTestId(element, 'form-error').textContent).toContain(
+        'Einrichtungs-Code stimmt nicht',
+      );
+    });
+
     it('creates the first admin and opens the app', async () => {
       setup();
       const { element, fixture } = await renderComponent(Setup);
+      expect(element.querySelector('[data-testid="setup-token"]')).toBeNull();
       type(byTestId<HTMLInputElement>(element, 'setup-email'), 'admin@example.com');
       fillPasswords(element);
       submit(element);

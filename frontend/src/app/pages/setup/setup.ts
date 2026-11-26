@@ -1,7 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
-import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatError, MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { Router } from '@angular/router';
@@ -10,6 +17,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { BRAND_NAME } from '../../core/brand';
 import { ErrorMessage, errorMessage } from '../../core/errors/error-message';
 import { applyServerFieldErrors } from '../../core/forms/server-errors';
+import { errorCodeOf } from '../../core/http/api-error';
 import { emailValidators, fieldErrorKey } from '../../core/forms/validators';
 import { LanguageService } from '../../core/i18n/language.service';
 import { LANGUAGES, Language } from '../../core/i18n/languages';
@@ -27,6 +35,7 @@ import { PageCard } from '../../shared/page-card/page-card';
     MatLabel,
     MatInput,
     MatError,
+    MatHint,
     MatSelect,
     MatOption,
     TranslocoPipe,
@@ -44,6 +53,20 @@ import { PageCard } from '../../shared/page-card/page-card';
       </h1>
       <p class="mu-muted">{{ 'setup.intro' | transloco }}</p>
       <form class="mu-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        @if (tokenRequired()) {
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'setup.token' | transloco }}</mat-label>
+            <input
+              matInput
+              type="password"
+              autocomplete="off"
+              formControlName="setupToken"
+              data-testid="setup-token"
+            />
+            <mat-hint>{{ 'setup.tokenHint' | transloco }}</mat-hint>
+            <mat-error>{{ fieldError(form.controls.setupToken) ?? '' | transloco }}</mat-error>
+          </mat-form-field>
+        }
         <mat-form-field appearance="outline">
           <mat-label>{{ 'fields.email' | transloco }}</mat-label>
           <input
@@ -81,6 +104,9 @@ import { PageCard } from '../../shared/page-card/page-card';
 })
 export class Setup {
   private readonly auth = inject(AuthService);
+  protected readonly tokenRequired = computed(
+    () => this.auth.config()?.setupTokenRequired === true,
+  );
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
@@ -93,21 +119,42 @@ export class Setup {
     email: ['', emailValidators],
     passwords: newPasswordGroup(this.fb),
     locale: [inject(LanguageService).language() as Language],
+    setupToken: [''],
   });
+
+  constructor() {
+    effect(() => {
+      const control = this.form.controls.setupToken;
+      control.setValidators(
+        this.tokenRequired()
+          ? [Validators.required, Validators.pattern(/\S/), Validators.maxLength(256)]
+          : [],
+      );
+      control.updateValueAndValidity();
+    });
+  }
 
   protected async submit(): Promise<void> {
     this.form.markAllAsTouched();
     if (this.form.invalid || this.busy()) {
       return;
     }
-    const { email, passwords, locale } = this.form.getRawValue();
+    const { email, passwords, locale, setupToken } = this.form.getRawValue();
     this.busy.set(true);
     this.error.set(null);
     try {
-      await this.auth.setup({ email: email.trim(), password: passwords.password, locale });
+      await this.auth.setup({
+        email: email.trim(),
+        password: passwords.password,
+        locale,
+        ...(this.tokenRequired() ? { setupToken: setupToken.trim() } : {}),
+      });
       await this.router.navigateByUrl('/');
     } catch (error) {
       applyServerFieldErrors(this.form, error, { password: 'passwords.password' });
+      if (errorCodeOf(error) === 'SETUP_TOKEN_INVALID') {
+        this.form.controls.setupToken.setErrors({ server: true });
+      }
       this.error.set(errorMessage(error));
     } finally {
       this.busy.set(false);

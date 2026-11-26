@@ -15,7 +15,6 @@ import {
   settle,
 } from '../../testing/app-testing';
 import { resetDocumentState } from '../../testing/browser';
-import { Learn } from './learn/learn';
 import { ParentDashboard } from './parent/dashboard/parent-dashboard';
 import { ParentShell } from './parent/shell/parent-shell';
 import { ProfilePicker } from './profile-picker/profile-picker';
@@ -160,33 +159,6 @@ describe('family pages', () => {
       http.expectOne('/api/kids').flush(null, { status: 500, statusText: 'x' });
       await settle(fixture);
       expect(byTestId(element, 'form-error').textContent).toContain('Server');
-    });
-  });
-
-  describe('Learn', () => {
-    it('greets the active kid and switches profile', async () => {
-      const auth = TestBed.inject(AuthService);
-      auth.setUser(USER);
-      auth.setActiveKid(KID);
-      const { element, fixture } = await renderComponent(Learn);
-      expect(byTestId(element, 'page-title').textContent).toContain('Hallo Mia!');
-      expect(byTestId(element, 'learn-soon').textContent).toContain('Bald geht’s los!');
-      expect(element.querySelectorAll('mu-speak').length).toBe(2);
-
-      byTestId(element, 'switch-profile').click();
-      http.expectOne('/api/kids/deactivate').flush(null);
-      await settle(fixture);
-      expect(auth.activeKid()).toBeNull();
-      expect(navigate).toHaveBeenCalledWith('/');
-    });
-
-    it('reports a failed switch', async () => {
-      TestBed.inject(AuthService).setActiveKid(KID);
-      const { element, fixture } = await renderComponent(Learn);
-      byTestId(element, 'switch-profile').click();
-      http.expectOne('/api/kids/deactivate').flush(null, { status: 500, statusText: 'x' });
-      await settle(fixture);
-      expect(byTestId(element, 'form-error')).toBeTruthy();
     });
   });
 

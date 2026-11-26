@@ -31,6 +31,12 @@ function visit(path: string, extra?: (page: Page) => Promise<void>) {
   };
 }
 
+async function openLearn(page: Page) {
+  await visit('/')(page);
+  await page.getByTestId(`kid-tile-${kid().id}`).click();
+  await page.getByTestId('trail').waitFor();
+}
+
 /** The main pages, each with the backend state it needs. */
 export const SCENARIOS: readonly Scenario[] = [
   { name: 'welcome', options: signedOut, open: visit('/') },
@@ -63,7 +69,25 @@ export const SCENARIOS: readonly Scenario[] = [
     open: async (page) => {
       await visit('/')(page);
       await page.getByTestId(`kid-tile-${kid().id}`).click();
-      await page.getByTestId('learn-soon').waitFor();
+      await page.getByTestId('trail').waitFor();
+    },
+  },
+  {
+    name: 'player',
+    options: { ...family, learn: { demoSeen: ['math-zahlenwiese-01'] } },
+    open: async (page) => {
+      await openLearn(page);
+      await page.goto('/learn/level/math-zahlenwiese-01');
+      await page.getByTestId('prompt-text').waitFor();
+    },
+  },
+  {
+    name: 'demo',
+    options: family,
+    open: async (page) => {
+      await openLearn(page);
+      await page.goto('/learn/level/math-zahlenwiese-01');
+      await page.getByTestId('demo').waitFor();
     },
   },
   {

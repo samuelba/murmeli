@@ -21,6 +21,7 @@ export interface NewAccount {
   readonly email: string;
   readonly password: string;
   readonly locale: Language;
+  readonly setupToken?: string;
 }
 
 @Injectable({ providedIn: 'root' })

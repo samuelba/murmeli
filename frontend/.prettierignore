@@ -11,3 +11,6 @@ public/brand
 src/styles/_brand-tokens.scss
 src/app/core/avatars/avatar-manifest.json
 public/manifest.webmanifest
+public/pictures
+src/app/learn/content/learn-content.json
+public/audio

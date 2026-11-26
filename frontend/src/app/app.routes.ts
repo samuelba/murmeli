@@ -85,8 +85,7 @@ export const routes: Routes = [
   {
     path: 'learn',
     canActivate: [authGuard, kidGuard],
-    title: 'learn.pageTitle',
-    loadComponent: () => import('./pages/learn/learn').then((m) => m.Learn),
+    loadChildren: () => import('./learn/learn.routes').then((m) => m.LEARN_ROUTES),
   },
   {
     path: 'parent',

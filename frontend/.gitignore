@@ -47,3 +47,6 @@ Thumbs.db
 /e2e-results
 /playwright-report
 /test-results
+
+# Narration copied from ../content/audio by npm run content:sync
+/public/audio

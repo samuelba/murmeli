@@ -1,0 +1,217 @@
+<section class="player mu-kid-mode" [attr.data-phase]="store.phase()" data-testid="player">
+  @if (store.phase() !== 'resting' && store.phase() !== 'results') {
+    <header class="bar">
+      <button
+        type="button"
+        class="round"
+        data-testid="exit"
+        [attr.aria-label]="'learn.player.exit' | transloco"
+        (click)="exit()"
+      >
+        <mu-icon name="close" />
+      </button>
+      @if (store.total() > 0) {
+        <mu-progress-dots
+          class="progress"
+          [outcomes]="store.outcomes()"
+          [current]="store.index()"
+        />
+      } @else {
+        <span class="progress"></span>
+      }
+      @if (store.demo() && store.phase() !== 'demo') {
+        <button
+          type="button"
+          class="show-me"
+          data-testid="show-demo"
+          [disabled]="busy()"
+          (click)="store.openDemo()"
+        >
+          <img src="/brand/mascot/happy.svg" alt="" width="40" height="40" />
+          <span>{{ 'learn.player.showDemo' | transloco }}</span>
+        </button>
+      }
+    </header>
+  }
+
+  @switch (store.phase()) {
+    @case ('demo') {
+      @if (store.demo(); as demo) {
+        <div class="demo" data-testid="demo">
+          <p class="demo-label">{{ 'learn.player.demoLabel' | transloco }}</p>
+          <div class="prompt">
+            <mu-mascot class="prompt__mascot" pose="happy" />
+            <div class="bubble" aria-live="polite" data-testid="demo-say">
+              <h1 class="bubble__text mu-learning-text" tabindex="-1">
+                {{ store.demoSay() || demo.prompt.text }}
+              </h1>
+            </div>
+          </div>
+          <div class="board board--demo" inert>
+            <mu-exercise
+              [exercise]="demo"
+              [locked]="true"
+              [cue]="store.demoCue()"
+              [reveal]="store.demoReveal()"
+            />
+          </div>
+          <div class="mu-learn-actions">
+            <button
+              type="button"
+              class="mu-button mu-button--ghost"
+              data-testid="demo-again"
+              (click)="store.replayDemo()"
+            >
+              {{ 'learn.player.demoAgain' | transloco }}
+            </button>
+            <button
+              type="button"
+              class="mu-button mu-button--sun mu-button--big"
+              data-testid="demo-go"
+              [class.ready]="store.demoDone()"
+              (click)="store.closeDemo()"
+            >
+              {{ 'learn.player.demoGo' | transloco }}
+            </button>
+          </div>
+        </div>
+      }
+    }
+    @case ('results') {
+      @if (store.results(); as results) {
+        <mu-results
+          [results]="results"
+          [unlocked]="store.unlocked()"
+          [mode]="store.mode()"
+          (next)="playLevel($event)"
+          (again)="again()"
+          (map)="toMap()"
+        />
+      }
+    }
+    @case ('resting') {
+      <mu-rest />
+    }
+    @case ('error') {
+      <div class="mu-learn-state" data-testid="player-error">
+        <mu-mascot pose="encouraging" />
+        <h1 class="mu-learn-state__title" tabindex="-1">{{ 'learn.player.error' | transloco }}</h1>
+        <mu-form-error [error]="store.error()" />
+        <div class="mu-learn-actions">
+          <button
+            type="button"
+            class="mu-button mu-button--sun"
+            data-testid="player-retry"
+            (click)="store.retry()"
+          >
+            {{ 'learn.player.retry' | transloco }}
+          </button>
+          <button type="button" class="mu-button mu-button--ghost" (click)="toMap()">
+            {{ 'learn.results.map' | transloco }}
+          </button>
+        </div>
+      </div>
+    }
+    @case ('loading') {
+      <div class="mu-learn-state" data-testid="player-loading">
+        <mu-mascot pose="thinking" animated />
+        <p class="mu-learn-state__title">{{ 'learn.player.loading' | transloco }}</p>
+      </div>
+    }
+    @case ('finishing') {
+      <div class="mu-learn-state" data-testid="player-loading">
+        <mu-mascot pose="thinking" animated />
+        <p class="mu-learn-state__title">{{ 'kid.navigation.loading' | transloco }}</p>
+      </div>
+    }
+    @default {
+      @if (store.item(); as item) {
+        <div class="prompt" data-testid="prompt">
+          <mu-mascot class="prompt__mascot" [pose]="store.hint() ? 'encouraging' : 'happy'" />
+          <div class="bubble">
+            <h1
+              class="bubble__text mu-learning-text"
+              tabindex="-1"
+              data-testid="prompt-text"
+              [attr.aria-describedby]="store.attempt() > 1 ? 'hint' : null"
+            >
+              {{ item.prompt.text }}
+            </h1>
+            <mu-speak [text]="item.prompt.text" [segments]="item.prompt.speak" />
+          </div>
+        </div>
+
+        @if (store.attempt() > 1 && store.phase() !== 'feedback') {
+          <div id="hint" class="hint" role="status" data-testid="hint">
+            <mu-icon name="info" />
+            <p>
+              <strong>{{ store.hintPhrase() }}</strong>
+              @if (store.hintText(); as hint) {
+                <span data-testid="hint-text">{{ hint }}</span>
+              }
+            </p>
+            @if (store.hintText(); as hint) {
+              <mu-speak [text]="hint" />
+            }
+          </div>
+        }
+        <mu-form-error [error]="store.error()" />
+
+        <div
+          class="board"
+          [attr.data-testid]="'exercise-' + item.type"
+          [attr.inert]="store.phase() === 'feedback' ? '' : null"
+        >
+          @for (entry of exercises(); track entry.key) {
+            <mu-exercise
+              [exercise]="entry.item"
+              [locked]="store.phase() !== 'playing'"
+              [reveal]="store.feedback()?.solution ?? null"
+              (answered)="answer($event)"
+            />
+          }
+        </div>
+
+        @if (store.phase() === 'feedback' && store.feedback(); as feedback) {
+          <div
+            class="feedback"
+            role="status"
+            data-testid="feedback"
+            [attr.data-kind]="feedback.kind"
+          >
+            @if (feedback.kind === 'correct') {
+              <mu-confetti />
+            }
+            <mu-mascot
+              class="feedback__mascot"
+              [pose]="feedback.kind === 'correct' ? 'cheering' : 'happy'"
+            />
+            <div class="feedback__text">
+              <p id="feedback-phrase" class="feedback__phrase">
+                @if (feedback.kind === 'correct') {
+                  <mu-icon name="success" />
+                }
+                {{ feedback.phrase }}
+              </p>
+              @if (feedback.kind === 'solution') {
+                <p id="feedback-sub" class="feedback__sub">
+                  {{ 'learn.player.solutionLabel' | transloco }}
+                </p>
+              }
+            </div>
+            <button
+              type="button"
+              class="mu-button mu-button--sun mu-button--big"
+              data-testid="next"
+              aria-describedby="feedback-phrase feedback-sub"
+              (click)="store.next()"
+            >
+              {{ 'learn.player.next' | transloco }}
+              <mu-icon name="back" class="forward" />
+            </button>
+          </div>
+        }
+      }
+    }
+  }
+</section>

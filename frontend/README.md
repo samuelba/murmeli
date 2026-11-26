@@ -4,32 +4,40 @@ Angular 22 (standalone components, signals, zoneless), Angular Material 22 (M3, 
 
 ## Commands
 
-| Command                  | What it does                                                                                                                                     |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `npm start`              | Dev server on http://localhost:4200, proxies `/api` to `BACKEND_URL` (default `http://localhost:3000`)                                           |
-| `npm run build`          | Production build into `dist/murmeli-frontend/browser`                                                                                            |
-| `npm run check:external` | Fails if the build references any third-party host                                                                                               |
-| `npm test`               | Unit tests (Vitest through `@angular/build:unit-test`)                                                                                           |
-| `npm run test:coverage`  | Unit tests with coverage; fails below 80%                                                                                                        |
-| `npm run lint`           | `brand:check`, then ESLint (angular-eslint)                                                                                                      |
-| `npm run brand:sync`     | Copies `../brand` assets into `public/brand/`, `src/styles/_brand-tokens.scss` and the avatar manifest, and writes `public/manifest.webmanifest` |
-| `npm run brand:check`    | Fails if those copies are out of date; skips when `../brand` is missing (Docker build)                                                           |
-| `npm run format:check`   | Prettier                                                                                                                                         |
-| `npm run e2e`            | Playwright (desktop, iPad, Pixel) against `ng serve` with a mocked API                                                                           |
+| Command                                      | What it does                                                                                                                                                         |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm start`                                  | Dev server on http://localhost:4200, proxies `/api` to `BACKEND_URL` (default `http://localhost:3000`)                                                               |
+| `npm run build`                              | Production build into `dist/murmeli-frontend/browser`                                                                                                                |
+| `npm run check:external`                     | Fails if the build references any third-party host                                                                                                                   |
+| `npm test`                                   | Unit tests (Vitest through `@angular/build:unit-test`)                                                                                                               |
+| `npm run test:coverage`                      | Unit tests with coverage; fails below 80%                                                                                                                            |
+| `npm run lint`                               | `brand:check`, then ESLint (angular-eslint)                                                                                                                          |
+| `npm run brand:sync`                         | Copies `../brand` assets into `public/brand/`, `src/styles/_brand-tokens.scss` and the avatar manifest, and writes `public/manifest.webmanifest`                     |
+| `npm run brand:check`                        | Fails if those copies are out of date; skips when `../brand` is missing (Docker build)                                                                               |
+| `npm run content:sync`                       | Copies `../content/pictures` into `public/pictures/`, writes `src/app/learn/content/learn-content.json`, and copies `../content/audio` (if any) into `public/audio/` |
+| `npm run content:check`                      | Fails if the pictures or the learn content JSON are out of date (run by `lint`)                                                                                      |
+| `npm run format:check`                       | Prettier                                                                                                                                                             |
+| `npm run e2e`                                | Playwright (desktop, iPad, Pixel) against `ng serve` with a mocked API                                                                                               |
+| `npx playwright test -c e2e/shots.config.ts` | Screenshots of the map, the flow and every exercise type (phone and tablet, light and dark) into `e2e-results/shots` (`SHOTS_OUT`, `TYPES`, `THEMES`)                |
 
 Set `E2E_BASE_URL` to run the e2e suite against an already running server, for example the nginx container. The e2e suite mocks every `/api` call with `e2e/helpers/mock-api.ts` and the stateful fake backend in `e2e/helpers/family.ts` (it even serves real, cheap ALTCHA challenges), and runs axe-core on the main pages.
+
+The learning API is faked by `e2e/helpers/learn-fixtures.ts` on top of the real content runtime (`generateRun`, `checkAnswer`, `starsFor` … from `@murmeli/content`), so items, demos, hints, scoring and unlocking behave like the backend. `e2e/pages/player.page.ts` answers every exercise type right or wrong like a kid would. `/audio/**` is served from `e2e/fixtures/audio` (a three-clip manifest). The content package is a symlinked ESM build, so `playwright.config.ts` loads `content/dist` untranspiled (`build.external`).
+
+The content package must be built before the frontend is installed, linted, tested or built: `cd ../content && npm ci && npm run build`.
 
 ## Layout
 
 - `src/app/core/`: brand name, HTTP (`ApiService`, interceptors), auth (`AuthService`, guards, parent gate), API models and services (kids, account, admin), error mapping, form validators, avatar catalog, i18n, theme and storage.
 - `src/app/shared/`: `mu-logo`, `mu-mascot`, `mu-avatar`, `mu-avatar-builder`, `mu-pin-pad`, `mu-speak`, `mu-altcha`, dialogs and form helpers.
 - `src/app/layout/`: app shell (top bar, theme toggle, language switch, session menu).
-- `src/app/pages/`: lazy-loaded routes (public auth pages, profile picker, kid home, `parent/**`, `admin/**`).
+- `src/app/pages/`: lazy-loaded routes (public auth pages, profile picker, `parent/**`, `admin/**`).
+- `src/app/learn/`: the learning area (`/learn` trail map, `/learn/level/:levelId` and `/learn/practice` player), see below.
 - `src/styles/`: `_brand-tokens.scss` (copy of `brand/tokens/tokens.css`, the source of truth), `_tokens.scss` (app aliases and self-hosted font names on top), `_theme.scss` (Material M3), `_base.scss`, `_forms.scss`. `_theme-colors.scss` is generated by `ng generate @angular/material:theme-color` from the brand colors (primary `#1F6FB8`, secondary `#2E7D4F`, tertiary `#F7C600`).
 
 ## Brand
 
-`brand/` is the source of truth. `npm run brand:sync` copies it into the frontend; the copies are committed because the Docker build only sees `frontend/`. Material uses the brand blue as `primary` (AA as text and as a fill), and filled buttons use the signpost yellow with dark text (12:1). The animated logo is inlined in `mu-logo` (keyframes in its SCSS, off under `prefers-reduced-motion`).
+`brand/` is the source of truth. `npm run brand:sync` copies it into the frontend; the copies are committed, and the Docker build does not run the brand sync. Material uses the brand blue as `primary` (AA as text and as a fill), and filled buttons use the signpost yellow with dark text (12:1). The animated logo is inlined in `mu-logo` (keyframes in its SCSS, off under `prefers-reduced-motion`).
 
 ## Auth and sessions
 
@@ -50,11 +58,23 @@ Registration, resend-verification and forgot-password use the self-hosted `altch
 - `public/i18n/`: translations. `de-CH` never uses the Eszett (it writes "ss"); a unit test checks that and that both files have the same keys.
 - Fonts (Nunito, Andika) are self-hosted from `@fontsource` packages. No CDN, no external requests.
 
-Kid mode: put `.mu-kid-mode` on a container to raise touch targets from 48px to 64px. Every kid-facing instruction has a `<mu-speak [text]>`. It renders nothing until an audio service provides `SPEAK_PROVIDER` (milestone 3).
+Kid mode: put `.mu-kid-mode` on a container to raise touch targets from 48px to 64px. Every kid-facing instruction has a `<mu-speak [text]>` (or `[segments]` for a prompt's `speak` list). It is hidden while the narration has no clip for the text.
+
+## Learning (milestone 3)
+
+The contract is `docs/internal/learning-engine.md`. Payload, answer and API types come from `@murmeli/content` (`"file:../content"`) with `import type` only, so no content code ends up in the bundle.
+
+- **Map** (`learn/map/`): one Alpine trail per track (tabs), worlds as scene bands from the valley (first world, bottom) up, levels as yellow signposts with 0–3 stars. Locked levels shake and say why; Murmeli stands at the next level; completed worlds get a summit flag.
+- **Player** (`learn/player/`): `PlayerStore` is the state machine (`loading → demo → playing ⇄ checking → feedback → … → finishing → results`, plus `resting` for `403 DAILY_LIMIT_REACHED` and `error` with retry). A wrong first answer shows the hint (`HINTS` text) and the item starts fresh; the second wrong answer reveals the solution. Unknown exercise types from a newer server are skipped.
+- **"Zeig mir"**: the demo instance is rendered by the same exercise component (locked), with each step's action as a `cue` (highlight, count along, hop, clap, place tiles, fill blank, tap answer with a pointing hand) and Murmeli saying the step.
+- **Exercises** (`learn/exercises/`): one component per type on `ExerciseBase` (`payload`, `locked`, `reveal`, `cue` in, `answered` out). Single-tap answers submit at once; keypad, number house, number wall, number line (place), drum and word building have an explicit check. Shared pieces: `mu-choices`, `mu-keypad` (also digits, Backspace and Enter on a keyboard), `mu-value-answer`, `mu-frame-grid`, `mu-quantity`, `mu-picture` (`/pictures/<id>.svg`, alt = the word).
+- **Audio** (`core/audio/`): `AudioService` is the `SPEAK_PROVIDER`. It loads `/audio/manifest.json` (the `tools/audio` format) once, maps text → clip per locale, plays `prompt.speak` segments back to back with a 120 ms gap on one reusable `<audio>`, and stops on a new speech, `stop()` or navigation. Missing clips are skipped (`console.debug` in dev). Prompts, hints and feedback play on their own only when the kid's `readAloud` asks for it (`auto` = KG1/KG2); the speak button always works. `SoundEffects` makes the correct/wrong/star/complete sounds with Web Audio oscillators and follows `soundEnabled`. Both unlock on the first tap (Safari autoplay).
+- **Spoken UI strings** live under `kid.feedback.*`, `kid.instructions.*` and `kid.navigation.*` (no placeholders), the globs in `tools/audio/speakable-i18n-keys.txt`. Feedback phrases and hints come from the content package (`learn-content.json`), so they match the manifest texts.
+- **Narration files**: `npm run content:sync` copies `../content/audio` into `public/audio/` (gitignored). For a local test with another render use `node scripts/sync-content.mjs --audio-from ../tools/audio/out` (or `MURMELI_AUDIO_DIR`).
 
 ## Container
 
-`docker build --target production .` builds an `nginxinc/nginx-unprivileged` image that listens on 8080, runs as a non-root user and works with a read-only root filesystem (it renders its config into `/tmp`).
+`docker build -f frontend/Dockerfile --target production .`, run from the repository root (the image needs `content/`), builds an `nginxinc/nginx-unprivileged` image that listens on 8080, runs as a non-root user and works with a read-only root filesystem (it renders its config into `/tmp`).
 
 | Variable                  | Default                 | Purpose                                                                                                                          |
 | ------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
@@ -67,6 +87,6 @@ Kid mode: put `.mu-kid-mode` on a container to raise touch targets from 48px to 
 
 nginx sends the backend `X-Forwarded-For` with exactly one address, the real client, so the backend should trust only this hop. `/api/health/ready` is answered with 404 at nginx; the backend health check calls the backend directly. Access logs are JSON lines with the client IP, method, path (without the query string), status, bytes and duration; no referrer, user agent or cookies.
 
-`/healthz` returns 200 for health checks. `/manifest.webmanifest` is served as `application/manifest+json`. `/brand/` assets send `Cross-Origin-Resource-Policy: cross-origin` so email clients can show the logo; everything else stays `same-origin`.
+`/healthz` returns 200 for health checks. `/audio/manifest.json` is revalidated (`no-cache`); clips are requested with `?v=<manifest version>` and cached for a year, served as `audio/ogg`. The image contains `content/audio` when it exists at build time; otherwise mount a rendered set read-only at `/usr/share/nginx/html/audio`. Without a manifest the read-aloud buttons stay hidden. `/pictures/` is cached for a day and gets an extra sandboxing CSP. `/manifest.webmanifest` is served as `application/manifest+json`. `/brand/` assets send `Cross-Origin-Resource-Policy: cross-origin` so email clients can show the logo; everything else stays `same-origin`.
 
 The CSP adds `upgrade-insecure-requests` only when `HSTS_ENABLED=true`, so plain-http LAN installs keep working. The entrypoint warns when `TRUSTED_PROXIES` is empty, because behind a reverse proxy all clients would then share one IP for rate limiting. Invite tokens in paths (`/invite/<token>`, `/api/invites/<token>[/accept]`) are logged as `:token`.

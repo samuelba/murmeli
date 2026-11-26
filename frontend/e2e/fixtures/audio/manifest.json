@@ -1,0 +1,25 @@
+{
+  "version": "e2e-fixture",
+  "locales": {
+    "de-CH": {
+      "27595514d1e7a67d": {
+        "text": "Wie viele",
+        "file": "de-CH/27595514d1e7a67d.opus",
+        "durationMs": 689,
+        "status": "ok"
+      },
+      "bd7c183824071a9b": {
+        "text": "Äpfel",
+        "file": "de-CH/bd7c183824071a9b.opus",
+        "durationMs": 554,
+        "status": "ok"
+      },
+      "c83f2c69cee180aa": {
+        "text": "siehst du?",
+        "file": "de-CH/c83f2c69cee180aa.opus",
+        "durationMs": 647,
+        "status": "ok"
+      }
+    }
+  }
+}

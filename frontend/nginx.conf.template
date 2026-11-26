@@ -115,6 +115,34 @@ http {
             try_files $uri =404;
         }
 
+        # Narration (content/audio): the manifest is revalidated; clips are fetched with
+        # ?v=<manifest version>, so they can be cached for a year.
+        location ^~ /audio/ {
+            include /tmp/nginx/security-headers.conf;
+            add_header Cache-Control "no-cache" always;
+            types {
+                application/json json;
+                audio/ogg opus ogg;
+            }
+            location ~ "^/audio/[A-Za-z-]+/[A-Za-z0-9_-]+\.(?:opus|ogg)$" {
+                include /tmp/nginx/security-headers.conf;
+                add_header Cache-Control "public, max-age=31536000, immutable" always;
+                types {
+                    audio/ogg opus ogg;
+                }
+                try_files $uri =404;
+            }
+            try_files $uri =404;
+        }
+
+        location ^~ /pictures/ {
+            include /tmp/nginx/security-headers.conf;
+            # A second, stricter CSP for SVGs opened directly (browsers enforce both).
+            add_header Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; sandbox" always;
+            add_header Cache-Control "public, max-age=86400" always;
+            try_files $uri =404;
+        }
+
         location = /manifest.webmanifest {
             include /tmp/nginx/security-headers.conf;
             add_header Cache-Control "no-cache" always;

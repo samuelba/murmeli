@@ -112,7 +112,12 @@
     "TOKEN_INVALID": "This link is invalid or has expired.",
     "TOTP_INVALID": "The code is not correct. Please try again.",
     "TOTP_REQUIRED": "The admin area requires two-factor sign-in. Set it up under “Account”.",
-    "VALIDATION_FAILED": "Please check the highlighted fields."
+    "VALIDATION_FAILED": "Please check the highlighted fields.",
+    "SETUP_TOKEN_INVALID": "The setup code is wrong. You find it in the server configuration (SETUP_TOKEN).",
+    "LEVEL_LOCKED": "This level is still locked. Play the level before it first.",
+    "LEVEL_NOT_FOUND": "This level doesn’t exist. Back to the map!",
+    "NOTHING_TO_PRACTICE": "Play a level first, then you can practice.",
+    "RUN_NOT_FOUND": "This round is over. Just start it again."
   },
   "parentGate": {
     "title": "Parent area",
@@ -175,7 +180,9 @@
     "pageTitle": "Setup",
     "title": "Welcome to {{brand}}!",
     "intro": "Create the first account. It becomes the administrator of this installation.",
-    "submit": "Create account"
+    "submit": "Create account",
+    "token": "Setup code",
+    "tokenHint": "The value of SETUP_TOKEN in the server configuration."
   },
   "verifyEmail": {
     "pageTitle": "Confirm email",
@@ -247,8 +254,122 @@
   "learn": {
     "pageTitle": "Learn",
     "hello": "Hi {{name}}!",
-    "soon": "Coming soon! The mountain trail is being built.",
-    "switchProfile": "Switch profile"
+    "switchProfile": "Switch profile",
+    "levelTitle": "Play",
+    "practiceTitle": "Practice",
+    "map": {
+      "tracks": "What do you want to learn?",
+      "trail": "{{title}} trail",
+      "level": "Level {{number}}: {{title}}",
+      "state": {
+        "locked": "still locked",
+        "unlocked": "ready to play",
+        "passed": "{{stars}} of 3 stars",
+        "skipped": "skipped"
+      },
+      "worldStars": "{{stars}} of {{max}} stars",
+      "worldLocked": "Still locked",
+      "summit": "Summit reached!",
+      "youAreHere": "You are here",
+      "practice": "Practice",
+      "practiceHint": "Practice what you already know",
+      "loading": "Loading the mountain trail…",
+      "error": "The mountain trail could not be loaded.",
+      "retry": "Try again",
+      "empty": "There is nothing to learn here yet."
+    },
+    "player": {
+      "progress": "Exercise {{current}} of {{total}}",
+      "exit": "Stop",
+      "showDemo": "Show me",
+      "next": "Next",
+      "loading": "Murmeli is packing the backpack…",
+      "error": "Oops, that didn’t work.",
+      "retry": "Try again",
+      "exitConfirm": "Yes, back to the map",
+      "exitCancel": "Keep playing",
+      "demoAgain": "Show again",
+      "demoGo": "Let’s go!",
+      "demoLabel": "Murmeli shows how it works",
+      "correctLabel": "Correct",
+      "solutionLabel": "The right answer is marked.",
+      "hintLabel": "Tip"
+    },
+    "results": {
+      "stars": "{{stars}} of 3 stars",
+      "newWorld": "New world: {{title}}",
+      "next": "Next level",
+      "again": "Play again",
+      "map": "Back to the map"
+    },
+    "rest": {
+      "back": "Back to the profiles"
+    },
+    "ex": {
+      "answers": "Answers",
+      "check": "Check",
+      "keypad": {
+        "label": "Number pad",
+        "display": "Your number: {{value}}",
+        "empty": "Your number: empty",
+        "delete": "Delete",
+        "ok": "Done"
+      },
+      "count": {
+        "objects": "{{count}} pictures. Tap each picture while you count.",
+        "total": "{{count}} counted"
+      },
+      "quantity": {
+        "dots": "{{count}} dots",
+        "fingers": "{{count}} fingers",
+        "frame": "Ten frame with {{count}} dots",
+        "objects": "{{count}} × {{word}}"
+      },
+      "hear": "Listen carefully",
+      "frame": "Ten frame with {{filled}} of {{total}} boxes filled",
+      "relation": {
+        "lt": "less than",
+        "gt": "greater than",
+        "eq": "equal to"
+      },
+      "compareLeft": "Left",
+      "compareRight": "Right",
+      "line": {
+        "label": "Number line from {{start}} to {{end}}",
+        "tick": "Mark {{number}} of {{total}}",
+        "marked": "Marked spot",
+        "left": "Move the flag left",
+        "right": "Move the flag right"
+      },
+      "blank": "Blank",
+      "blankFilled": "Blank: {{value}}",
+      "bond": {
+        "label": "Number house",
+        "roof": "Roof",
+        "row": "Floor {{number}}"
+      },
+      "wall": {
+        "label": "Number wall",
+        "brick": "Brick {{number}}"
+      },
+      "sequence": "Number row",
+      "pattern": "Pattern",
+      "syllables": {
+        "drum": "Drum: tap once for each syllable",
+        "count": "Drummed {{count}} times",
+        "undo": "One back"
+      },
+      "word": {
+        "syllables": "Syllables: {{syllables}}"
+      },
+      "build": {
+        "slots": "Your word",
+        "slot": "Spot {{number}}: {{letter}}",
+        "slotEmpty": "Spot {{number}}: empty",
+        "tiles": "Letters",
+        "tile": "Letter {{letter}}"
+      }
+    }
   },
   "avatarBuilder": {
     "animal": "Animal",
@@ -276,6 +397,21 @@
       "KG2": "Kindergarten 2",
       "1": "1st grade",
       "2": "2nd grade"
+    },
+    "feedback": {
+      "allStars": "Wow, all the stars!",
+      "passed": "You did it! Great climbing!",
+      "onePoint": "Good practice! One more time?",
+      "practiced": "Great that you practiced!",
+      "newLevel": "A new level is open!",
+      "newWorld": "A new world is open!"
+    },
+    "navigation": {
+      "exitQuestion": "Do you want to stop?",
+      "rest": "Murmeli is taking a break now.",
+      "restMore": "That’s enough learning for today. See you tomorrow!",
+      "loading": "One moment, please.",
+      "locked": "This level is still closed. Play the others first."
     }
   },
   "kidForm": {

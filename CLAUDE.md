@@ -14,6 +14,7 @@ Murmeli is a self-hosted learning platform for kids, from kindergarten to the en
 - **Version control:** jj, with Conventional Commits. release-please builds the changelog from the commit messages.
 - **No ß in German.** The de-CH text uses "ss". `scripts/check-no-eszett.mjs` enforces this in CI.
 - **Brand name:** "Murmeli" is a working name. Use `BRAND_NAME` (frontend `src/app/core/brand.ts`, backend `src/config/brand.ts`) and don't hard-code the name in templates.
+  - **Exception:** spoken kid strings (`kid.feedback.*`, `kid.navigation.*`) and content YAML name the mascot directly, because their audio is pre-rendered. A rename means editing those strings and re-rendering the audio.
 - **Kid privacy:**
   - Kid profiles store only a nickname, an avatar, a birth year or class, and settings.
   - No photos, no third-party requests (no CDNs, fonts or analytics), and only essential cookies.

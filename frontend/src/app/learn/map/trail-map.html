@@ -1,0 +1,188 @@
+<section class="map mu-kid-mode" aria-labelledby="page-heading">
+  @if (kid(); as kid) {
+    <header class="head">
+      <mu-avatar class="head__avatar" [avatar]="kid.avatar" [size]="72" />
+      <div class="head__title">
+        <h1 id="page-heading" class="title" data-testid="page-title">
+          {{ 'learn.hello' | transloco: { name: kid.nickname } }}
+        </h1>
+        <mu-speak [text]="'learn.hello' | transloco: { name: kid.nickname }" />
+      </div>
+      <div class="head__actions">
+        @if (map()) {
+          <button
+            type="button"
+            class="mu-button mu-button--sun practice"
+            data-testid="practice"
+            [attr.aria-describedby]="'practice-hint'"
+            (click)="practice()"
+          >
+            <svg class="practice__icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6-4.5-4.2 6.1-.7z" />
+            </svg>
+            <span>{{ 'learn.map.practice' | transloco }}</span>
+          </button>
+          <span id="practice-hint" class="mu-visually-hidden">{{
+            'learn.map.practiceHint' | transloco
+          }}</span>
+        }
+        <button
+          type="button"
+          class="mu-button mu-button--ghost"
+          data-testid="switch-profile"
+          [disabled]="busy()"
+          (click)="switchProfile()"
+        >
+          <mu-icon name="family" />
+          <span>{{ 'learn.switchProfile' | transloco }}</span>
+        </button>
+      </div>
+      <mu-form-error class="head__error" [error]="error()" />
+    </header>
+  }
+
+  @if (loading()) {
+    <div class="mu-learn-state" data-testid="map-loading">
+      <mu-mascot pose="thinking" animated />
+      <p>{{ 'learn.map.loading' | transloco }}</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="mu-learn-state" data-testid="map-error">
+      <mu-mascot pose="encouraging" />
+      <p>{{ 'learn.map.error' | transloco }}</p>
+      <mu-form-error [error]="loadError()" />
+      <button type="button" class="mu-button mu-button--sun" (click)="load()">
+        {{ 'learn.map.retry' | transloco }}
+      </button>
+    </div>
+  } @else if (track(); as track) {
+    @if (tracks().length > 1) {
+      <div class="tracks" role="tablist" [attr.aria-label]="'learn.map.tracks' | transloco">
+        @for (item of tracks(); track item.id; let i = $index) {
+          <button
+            type="button"
+            role="tab"
+            class="tab"
+            [id]="'tab-' + item.id"
+            [attr.aria-selected]="item.id === track.id"
+            [attr.aria-controls]="item.id === track.id ? 'trail-' + item.id : null"
+            [attr.tabindex]="item.id === track.id ? 0 : -1"
+            [attr.data-icon]="item.icon"
+            [attr.data-testid]="'track-' + item.id"
+            (click)="chooseTrack(item.id)"
+            (keydown)="onTabKey($event, i)"
+          >
+            <span class="tab__icon" aria-hidden="true">{{
+              item.icon === 'math' ? '1 2 3' : 'A b c'
+            }}</span>
+            <span class="tab__title">{{ item.title }}</span>
+          </button>
+        }
+      </div>
+    }
+    <div
+      class="trail"
+      [id]="'trail-' + track.id"
+      [attr.role]="tracks().length > 1 ? 'tabpanel' : 'region'"
+      [attr.aria-labelledby]="tracks().length > 1 ? 'tab-' + track.id : null"
+      [attr.aria-label]="
+        tracks().length > 1 ? null : ('learn.map.trail' | transloco: { title: track.title })
+      "
+      data-testid="trail"
+    >
+      <ol class="worlds">
+        @for (entry of worlds(); track entry.world.id) {
+          <li
+            class="world"
+            [attr.data-state]="entry.world.state"
+            [attr.data-testid]="'world-' + entry.world.id"
+            [attr.aria-labelledby]="'world-title-' + entry.world.id"
+          >
+            <mu-scene [scene]="entry.world.scene" />
+            <div class="world__sign">
+              <h2 class="world__title" [id]="'world-title-' + entry.world.id">
+                @if (entry.world.state === 'locked') {
+                  <mu-icon name="lock" />
+                }
+                {{ entry.world.title }}
+              </h2>
+              @if (entry.world.state === 'locked') {
+                <p class="world__meta">{{ 'learn.map.worldLocked' | transloco }}</p>
+              } @else {
+                <p class="world__meta" [attr.data-testid]="'world-stars-' + entry.world.id">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6-4.5-4.2 6.1-.7z"
+                    />
+                  </svg>
+                  {{
+                    'learn.map.worldStars'
+                      | transloco: { stars: entry.world.stars, max: entry.world.maxStars }
+                  }}
+                </p>
+              }
+            </div>
+            <div class="world__trail" [style.height.px]="entry.height">
+              <svg
+                class="path"
+                aria-hidden="true"
+                preserveAspectRatio="none"
+                [attr.viewBox]="'0 0 100 ' + entry.height"
+              >
+                <path class="path__bed" [attr.d]="entry.path" />
+                <path class="path__dash" [attr.d]="entry.path" />
+              </svg>
+              @if (entry.complete) {
+                <span
+                  class="summit"
+                  role="img"
+                  [attr.aria-label]="'learn.map.summit' | transloco"
+                  [attr.data-testid]="'summit-' + entry.world.id"
+                >
+                  <svg viewBox="0 0 48 64" aria-hidden="true">
+                    <rect x="6" y="4" width="5" height="58" rx="2" fill="#6b4a2b" />
+                    <path d="M11 6 H44 L36 18 L44 30 H11Z" fill="#e5322d" />
+                    <path
+                      d="M24 12 L26 16.5 L31 17 L27.2 20.2 L28.4 25 L24 22.4 L19.6 25 L20.8 20.2 L17 17 L22 16.5Z"
+                      fill="#fff"
+                    />
+                  </svg>
+                </span>
+              }
+              <ol class="levels">
+                @for (placed of entry.levels; track placed.level.id) {
+                  <li>
+                    <mu-signpost
+                      [style.left.%]="placed.x"
+                      [style.top.px]="placed.y"
+                      [level]="placed.level"
+                      [number]="placed.number"
+                      [pointsLeft]="placed.pointsLeft"
+                      (opened)="play($event)"
+                      (blocked)="locked()"
+                    />
+                    @if (placed.level.id === current()) {
+                      <mu-mascot
+                        class="here"
+                        pose="happy"
+                        data-testid="map-mascot"
+                        [class.here--left]="placed.x > 50"
+                        [style.left.%]="placed.x"
+                        [style.top.px]="placed.y"
+                      />
+                    }
+                  </li>
+                }
+              </ol>
+            </div>
+          </li>
+        }
+      </ol>
+    </div>
+  } @else {
+    <div class="mu-learn-state" data-testid="map-empty">
+      <mu-mascot pose="happy" />
+      <p>{{ 'learn.map.empty' | transloco }}</p>
+    </div>
+  }
+</section>

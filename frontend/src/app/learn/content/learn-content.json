@@ -1,0 +1,606 @@
+{
+  "pictures": {
+    "ant": {
+      "de-CH": "Ameise",
+      "en-US": "ant"
+    },
+    "apple": {
+      "de-CH": "Apfel",
+      "en-US": "apple"
+    },
+    "bag": {
+      "de-CH": "Tasche",
+      "en-US": "bag"
+    },
+    "ball": {
+      "de-CH": "Ball",
+      "en-US": "ball"
+    },
+    "balloon": {
+      "de-CH": "Ballon",
+      "en-US": "balloon"
+    },
+    "banana": {
+      "de-CH": "Banane",
+      "en-US": "banana"
+    },
+    "bat": {
+      "de-CH": "Fledermaus",
+      "en-US": "bat"
+    },
+    "bear": {
+      "de-CH": "Bär",
+      "en-US": "bear"
+    },
+    "bed": {
+      "de-CH": "Bett",
+      "en-US": "bed"
+    },
+    "bee": {
+      "de-CH": "Biene",
+      "en-US": "bee"
+    },
+    "book": {
+      "de-CH": "Buch",
+      "en-US": "book"
+    },
+    "box": {
+      "de-CH": "Paket",
+      "en-US": "box"
+    },
+    "bus": {
+      "de-CH": "Bus",
+      "en-US": "bus"
+    },
+    "butterfly": {
+      "de-CH": "Schmetterling",
+      "en-US": "butterfly"
+    },
+    "cake": {
+      "de-CH": "Kuchen",
+      "en-US": "cake"
+    },
+    "cap": {
+      "de-CH": "Kappe",
+      "en-US": "cap"
+    },
+    "car": {
+      "de-CH": "Auto",
+      "en-US": "car"
+    },
+    "carrot": {
+      "de-CH": "Karotte",
+      "en-US": "carrot"
+    },
+    "cat": {
+      "de-CH": "Katze",
+      "en-US": "cat"
+    },
+    "caterpillar": {
+      "de-CH": "Raupe",
+      "en-US": "caterpillar"
+    },
+    "chair": {
+      "de-CH": "Stuhl",
+      "en-US": "chair"
+    },
+    "chick": {
+      "de-CH": "Küken",
+      "en-US": "chick"
+    },
+    "cloud": {
+      "de-CH": "Wolke",
+      "en-US": "cloud"
+    },
+    "coat": {
+      "de-CH": "Jacke",
+      "en-US": "coat"
+    },
+    "cow": {
+      "de-CH": "Kuh",
+      "en-US": "cow"
+    },
+    "cup": {
+      "de-CH": "Tasse",
+      "en-US": "cup"
+    },
+    "dinosaur": {
+      "de-CH": "Dino",
+      "en-US": "dinosaur"
+    },
+    "dog": {
+      "de-CH": "Hund",
+      "en-US": "dog"
+    },
+    "dolphin": {
+      "de-CH": "Delfin",
+      "en-US": "dolphin"
+    },
+    "donkey": {
+      "de-CH": "Esel",
+      "en-US": "donkey"
+    },
+    "duck": {
+      "de-CH": "Ente",
+      "en-US": "duck"
+    },
+    "ear": {
+      "de-CH": "Ohr",
+      "en-US": "ear"
+    },
+    "egg": {
+      "de-CH": "Ei",
+      "en-US": "egg"
+    },
+    "elephant": {
+      "de-CH": "Elefant",
+      "en-US": "elephant"
+    },
+    "eye": {
+      "de-CH": "Auge",
+      "en-US": "eye"
+    },
+    "fish": {
+      "de-CH": "Fisch",
+      "en-US": "fish"
+    },
+    "flower": {
+      "de-CH": "Blume",
+      "en-US": "flower"
+    },
+    "fox": {
+      "de-CH": "Fuchs",
+      "en-US": "fox"
+    },
+    "frog": {
+      "de-CH": "Frosch",
+      "en-US": "frog"
+    },
+    "gift": {
+      "de-CH": "Geschenk",
+      "en-US": "gift"
+    },
+    "giraffe": {
+      "de-CH": "Giraffe",
+      "en-US": "giraffe"
+    },
+    "goat": {
+      "de-CH": "Ziege",
+      "en-US": "goat"
+    },
+    "guitar": {
+      "de-CH": "Gitarre",
+      "en-US": "guitar"
+    },
+    "hat": {
+      "de-CH": "Hut",
+      "en-US": "hat"
+    },
+    "hedgehog": {
+      "de-CH": "Igel",
+      "en-US": "hedgehog"
+    },
+    "hen": {
+      "de-CH": "Huhn",
+      "en-US": "hen"
+    },
+    "hippo": {
+      "de-CH": "Nilpferd",
+      "en-US": "hippo"
+    },
+    "house": {
+      "de-CH": "Haus",
+      "en-US": "house"
+    },
+    "jellyfish": {
+      "de-CH": "Qualle",
+      "en-US": "jellyfish"
+    },
+    "key": {
+      "de-CH": "Schlüssel",
+      "en-US": "key"
+    },
+    "kite": {
+      "de-CH": "Drachen",
+      "en-US": "kite"
+    },
+    "ladder": {
+      "de-CH": "Leiter",
+      "en-US": "ladder"
+    },
+    "ladybug": {
+      "de-CH": "Marienkäfer",
+      "en-US": "ladybug"
+    },
+    "leaf": {
+      "de-CH": "Blatt",
+      "en-US": "leaf"
+    },
+    "leg": {
+      "de-CH": "Bein",
+      "en-US": "leg"
+    },
+    "lemon": {
+      "de-CH": "Zitrone",
+      "en-US": "lemon"
+    },
+    "lion": {
+      "de-CH": "Löwe",
+      "en-US": "lion"
+    },
+    "llama": {
+      "de-CH": "Lama",
+      "en-US": "llama"
+    },
+    "log": {
+      "de-CH": "Holz",
+      "en-US": "log"
+    },
+    "map": {
+      "de-CH": "Karte",
+      "en-US": "map"
+    },
+    "monkey": {
+      "de-CH": "Affe",
+      "en-US": "monkey"
+    },
+    "moon": {
+      "de-CH": "Mond",
+      "en-US": "moon"
+    },
+    "mouse": {
+      "de-CH": "Maus",
+      "en-US": "mouse"
+    },
+    "mushroom": {
+      "de-CH": "Pilz",
+      "en-US": "mushroom"
+    },
+    "nest": {
+      "de-CH": "Nest",
+      "en-US": "nest"
+    },
+    "nose": {
+      "de-CH": "Nase",
+      "en-US": "nose"
+    },
+    "octopus": {
+      "de-CH": "Krake",
+      "en-US": "octopus"
+    },
+    "otter": {
+      "de-CH": "Otter",
+      "en-US": "otter"
+    },
+    "owl": {
+      "de-CH": "Eule",
+      "en-US": "owl"
+    },
+    "pen": {
+      "de-CH": "Stift",
+      "en-US": "pen"
+    },
+    "penguin": {
+      "de-CH": "Pinguin",
+      "en-US": "penguin"
+    },
+    "pig": {
+      "de-CH": "Schwein",
+      "en-US": "pig"
+    },
+    "pineapple": {
+      "de-CH": "Ananas",
+      "en-US": "pineapple"
+    },
+    "rabbit": {
+      "de-CH": "Hase",
+      "en-US": "rabbit"
+    },
+    "rainbow": {
+      "de-CH": "Regenbogen",
+      "en-US": "rainbow"
+    },
+    "rocket": {
+      "de-CH": "Rakete",
+      "en-US": "rocket"
+    },
+    "rose": {
+      "de-CH": "Rose",
+      "en-US": "rose"
+    },
+    "saw": {
+      "de-CH": "Säge",
+      "en-US": "saw"
+    },
+    "shape-circle": {
+      "de-CH": "Kreis",
+      "en-US": "circle"
+    },
+    "shape-rectangle": {
+      "de-CH": "Rechteck",
+      "en-US": "rectangle"
+    },
+    "shape-square": {
+      "de-CH": "Quadrat",
+      "en-US": "square"
+    },
+    "shape-triangle": {
+      "de-CH": "Dreieck",
+      "en-US": "triangle"
+    },
+    "sheep": {
+      "de-CH": "Schaf",
+      "en-US": "sheep"
+    },
+    "ship": {
+      "de-CH": "Schiff",
+      "en-US": "ship"
+    },
+    "shoe": {
+      "de-CH": "Schuh",
+      "en-US": "shoe"
+    },
+    "snail": {
+      "de-CH": "Schnecke",
+      "en-US": "snail"
+    },
+    "snake": {
+      "de-CH": "Schlange",
+      "en-US": "snake"
+    },
+    "sofa": {
+      "de-CH": "Sofa",
+      "en-US": "couch"
+    },
+    "star": {
+      "de-CH": "Stern",
+      "en-US": "star"
+    },
+    "strawberry": {
+      "de-CH": "Erdbeere",
+      "en-US": "strawberry"
+    },
+    "sun": {
+      "de-CH": "Sonne",
+      "en-US": "sun"
+    },
+    "teddy": {
+      "de-CH": "Teddy",
+      "en-US": "teddy"
+    },
+    "thumb": {
+      "de-CH": "Daumen",
+      "en-US": "thumb"
+    },
+    "tiger": {
+      "de-CH": "Tiger",
+      "en-US": "tiger"
+    },
+    "tomato": {
+      "de-CH": "Tomate",
+      "en-US": "tomato"
+    },
+    "tree": {
+      "de-CH": "Baum",
+      "en-US": "tree"
+    },
+    "turtle": {
+      "de-CH": "Schildkröte",
+      "en-US": "turtle"
+    },
+    "umbrella": {
+      "de-CH": "Schirm",
+      "en-US": "umbrella"
+    },
+    "unicorn": {
+      "de-CH": "Einhorn",
+      "en-US": "unicorn"
+    },
+    "van": {
+      "de-CH": "Kleinbus",
+      "en-US": "van"
+    },
+    "violin": {
+      "de-CH": "Geige",
+      "en-US": "violin"
+    },
+    "volcano": {
+      "de-CH": "Vulkan",
+      "en-US": "volcano"
+    },
+    "watch": {
+      "de-CH": "Uhr",
+      "en-US": "watch"
+    },
+    "watermelon": {
+      "de-CH": "Melone",
+      "en-US": "watermelon"
+    },
+    "web": {
+      "de-CH": "Netz",
+      "en-US": "web"
+    },
+    "whale": {
+      "de-CH": "Wal",
+      "en-US": "whale"
+    },
+    "worm": {
+      "de-CH": "Wurm",
+      "en-US": "worm"
+    },
+    "yoyo": {
+      "de-CH": "Jojo",
+      "en-US": "yo-yo"
+    },
+    "zebra": {
+      "de-CH": "Zebra",
+      "en-US": "zebra"
+    }
+  },
+  "hints": {
+    "add-the-two-below": {
+      "de-CH": "Zwei Steine nebeneinander sind zusammen der Stein darüber.",
+      "en-US": "Two bricks side by side make the brick on top."
+    },
+    "clap-along": {
+      "de-CH": "Sprich das Wort und klatsche bei jeder Silbe.",
+      "en-US": "Say the word and clap for each syllable."
+    },
+    "count-back": {
+      "de-CH": "Merke dir die erste Zahl und zähle zurück.",
+      "en-US": "Keep the first number in your head and count back."
+    },
+    "count-corners": {
+      "de-CH": "Zähle die Ecken.",
+      "en-US": "Count the corners."
+    },
+    "count-dots": {
+      "de-CH": "Zähle die Punkte langsam.",
+      "en-US": "Count the dots slowly."
+    },
+    "count-on": {
+      "de-CH": "Merke dir die erste Zahl und zähle weiter.",
+      "en-US": "Keep the first number in your head and count on."
+    },
+    "count-the-steps": {
+      "de-CH": "Zähle die Striche vom Anfang an.",
+      "en-US": "Count the marks from the start."
+    },
+    "crocodile": {
+      "de-CH": "Das Krokodil frisst immer die grössere Zahl.",
+      "en-US": "The crocodile always eats the greater number."
+    },
+    "first-sound": {
+      "de-CH": "Sprich das Wort langsam. Was hörst du ganz am Anfang?",
+      "en-US": "Say the word slowly. What do you hear at the very beginning?"
+    },
+    "listen-again": {
+      "de-CH": "Hör nochmal gut zu.",
+      "en-US": "Listen again carefully."
+    },
+    "listen-to-the-sound": {
+      "de-CH": "Hör den Laut nochmal und schau die Buchstaben genau an.",
+      "en-US": "Listen to the sound again and look closely at the letters."
+    },
+    "look-at-neighbors": {
+      "de-CH": "Schau die Nachbarzahlen an.",
+      "en-US": "Look at the numbers next to it."
+    },
+    "look-at-the-steps": {
+      "de-CH": "Wie gross sind die Schritte? Mach den nächsten Schritt.",
+      "en-US": "How big are the steps? Take the next step."
+    },
+    "make-ten": {
+      "de-CH": "Mach zuerst die Zehn voll.",
+      "en-US": "Make ten first."
+    },
+    "match-pairs": {
+      "de-CH": "Mach Paare: eins links, eins rechts.",
+      "en-US": "Make pairs: one on the left, one on the right."
+    },
+    "parts-make-whole": {
+      "de-CH": "Die zwei Zahlen unten sind zusammen die Zahl im Dach.",
+      "en-US": "The two numbers below make the number in the roof."
+    },
+    "power-of-five": {
+      "de-CH": "Eine volle Reihe sind fünf. Zähle von fünf weiter.",
+      "en-US": "A full row is five. Count on from five."
+    },
+    "read-sound-by-sound": {
+      "de-CH": "Lies Laut für Laut und schleife die Laute zusammen.",
+      "en-US": "Read sound by sound, then blend the sounds."
+    },
+    "say-the-pattern": {
+      "de-CH": "Sag das Muster laut.",
+      "en-US": "Say the pattern out loud."
+    },
+    "say-the-word-slowly": {
+      "de-CH": "Sprich das Wort langsam. Welchen Laut hörst du zuerst?",
+      "en-US": "Say the word slowly. Which sound comes first?"
+    },
+    "subtract-from-above": {
+      "de-CH": "Rechne minus: der Stein oben minus sein Nachbar.",
+      "en-US": "Subtract: the brick on top minus its neighbor."
+    },
+    "touch-each": {
+      "de-CH": "Tippe beim Zählen jedes Bild einmal an.",
+      "en-US": "Touch each picture once while you count."
+    }
+  },
+  "feedback": {
+    "de-CH": {
+      "correct": [
+        "Super!",
+        "Toll gemacht!",
+        "Richtig!",
+        "Genau!",
+        "Prima!",
+        "Du hast es geschafft!"
+      ],
+      "almost": [
+        "Fast!",
+        "Ganz knapp!"
+      ],
+      "try_again": [
+        "Probier es nochmal!",
+        "Versuch es noch einmal.",
+        "Schau nochmal genau hin."
+      ],
+      "encourage": [
+        "Du schaffst das!",
+        "Schritt für Schritt.",
+        "Lass dir Zeit."
+      ],
+      "hint": [
+        "Ich helfe dir.",
+        "Hier ist ein Tipp."
+      ],
+      "solution": [
+        "Schau, so geht es.",
+        "So ist es richtig."
+      ],
+      "level_done": [
+        "Geschafft!",
+        "Du bist super geklettert!",
+        "Weiter so!"
+      ]
+    },
+    "en-US": {
+      "correct": [
+        "Great job!",
+        "Super!",
+        "That's right!",
+        "Well done!",
+        "You did it!",
+        "Awesome!"
+      ],
+      "almost": [
+        "Almost!",
+        "So close!"
+      ],
+      "try_again": [
+        "Try again!",
+        "Give it another try.",
+        "Look again carefully."
+      ],
+      "encourage": [
+        "You can do it!",
+        "Step by step.",
+        "Take your time."
+      ],
+      "hint": [
+        "Let me help you.",
+        "Here is a tip."
+      ],
+      "solution": [
+        "Look, this is how it works.",
+        "This is the right answer."
+      ],
+      "level_done": [
+        "You did it!",
+        "Great climbing!",
+        "Keep it up!"
+      ]
+    }
+  }
+}

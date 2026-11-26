@@ -112,7 +112,12 @@
     "TOKEN_INVALID": "Dieser Link ist ungültig oder abgelaufen.",
     "TOTP_INVALID": "Der Code stimmt nicht. Bitte versuche es noch einmal.",
     "TOTP_REQUIRED": "Für den Adminbereich brauchst du die Zwei-Faktor-Anmeldung. Richte sie unter «Konto» ein.",
-    "VALIDATION_FAILED": "Bitte prüfe die markierten Angaben."
+    "VALIDATION_FAILED": "Bitte prüfe die markierten Angaben.",
+    "SETUP_TOKEN_INVALID": "Der Einrichtungs-Code stimmt nicht. Er steht in der Server-Konfiguration (SETUP_TOKEN).",
+    "LEVEL_LOCKED": "Diese Stufe ist noch gesperrt. Spiel zuerst die Stufe davor.",
+    "LEVEL_NOT_FOUND": "Diese Stufe gibt es nicht. Zurück zur Karte!",
+    "NOTHING_TO_PRACTICE": "Spiel zuerst eine Stufe, dann kannst du üben.",
+    "RUN_NOT_FOUND": "Diese Runde ist vorbei. Starte sie einfach nochmal."
   },
   "parentGate": {
     "title": "Elternbereich",
@@ -175,7 +180,9 @@
     "pageTitle": "Einrichtung",
     "title": "Willkommen bei {{brand}}!",
     "intro": "Lege das erste Konto an. Es wird das Administrationskonto dieser Installation.",
-    "submit": "Konto anlegen"
+    "submit": "Konto anlegen",
+    "token": "Einrichtungs-Code",
+    "tokenHint": "Der Wert von SETUP_TOKEN aus der Server-Konfiguration."
   },
   "verifyEmail": {
     "pageTitle": "E-Mail bestätigen",
@@ -247,8 +254,122 @@
   "learn": {
     "pageTitle": "Lernen",
     "hello": "Hallo {{name}}!",
-    "soon": "Bald geht’s los! Der Bergpfad wird gerade gebaut.",
-    "switchProfile": "Profil wechseln"
+    "switchProfile": "Profil wechseln",
+    "levelTitle": "Spielen",
+    "practiceTitle": "Üben",
+    "map": {
+      "tracks": "Was möchtest du lernen?",
+      "trail": "Bergpfad {{title}}",
+      "level": "Stufe {{number}}: {{title}}",
+      "state": {
+        "locked": "noch gesperrt",
+        "unlocked": "bereit zum Spielen",
+        "passed": "{{stars}} von 3 Sternen",
+        "skipped": "übersprungen"
+      },
+      "worldStars": "{{stars}} von {{max}} Sternen",
+      "worldLocked": "Noch gesperrt",
+      "summit": "Gipfel erreicht!",
+      "youAreHere": "Hier bist du",
+      "practice": "Üben",
+      "practiceHint": "Übe, was du schon kannst",
+      "loading": "Der Bergpfad wird geladen …",
+      "error": "Der Bergpfad konnte nicht geladen werden.",
+      "retry": "Nochmal versuchen",
+      "empty": "Hier gibt es noch nichts zu lernen."
+    },
+    "player": {
+      "progress": "Aufgabe {{current}} von {{total}}",
+      "exit": "Aufhören",
+      "showDemo": "Zeig mir",
+      "next": "Weiter",
+      "loading": "Murmeli packt den Rucksack …",
+      "error": "Hoppla, das hat nicht geklappt.",
+      "retry": "Nochmal versuchen",
+      "exitConfirm": "Ja, zur Karte",
+      "exitCancel": "Weiterspielen",
+      "demoAgain": "Nochmal zeigen",
+      "demoGo": "Los geht’s!",
+      "demoLabel": "Murmeli zeigt, wie es geht",
+      "correctLabel": "Richtig",
+      "solutionLabel": "Die richtige Antwort ist markiert.",
+      "hintLabel": "Tipp"
+    },
+    "results": {
+      "stars": "{{stars}} von 3 Sternen",
+      "newWorld": "Neue Welt: {{title}}",
+      "next": "Nächste Stufe",
+      "again": "Nochmal",
+      "map": "Zur Karte"
+    },
+    "rest": {
+      "back": "Zu den Profilen"
+    },
+    "ex": {
+      "answers": "Antworten",
+      "check": "Prüfen",
+      "keypad": {
+        "label": "Zahlenfeld",
+        "display": "Deine Zahl: {{value}}",
+        "empty": "Deine Zahl: noch leer",
+        "delete": "Löschen",
+        "ok": "Fertig"
+      },
+      "count": {
+        "objects": "{{count}} Bilder. Tippe beim Zählen jedes Bild an.",
+        "total": "{{count}} gezählt"
+      },
+      "quantity": {
+        "dots": "{{count}} Punkte",
+        "fingers": "{{count}} Finger",
+        "frame": "Zehnerfeld mit {{count}} Punkten",
+        "objects": "{{count}} × {{word}}"
+      },
+      "hear": "Hör gut zu",
+      "frame": "Zehnerfeld mit {{filled}} von {{total}} Feldern gefüllt",
+      "relation": {
+        "lt": "kleiner als",
+        "gt": "grösser als",
+        "eq": "gleich"
+      },
+      "compareLeft": "Links",
+      "compareRight": "Rechts",
+      "line": {
+        "label": "Zahlenstrahl von {{start}} bis {{end}}",
+        "tick": "Strich {{number}} von {{total}}",
+        "marked": "Markierter Strich",
+        "left": "Fahne nach links",
+        "right": "Fahne nach rechts"
+      },
+      "blank": "Lücke",
+      "blankFilled": "Lücke: {{value}}",
+      "bond": {
+        "label": "Zahlenhaus",
+        "roof": "Dach",
+        "row": "Stockwerk {{number}}"
+      },
+      "wall": {
+        "label": "Rechenmauer",
+        "brick": "Stein {{number}}"
+      },
+      "sequence": "Zahlenreihe",
+      "pattern": "Muster",
+      "syllables": {
+        "drum": "Trommel: einmal pro Silbe tippen",
+        "count": "{{count}} Mal getrommelt",
+        "undo": "Einmal zurück"
+      },
+      "word": {
+        "syllables": "Silben: {{syllables}}"
+      },
+      "build": {
+        "slots": "Dein Wort",
+        "slot": "Platz {{number}}: {{letter}}",
+        "slotEmpty": "Platz {{number}}: leer",
+        "tiles": "Buchstaben",
+        "tile": "Buchstabe {{letter}}"
+      }
+    }
   },
   "avatarBuilder": {
     "animal": "Tier",
@@ -276,6 +397,21 @@
       "KG2": "Kindergarten 2",
       "1": "1. Klasse",
       "2": "2. Klasse"
+    },
+    "feedback": {
+      "allStars": "Wow, alle Sterne!",
+      "passed": "Geschafft! Super geklettert!",
+      "onePoint": "Gut geübt! Gleich nochmal?",
+      "practiced": "Schön, dass du geübt hast!",
+      "newLevel": "Eine neue Stufe ist offen!",
+      "newWorld": "Eine neue Welt ist offen!"
+    },
+    "navigation": {
+      "exitQuestion": "Willst du aufhören?",
+      "rest": "Murmeli macht jetzt eine Pause.",
+      "restMore": "Für heute ist genug gelernt. Bis morgen!",
+      "loading": "Einen Moment, bitte.",
+      "locked": "Diese Stufe ist noch zu. Spiel zuerst die anderen."
     }
   },
   "kidForm": {

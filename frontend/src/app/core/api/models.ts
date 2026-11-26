@@ -20,6 +20,8 @@ export interface AuthConfig {
   readonly registrationEnabled: boolean;
   readonly emailEnabled: boolean;
   readonly setupRequired: boolean;
+  /** The server has SETUP_TOKEN set: the setup form must send it. */
+  readonly setupTokenRequired?: boolean;
 }
 
 export interface MeResponse {

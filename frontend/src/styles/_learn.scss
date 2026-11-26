@@ -1,0 +1,285 @@
+// Shared look of the learning player and its exercises (kid mode, touch first).
+
+@mixin board-light {
+  --mu-board-a: #e6f6dc;
+  --mu-board-b: #cdeebf;
+  --mu-board-glow: rgb(255 255 255 / 0.6);
+}
+
+@mixin board-dark {
+  --mu-board-a: #24473a;
+  --mu-board-b: #1b382d;
+  --mu-board-glow: rgb(255 255 255 / 0.08);
+}
+
+:root {
+  @include board-light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include board-dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  @include board-dark;
+}
+
+.mu-ex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mu-space-5);
+  width: 100%;
+}
+
+.mu-ex__stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mu-space-4);
+  width: 100%;
+  padding: var(--mu-space-4);
+  border-radius: var(--mu-radius-chunky);
+  background: var(--mu-color-surface-raised);
+  box-shadow: inset 0 0 0 3px var(--mu-color-border);
+}
+
+.mu-ex__answer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mu-space-4);
+  width: 100%;
+}
+
+.mu-ex__check {
+  min-width: min(100%, 220px);
+  font-size: var(--mu-font-size-lg);
+}
+
+.mu-number {
+  font: 800 clamp(2.25rem, 1.6rem + 3vw, 3.25rem) / 1 var(--mu-font-learn);
+  color: var(--mu-color-text);
+}
+
+// A blank the kid fills (keypad answers, number house, wall, sequence).
+.mu-blank {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  min-height: 72px;
+  padding: 0 var(--mu-space-2);
+  border: 4px dashed var(--mu-color-sky-strong);
+  border-radius: var(--mu-radius-rounded);
+  background: var(--mu-color-surface);
+  color: var(--mu-color-text);
+  font: 800 2.25rem/1 var(--mu-font-learn);
+
+  &--active {
+    border-style: solid;
+    border-color: var(--mu-color-focus);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--mu-color-focus) 30%, transparent);
+  }
+
+  &--filled {
+    border-style: solid;
+  }
+
+  &--revealed {
+    border-style: solid;
+    border-color: var(--mu-color-success);
+    background: color-mix(in srgb, var(--mu-color-success) 14%, var(--mu-color-surface));
+    animation: mu-pop-in 0.45s var(--mu-ease-bounce) both;
+  }
+}
+
+button.mu-blank {
+  cursor: pointer;
+}
+
+.mu-choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--mu-space-3);
+  width: 100%;
+}
+
+.mu-choice {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  min-height: 80px;
+  padding: var(--mu-space-2) var(--mu-space-3);
+  border: 3px solid var(--mu-color-signpost-black);
+  border-radius: var(--mu-radius-chunky);
+  background: var(--mu-choice-tint, #fffdf8);
+  color: var(--mu-color-signpost-black);
+  font: 800 clamp(2rem, 1.5rem + 2vw, 2.75rem) / 1 var(--mu-font-learn);
+  cursor: pointer;
+  box-shadow: 0 6px 0 rgb(0 0 0 / 0.28);
+  touch-action: manipulation;
+  transition:
+    transform var(--mu-motion-fast) ease-out,
+    box-shadow var(--mu-motion-fast) ease-out;
+
+  @media (hover: hover) {
+    &:hover:not([aria-disabled='true']) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 0 rgb(0 0 0 / 0.28);
+    }
+  }
+
+  &:active:not([aria-disabled='true']) {
+    transform: translateY(5px);
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.28);
+  }
+
+  &:focus-visible {
+    outline: 5px solid var(--mu-color-focus);
+    outline-offset: 3px;
+  }
+
+  &[aria-disabled='true'] {
+    cursor: default;
+  }
+
+  &--selected {
+    box-shadow:
+      0 0 0 4px var(--mu-color-bg),
+      0 0 0 8px var(--mu-color-sky-strong);
+  }
+
+  &--revealed {
+    border-width: 5px;
+    border-color: var(--mu-color-success);
+    animation: mu-pop-in 0.45s var(--mu-ease-bounce) both;
+  }
+}
+
+.mu-choices[data-kind='picture'] .mu-choice,
+.mu-choices[data-kind='custom'] .mu-choice {
+  min-width: 112px;
+  min-height: 112px;
+  padding: var(--mu-space-3);
+}
+
+.mu-choice__picture {
+  width: clamp(64px, 18vw, 96px);
+  height: clamp(64px, 18vw, 96px);
+}
+
+.mu-choice__badge {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: var(--mu-color-success);
+  color: var(--mu-color-on-success);
+
+  .mu-icon {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+// Murmeli's demo points the kid's attention at a part of the exercise.
+.mu-cue {
+  border-radius: var(--mu-radius-chunky);
+  animation: mu-cue-glow 1.2s ease-in-out infinite;
+}
+
+@keyframes mu-cue-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--mu-color-sun) 70%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 12px color-mix(in srgb, var(--mu-color-sun) 35%, transparent);
+  }
+}
+
+@keyframes mu-count-pop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.35);
+    filter: drop-shadow(0 0 6px var(--mu-color-sun));
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes mu-pop-in {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes mu-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mu-cue {
+    animation: none;
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--mu-color-sun) 70%, transparent);
+  }
+}
+
+.mu-button--big {
+  font-size: var(--mu-font-size-lg);
+}
+
+.mu-learn-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--mu-space-3);
+}
+
+.mu-learn-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mu-space-4);
+  padding: var(--mu-space-7) var(--mu-space-4);
+  font-size: var(--mu-font-size-lg);
+  font-weight: 700;
+  text-align: center;
+
+  p {
+    margin: 0;
+  }
+}
+
+.mu-learn-state__title {
+  margin: 0;
+  font-size: var(--mu-font-size-lg);
+  font-weight: 800;
+}

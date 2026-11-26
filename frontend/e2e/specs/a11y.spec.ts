@@ -2,7 +2,15 @@ import AxeBuilder from '@axe-core/playwright';
 import { type Page, expect, test } from '@playwright/test';
 import { SCENARIOS, openScenario } from '../helpers/scenarios';
 
-const DARK_TOO = new Set(['welcome', 'login', 'profile picker', 'PIN view', 'learn']);
+const DARK_TOO = new Set([
+  'welcome',
+  'login',
+  'profile picker',
+  'PIN view',
+  'learn',
+  'player',
+  'demo',
+]);
 
 async function seriousViolations(page: Page) {
   const results = await new AxeBuilder({ page })

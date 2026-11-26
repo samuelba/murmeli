@@ -5,6 +5,8 @@ const baseURL = process.env['E2E_BASE_URL'] ?? `http://localhost:${port}`;
 const isCI = !!process.env['CI'];
 
 export default defineConfig({
+  // @murmeli/content is a symlinked ESM package: load it as is, never transpile it.
+  build: { external: ['**/content/dist/**'] },
   testDir: './e2e/specs',
   outputDir: './e2e-results',
   fullyParallel: true,
