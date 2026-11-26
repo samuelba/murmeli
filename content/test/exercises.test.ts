@@ -30,6 +30,17 @@ const VALID: Record<ExerciseTypeId, unknown> = {
   syllables: { pictures: ['apple', 'mouse'] },
   'word-picture': { words: ['apple', 'mouse', 'cat'] },
   'build-word': { words: ['mouse'] },
+  'times-table': { rows: [2, 5, 10] },
+  'division-share': { divisors: [2, 3], objects: ['apple'] },
+  clock: { steps: 'half' },
+  'money-chf': { mode: 'total', maxTotal: 10 },
+  'trace-letter': { letters: ['A', 'm', '3'] },
+  'listen-write': { words: ['mouse'] },
+  'sentence-picture': {
+    kind: 'position',
+    subjects: ['mouse', 'cat'],
+    objects: ['bed'],
+  },
 };
 
 const INVALID: [ExerciseTypeId, unknown, RegExp][] = [
@@ -134,11 +145,58 @@ const INVALID: [ExerciseTypeId, unknown, RegExp][] = [
   ['syllables', { pictures: ['apple'] }, /params\.pictures/],
   ['word-picture', { words: ['apple', 'mouse'], choices: 3 }, /choices exceed/],
   ['build-word', { words: ['mouse'], extraTiles: 9 }, /params\.extraTiles/],
+  [
+    'times-table',
+    { rows: [2], minFactor: 5, maxFactor: 3 },
+    /minFactor must not exceed/,
+  ],
+  [
+    'times-table',
+    { rows: [2], mode: 'row', minFactor: 1, maxFactor: 3 },
+    /at least 4 factors/,
+  ],
+  [
+    'times-table',
+    { rows: [2], mode: 'missing-factor', minFactor: 0 },
+    /product is 0/,
+  ],
+  ['times-table', { rows: [11] }, /params\.rows/],
+  [
+    'division-share',
+    { divisors: [2], objects: ['apple'], minQuotient: 6, maxQuotient: 2 },
+    /minQuotient/,
+  ],
+  ['division-share', { divisors: [1], objects: ['apple'] }, /params\.divisors/],
+  ['clock', { steps: 'minute' }, /params\.steps/],
+  [
+    'money-chf',
+    { mode: 'total', minItems: 5, maxItems: 2, maxTotal: 10 },
+    /minItems must not exceed/,
+  ],
+  [
+    'money-chf',
+    { mode: 'total', group: 'minor', minItems: 3, maxTotal: 10 },
+    /CHF needs a larger maxTotal/,
+  ],
+  ['money-chf', { mode: 'pay', maxTotal: 1 }, /params\.maxTotal/],
+  ['trace-letter', { letters: ['$'] }, /no stroke data/],
+  ['trace-letter', { letters: ['A'], tolerance: 9 }, /params\.tolerance/],
+  ['listen-write', { words: ['mouse'], maxLength: 9 }, /params\.maxLength/],
+  [
+    'sentence-picture',
+    { kind: 'position', subjects: ['cat'], objects: ['cat'] },
+    /only 0 different/,
+  ],
+  [
+    'sentence-picture',
+    { kind: 'count', pictures: ['apple'], min: 4, max: 3 },
+    /min must not exceed max/,
+  ],
 ];
 
 describe('exercise type registry', () => {
-  it('has the 15 first-set types with schemas, frames and descriptions', () => {
-    assert.equal(EXERCISE_TYPE_IDS.length, 15);
+  it('has all exercise types with schemas, frames and descriptions', () => {
+    assert.equal(EXERCISE_TYPE_IDS.length, 22);
     for (const id of EXERCISE_TYPE_IDS) {
       assert.equal(EXERCISE_TYPES[id].id, id);
       assert.equal(

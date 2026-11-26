@@ -23,11 +23,18 @@ export interface PictureRequirement {
   readonly maxSyllables?: number;
   readonly maxLength?: number;
   readonly initialIn?: readonly string[];
+  readonly regularFirstSound?: boolean;
 }
 
 export interface CarrierRequirement {
   readonly kind: 'carrier';
   readonly grapheme: string;
+  readonly path: readonly PathSegment[];
+}
+
+export interface LetterRequirement {
+  readonly kind: 'letter';
+  readonly letter: string;
   readonly path: readonly PathSegment[];
 }
 
@@ -39,7 +46,10 @@ export interface InitialSoundRequirement {
 }
 
 export type Requirement =
-  PictureRequirement | CarrierRequirement | InitialSoundRequirement;
+  | PictureRequirement
+  | CarrierRequirement
+  | LetterRequirement
+  | InitialSoundRequirement;
 
 export interface ParamIssue {
   readonly path: readonly PathSegment[];
@@ -69,6 +79,7 @@ export interface ExerciseTypeDef<S extends z.ZodType = z.ZodType> {
   requirements(params: z.output<S>): Requirement[];
   issues(params: z.output<S>, ctx: IssueContext): ParamIssue[];
   frameUses(params: z.output<S>, ctx: SlotContext): FrameUse[];
+  labels?(params: z.output<S>, ctx: SlotContext): string[];
 }
 
 export function defineExerciseType<

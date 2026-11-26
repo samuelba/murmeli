@@ -85,6 +85,12 @@ function addExercise(
       }
     }
   }
+  for (const label of def.labels?.(spec.params, {
+    locale,
+    pictures: content.pictures,
+  }) ?? []) {
+    set.add(label, `label:${spec.type}`);
+  }
 }
 
 function addLexicon(set: SpeakableSet, lexicon: Lexicon): void {

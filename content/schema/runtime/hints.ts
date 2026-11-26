@@ -89,6 +89,47 @@ export const HINTS = {
     'de-CH': 'Sprich das Wort langsam. Welchen Laut hörst du zuerst?',
     'en-US': 'Say the word slowly. Which sound comes first?',
   },
+  'skip-count': {
+    'de-CH': 'Zähle in Schritten, zum Beispiel 5, 10, 15.',
+    'en-US': 'Count in steps, like 5, 10, 15.',
+  },
+  'times-row': {
+    'de-CH': 'Sag die Reihe auf, bis du die Zahl findest.',
+    'en-US': 'Say the times table row until you find the number.',
+  },
+  'share-one-by-one': {
+    'de-CH': 'Verteile eins nach dem anderen auf die Teller.',
+    'en-US': 'Share them out one by one onto the plates.',
+  },
+  'clock-hands': {
+    'de-CH':
+      'Der kurze Zeiger zeigt die Stunde. Der lange Zeiger zeigt die Minuten.',
+    'en-US': 'The short hand shows the hour. The long hand shows the minutes.',
+  },
+  'count-the-money': {
+    'de-CH': 'Zähle das Geld zusammen. Beginne mit dem grössten Stück.',
+    'en-US': 'Add up the money. Start with the biggest piece.',
+  },
+  'stroke-count': {
+    'de-CH': 'Schau genau, wie viele Striche es braucht.',
+    'en-US': 'Look closely at how many lines you need.',
+  },
+  'start-at-dot': {
+    'de-CH': 'Beginne beim Punkt und fahre in Pfeilrichtung.',
+    'en-US': 'Start at the dot and follow the arrow.',
+  },
+  'stroke-order': {
+    'de-CH': 'Achte auf die Reihenfolge: Zuerst kommt Strich eins.',
+    'en-US': 'Mind the order: line one comes first.',
+  },
+  'trace-slowly': {
+    'de-CH': 'Fahre langsam genau auf der Linie.',
+    'en-US': 'Trace slowly right on the line.',
+  },
+  'read-each-word': {
+    'de-CH': 'Lies jedes Wort genau. Wer ist wo?',
+    'en-US': 'Read each word carefully. Who is where?',
+  },
 } as const satisfies Record<string, Readonly<Record<Locale, string>>>;
 
 export type HintKey = keyof typeof HINTS;

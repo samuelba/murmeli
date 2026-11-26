@@ -1,0 +1,97 @@
+# Uhrenturm: reading full and half hours on an analog clock (Kindergarten 2, into 1st class).
+id: math-uhrenturm
+order: 4
+grade: KG2
+requires: [math-zahlenwiese]
+title: { de-CH: Uhrenturm, en-US: Clock Tower }
+scene: tower
+skills:
+  - id: math.clock.hours
+    lp21: MA.3.A.1
+    title: { de-CH: Volle und halbe Stunden, en-US: Hours and half hours }
+levels:
+  - id: math-uhrenturm-01
+    title: { de-CH: Volle Stunden, en-US: Full Hours }
+    skill: math.clock.hours
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: clock, params: { steps: hour, labels: digital, choices: 2 } }
+      target: '3:00'
+      steps:
+        - say: { de-CH: "Die Uhr hat einen kurzen und einen langen Zeiger.", en-US: "The clock has a short hand and a long hand." }
+          action: { highlight: clock }
+        - say: { de-CH: "Der lange Zeiger zeigt nach oben. Der kurze Zeiger zeigt auf die Drei.", en-US: "The long hand points straight up. The short hand points to three." }
+          action: { highlight: clock }
+        - say: { de-CH: "Es ist drei Uhr!", en-US: "It is three o'clock!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: clock, weight: 1, params: { steps: hour, labels: digital, choices: 2 } }
+
+  - id: math-uhrenturm-02
+    title: { de-CH: Welche Stunde ist es?, en-US: Which Hour Is It? }
+    skill: math.clock.hours
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: clock, params: { steps: hour, choices: 3 } }
+      target: '7:00'
+      steps:
+        - say: { de-CH: "Ich schaue zuerst auf den kurzen Zeiger.", en-US: "First I look at the short hand." }
+          action: { highlight: clock }
+        - say: { de-CH: "Er zeigt auf die Sieben. Es ist sieben Uhr.", en-US: "It points to seven. It is seven o'clock." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: clock, weight: 1, params: { steps: hour, choices: 3 } }
+
+  - id: math-uhrenturm-03
+    title: { de-CH: Stunden lesen, en-US: Reading the Hours }
+    skill: math.clock.hours
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: clock, params: { steps: hour, labels: words, choices: 3 } }
+      target: '12:00'
+      steps:
+        - say: { de-CH: "Beide Zeiger zeigen nach oben.", en-US: "Both hands point straight up." }
+          action: { highlight: clock }
+        - say: { de-CH: "Dann ist es zwölf Uhr. Mittag!", en-US: "Then it is twelve o'clock. Lunch time!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: clock, weight: 1, params: { steps: hour, labels: words, choices: 3 } }
+      - { type: clock, weight: 1, params: { steps: hour, choices: 4 } }
+
+  - id: math-uhrenturm-04
+    title: { de-CH: Halbe Stunden, en-US: Half Hours }
+    skill: math.clock.hours
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: clock, params: { steps: half, choices: 3 } }
+      target: '2:30'
+      steps:
+        - say: { de-CH: "Der lange Zeiger zeigt nach unten. Die Stunde ist halb vorbei.", en-US: "The long hand points straight down. Half of the hour is over." }
+          action: { highlight: clock }
+        - say: { de-CH: "Der kurze Zeiger ist zwischen der Zwei und der Drei. Wir sagen: halb drei.", en-US: "The short hand is between two and three. We say: half past two." }
+          action: { highlight: choices }
+        - say: { de-CH: "Ich tippe auf halb drei.", en-US: "I tap half past two." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: clock, weight: 1, params: { steps: half, choices: 3 } }
+
+  - id: math-uhrenturm-05
+    title: { de-CH: Volle und halbe Stunden, en-US: Hours and Half Hours }
+    skill: math.clock.hours
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: clock, params: { steps: half, labels: words, choices: 3 } }
+      target: '6:30'
+      steps:
+        - say: { de-CH: "Wo zeigt der lange Zeiger hin? Nach unten. Also halb.", en-US: "Where does the long hand point? Down. So it is half past." }
+          action: { highlight: clock }
+        - say: { de-CH: "Es ist halb sieben.", en-US: "It is half past six." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: clock, weight: 1, params: { steps: half, labels: words, choices: 3 } }
+      - { type: clock, weight: 1, params: { steps: half, choices: 4 } }

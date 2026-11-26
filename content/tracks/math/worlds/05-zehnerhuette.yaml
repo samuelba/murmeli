@@ -2,7 +2,7 @@
 # Comes before the Plus Bridge: seeing 5 + 2 at a glance and splitting numbers are the basis of
 # addition strategies.
 id: math-zehnerhuette
-order: 4
+order: 5
 grade: '1'
 requires: [math-zahlenbach]
 title: { de-CH: Zehnerhütte, en-US: Ten Hut }

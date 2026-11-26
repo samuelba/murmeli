@@ -1,6 +1,6 @@
 # Rechenberg: adding and subtracting within 20, crossing ten step by step, and number walls (1st class).
 id: math-rechenberg
-order: 6
+order: 7
 grade: '1'
 requires: [math-plusbruecke]
 title: { de-CH: Rechenberg, en-US: Calculation Mountain }

@@ -100,7 +100,7 @@ describe('stats', () => {
   it('counts tracks, worlds and levels per grade', () => {
     const stats = contentStats(content);
     assert.equal(stats.totals.tracks, 3);
-    assert.equal(stats.totals.exerciseTypes, 15);
+    assert.equal(stats.totals.exerciseTypes, 22);
     const math = stats.tracks.find((t) => t.id === 'math')!;
     assert.equal(math.byGrade.KG1.worlds, 2);
     assert.equal(

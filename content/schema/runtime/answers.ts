@@ -33,3 +33,30 @@ export type ValuesAnswer = z.infer<typeof ValuesAnswerSchema>;
 export type CellsAnswer = z.infer<typeof CellsAnswerSchema>;
 export type CountAnswer = z.infer<typeof CountAnswerSchema>;
 export type LettersAnswer = z.infer<typeof LettersAnswerSchema>;
+
+const coordinate = z.number().finite().min(-20).max(120);
+export const StrokesAnswerSchema = z.strictObject({
+  strokes: z
+    .array(
+      z
+        .array(z.tuple([coordinate, coordinate]))
+        .min(1)
+        .max(200),
+    )
+    .min(1)
+    .max(6),
+});
+export const CoinsAnswerSchema = z.strictObject({
+  coins: z
+    .array(z.string().regex(/^[a-z]{3}-[0-9a-z]+$/))
+    .min(1)
+    .max(30),
+});
+export const MoneyAnswerSchema = z.union([
+  ValueAnswerSchema,
+  CoinsAnswerSchema,
+  RelationAnswerSchema,
+]);
+
+export type StrokesAnswer = z.infer<typeof StrokesAnswerSchema>;
+export type CoinsAnswer = z.infer<typeof CoinsAnswerSchema>;

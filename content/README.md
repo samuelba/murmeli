@@ -100,6 +100,7 @@ The validator reports every problem at once, as `file: path: message`:
   `<script>`, `<foreignObject>`, embedding or link elements, event handler attributes, `javascript:` or `data:` URLs,
   `@import`, or any `href`/`url()` that is not a `#fragment`. Files are limited to 256 KB.
 - **Sharp s:** a raw-text scan of every YAML file, plus the LocalizedText check.
+- **Demos and generators:** each demo is generated in every locale of its track, and the result must show its `target`. Each generator is generated once per locale as a smoke test, so a runtime error becomes a validation issue.
 
 ## Exercise types
 
@@ -120,6 +121,13 @@ The validator reports every problem at once, as `file: path: message`:
 | `syllables` | `pictures` (with syllables), `maxSyllables`, `showWord` |
 | `word-picture` | `words` (picture ids), `choices`, `case` upper/natural, `showSyllables` |
 | `build-word` | `words`, `extraTiles`, `audio` (say the word) or picture only, `case`, `maxLength` |
+| `times-table` | `rows` (e.g. [2, 5, 10]), `mode` product / missing-factor / row (Einmaleins-Reihe), `minFactor`/`maxFactor`, `commute`, `answerMode` (keypad by default) |
+| `division-share` | `divisors` (number of plates), `minQuotient`/`maxQuotient`, `objects` (pictures with a plural) |
+| `clock` | `steps` hour / half / quarter / five, `labels` words / digital / both, `choices` |
+| `money-chf` | `mode` total / pay / compare, `currency` auto (CHF in de-CH, USD in en-US) / CHF / USD, `group` major (Franken, dollars) / minor (Rappen, cents), `minItems`/`maxItems`, `maxTotal` (in units of the group) |
+| `trace-letter` | `letters` (A-Z, a-z, Ä Ö Ü ä ö ü, 0-9), `tolerance` (0.5-3), `strictOrder`, `strictDirection`, `showModel` |
+| `listen-write` | `words` (pictures with a regular first sound), `extraTiles`, `case`, `maxLength` (2-6) |
+| `sentence-picture` | `kind: position` (`subjects`, `objects`, `relations` on/under/next-to) or `kind: count` (`pictures`, `min`/`max` 2-5), `choices` |
 
 Graphemes are written capitalized (`M`, `Sch`, `Ei`, `Sh`). The display case is a param.
 
@@ -206,6 +214,34 @@ const result = parsed.success ? checkAnswer(item.solution, parsed.answer) : { co
 | syllables | `pictureId`, `maxCount` (drum taps allowed), `word?` (only with `showWord`) | `{ count }` |
 | word-picture | `word` (already in the display case), `syllables?`, `choices[{id, pictureId}]` | `{ choiceId }` |
 | build-word | `pictureId`, `audio`, `length`, `tiles[{id, letter}]` (shuffled, plus `extraTiles` distractors) | `{ letters }`, case-sensitive and in order |
+| times-table | `mode`, `a`, `b`, `product` (null for the unknown); row mode: `row`, `items` with a null gap | `{ value }` |
+| division-share | `total`, `groups`, `pictureId`, `answerMode`, `choices?` | `{ value }` (per plate) |
+| clock | `hour` (1-12), `minute` for the analog face, `choices[{id, label, digital?}]` | `{ choiceId }` |
+| money-chf | total: `items[{denomination, label, kind, file}]`; pay: `amount` + `wallet` (one of each denomination); compare: `left`/`right` purses. Always `currency` and `group` | total `{ value }`, pay `{ coins: denominationId[] }` (any set with the right sum), compare `{ relation }` |
+| trace-letter | `char`, `strokes` (model points, see below), `guides`, `showModel` | `{ strokes: [x, y][][] }` (max 6 strokes, 200 points each) |
+| listen-write | `length`, `tiles[{id, letter}]` (no picture: the word is only heard; replay = play `prompt.speak` again) | `{ letters }` |
+| sentence-picture | `sentence`, `choices[{id, scene}]` with scene `{kind: 'position', subject, relation, object}` or `{kind: 'count', pictureId, count}` | `{ choiceId }` |
+
+**Checks that are not plain equality.** A solution can carry a JSON `rule` that `checkAnswer` uses instead of deep equality. `coin-sum` accepts any coins of the wallet whose values add up to the amount. `trace` scores the drawn strokes (see below). `solution.answer` is still a correct answer that can be shown: the greedy coin set, or the model strokes.
+
+### Stroke format for tracing (`GLYPHS`)
+
+- **Box and guides:** every glyph lives in a 0-100 box with y pointing down. The guide lines are in `GLYPH_GUIDES`: ascender and cap height 10, x-height 45, baseline 80, descender 100.
+- **Shape:** a glyph is an ordered list of strokes (at most 6). Each stroke is a polyline `[x, y][]`. Curves are sampled into short segments every 15 degrees. The style is a simple school print close to Basisschrift: round letters start at the top right and go counter-clockwise, lines go top to bottom and left to right.
+- **Start and direction:** the first point of a stroke is its start dot, and the point order is its direction. The array order is the stroke order. Dots (on i, j and umlauts) are tiny strokes and are judged as taps.
+- **Rendering:** the frontend can draw the model faintly, put a numbered start dot at each stroke's first point, and animate each stroke along its points in order for the demo (`trace` action).
+- **Scoring (`scoreTrace`):**
+  1. Wrong stroke count gives the hint `stroke-count`.
+  2. Each model and drawn stroke is resampled to 32 points by arc length, and their mean point distance is compared, both forward and reversed. A dot is compared by its centre, and the drawing may span at most 20 units.
+  3. With `strictOrder: false`, the best matching of drawn to model strokes is used; otherwise the order must match, and the hint is `stroke-order` when another order would have passed.
+  4. A stroke passes if its distance is at most `10 × tolerance`. If it only passes reversed and `strictDirection` is set, the hint is `start-at-dot`. Anything else gives `trace-slowly`.
+- **What the tests show:** with `tolerance: 1`, tracing with ±3 units of wobble, an offset of up to 4 units and any point density passes for every glyph. Scribbles, and other letters with the same stroke count, fail.
+
+**Money pictures.** `pictures/money/<denomination>.svg` are self-drawn generic coins and notes with the value written on them, with no national symbols. Denominations are listed in `DENOMINATIONS`: CHF 5, 10, 20 and 50 Rp, 1, 2 and 5 Fr. as coins, and 10 and 20 Fr. as notes. USD: 1, 5, 10 and 25¢ as coins, and $1, $5, $10 and $20 as bills. The validator checks that every denomination has a safe SVG.
+
+**Clock phrasing.** `timeWords()` uses Swiss German school phrasing ("halb drei" = 2:30, "Viertel nach drei", "Viertel vor drei", "fünf vor halb vier"). American English uses "half past two", "quarter to three", "twenty-five past five". Digital labels look like `2:30`. Distractors include the typical confusions (the next or previous hour, mirrored minutes, and the "halb" trap).
+
+**Sentences.** `sceneSentence()` builds "Die Maus ist auf dem Bett." (dative article from `article`), "The mouse is on the bed." and "Ich sehe drei Äpfel." / "I see three apples." from picture words. The frontend draws a scene from two pictures and a relation, or from N copies of one picture. All clock labels and sentences are listed by `npm run speakables` (sources `label:clock`, `label:sentence-picture`).
 
 ### API shapes and scoring (`api.ts`)
 
@@ -244,9 +280,9 @@ and the attribution and the list of modified files are in `pictures/NOTICE.md`. 
 
 | Track | Worlds (grade) |
 |---|---|
-| `math` (de-CH, en-US) | Zahlenwiese (KG1), Formenwald (KG1), Zahlenbach (KG2), Zehnerhütte (1), Plusbrücke (1), Rechenberg (1), Hundertergipfel (2) |
-| `reading-de` (de-CH) | Lautwiese (KG2), Silbenwald (KG2), Buchstabenbach (1), Wörterhaus (1), Wörterwerkstatt (1) |
-| `reading-en` (en-US) | Sound Garden (KG2), Syllable Park (KG2), Blending Bay (1), Word Workshop (1) |
+| `math` (de-CH, en-US) | Zahlenwiese (KG1), Formenwald (KG1), Zahlenbach (KG2), Uhrenturm (KG2), Zehnerhütte (1), Plusbrücke (1), Rechenberg (1), Hundertergipfel (2), Märtplatz (2), Einmaleinsalp (2), Uhrenturm-Spitze (2) |
+| `reading-de` (de-CH) | Lautwiese (KG2), Silbenwald (KG2), Buchstabenbach (1), Wörterhaus (1), Wörterwerkstatt (1), Schreibwiese (1), Hörwerkstatt (1), Satzgarten (1) |
+| `reading-en` (en-US) | Sound Garden (KG2), Syllable Park (KG2), Blending Bay (1), Word Workshop (1), Tracing Trail (1), Listening Lab (1), Sentence Garden (1) |
 
 The Zehnerhütte (ten-frame and Zahlenhaus) comes before the Plusbrücke, because structured quantities and splitting
 numbers are the basis of the addition strategies taught in 1st class. Formenwald has no `requires`, so it is open from the start.
@@ -261,6 +297,9 @@ numbers are the basis of the addition strategies taught in 1st class. Formenwald
 | MA.1.C.1 | Representations: ten-frame, number line |
 | MA.2.A.1 | Shapes |
 | MA.2.B.1 | Picture patterns (uncertain; could also be MA.1.B.1) |
+| MA.3.A.1 | Time (clock) and money (uncertain) |
+| D.4.A.1 | Handwriting (tracing) |
+| D.2.B.1 | Reading sentences (uncertain; could be D.2.A.1) |
 | D.1.A.1 | Phonological awareness: initial sounds, syllables |
 | D.2.A.1 | Letter knowledge and reading words |
 | D.5.E.1 | Building words / spelling (uncertain; could be D.4) |

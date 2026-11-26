@@ -194,3 +194,75 @@ export type {
   WordPicturePayload,
   BuildWordPayload,
 } from './runtime/types.ts';
+export {
+  clock,
+  ClockParamsSchema,
+  divisionShare,
+  DivisionShareParamsSchema,
+  enumerateTimes,
+  moneyChf,
+  moneyFrameKey,
+  MoneyParamsSchema,
+  payAmounts,
+  timesTable,
+  TimesTableParamsSchema,
+} from './exercises/advanced.ts';
+export type {
+  MoneyParams,
+  TimesProblem,
+  TimesTableParams,
+} from './exercises/advanced.ts';
+export {
+  listenWrite,
+  ListenWriteParamsSchema,
+  sentencePicture,
+  SentencePictureParamsSchema,
+  sentenceScenes,
+  traceLetter,
+  TraceLetterParamsSchema,
+} from './exercises/writing.ts';
+export type { SentencePictureParams } from './exercises/writing.ts';
+export { clockTimes, digitalTime, timeWords } from './clock.ts';
+export type { ClockStep, ClockTime } from './clock.ts';
+export {
+  currencyFor,
+  DENOMINATIONS,
+  denominationsFor,
+  LOCALE_CURRENCY,
+  moneyUnit,
+} from './money.ts';
+export type { Currency, Denomination, MoneyGroup } from './money.ts';
+export { GLYPH_CHARS, GLYPH_GUIDES, GLYPHS, strokeLength } from './glyphs.ts';
+export type { Glyph, GlyphPoint, GlyphStroke } from './glyphs.ts';
+export {
+  MAX_SENTENCE_COUNT,
+  RELATIONS,
+  sceneKey,
+  sceneSentence,
+} from './sentences.ts';
+export type { Relation, Scene } from './sentences.ts';
+export {
+  resample,
+  scoreTrace,
+  TRACE_SAMPLES,
+  TRACE_THRESHOLD,
+} from './runtime/trace.ts';
+export type { TraceOptions, TraceResult } from './runtime/trace.ts';
+export { greedyCoins } from './runtime/advanced.ts';
+export type {
+  ClockChoice,
+  ClockPayload,
+  DivisionSharePayload,
+  MoneyItem,
+  MoneyPayload,
+  TimesTablePayload,
+} from './runtime/advanced.ts';
+export type {
+  ListenWritePayload,
+  SceneChoice,
+  SentencePicturePayload,
+  TraceLetterPayload,
+} from './runtime/writing.ts';
+export { demoSeed } from './runtime/exercise.ts';
+export type { CheckRule } from './runtime/types.ts';
+export { wordTiles } from './runtime/literacy.ts';

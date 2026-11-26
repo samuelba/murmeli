@@ -239,6 +239,32 @@ export function wordLetters(word: string): string[] {
   return [...word].filter((char) => /\p{L}/u.test(char));
 }
 
+export function wordTiles(
+  rng: Rng,
+  ctx: RuntimeContext,
+  pictureId: string,
+  extraTiles: number,
+  letterCase: 'upper' | 'natural',
+): { letters: string[]; tiles: { id: string; letter: string }[] } {
+  const letters = wordLetters(
+    caseWord(wordOf(ctx, pictureId), letterCase, ctx.locale),
+  );
+  const lowerWord = letters.join('').toLocaleLowerCase(ctx.locale);
+  const spare = [...ALPHABET[ctx.locale]].filter(
+    (char) => !lowerWord.includes(char),
+  );
+  const extra = rng
+    .sample(spare, extraTiles)
+    .map((char) =>
+      letterCase === 'upper' ? char.toLocaleUpperCase(ctx.locale) : char,
+    );
+  const tiles = withIds(
+    rng,
+    rng.shuffle([...letters, ...extra]).map((letter) => ({ letter })),
+  );
+  return { letters, tiles };
+}
+
 export const buildWordRuntime: ExerciseRuntime<
   Params<'build-word'>,
   BuildWordPayload,
@@ -247,21 +273,12 @@ export const buildWordRuntime: ExerciseRuntime<
   answerSchema: LettersAnswerSchema,
   generate(rng, p, ctx) {
     const pictureId = pickFocus(rng, p.words, ctx);
-    const letters = wordLetters(
-      caseWord(wordOf(ctx, pictureId), p.case, ctx.locale),
-    );
-    const lowerWord = letters.join('').toLocaleLowerCase(ctx.locale);
-    const spare = [...ALPHABET[ctx.locale]].filter(
-      (char) => !lowerWord.includes(char),
-    );
-    const extra = rng
-      .sample(spare, p.extraTiles)
-      .map((char) =>
-        p.case === 'upper' ? char.toLocaleUpperCase(ctx.locale) : char,
-      );
-    const tiles = withIds(
+    const { letters, tiles } = wordTiles(
       rng,
-      rng.shuffle([...letters, ...extra]).map((letter) => ({ letter })),
+      ctx,
+      pictureId,
+      p.extraTiles,
+      p.case,
     );
     return {
       prompt: p.audio

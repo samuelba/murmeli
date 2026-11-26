@@ -6,7 +6,7 @@ const content = require('@murmeli/content');
 
 test('require(esm) exposes the loader and the exercise registry', () => {
   assert.equal(typeof content.loadContent, 'function');
-  assert.equal(content.EXERCISE_TYPE_IDS.length, 15);
+  assert.equal(content.EXERCISE_TYPE_IDS.length, 22);
   const loaded = content.loadContent();
   assert.ok(loaded.tracks.length >= 3);
   const parsed = content.EXERCISE_PARAMS_SCHEMAS['add-sub'].safeParse({

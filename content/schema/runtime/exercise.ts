@@ -26,10 +26,24 @@ import {
   shapePickRuntime,
   tenFrameRuntime,
 } from './math.ts';
+import {
+  clockRuntime,
+  divisionShareRuntime,
+  moneyRuntime,
+  timesTableRuntime,
+} from './advanced.ts';
+import {
+  listenWriteRuntime,
+  sentencePictureRuntime,
+  traceLetterRuntime,
+} from './writing.ts';
+import { scoreTrace } from './trace.ts';
+import { CoinsAnswerSchema, StrokesAnswerSchema } from './answers.ts';
 import { createRng, hashString, itemSeed, mixSeed } from './rng.ts';
 import type { Rng } from './rng.ts';
 import type {
   CheckResult,
+  CheckRule,
   ExerciseRuntime,
   RuntimeContext,
   Solution as SolutionOf,
@@ -52,6 +66,13 @@ export const EXERCISE_RUNTIMES = {
   syllables: syllablesRuntime,
   'word-picture': wordPictureRuntime,
   'build-word': buildWordRuntime,
+  'times-table': timesTableRuntime,
+  'division-share': divisionShareRuntime,
+  clock: clockRuntime,
+  'money-chf': moneyRuntime,
+  'trace-letter': traceLetterRuntime,
+  'listen-write': listenWriteRuntime,
+  'sentence-picture': sentencePictureRuntime,
 } as const satisfies {
   [K in ExerciseTypeId]: ExerciseRuntime<ExerciseParams<K>, unknown, unknown>;
 };
@@ -114,13 +135,36 @@ export function parseAnswer(
     : { success: false };
 }
 
+function checkRule(rule: CheckRule, answer: unknown): CheckResult | boolean {
+  if (rule.kind === 'coin-sum') {
+    const parsed = CoinsAnswerSchema.safeParse(answer);
+    return (
+      parsed.success &&
+      parsed.data.coins.every((id) => rule.values[id] !== undefined) &&
+      parsed.data.coins.reduce((sum, id) => sum + (rule.values[id] ?? 0), 0) ===
+        rule.amount
+    );
+  }
+  const parsed = StrokesAnswerSchema.safeParse(answer);
+  if (!parsed.success) {
+    return false;
+  }
+  const { correct, hint } = scoreTrace(rule.glyph, parsed.data.strokes, rule);
+  return hint === undefined ? { correct } : { correct, hint };
+}
+
 export function checkAnswer(
   solution: SolutionOf<unknown>,
   answer: unknown,
 ): CheckResult {
-  return deepEqual(solution.answer, answer)
-    ? { correct: true }
-    : { correct: false, hint: solution.hint };
+  const outcome =
+    solution.rule !== undefined
+      ? checkRule(solution.rule, answer)
+      : deepEqual(solution.answer, answer);
+  if (typeof outcome !== 'boolean') {
+    return outcome;
+  }
+  return outcome ? { correct: true } : { correct: false, hint: solution.hint };
 }
 
 const RETRIES = 6;
@@ -171,12 +215,16 @@ export interface DemoInstance {
   }[];
 }
 
+export function demoSeed(levelId: string): number {
+  return hashString(`demo:${levelId}`);
+}
+
 export function generateDemo(
   level: Level,
   locale: Locale,
   content: PromptContent,
 ): DemoInstance {
-  const rng = createRng(hashString(`demo:${level.id}`));
+  const rng = createRng(demoSeed(level.id));
   const target = level.demo.target;
   const exercise = generateExercise(level.demo.exercise, rng, {
     locale,

@@ -1,0 +1,118 @@
+# Hörwerkstatt: a light dictation. Hear a short regular word and build it from letter tiles (no picture).
+id: reading-de-hoerwerkstatt
+order: 7
+grade: '1'
+requires: [reading-de-woerterwerkstatt]
+title: { de-CH: Hörwerkstatt }
+scene: workshop
+skills:
+  - { id: de.write.dictation, lp21: D.5.E.1, title: { de-CH: Gehörte Wörter schreiben } }
+  - { id: de.write.tiles, lp21: D.5.E.1, title: { de-CH: Wörter genau aufbauen } }
+levels:
+  - id: reading-de-hoerwerkstatt-01
+    title: { de-CH: "Kurze Wörter" }
+    skill: de.write.dictation
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: listen-write, params: { words: [watch], maxLength: 3 } }
+      target: watch
+      steps:
+        - say: { de-CH: "Hör gut zu: Uhr." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich spreche das Wort ganz langsam und suche Buchstabe für Buchstabe." }
+          action: { placeTiles: true }
+        - say: { de-CH: "Fertig! Da steht Uhr." }
+          action: { highlight: tiles }
+    generators:
+      - { type: listen-write, weight: 1, params: { words: [egg, watch, ear], extraTiles: 0, maxLength: 3 } }
+
+  - id: reading-de-hoerwerkstatt-02
+    title: { de-CH: "Hut, Bus und Wal" }
+    skill: de.write.dictation
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: listen-write, params: { words: [hat], maxLength: 3 } }
+      target: hat
+      steps:
+        - say: { de-CH: "Hör gut zu: Hut." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich spreche das Wort ganz langsam und suche Buchstabe für Buchstabe." }
+          action: { placeTiles: true }
+        - say: { de-CH: "Fertig! Da steht Hut." }
+          action: { highlight: tiles }
+    generators:
+      - { type: listen-write, weight: 1, params: { words: [hat, bus, whale, egg, ear], extraTiles: 0, maxLength: 3 } }
+
+  - id: reading-de-hoerwerkstatt-03
+    title: { de-CH: "Wörter mit vier Buchstaben" }
+    skill: de.write.dictation
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: listen-write, params: { words: [mouse], maxLength: 4 } }
+      target: mouse
+      steps:
+        - say: { de-CH: "Hör gut zu: Maus." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich spreche das Wort ganz langsam und suche Buchstabe für Buchstabe." }
+          action: { placeTiles: true }
+        - say: { de-CH: "Fertig! Da steht Maus." }
+          action: { highlight: tiles }
+    generators:
+      - { type: listen-write, weight: 1, params: { words: [mouse, moon, dog, nose], extraTiles: 0, maxLength: 4 } }
+
+  - id: reading-de-hoerwerkstatt-04
+    title: { de-CH: "Igel, Esel und Rose" }
+    skill: de.write.dictation
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: listen-write, params: { words: [rose], maxLength: 4 } }
+      target: rose
+      steps:
+        - say: { de-CH: "Hör gut zu: Rose." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich spreche das Wort ganz langsam und suche Buchstabe für Buchstabe." }
+          action: { placeTiles: true }
+        - say: { de-CH: "Fertig! Da steht Rose." }
+          action: { highlight: tiles }
+    generators:
+      - { type: listen-write, weight: 1, params: { words: [hedgehog, donkey, rose, sofa, llama], extraTiles: 0, maxLength: 4 } }
+
+  - id: reading-de-hoerwerkstatt-05
+    title: { de-CH: "Mit Extra-Buchstaben" }
+    skill: de.write.tiles
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: listen-write, params: { words: [nest], maxLength: 4 } }
+      target: nest
+      steps:
+        - say: { de-CH: "Hör gut zu: Nest." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich spreche das Wort ganz langsam und suche Buchstabe für Buchstabe." }
+          action: { placeTiles: true }
+        - say: { de-CH: "Fertig! Da steht Nest." }
+          action: { highlight: tiles }
+    generators:
+      - { type: listen-write, weight: 1, params: { words: [car, web, nest, duck, bed, ball], extraTiles: 2, maxLength: 4 } }
+
+  - id: reading-de-hoerwerkstatt-06
+    title: { de-CH: "Hörprofi" }
+    skill: de.write.tiles
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: listen-write, params: { words: [sofa], maxLength: 4 } }
+      target: sofa
+      steps:
+        - say: { de-CH: "Hör gut zu: Sofa." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich spreche das Wort ganz langsam und suche Buchstabe für Buchstabe." }
+          action: { placeTiles: true }
+        - say: { de-CH: "Fertig! Da steht Sofa." }
+          action: { highlight: tiles }
+    generators:
+      - { type: listen-write, weight: 1, params: { words: [hat, bus, whale, mouse, moon, dog, nose, hedgehog, donkey, rose, sofa, llama, car, web, nest, duck], extraTiles: 3, maxLength: 4 } }

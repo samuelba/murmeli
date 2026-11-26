@@ -1,0 +1,120 @@
+# Sentence Garden: read a short sentence and pick the matching picture.
+# Counting sentences first, then where something is (on, under, next to), with CVC-friendly words.
+id: reading-en-sentence-garden
+order: 7
+grade: '1'
+requires: [reading-en-blending-bay]
+title: { en-US: Sentence Garden }
+scene: garden
+skills:
+  - { id: en.read.sentences, ccss: RF.K.4, title: { en-US: Reading short sentences } }
+  - { id: en.read.where, ccss: RF.1.4, title: { en-US: Reading sentences with understanding } }
+levels:
+  - id: reading-en-sentence-garden-01
+    title: { en-US: "I see …" }
+    skill: en.read.sentences
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: sentence-picture, params: { kind: count, pictures: [cat, dog], min: 2, max: 3 } }
+      target: cat
+      steps:
+        - say: { en-US: "I read the sentence: I see two cats." }
+          action: { highlight: sentence }
+        - say: { en-US: "I look for the picture with two cats." }
+          action: { highlight: choices }
+        - say: { en-US: "Here are two cats. I tap it!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sentence-picture, weight: 1, params: { kind: count, pictures: [cat, dog, pig], min: 2, max: 3 } }
+
+  - id: reading-en-sentence-garden-02
+    title: { en-US: "How many?" }
+    skill: en.read.sentences
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: sentence-picture, params: { kind: count, pictures: [hen, fox], min: 2, max: 3 } }
+      target: hen
+      steps:
+        - say: { en-US: "I read: I see two hens." }
+          action: { highlight: sentence }
+        - say: { en-US: "I count the hens in each picture." }
+          action: { highlight: choices }
+        - say: { en-US: "This picture fits!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sentence-picture, weight: 1, params: { kind: count, pictures: [hen, fox, bat, duck], min: 2, max: 5 } }
+
+  - id: reading-en-sentence-garden-03
+    title: { en-US: "On or under?" }
+    skill: en.read.where
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: sentence-picture, params: { kind: position, subjects: [cat], objects: [bed, box], relations: [on, under] } }
+      target: cat
+      steps:
+        - say: { en-US: "I read: The cat is on the bed." }
+          action: { highlight: sentence }
+        - say: { en-US: "Where is the cat? On the bed, not under it." }
+          action: { highlight: choices }
+        - say: { en-US: "I tap this picture." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sentence-picture, weight: 1, params: { kind: position, subjects: [cat, dog], objects: [bed, box], relations: [on, under] } }
+
+  - id: reading-en-sentence-garden-04
+    title: { en-US: "Who is where?" }
+    skill: en.read.where
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: sentence-picture, params: { kind: position, subjects: [pig], objects: [van, bed], relations: [under, on] } }
+      target: pig
+      steps:
+        - say: { en-US: "I read: The pig is under the van." }
+          action: { highlight: sentence }
+        - say: { en-US: "I look closely: where is the pig?" }
+          action: { highlight: choices }
+        - say: { en-US: "Here it is, under the van!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sentence-picture, weight: 1, params: { kind: position, subjects: [cat, dog, pig], objects: [bed, box, van], relations: [on, under] } }
+
+  - id: reading-en-sentence-garden-05
+    title: { en-US: "Next to, on and under" }
+    skill: en.read.where
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: sentence-picture, params: { kind: position, subjects: [fox], objects: [log, box], relations: [next-to, on] } }
+      target: fox
+      steps:
+        - say: { en-US: "I read: The fox is next to the log." }
+          action: { highlight: sentence }
+        - say: { en-US: "Next to means right beside it." }
+          action: { highlight: choices }
+        - say: { en-US: "This picture fits!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sentence-picture, weight: 1, params: { kind: position, subjects: [cat, dog, hen, fox], objects: [bed, box, log, bus], relations: [on, under, next-to] } }
+
+  - id: reading-en-sentence-garden-06
+    title: { en-US: "Sentence pro" }
+    skill: en.read.where
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: sentence-picture, params: { kind: position, subjects: [dog], objects: [bus, bed], relations: [on, under] } }
+      target: dog
+      steps:
+        - say: { en-US: "I read: The dog is on the bus." }
+          action: { highlight: sentence }
+        - say: { en-US: "I read each word carefully." }
+          action: { highlight: choices }
+        - say: { en-US: "There is the dog on the bus!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sentence-picture, weight: 2, params: { kind: position, subjects: [cat, dog, pig, hen, fox, bat], objects: [bed, box, van, log, bus], choices: 4 } }
+      - { type: sentence-picture, weight: 1, params: { kind: count, pictures: [cat, dog, pig, hen, fox, bat], min: 2, max: 5, choices: 4 } }

@@ -1,0 +1,160 @@
+# Tracing Trail: trace letters in the phonics order (s a t p i n, m d g o c k, e u r h b f l, ...), small letters first.
+id: reading-en-tracing-trail
+order: 5
+grade: '1'
+requires: [reading-en-sound-garden]
+title: { en-US: Tracing Trail }
+scene: forest
+skills:
+  - { id: en.write.lower, ccss: L.K.1a, title: { en-US: Writing small letters } }
+  - { id: en.write.upper, ccss: L.K.1a, title: { en-US: Writing capital letters } }
+levels:
+  - id: reading-en-tracing-trail-01
+    title: { en-US: "s, a, t and p" }
+    skill: en.write.lower
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [s], tolerance: 1.3 } }
+      target: s
+      steps:
+        - say: { en-US: "Look, this is how I write s." }
+          action: { highlight: canvas }
+        - say: { en-US: "I start at the dot and follow the arrow." }
+          action: { trace: true }
+        - say: { en-US: "Now it's your turn. Go slowly on the line." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [s, a, t, p], tolerance: 1.3 } }
+
+  - id: reading-en-tracing-trail-02
+    title: { en-US: "i, n, m and d" }
+    skill: en.write.lower
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [m], tolerance: 1.3 } }
+      target: m
+      steps:
+        - say: { en-US: "Look, this is how I write m." }
+          action: { highlight: canvas }
+        - say: { en-US: "I start at the dot and follow the arrow." }
+          action: { trace: true }
+        - say: { en-US: "Now it's your turn. Go slowly on the line." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [i, n, m, d], tolerance: 1.3 } }
+      - { type: trace-letter, weight: 1, params: { letters: [s, a, t, p], tolerance: 1.3 } }
+
+  - id: reading-en-tracing-trail-03
+    title: { en-US: "g, o, c and k" }
+    skill: en.write.lower
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [o], tolerance: 1.3 } }
+      target: o
+      steps:
+        - say: { en-US: "Look, this is how I write o." }
+          action: { highlight: canvas }
+        - say: { en-US: "I start at the dot and follow the arrow." }
+          action: { trace: true }
+        - say: { en-US: "Now it's your turn. Go slowly on the line." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [g, o, c, k], tolerance: 1.3 } }
+      - { type: trace-letter, weight: 1, params: { letters: [i, n, m, d], tolerance: 1.3 } }
+
+  - id: reading-en-tracing-trail-04
+    title: { en-US: "e, u, r and h" }
+    skill: en.write.lower
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [e], tolerance: 1.2 } }
+      target: e
+      steps:
+        - say: { en-US: "Look, this is how I write e." }
+          action: { highlight: canvas }
+        - say: { en-US: "I start at the dot and follow the arrow." }
+          action: { trace: true }
+        - say: { en-US: "Now it's your turn. Go slowly on the line." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [e, u, r, h], tolerance: 1.2 } }
+      - { type: trace-letter, weight: 1, params: { letters: [g, o, c, k, a, s], tolerance: 1.2 } }
+
+  - id: reading-en-tracing-trail-05
+    title: { en-US: "b, f, l and j" }
+    skill: en.write.lower
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [b], tolerance: 1.2 } }
+      target: b
+      steps:
+        - say: { en-US: "Look, this is how I write b." }
+          action: { highlight: canvas }
+        - say: { en-US: "I start at the dot and follow the arrow." }
+          action: { trace: true }
+        - say: { en-US: "Now it's your turn. Go slowly on the line." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [b, f, l, j], tolerance: 1.2 } }
+      - { type: trace-letter, weight: 1, params: { letters: [e, u, r, h], tolerance: 1.2 } }
+
+  - id: reading-en-tracing-trail-06
+    title: { en-US: "v, w, y and z" }
+    skill: en.write.lower
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [w], tolerance: 1.2 } }
+      target: w
+      steps:
+        - say: { en-US: "Look, this is how I write w." }
+          action: { highlight: canvas }
+        - say: { en-US: "I start at the dot and follow the arrow." }
+          action: { trace: true }
+        - say: { en-US: "Now it's your turn. Go slowly on the line." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [v, w, y, z], tolerance: 1.2 } }
+      - { type: trace-letter, weight: 1, params: { letters: [b, f, l, j, d, p], tolerance: 1.2 } }
+
+  - id: reading-en-tracing-trail-07
+    title: { en-US: "Capital S, A, T and P" }
+    skill: en.write.upper
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [A], tolerance: 1.3 } }
+      target: A
+      steps:
+        - say: { en-US: "Look, this is how I write A." }
+          action: { highlight: canvas }
+        - say: { en-US: "I start at the dot and follow the arrow." }
+          action: { trace: true }
+        - say: { en-US: "Now it's your turn. Go slowly on the line." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [S, A, T, P], tolerance: 1.3 } }
+
+  - id: reading-en-tracing-trail-08
+    title: { en-US: "Capital I, N, M and D" }
+    skill: en.write.upper
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [M], tolerance: 1.2 } }
+      target: M
+      steps:
+        - say: { en-US: "Look, this is how I write M." }
+          action: { highlight: canvas }
+        - say: { en-US: "I start at the dot and follow the arrow." }
+          action: { trace: true }
+        - say: { en-US: "Now it's your turn. Go slowly on the line." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [I, N, M, D], tolerance: 1.2 } }
+      - { type: trace-letter, weight: 1, params: { letters: [S, A, T, P], tolerance: 1.2 } }

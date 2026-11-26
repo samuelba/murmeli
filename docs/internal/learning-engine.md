@@ -184,3 +184,16 @@ Every kid foreign key has `ON DELETE CASCADE`. Content ids are stored as text an
   - `best_score` and `mastery` are `double precision`.
   - `attempts` is append-only for the runtime role, with a unique key on `(run_id, item_index, attempt)`.
   - `attempts` has no retention or rollup yet.
+
+## 8. Milestone 5 additions (content runtime)
+- **New types:**
+  - `times-table` and `division-share`.
+  - `clock`, with Swiss phrasing ("halb drei" = 2:30, "Viertel nach/vor") and digital labels like `2:30`.
+  - `money-chf`: its `currency` is `auto`, which means CHF for de-CH and USD for en-US.
+  - `trace-letter`, with stroke data in a 0–100 box. The format is in content/README.md.
+  - `listen-write` and `sentence-picture`.
+- **`Solution.rule`:** optional, either `coin-sum` or `trace`. `checkAnswer` then evaluates the answer instead of comparing it exactly. Any coin set with the right sum is correct, and tracing is scored with tolerance.
+- **Hints:** 10 new keys (for example `stroke-count`, `stroke-order`, `start-at-dot`, `trace-slowly`).
+- **Speakables:** a type can list extra speakable strings (clock times, sentences).
+- **Demos:** new actions `trace` and `placeCoins`. New highlight targets: clock, money, plates, sentence and canvas.
+- **Validation:** the validator generates every demo in each locale of its track and checks it shows its `target`. It also runs every generator once.

@@ -1,6 +1,6 @@
 # Hundertergipfel: numbers to 100, tens and ones, adding and subtracting tens and ones (2nd class).
 id: math-hundertergipfel
-order: 7
+order: 8
 grade: '2'
 requires: [math-rechenberg]
 title: { de-CH: Hundertergipfel, en-US: Hundred Peak }

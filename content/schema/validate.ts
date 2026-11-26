@@ -1,4 +1,6 @@
 import { initialSoundPictures } from './exercises/common.ts';
+import { demoSeed, generateExercise } from './runtime/exercise.ts';
+import { createRng } from './runtime/rng.ts';
 import { frameSlots, resolveSlot } from './exercises/frames.ts';
 import type { PromptContent } from './exercises/frames.ts';
 import { exerciseTypeDef, parseExerciseParams } from './exercises/registry.ts';
@@ -120,6 +122,9 @@ function pictureProblems(
       );
     }
   }
+  if (req.regularFirstSound === true && sound !== undefined && !sound.regular) {
+    problems.push(`picture "${req.id}" is not regular enough in ${locale}`);
+  }
   return problems;
 }
 
@@ -140,6 +145,10 @@ function requirementProblems(
       return lexicon !== undefined &&
         carrierFor(lexicon, req.grapheme) === undefined
         ? [`the ${locale} lexicon has no carrier phrase for "${req.grapheme}"`]
+        : [];
+    case 'letter':
+      return lexicon !== undefined && lexicon.letters[req.letter] === undefined
+        ? [`the ${locale} lexicon has no letter "${req.letter}"`]
         : [];
     case 'initial-sound':
       return initialSoundPictures(pictures, locale, req.grapheme, req.pool)
@@ -229,17 +238,52 @@ function parseSpec(
   return result.spec;
 }
 
-function stringLeaves(value: unknown): string[] {
-  if (typeof value === 'string') {
-    return [value];
+function smokeGenerate(
+  levelId: string,
+  demo: ExerciseSpec,
+  target: string | number | undefined,
+  generators: readonly Generator[],
+  locales: readonly Locale[],
+  input: CrossInput,
+  report: Report,
+): void {
+  if (input.pictures === undefined) {
+    return;
   }
-  if (Array.isArray(value)) {
-    return value.flatMap(stringLeaves);
+  const content: PromptContent = {
+    pictures: input.pictures,
+    lexicons: input.lexicons,
+  };
+  for (const locale of locales.filter((l) => input.lexicons[l] !== undefined)) {
+    const ctx = { locale, content };
+    try {
+      const shown = generateExercise(demo, createRng(demoSeed(levelId)), {
+        ...ctx,
+        demo: target !== undefined ? { target } : {},
+      });
+      if (target !== undefined && shown.focus !== target) {
+        report(
+          ['demo', 'target'],
+          `the ${locale} demo shows ${JSON.stringify(shown.focus)}, not the target ${JSON.stringify(target)}`,
+        );
+      }
+      generators.forEach((generator, index) => {
+        try {
+          generateExercise(generator, createRng(index + 1), ctx);
+        } catch (error) {
+          report(
+            ['generators', index],
+            `cannot generate in ${locale}: ${String(error)}`,
+          );
+        }
+      });
+    } catch (error) {
+      report(
+        ['demo', 'exercise'],
+        `cannot generate the ${locale} demo: ${String(error)}`,
+      );
+    }
   }
-  if (value !== null && typeof value === 'object') {
-    return Object.values(value).flatMap(stringLeaves);
-  }
-  return [];
 }
 
 function buildLevel(
@@ -248,8 +292,13 @@ function buildLevel(
   world: RawWorld,
   locales: readonly Locale[],
   input: CrossInput,
-  report: Report,
+  outerReport: Report,
 ): Level | undefined {
+  let failed = false;
+  const report: Report = (p, m) => {
+    failed = true;
+    outerReport(p, m);
+  };
   const path = ['levels', index];
   checkLocales(raw.title, locales, [...path, 'title'], report);
   raw.demo.steps.forEach((step, stepIndex) =>
@@ -278,15 +327,6 @@ function buildLevel(
     1,
   );
   const target = raw.demo.target;
-  if (
-    typeof target === 'string' &&
-    !stringLeaves(raw.demo.exercise.params).includes(target)
-  ) {
-    report(
-      [...path, 'demo', 'target'],
-      `target "${target}" does not appear in the demo params`,
-    );
-  }
   const generators = raw.generators.map((generator, genIndex) => {
     const spec = parseSpec(
       generator,
@@ -299,6 +339,17 @@ function buildLevel(
   });
   if (exercise === undefined || generators.some((g) => g === undefined)) {
     return undefined;
+  }
+  if (!failed) {
+    smokeGenerate(
+      raw.id,
+      exercise,
+      target,
+      generators as Generator[],
+      locales,
+      input,
+      (p, m) => report([...path, ...p], m),
+    );
   }
   const demo: Demo = {
     exercise,

@@ -68,6 +68,11 @@ export const HIGHLIGHT_TARGETS = [
   'tiles',
   'drum',
   'signs',
+  'clock',
+  'money',
+  'plates',
+  'sentence',
+  'canvas',
 ] as const;
 
 const ACTION_KEYS = [
@@ -78,6 +83,8 @@ const ACTION_KEYS = [
   'placeTiles',
   'fillBlank',
   'tapAnswer',
+  'trace',
+  'placeCoins',
 ] as const;
 
 export const DemoActionSchema = z
@@ -89,6 +96,8 @@ export const DemoActionSchema = z
     placeTiles: z.literal(true).optional(),
     fillBlank: z.literal(true).optional(),
     tapAnswer: z.literal(true).optional(),
+    trace: z.literal(true).optional(),
+    placeCoins: z.literal(true).optional(),
   })
   .refine(
     (action) =>

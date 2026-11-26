@@ -104,6 +104,13 @@ export function writeFixture(data: FixtureData = baseData()): string {
     path.join(root, 'pictures.yaml'),
     YAML.stringify({ pictures: data.pictures }),
   );
+  fs.cpSync(
+    path.join(CONTENT_ROOT, 'pictures', 'money'),
+    path.join(root, 'pictures', 'money'),
+    {
+      recursive: true,
+    },
+  );
   fs.cpSync(path.join(CONTENT_ROOT, 'lexicon'), path.join(root, 'lexicon'), {
     recursive: true,
   });

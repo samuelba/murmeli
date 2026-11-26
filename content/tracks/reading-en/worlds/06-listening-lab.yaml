@@ -1,0 +1,118 @@
+# Listening Lab: hear a CVC word (no picture) and build it from letter tiles, in phonics order.
+id: reading-en-listening-lab
+order: 6
+grade: '1'
+requires: [reading-en-word-workshop]
+title: { en-US: Listening Lab }
+scene: workshop
+skills:
+  - { id: en.spell.dictation, ccss: L.K.2d, title: { en-US: Spelling words you hear } }
+  - { id: en.spell.extra, ccss: L.K.2d, title: { en-US: Spelling with extra letters } }
+levels:
+  - id: reading-en-listening-lab-01
+    title: { en-US: "Cat, map and cap" }
+    skill: en.spell.dictation
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: listen-write, params: { words: [cat], maxLength: 4 } }
+      target: cat
+      steps:
+        - say: { en-US: "Listen: cat." }
+          action: { highlight: prompt }
+        - say: { en-US: "I say the word slowly and pick one letter for each sound." }
+          action: { placeTiles: true }
+        - say: { en-US: "Done! It says cat." }
+          action: { highlight: tiles }
+    generators:
+      - { type: listen-write, weight: 1, params: { words: [cat, map, cap], extraTiles: 0, maxLength: 4 } }
+
+  - id: reading-en-listening-lab-02
+    title: { en-US: "Dog, pig and ant" }
+    skill: en.spell.dictation
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: listen-write, params: { words: [dog], maxLength: 4 } }
+      target: dog
+      steps:
+        - say: { en-US: "Listen: dog." }
+          action: { highlight: prompt }
+        - say: { en-US: "I say the word slowly and pick one letter for each sound." }
+          action: { placeTiles: true }
+        - say: { en-US: "Done! It says dog." }
+          action: { highlight: tiles }
+    generators:
+      - { type: listen-write, weight: 1, params: { words: [dog, pig, ant, cat], extraTiles: 0, maxLength: 4 } }
+
+  - id: reading-en-listening-lab-03
+    title: { en-US: "Sun, cup and pen" }
+    skill: en.spell.dictation
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: listen-write, params: { words: [sun], maxLength: 4 } }
+      target: sun
+      steps:
+        - say: { en-US: "Listen: sun." }
+          action: { highlight: prompt }
+        - say: { en-US: "I say the word slowly and pick one letter for each sound." }
+          action: { placeTiles: true }
+        - say: { en-US: "Done! It says sun." }
+          action: { highlight: tiles }
+    generators:
+      - { type: listen-write, weight: 1, params: { words: [sun, cup, pen, egg, duck], extraTiles: 0, maxLength: 4 } }
+
+  - id: reading-en-listening-lab-04
+    title: { en-US: "Hat, hen and bed" }
+    skill: en.spell.dictation
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: listen-write, params: { words: [hen], maxLength: 4 } }
+      target: hen
+      steps:
+        - say: { en-US: "Listen: hen." }
+          action: { highlight: prompt }
+        - say: { en-US: "I say the word slowly and pick one letter for each sound." }
+          action: { placeTiles: true }
+        - say: { en-US: "Done! It says hen." }
+          action: { highlight: tiles }
+    generators:
+      - { type: listen-write, weight: 1, params: { words: [hat, hen, bed, bat, bag], extraTiles: 0, maxLength: 4 } }
+
+  - id: reading-en-listening-lab-05
+    title: { en-US: "Bus, log and fox" }
+    skill: en.spell.extra
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: listen-write, params: { words: [bus], maxLength: 4 } }
+      target: bus
+      steps:
+        - say: { en-US: "Listen: bus." }
+          action: { highlight: prompt }
+        - say: { en-US: "I say the word slowly and pick one letter for each sound." }
+          action: { placeTiles: true }
+        - say: { en-US: "Done! It says bus." }
+          action: { highlight: tiles }
+    generators:
+      - { type: listen-write, weight: 1, params: { words: [bus, log, leg, fox, box], extraTiles: 2, maxLength: 4 } }
+
+  - id: reading-en-listening-lab-06
+    title: { en-US: "Listening pro" }
+    skill: en.spell.extra
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: listen-write, params: { words: [van], maxLength: 4 } }
+      target: van
+      steps:
+        - say: { en-US: "Listen: van." }
+          action: { highlight: prompt }
+        - say: { en-US: "I say the word slowly and pick one letter for each sound." }
+          action: { placeTiles: true }
+        - say: { en-US: "Done! It says van." }
+          action: { highlight: tiles }
+    generators:
+      - { type: listen-write, weight: 1, params: { words: [cat, map, dog, pig, sun, cup, pen, hat, hen, bed, bat, bag, bus, log, leg, fox, box, web, van], extraTiles: 2, maxLength: 4 } }

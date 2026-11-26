@@ -1,0 +1,146 @@
+# Einmaleinsalp: the core times tables (2, 5, 10, then 3 and 4) and fair sharing (2nd class).
+id: math-einmaleinsalp
+order: 10
+grade: '2'
+requires: [math-hundertergipfel]
+title: { de-CH: Einmaleinsalp, en-US: Times Table Alp }
+scene: alp
+skills:
+  - id: math.times.core
+    lp21: MA.1.A.2
+    title: { de-CH: "Einmaleins mit 2, 5 und 10", en-US: "Times tables 2, 5 and 10" }
+  - id: math.times.more
+    lp21: MA.1.A.2
+    title: { de-CH: Einmaleins mit 3 und 4, en-US: Times tables 3 and 4 }
+  - id: math.division.share
+    lp21: MA.1.A.2
+    title: { de-CH: Gerecht verteilen, en-US: Sharing fairly }
+levels:
+  - id: math-einmaleinsalp-01
+    title: { de-CH: Die Zweierreihe, en-US: The Twos }
+    skill: math.times.core
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: times-table, params: { rows: [2], minFactor: 3, maxFactor: 3, commute: false } }
+      target: 6
+      steps:
+        - say: { de-CH: "Drei mal zwei heisst: dreimal die Zwei.", en-US: "Three times two means three twos." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich zähle in Zweierschritten: zwei, vier, sechs.", en-US: "I count in steps of two: two, four, six." }
+          action: { hop: true }
+        - say: { de-CH: "Drei mal zwei ist sechs!", en-US: "Three times two is six!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: times-table, weight: 1, params: { rows: [2], answerMode: choices } }
+      - { type: times-table, weight: 1, params: { rows: [2] } }
+
+  - id: math-einmaleinsalp-02
+    title: { de-CH: Zehner- und Fünferreihe, en-US: The Tens and Fives }
+    skill: math.times.core
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: times-table, params: { rows: [5], minFactor: 4, maxFactor: 4, commute: false } }
+      target: 20
+      steps:
+        - say: { de-CH: "Vier mal fünf. Ich zähle in Fünferschritten.", en-US: "Four times five. I count in steps of five." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Fünf, zehn, fünfzehn, zwanzig.", en-US: "Five, ten, fifteen, twenty." }
+          action: { hop: true }
+        - say: { de-CH: "Vier mal fünf ist zwanzig!", en-US: "Four times five is twenty!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: times-table, weight: 1, params: { rows: [10] } }
+      - { type: times-table, weight: 2, params: { rows: [5] } }
+
+  - id: math-einmaleinsalp-03
+    title: { de-CH: Wie geht die Reihe weiter?, en-US: Continue the Row }
+    skill: math.times.core
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: times-table, params: { rows: [5], mode: row, minFactor: 1, maxFactor: 4 } }
+      target: 20
+      steps:
+        - say: { de-CH: "Fünf, zehn, fünfzehn. Es geht immer fünf weiter.", en-US: "Five, ten, fifteen. It always goes up by five." }
+          action: { highlight: numbers }
+        - say: { de-CH: "Nach fünfzehn kommt zwanzig.", en-US: "After fifteen comes twenty." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: times-table, weight: 1, params: { rows: [2, 5, 10], mode: row } }
+
+  - id: math-einmaleinsalp-04
+    title: { de-CH: Welche Zahl fehlt?, en-US: The Missing Factor }
+    skill: math.times.core
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: times-table, params: { rows: [10], mode: missing-factor, minFactor: 3, maxFactor: 3, commute: false } }
+      target: 10
+      steps:
+        - say: { de-CH: "Drei mal wie viel gibt dreissig?", en-US: "Three times what makes thirty?" }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich sage die Zehnerreihe auf: zehn, zwanzig, dreissig. Dreimal die Zehn!", en-US: "I say the tens: ten, twenty, thirty. Three tens!" }
+          action: { hop: true }
+        - say: { de-CH: "Es fehlt die Zehn.", en-US: "The missing number is ten." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: times-table, weight: 1, params: { rows: [2, 5, 10], mode: missing-factor } }
+
+  - id: math-einmaleinsalp-05
+    title: { de-CH: Dreier- und Viererreihe, en-US: The Threes and Fours }
+    skill: math.times.more
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: times-table, params: { rows: [3], minFactor: 4, maxFactor: 4, commute: false } }
+      target: 12
+      steps:
+        - say: { de-CH: "Vier mal drei. Ich zähle in Dreierschritten.", en-US: "Four times three. I count in steps of three." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Drei, sechs, neun, zwölf.", en-US: "Three, six, nine, twelve." }
+          action: { hop: true }
+        - say: { de-CH: "Vier mal drei ist zwölf!", en-US: "Four times three is twelve!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: times-table, weight: 1, params: { rows: [3, 4] } }
+      - { type: times-table, weight: 1, params: { rows: [3, 4], mode: row } }
+
+  - id: math-einmaleinsalp-06
+    title: { de-CH: Einmaleins gemischt, en-US: Mixed Times Tables }
+    skill: math.times.more
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: times-table, params: { rows: [4], mode: missing-factor, minFactor: 6, maxFactor: 6, commute: false } }
+      target: 4
+      steps:
+        - say: { de-CH: "Sechs mal wie viel gibt vierundzwanzig?", en-US: "Six times what makes twenty-four?" }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich probiere die Viererreihe: Sechs mal vier ist vierundzwanzig.", en-US: "I try the fours: six times four is twenty-four." }
+          action: { highlight: numbers }
+        - say: { de-CH: "Es fehlt die Vier.", en-US: "The missing number is four." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: times-table, weight: 2, params: { rows: [2, 3, 4, 5, 10] } }
+      - { type: times-table, weight: 1, params: { rows: [2, 3, 4, 5, 10], mode: missing-factor } }
+
+  - id: math-einmaleinsalp-07
+    title: { de-CH: Gerecht verteilen, en-US: Sharing Fairly }
+    skill: math.division.share
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: division-share, params: { divisors: [3], minQuotient: 4, maxQuotient: 4, objects: [apple] } }
+      target: 4
+      steps:
+        - say: { de-CH: "Zwölf Äpfel kommen auf drei Teller.", en-US: "Twelve apples go on three plates." }
+          action: { highlight: plates }
+        - say: { de-CH: "Ich lege immer einen Apfel auf jeden Teller, bis alle verteilt sind.", en-US: "I put one apple on each plate, again and again, until all are shared." }
+          action: { countAlong: true }
+        - say: { de-CH: "Auf jedem Teller liegen vier Äpfel.", en-US: "Each plate has four apples." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: division-share, weight: 1, params: { divisors: [2, 3, 4, 5], maxQuotient: 5, objects: [apple, strawberry, egg, ball, carrot] } }
+      - { type: division-share, weight: 1, params: { divisors: [2, 5, 10], maxQuotient: 6, objects: [star, flower, balloon], answerMode: keypad } }

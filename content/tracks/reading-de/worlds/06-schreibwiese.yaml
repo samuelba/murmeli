@@ -1,0 +1,161 @@
+# Schreibwiese: tracing letters in Basisschrift-like print, in the Lautwiese order.
+# Capital letters first, then small letters, then the umlauts.
+id: reading-de-schreibwiese
+order: 6
+grade: '1'
+requires: [reading-de-lautwiese]
+title: { de-CH: Schreibwiese }
+scene: meadow
+skills:
+  - { id: de.write.upper, lp21: D.4.A.1, title: { de-CH: Grosse Buchstaben schreiben } }
+  - { id: de.write.lower, lp21: D.4.A.1, title: { de-CH: Kleine Buchstaben schreiben } }
+levels:
+  - id: reading-de-schreibwiese-01
+    title: { de-CH: "A, M und I" }
+    skill: de.write.upper
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [A], tolerance: 1.3 } }
+      target: A
+      steps:
+        - say: { de-CH: "Schau, so schreibe ich das A." }
+          action: { highlight: canvas }
+        - say: { de-CH: "Ich beginne beim Punkt und fahre dem Pfeil nach." }
+          action: { trace: true }
+        - say: { de-CH: "Jetzt bist du dran. Fahre langsam auf der Linie." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [A, M, I], tolerance: 1.3 } }
+
+  - id: reading-de-schreibwiese-02
+    title: { de-CH: "L, O, S und E" }
+    skill: de.write.upper
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [O], tolerance: 1.3 } }
+      target: O
+      steps:
+        - say: { de-CH: "Schau, so schreibe ich das O." }
+          action: { highlight: canvas }
+        - say: { de-CH: "Ich beginne beim Punkt und fahre dem Pfeil nach." }
+          action: { trace: true }
+        - say: { de-CH: "Jetzt bist du dran. Fahre langsam auf der Linie." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [L, O, S, E], tolerance: 1.3 } }
+      - { type: trace-letter, weight: 1, params: { letters: [A, M, I], tolerance: 1.3 } }
+
+  - id: reading-de-schreibwiese-03
+    title: { de-CH: "U, R, N und F" }
+    skill: de.write.upper
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [R], tolerance: 1.3 } }
+      target: R
+      steps:
+        - say: { de-CH: "Schau, so schreibe ich das R." }
+          action: { highlight: canvas }
+        - say: { de-CH: "Ich beginne beim Punkt und fahre dem Pfeil nach." }
+          action: { trace: true }
+        - say: { de-CH: "Jetzt bist du dran. Fahre langsam auf der Linie." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [U, R, N, F], tolerance: 1.3 } }
+      - { type: trace-letter, weight: 1, params: { letters: [A, M, I, L, O, S, E], tolerance: 1.3 } }
+
+  - id: reading-de-schreibwiese-04
+    title: { de-CH: "T, P, K und H" }
+    skill: de.write.upper
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [K], tolerance: 1.2 } }
+      target: K
+      steps:
+        - say: { de-CH: "Schau, so schreibe ich das K." }
+          action: { highlight: canvas }
+        - say: { de-CH: "Ich beginne beim Punkt und fahre dem Pfeil nach." }
+          action: { trace: true }
+        - say: { de-CH: "Jetzt bist du dran. Fahre langsam auf der Linie." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [T, P, K, H], tolerance: 1.2 } }
+      - { type: trace-letter, weight: 1, params: { letters: [U, R, N, F, E, L], tolerance: 1.2 } }
+
+  - id: reading-de-schreibwiese-05
+    title: { de-CH: "Kleine a, m, i und l" }
+    skill: de.write.lower
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [m], tolerance: 1.3 } }
+      target: m
+      steps:
+        - say: { de-CH: "Schau, so schreibe ich das m." }
+          action: { highlight: canvas }
+        - say: { de-CH: "Ich beginne beim Punkt und fahre dem Pfeil nach." }
+          action: { trace: true }
+        - say: { de-CH: "Jetzt bist du dran. Fahre langsam auf der Linie." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [a, m, i, l], tolerance: 1.3 } }
+
+  - id: reading-de-schreibwiese-06
+    title: { de-CH: "Kleine o, s, e und u" }
+    skill: de.write.lower
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [s], tolerance: 1.3 } }
+      target: s
+      steps:
+        - say: { de-CH: "Schau, so schreibe ich das s." }
+          action: { highlight: canvas }
+        - say: { de-CH: "Ich beginne beim Punkt und fahre dem Pfeil nach." }
+          action: { trace: true }
+        - say: { de-CH: "Jetzt bist du dran. Fahre langsam auf der Linie." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [o, s, e, u], tolerance: 1.3 } }
+      - { type: trace-letter, weight: 1, params: { letters: [a, m, i, l], tolerance: 1.3 } }
+
+  - id: reading-de-schreibwiese-07
+    title: { de-CH: "Kleine r, n, f und t" }
+    skill: de.write.lower
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [f], tolerance: 1.2 } }
+      target: f
+      steps:
+        - say: { de-CH: "Schau, so schreibe ich das f." }
+          action: { highlight: canvas }
+        - say: { de-CH: "Ich beginne beim Punkt und fahre dem Pfeil nach." }
+          action: { trace: true }
+        - say: { de-CH: "Jetzt bist du dran. Fahre langsam auf der Linie." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [r, n, f, t], tolerance: 1.2 } }
+      - { type: trace-letter, weight: 1, params: { letters: [a, m, i, l, o, s, e, u], tolerance: 1.2 } }
+
+  - id: reading-de-schreibwiese-08
+    title: { de-CH: "Ä, Ö und Ü" }
+    skill: de.write.lower
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: trace-letter, params: { letters: [ä], tolerance: 1.2 } }
+      target: ä
+      steps:
+        - say: { de-CH: "Schau, so schreibe ich das ä." }
+          action: { highlight: canvas }
+        - say: { de-CH: "Ich beginne beim Punkt und fahre dem Pfeil nach." }
+          action: { trace: true }
+        - say: { de-CH: "Jetzt bist du dran. Fahre langsam auf der Linie." }
+          action: { highlight: canvas }
+    generators:
+      - { type: trace-letter, weight: 2, params: { letters: [ä, ö, ü, Ä], tolerance: 1.2 } }
+      - { type: trace-letter, weight: 1, params: { letters: [Ö, Ü, a, o, u], tolerance: 1.2 } }

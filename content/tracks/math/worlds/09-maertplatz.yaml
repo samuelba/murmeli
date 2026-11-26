@@ -1,0 +1,124 @@
+# Märtplatz: counting money, paying and comparing (2nd class). The currency follows the kid's
+# locale: Franken and Rappen in de-CH, dollars and cents in en-US (currency: auto).
+id: math-maertplatz
+order: 9
+grade: '2'
+requires: [math-rechenberg]
+title: { de-CH: Märtplatz, en-US: Market Square }
+scene: market
+skills:
+  - id: math.money.whole
+    lp21: MA.3.A.1
+    title: { de-CH: Mit Franken rechnen, en-US: Counting whole dollars }
+  - id: math.money.cents
+    lp21: MA.3.A.1
+    title: { de-CH: Mit Rappen rechnen, en-US: Counting cents }
+levels:
+  - id: math-maertplatz-01
+    title: { de-CH: Geld zählen, en-US: Counting Money }
+    skill: math.money.whole
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: money-chf, params: { mode: total, maxTotal: 3, minItems: 2, maxItems: 3, answerMode: choices } }
+      target: 3
+      steps:
+        - say: { de-CH: "Schau, hier liegt Geld.", en-US: "Look, here is some money." }
+          action: { highlight: money }
+        - say: { de-CH: "Ich zähle alles zusammen.", en-US: "I add it all up." }
+          action: { countAlong: true }
+        - say: { de-CH: "Das sind drei Franken!", en-US: "That makes three dollars!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: money-chf, weight: 1, params: { mode: total, maxTotal: 10, minItems: 2, maxItems: 3, answerMode: choices } }
+
+  - id: math-maertplatz-02
+    title: { de-CH: Münzen und Noten, en-US: Coins and Bills }
+    skill: math.money.whole
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: money-chf, params: { mode: total, maxTotal: 30, minItems: 2, maxItems: 3 } }
+      target: 25
+      steps:
+        - say: { de-CH: "Ich beginne mit dem grössten Geldstück.", en-US: "I start with the biggest piece." }
+          action: { highlight: money }
+        - say: { de-CH: "Dann zähle ich die anderen dazu.", en-US: "Then I add the others." }
+          action: { countAlong: true }
+        - say: { de-CH: "Zusammen sind es fünfundzwanzig Franken.", en-US: "Together it makes twenty-five dollars." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: money-chf, weight: 1, params: { mode: total, maxTotal: 50, minItems: 2, maxItems: 4 } }
+
+  - id: math-maertplatz-03
+    title: { de-CH: Bezahlen, en-US: Paying }
+    skill: math.money.whole
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: money-chf, params: { mode: pay, maxTotal: 10 } }
+      target: 7
+      steps:
+        - say: { de-CH: "Ich muss sieben Franken bezahlen.", en-US: "I have to pay seven dollars." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich lege fünf hin und noch zwei dazu.", en-US: "I put down five and two more." }
+          action: { placeCoins: true }
+        - say: { de-CH: "Fünf und zwei sind sieben. Genau richtig!", en-US: "Five and two make seven. Just right!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: money-chf, weight: 1, params: { mode: pay, maxTotal: 10 } }
+      - { type: money-chf, weight: 1, params: { mode: pay, maxTotal: 30 } }
+
+  - id: math-maertplatz-04
+    title: { de-CH: Wo ist mehr Geld?, en-US: Which Has More Money? }
+    skill: math.money.whole
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: money-chf, params: { mode: compare, maxTotal: 10, minItems: 1, maxItems: 3 } }
+      steps:
+        - say: { de-CH: "Ich zähle das Geld auf beiden Seiten.", en-US: "I count the money on both sides." }
+          action: { countAlong: true }
+        - say: { de-CH: "Mehr Stücke heisst nicht immer mehr Geld!", en-US: "More pieces does not always mean more money!" }
+          action: { highlight: money }
+        - say: { de-CH: "Ich tippe auf das richtige Zeichen.", en-US: "I tap the right sign." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: money-chf, weight: 1, params: { mode: compare, maxTotal: 20, minItems: 1, maxItems: 4 } }
+
+  - id: math-maertplatz-05
+    title: { de-CH: Kleingeld zählen, en-US: Counting Cents }
+    skill: math.money.cents
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: money-chf, params: { mode: total, group: minor, maxTotal: 30, minItems: 2, maxItems: 2, answerMode: choices } }
+      target: 30
+      steps:
+        - say: { de-CH: "Das sind kleine Münzen.", en-US: "These are small coins." }
+          action: { highlight: money }
+        - say: { de-CH: "Ich zähle sie zusammen.", en-US: "I add them up." }
+          action: { countAlong: true }
+        - say: { de-CH: "Das sind dreissig Rappen!", en-US: "That makes thirty cents!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: money-chf, weight: 1, params: { mode: total, group: minor, maxTotal: 100, minItems: 2, maxItems: 4, answerMode: choices } }
+
+  - id: math-maertplatz-06
+    title: { de-CH: Mit Kleingeld bezahlen, en-US: Paying with Cents }
+    skill: math.money.cents
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: money-chf, params: { mode: pay, group: minor, maxTotal: 100 } }
+      target: 60
+      steps:
+        - say: { de-CH: "Ich muss sechzig Rappen bezahlen.", en-US: "I have to pay sixty cents." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich lege Münzen hin und zähle mit.", en-US: "I put down coins and count along." }
+          action: { placeCoins: true }
+        - say: { de-CH: "Genau sechzig. Fertig!", en-US: "Exactly sixty. Done!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: money-chf, weight: 1, params: { mode: pay, group: minor, maxTotal: 100 } }
+      - { type: money-chf, weight: 1, params: { mode: compare, group: minor, maxTotal: 100, minItems: 1, maxItems: 4 } }

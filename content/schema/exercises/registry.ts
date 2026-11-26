@@ -1,5 +1,6 @@
 import type { z } from 'zod';
 import type { PathSegment } from '../issues.ts';
+import { clock, divisionShare, moneyChf, timesTable } from './advanced.ts';
 import {
   buildWord,
   initialSound,
@@ -20,6 +21,7 @@ import {
   tenFrame,
 } from './math.ts';
 import type { ExerciseTypeDef, ParamIssue } from './types.ts';
+import { listenWrite, sentencePicture, traceLetter } from './writing.ts';
 
 export const EXERCISE_TYPES = {
   'count-objects': countObjects,
@@ -37,6 +39,13 @@ export const EXERCISE_TYPES = {
   syllables,
   'word-picture': wordPicture,
   'build-word': buildWord,
+  'times-table': timesTable,
+  'division-share': divisionShare,
+  clock,
+  'money-chf': moneyChf,
+  'trace-letter': traceLetter,
+  'listen-write': listenWrite,
+  'sentence-picture': sentencePicture,
 } as const;
 
 export type ExerciseTypeId = keyof typeof EXERCISE_TYPES;

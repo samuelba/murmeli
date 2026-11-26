@@ -1,0 +1,98 @@
+# Uhrenturm-Spitze: quarter hours and five-minute steps (2nd class).
+id: math-uhrenturm-spitze
+order: 11
+grade: '2'
+requires: [math-uhrenturm, math-hundertergipfel]
+title: { de-CH: Uhrenturm-Spitze, en-US: Clock Tower Top }
+scene: tower
+skills:
+  - id: math.clock.quarters
+    lp21: MA.3.A.1
+    title: { de-CH: Viertelstunden, en-US: Quarter hours }
+  - id: math.clock.minutes
+    lp21: MA.3.A.1
+    title: { de-CH: Fünf-Minuten-Schritte, en-US: Five-minute steps }
+levels:
+  - id: math-uhrenturm-spitze-01
+    title: { de-CH: Viertel nach, en-US: Quarter Past }
+    skill: math.clock.quarters
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: clock, params: { steps: quarter, choices: 3 } }
+      target: '3:15'
+      steps:
+        - say: { de-CH: "Der lange Zeiger zeigt auf die Drei. Ein Viertel der Stunde ist vorbei.", en-US: "The long hand points to the three. A quarter of the hour is over." }
+          action: { highlight: clock }
+        - say: { de-CH: "Der kurze Zeiger ist kurz nach der Drei. Es ist Viertel nach drei.", en-US: "The short hand is just past three. It is quarter past three." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: clock, weight: 1, params: { steps: quarter, choices: 3 } }
+
+  - id: math-uhrenturm-spitze-02
+    title: { de-CH: Viertel vor, en-US: Quarter To }
+    skill: math.clock.quarters
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: clock, params: { steps: quarter, choices: 3 } }
+      target: '2:45'
+      steps:
+        - say: { de-CH: "Der lange Zeiger zeigt auf die Neun. Bald ist die Stunde voll.", en-US: "The long hand points to the nine. The hour is almost over." }
+          action: { highlight: clock }
+        - say: { de-CH: "Der kurze Zeiger ist fast bei der Drei. Es ist Viertel vor drei.", en-US: "The short hand is almost at three. It is quarter to three." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: clock, weight: 1, params: { steps: quarter, choices: 3 } }
+
+  - id: math-uhrenturm-spitze-03
+    title: { de-CH: Alle Viertelstunden, en-US: All Quarter Hours }
+    skill: math.clock.quarters
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: clock, params: { steps: quarter, labels: words, choices: 4 } }
+      target: '8:30'
+      steps:
+        - say: { de-CH: "Ich schaue zuerst auf den langen Zeiger: unten heisst halb.", en-US: "First I look at the long hand: down means half past." }
+          action: { highlight: clock }
+        - say: { de-CH: "Dann auf den kurzen Zeiger. Es ist halb neun.", en-US: "Then at the short hand. It is half past eight." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: clock, weight: 1, params: { steps: quarter, labels: words, choices: 4 } }
+      - { type: clock, weight: 1, params: { steps: quarter, choices: 4 } }
+
+  - id: math-uhrenturm-spitze-04
+    title: { de-CH: Fünf-Minuten-Schritte, en-US: Five-Minute Steps }
+    skill: math.clock.minutes
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: clock, params: { steps: five, choices: 3 } }
+      target: '4:10'
+      steps:
+        - say: { de-CH: "Von einer Zahl zur nächsten sind es fünf Minuten.", en-US: "From one number to the next is five minutes." }
+          action: { highlight: clock }
+        - say: { de-CH: "Der lange Zeiger steht auf der Zwei: fünf, zehn. Zehn nach vier.", en-US: "The long hand is on the two: five, ten. Ten past four." }
+          action: { countAlong: true }
+        - say: { de-CH: "Ich tippe auf zehn nach vier.", en-US: "I tap ten past four." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: clock, weight: 1, params: { steps: five, choices: 3 } }
+
+  - id: math-uhrenturm-spitze-05
+    title: { de-CH: Uhrzeiten-Profi, en-US: Clock Pro }
+    skill: math.clock.minutes
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: clock, params: { steps: five, labels: words, choices: 4 } }
+      target: '5:25'
+      steps:
+        - say: { de-CH: "Der lange Zeiger steht kurz vor der Sechs.", en-US: "The long hand is just before the six." }
+          action: { highlight: clock }
+        - say: { de-CH: "Bis halb sechs fehlen fünf Minuten. Es ist fünf vor halb sechs.", en-US: "That is twenty-five minutes. It is twenty-five past five." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: clock, weight: 1, params: { steps: five, labels: words, choices: 4 } }
+      - { type: clock, weight: 1, params: { steps: five, labels: digital, choices: 4 } }

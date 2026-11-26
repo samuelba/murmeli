@@ -22,9 +22,24 @@ export interface RuntimeContext {
   readonly demo?: { readonly target?: string | number };
 }
 
+export type CheckRule =
+  | {
+      readonly kind: 'coin-sum';
+      readonly amount: number;
+      readonly values: Readonly<Record<string, number>>;
+    }
+  | {
+      readonly kind: 'trace';
+      readonly glyph: string;
+      readonly tolerance: number;
+      readonly strictOrder: boolean;
+      readonly strictDirection: boolean;
+    };
+
 export interface Solution<A> {
   readonly answer: A;
   readonly hint: HintKey;
+  readonly rule?: CheckRule;
 }
 
 export interface CheckResult {

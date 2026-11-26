@@ -1,0 +1,120 @@
+# Satzgarten: read a short sentence and pick the matching picture.
+# Counting sentences first, then where something is (auf, unter, neben).
+id: reading-de-satzgarten
+order: 8
+grade: '1'
+requires: [reading-de-woerterhaus]
+title: { de-CH: Satzgarten }
+scene: garden
+skills:
+  - { id: de.read.sentences, lp21: D.2.B.1, title: { de-CH: Kurze Sätze lesen } }
+  - { id: de.read.where, lp21: D.2.B.1, title: { de-CH: Sätze lesen und verstehen } }
+levels:
+  - id: reading-de-satzgarten-01
+    title: { de-CH: "Ich sehe …" }
+    skill: de.read.sentences
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: sentence-picture, params: { kind: count, pictures: [apple, ball], min: 2, max: 3 } }
+      target: apple
+      steps:
+        - say: { de-CH: "Ich lese den Satz: Ich sehe zwei Äpfel." }
+          action: { highlight: sentence }
+        - say: { de-CH: "Ich suche das Bild mit zwei Äpfeln." }
+          action: { highlight: choices }
+        - say: { de-CH: "Hier sind es zwei. Ich tippe drauf!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sentence-picture, weight: 1, params: { kind: count, pictures: [apple, ball, star], min: 2, max: 3 } }
+
+  - id: reading-de-satzgarten-02
+    title: { de-CH: "Wie viele sind es?" }
+    skill: de.read.sentences
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: sentence-picture, params: { kind: count, pictures: [duck, fish], min: 2, max: 3 } }
+      target: duck
+      steps:
+        - say: { de-CH: "Ich lese: Ich sehe zwei Enten." }
+          action: { highlight: sentence }
+        - say: { de-CH: "Ich zähle die Enten auf jedem Bild." }
+          action: { highlight: choices }
+        - say: { de-CH: "Dieses Bild passt!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sentence-picture, weight: 1, params: { kind: count, pictures: [duck, fish, egg, flower, mouse], min: 2, max: 5 } }
+
+  - id: reading-de-satzgarten-03
+    title: { de-CH: "Auf oder unter?" }
+    skill: de.read.where
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: sentence-picture, params: { kind: position, subjects: [mouse], objects: [bed, box], relations: [on, under] } }
+      target: mouse
+      steps:
+        - say: { de-CH: "Ich lese: Die Maus ist auf dem Bett." }
+          action: { highlight: sentence }
+        - say: { de-CH: "Wo ist die Maus? Auf dem Bett, nicht darunter." }
+          action: { highlight: choices }
+        - say: { de-CH: "Ich tippe auf dieses Bild." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sentence-picture, weight: 1, params: { kind: position, subjects: [mouse, cat], objects: [bed, box], relations: [on, under] } }
+
+  - id: reading-de-satzgarten-04
+    title: { de-CH: "Wer ist wo?" }
+    skill: de.read.where
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: sentence-picture, params: { kind: position, subjects: [dog], objects: [chair, bed], relations: [on, under] } }
+      target: dog
+      steps:
+        - say: { de-CH: "Ich lese: Der Hund ist auf dem Stuhl." }
+          action: { highlight: sentence }
+        - say: { de-CH: "Ich schaue genau: Wo ist der Hund?" }
+          action: { highlight: choices }
+        - say: { de-CH: "Hier sitzt er auf dem Stuhl!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sentence-picture, weight: 1, params: { kind: position, subjects: [mouse, cat, dog], objects: [bed, chair, sofa], relations: [on, under] } }
+
+  - id: reading-de-satzgarten-05
+    title: { de-CH: "Neben, auf und unter" }
+    skill: de.read.where
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: sentence-picture, params: { kind: position, subjects: [teddy], objects: [box, bed], relations: [next-to, on] } }
+      target: teddy
+      steps:
+        - say: { de-CH: "Ich lese: Der Teddy ist neben dem Paket." }
+          action: { highlight: sentence }
+        - say: { de-CH: "Neben heisst: gleich daneben." }
+          action: { highlight: choices }
+        - say: { de-CH: "Dieses Bild passt!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sentence-picture, weight: 1, params: { kind: position, subjects: [duck, ball, teddy], objects: [bed, box, chair], relations: [on, under, next-to] } }
+
+  - id: reading-de-satzgarten-06
+    title: { de-CH: "Satzprofi" }
+    skill: de.read.where
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: sentence-picture, params: { kind: position, subjects: [cat], objects: [sofa, car], relations: [under, on] } }
+      target: cat
+      steps:
+        - say: { de-CH: "Ich lese: Die Katze ist unter dem Sofa." }
+          action: { highlight: sentence }
+        - say: { de-CH: "Ich lese jedes Wort genau." }
+          action: { highlight: choices }
+        - say: { de-CH: "Da ist die Katze unter dem Sofa!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sentence-picture, weight: 2, params: { kind: position, subjects: [mouse, cat, dog, duck, ball, teddy], objects: [bed, box, chair, sofa, car], choices: 4 } }
+      - { type: sentence-picture, weight: 1, params: { kind: count, pictures: [apple, star, fish, egg, flower, car], min: 2, max: 5, choices: 4 } }

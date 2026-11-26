@@ -275,7 +275,7 @@ describe('fixture content', () => {
           'target'
         ] = 'mouse';
       },
-      /demo\.target: target "mouse"/,
+      /demo\.target: the de-CH demo shows 2, not the target "mouse"/,
     ],
     [
       'missing locale in a title',

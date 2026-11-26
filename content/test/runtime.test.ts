@@ -6,9 +6,13 @@ import {
   collectSpeakables,
   createRng,
   generateExercise,
+  DENOMINATIONS,
   loadContent,
   parseAnswer,
   range,
+  sceneKey,
+  sceneSentence,
+  timeWords,
 } from '../schema/index.ts';
 import type {
   Choice,
@@ -52,6 +56,25 @@ function choicesOf(g: GeneratedExercise): readonly Choice[] | undefined {
 
 function wrongAnswer(g: GeneratedExercise): unknown {
   const answer = g.solution.answer as Record<string, unknown>;
+  if ('coins' in answer) {
+    const wallet = (
+      g.payload as unknown as { wallet: { denomination: string }[] }
+    ).wallet;
+    return {
+      coins: [...(answer['coins'] as string[]), wallet[0]!.denomination],
+    };
+  }
+  if ('strokes' in answer) {
+    const count = (answer['strokes'] as unknown[]).length;
+    return {
+      strokes: Array.from({ length: count }, (_, i) => [
+        [5 + i, 95],
+        [95, 5 + i],
+        [5 + i, 50],
+        [95, 95],
+      ]),
+    };
+  }
   if ('choiceId' in answer) {
     return {
       choiceId: choicesOf(g)!.find((c) => c.id !== answer['choiceId'])!.id,
@@ -258,6 +281,104 @@ const RESPECTS: Partial<Record<ExerciseSpec['type'], Checker>> = {
       content.pictures[payload.pictureId]!.syllables[locale]!.length,
     );
     assert.ok(count <= (spec.params as { maxSyllables: number }).maxSyllables);
+  },
+  'times-table': (g, spec) => {
+    const p = spec.params as {
+      rows: number[];
+      minFactor: number;
+      maxFactor: number;
+    };
+    const payload = g.payload as Payload<'times-table'>;
+    if (payload.mode === 'row') {
+      const items = payload.items!.map((item) => item ?? value(g));
+      assert.ok(p.rows.includes(payload.row!));
+      assert.ok(
+        items.slice(1).every((item, i) => item - items[i]! === payload.row),
+      );
+      return;
+    }
+    const b = payload.b ?? value(g);
+    const product = payload.product ?? value(g);
+    assert.equal(payload.a! * b, product);
+    assert.ok(p.rows.includes(payload.a!) || p.rows.includes(b));
+  },
+  'division-share': (g, spec) => {
+    const p = spec.params as {
+      divisors: number[];
+      minQuotient: number;
+      maxQuotient: number;
+    };
+    const payload = g.payload as Payload<'division-share'>;
+    assert.equal(payload.total, payload.groups * value(g));
+    assert.ok(p.divisors.includes(payload.groups));
+    assert.ok(value(g) >= p.minQuotient && value(g) <= p.maxQuotient);
+  },
+  clock: (g, spec, locale) => {
+    const payload = g.payload as Payload<'clock'>;
+    const steps = (spec.params as { steps: string }).steps;
+    const allowed = { hour: [0], half: [0, 30], quarter: [0, 15, 30, 45] }[
+      steps as 'hour'
+    ];
+    assert.ok(
+      allowed === undefined
+        ? payload.minute % 5 === 0
+        : allowed.includes(payload.minute),
+    );
+    assert.ok(payload.hour >= 1 && payload.hour <= 12);
+    const chosen = payload.choices.find(
+      (c) => c.id === (g.solution.answer as { choiceId: string }).choiceId,
+    )!;
+    const digital = `${payload.hour}:${String(payload.minute).padStart(2, '0')}`;
+    assert.ok(
+      chosen.label === digital ||
+        chosen.digital === digital ||
+        chosen.label === timeWords(payload, locale),
+    );
+  },
+  'money-chf': (g, spec, locale) => {
+    const p = spec.params as { group: string; maxTotal: number };
+    const payload = g.payload as Payload<'money-chf'>;
+    assert.equal(payload.currency, locale === 'de-CH' ? 'CHF' : 'USD');
+    const unit = p.group === 'major' ? 100 : 1;
+    const sum = (items: readonly { denomination: string }[]) =>
+      items.reduce(
+        (total, item) =>
+          total + DENOMINATIONS.find((d) => d.id === item.denomination)!.value,
+        0,
+      );
+    if (payload.mode === 'total') {
+      assert.equal(sum(payload.items), value(g) * unit);
+      assert.ok(value(g) <= p.maxTotal);
+    } else if (payload.mode === 'pay') {
+      const coins = (g.solution.answer as { coins: string[] }).coins.map(
+        (denomination) => ({ denomination }),
+      );
+      assert.equal(sum(coins), payload.amount * unit);
+    } else {
+      const relation = (g.solution.answer as { relation: string }).relation;
+      const [a, b] = [sum(payload.left), sum(payload.right)];
+      assert.equal(relation, a < b ? 'lt' : a > b ? 'gt' : 'eq');
+    }
+  },
+  'listen-write': (g) => {
+    const payload = g.payload as Payload<'listen-write'>;
+    assert.equal('pictureId' in payload, false);
+    assert.equal(
+      payload.length,
+      (g.solution.answer as { letters: string[] }).letters.length,
+    );
+  },
+  'sentence-picture': (g, _spec, locale) => {
+    const payload = g.payload as Payload<'sentence-picture'>;
+    const chosen = payload.choices.find(
+      (c) => c.id === (g.solution.answer as { choiceId: string }).choiceId,
+    )!;
+    assert.equal(
+      sceneSentence(chosen.scene, content.pictures, locale),
+      payload.sentence,
+    );
+    const keys = payload.choices.map((c) => sceneKey(c.scene));
+    assert.equal(new Set(keys).size, keys.length);
   },
   'build-word': (g, spec) => {
     const payload = g.payload as Payload<'build-word'>;

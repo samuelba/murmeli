@@ -24,6 +24,7 @@ import { containsEszett, LOCALES, NO_ESZETT_MESSAGE } from './locale.ts';
 import type { Locale } from './locale.ts';
 import { PictureCatalogSchema } from './pictures.ts';
 import type { Picture } from './pictures.ts';
+import { DENOMINATIONS } from './money.ts';
 import { checkSvg } from './svg.ts';
 import { crossValidate } from './validate.ts';
 import type { SourceTrack, SourceWorld } from './validate.ts';
@@ -223,6 +224,30 @@ function loadPictures(reader: Reader): Record<string, Picture> | undefined {
   return catalog.pictures;
 }
 
+function checkMoney(reader: Reader): void {
+  const files = new Set(reader.list('pictures/money', 'file'));
+  for (const denomination of DENOMINATIONS) {
+    const file = `pictures/${denomination.file}`;
+    const name = denomination.file.slice('money/'.length);
+    if (!files.has(name)) {
+      reader.report(file, '', `missing SVG for ${denomination.id}`);
+      continue;
+    }
+    files.delete(name);
+    const text = reader.text(file);
+    for (const problem of text === undefined ? [] : checkSvg(text)) {
+      reader.report(file, '', `unsafe SVG: ${problem}`);
+    }
+  }
+  for (const orphan of files) {
+    reader.report(
+      `pictures/money/${orphan}`,
+      '',
+      'SVG is not a known denomination',
+    );
+  }
+}
+
 function loadLexicons(reader: Reader): Partial<Record<Locale, Lexicon>> {
   const lexicons: Partial<Record<Locale, Lexicon>> = {};
   for (const locale of LOCALES) {
@@ -286,6 +311,7 @@ export function validateContent(
   const root = path.resolve(rootDir);
   const reader = new Reader(root);
   const pictures = loadPictures(reader);
+  checkMoney(reader);
   const lexicons = loadLexicons(reader);
   const sources = loadTracks(reader);
   const cross = crossValidate({

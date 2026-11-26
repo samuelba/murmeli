@@ -1,6 +1,6 @@
 # Plusbrücke: adding and subtracting within 10, first with pictures and ten-frames, then with numbers only.
 id: math-plusbruecke
-order: 5
+order: 6
 grade: '1'
 requires: [math-zehnerhuette]
 title: { de-CH: Plusbrücke, en-US: Plus Bridge }
