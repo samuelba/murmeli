@@ -19,4 +19,12 @@ docker compose up -d
 ```
 Then open http://localhost:8080. The first visit walks you through creating the admin account.
 
-The full manual is in [docs/site/](docs/site/), and [DEVELOPMENT.md](DEVELOPMENT.md) covers local development.
+## Documentation
+The [user manual](docs/site/index.md) covers:
+- [Quick start with Docker Compose](docs/site/getting-started/docker.md)
+- [Reverse proxy and HTTPS](docs/site/deployment/reverse-proxy.md), [Security](docs/site/deployment/security.md), [Backups](docs/site/deployment/backups.md) and [Upgrades](docs/site/deployment/upgrades.md)
+- Using it as a [parent](docs/site/usage/parents.md), [kid](docs/site/usage/kids.md) or [admin](docs/site/usage/admins.md)
+- [Curriculum](docs/site/learning/curriculum.md), [narration audio](docs/site/learning/audio.md) and [privacy](docs/site/privacy.md)
+- [Configuration reference](docs/site/reference/configuration.md)
+
+[DEVELOPMENT.md](DEVELOPMENT.md) covers local development.

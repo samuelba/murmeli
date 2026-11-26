@@ -33,6 +33,8 @@ jobs:
         run: npm run check:eszett
       - name: Environment variables are documented
         run: npm run docs:check
+      - name: Documentation links resolve
+        run: npm run check:doc-links
       - name: Validate compose files
         env:
           POSTGRES_PASSWORD: ci-placeholder
