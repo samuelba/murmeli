@@ -1,0 +1,138 @@
+x-hardening: &hardening
+  security_opt:
+    - no-new-privileges:true
+  restart: unless-stopped
+
+services:
+  postgres:
+    <<: *hardening
+    image: postgres:18-alpine
+    container_name: murmeli-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-murmeli}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-murmeli}
+    volumes:
+      - murmeli_postgres_data:/var/lib/postgresql
+    networks:
+      - murmeli
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    <<: *hardening
+    image: valkey/valkey:8-alpine
+    container_name: murmeli-redis
+    command: ["sh", "-c", "exec valkey-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\""]
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?set REDIS_PASSWORD in .env}
+    volumes:
+      - murmeli_redis_data:/data
+    networks:
+      - murmeli
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli -a \"$${REDIS_PASSWORD}\" --no-auth-warning ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    <<: *hardening
+    build:
+      context: ./backend
+      target: production
+    image: ghcr.io/samuelba/kids-learning/murmeli-backend:${MURMELI_VERSION:-latest}
+    container_name: murmeli-backend
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      TRUST_PROXY: ${TRUST_PROXY:-1}
+      APP_URL: ${APP_URL:?set APP_URL in .env (public URL, e.g. https://murmeli.example.com)}
+      CORS_ORIGINS: ${CORS_ORIGINS:-}
+
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: ${POSTGRES_USER:-murmeli}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_NAME: ${POSTGRES_DB:-murmeli}
+      DB_MIGRATIONS_RUN: ${DB_MIGRATIONS_RUN:-true}
+
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env (openssl rand -base64 48)}
+      JWT_ACCESS_EXPIRATION: ${JWT_ACCESS_EXPIRATION:-15m}
+      JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION:-30d}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?set ENCRYPTION_KEY in .env (openssl rand -base64 48)}
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN:-}
+
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+
+      REGISTRATION_ENABLED: ${REGISTRATION_ENABLED:-false}
+      ALTCHA_HMAC_KEY: ${ALTCHA_HMAC_KEY:?set ALTCHA_HMAC_KEY in .env (openssl rand -base64 48)}
+      RATE_LIMIT_TTL_SECONDS: ${RATE_LIMIT_TTL_SECONDS:-60}
+      RATE_LIMIT_LIMIT: ${RATE_LIMIT_LIMIT:-120}
+      RATE_LIMIT_AUTH_TTL_SECONDS: ${RATE_LIMIT_AUTH_TTL_SECONDS:-300}
+      RATE_LIMIT_AUTH_LIMIT: ${RATE_LIMIT_AUTH_LIMIT:-10}
+
+      BACKUP_DIR: /app/backups
+      BACKUP_MANDATORY: ${BACKUP_MANDATORY:-true}
+      BACKUP_KEEP_COUNT: ${BACKUP_KEEP_COUNT:-10}
+    volumes:
+      - murmeli_backups:/app/backups
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - murmeli
+
+  frontend:
+    <<: *hardening
+    build:
+      context: ./frontend
+      target: production
+    image: ghcr.io/samuelba/kids-learning/murmeli-frontend:${MURMELI_VERSION:-latest}
+    container_name: murmeli-frontend
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    environment:
+      BACKEND_URL: ${BACKEND_URL:-http://backend:3000}
+      HSTS_ENABLED: ${HSTS_ENABLED:-false}
+      HSTS_MAX_AGE: ${HSTS_MAX_AGE:-31536000}
+      NGINX_RESOLVER: ${NGINX_RESOLVER:-}
+    ports:
+      - "${FRONTEND_PORT:-8080}:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - murmeli
+
+networks:
+  murmeli:
+
+volumes:
+  murmeli_postgres_data:
+  murmeli_redis_data:
+  murmeli_backups:
