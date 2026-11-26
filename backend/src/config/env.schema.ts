@@ -43,6 +43,19 @@ const corsOrigins = z
 
 const optionalText = z.string().trim().min(1).optional();
 
+export function isTimeZone(value: string): boolean {
+  try {
+    new Intl.DateTimeFormat('en-US', { timeZone: value });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+const timeZone = z.string().trim().default('Europe/Zurich').refine(isTimeZone, {
+  error: 'must be an IANA time zone like Europe/Zurich',
+});
+
 export const DATABASE_SSL_MODES = ['false', 'true', 'require-verify'] as const;
 
 export const databaseEnvShape = {
@@ -94,6 +107,9 @@ export const identifierRateLimitShape = {
   RATE_LIMIT_EMAIL_RECIPIENT_LIMIT: envInt(3, 1, 1000),
   RATE_LIMIT_KID_PIN_LIMIT: envInt(5, 1, 1000),
   RATE_LIMIT_KID_PIN_WINDOW_SECONDS: envInt(900, 1, 86_400),
+  RATE_LIMIT_LEARN_WINDOW_SECONDS: envInt(60, 1, 3600),
+  RATE_LIMIT_LEARN_ANSWER_LIMIT: envInt(60, 1, 10_000),
+  RATE_LIMIT_LEARN_RUN_LIMIT: envInt(20, 1, 10_000),
 };
 
 export const backupEnvShape = {
@@ -147,6 +163,9 @@ export const baseEnvSchema = z.object({
 
   PASSWORD_HIBP_CHECK: envBoolean(false),
   SETUP_TOKEN: optionalText,
+
+  CONTENT_DIR: optionalText,
+  APP_TIMEZONE: timeZone,
 
   ...backupEnvShape,
 });

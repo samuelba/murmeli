@@ -33,6 +33,7 @@
     "avatars:sync": "node scripts/sync-avatar-catalog.mjs && prettier --write src/modules/kids/avatar-catalog.ts"
   },
   "dependencies": {
+    "@murmeli/content": "file:../content",
     "@nestjs/bullmq": "^12.0.2",
     "@nestjs/common": "^12.6.3",
     "@nestjs/config": "^12.1.1",

@@ -58,3 +58,17 @@ test('checkEnvDocs reads keys from a zod env schema', () => {
   const result = checkEnvDocs(root)
   assert.deepEqual(result.missingFromSample, ['APP_URL'])
 })
+
+test('checkEnvDocs reads every key of env.schema.ts, even with helper validators', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'murmeli-env-'))
+  fs.mkdirSync(path.join(root, 'backend', 'src', 'config'), { recursive: true })
+  fs.writeFileSync(
+    path.join(root, 'backend', 'src', 'config', 'env.schema.ts'),
+    'export const baseEnvSchema = z.object({\n  CONTENT_DIR: optionalText,\n})\n',
+  )
+  fs.writeFileSync(path.join(root, 'docker-compose.yml'), 'services: {}\n')
+  fs.writeFileSync(path.join(root, '.env.sample'), '')
+
+  const result = checkEnvDocs(root)
+  assert.deepEqual(result.missingFromSample, ['CONTENT_DIR'])
+})

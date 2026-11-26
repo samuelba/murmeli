@@ -1,0 +1,14 @@
+# Used instead of the root .dockerignore for `docker build -f backend/Dockerfile .`
+*
+!backend
+!content
+**/node_modules
+**/dist
+**/coverage
+**/.env
+**/.env.*
+**/*.tsbuildinfo
+**/npm-debug.log*
+backend/backups
+backend/Dockerfile*
+content/test

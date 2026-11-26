@@ -157,3 +157,30 @@ Every kid foreign key has `ON DELETE CASCADE`. Content ids are stored as text an
 
 ## 6. Pictures
 `content/pictures.yaml` maps picture ids (`apple`, `mouse`, `sun`…) to SVG files in `content/pictures/`, plus the word for each picture in every locale. The frontend copies the SVGs into `public/pictures/` with a sync script, the same way it copies the brand assets. Literacy exercises take their words from there. The first pictures are a curated subset of **Noto Emoji** SVGs (Apache-2.0), self-hosted, with the license file shipped next to them. Custom illustrations can replace them later.
+
+## 7. Backend decisions (milestone 3)
+- **Errors:**
+  - Starting a run: `403 LEVEL_LOCKED`, `404 LEVEL_NOT_FOUND` (also for a level in another language's track), `403 DAILY_LIMIT_REACHED`.
+  - Practice: `409 NOTHING_TO_PRACTICE`.
+  - Answers: `409 ITEM_DONE`, and `409 RUN_BUSY` for a concurrent duplicate answer.
+  - Unknown, finished or foreign runs: `404 RUN_NOT_FOUND`.
+  - Run starts and answers are limited per kid. Going over the limit returns `429 LEARN_RATE_LIMITED` with `Retry-After`.
+- **Demo seen:** stored in `level_progress.demo_seen_at` and set when a run starts. There is no separate endpoint.
+- **Redis keys:** `murmeli:run:<runId>` and `murmeli:run-active:<kidId>`. If saving a finish fails, the run is restored so the finish can be retried.
+- **Mastery:**
+  - The first run sets mastery to its score; later runs use the 0.7/0.3 average.
+  - A new skill starts in Leitner box 1.
+  - Only skills with at least one answer are updated, so leaving early doesn't count against the kid.
+- **Practice:**
+  - Skills are picked in this order: due, then never played, then weakest. Ties go to the most recently played. A practice run has 8 to 10 items.
+  - Finishing a practice run returns feedback stars (against a pass ratio of 0.8) with `passed: false`, and never stores stars.
+- **Time:**
+  - Answer durations are measured on the server, capped at 5 minutes per answer and 86,400 seconds per day.
+  - The day boundary uses `APP_TIMEZONE`, default Europe/Zurich.
+  - The daily limit is only checked when a run starts.
+- **Badges:** `first-level`, `first-world`, `star-collector` (5 levels with 3 stars) and `first-practice`.
+- **Parent progress:** `GET /api/parent/kids/:id/progress` returns `ParentProgressResponse`, defined in `backend/src/modules/learning/parent/parent-progress.types.ts`. It should move into `content/schema/api.ts` once the parent dashboard uses it.
+- **Database:**
+  - `best_score` and `mastery` are `double precision`.
+  - `attempts` is append-only for the runtime role, with a unique key on `(run_id, item_index, attempt)`.
+  - `attempts` has no retention or rollup yet.

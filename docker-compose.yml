@@ -48,7 +48,8 @@ services:
   backend:
     <<: *hardening
     build:
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
       target: production
     image: ghcr.io/samuelba/kids-learning/murmeli-backend:${MURMELI_VERSION:-latest}
     container_name: murmeli-backend
@@ -116,6 +117,10 @@ services:
       RATE_LIMIT_EMAIL_RECIPIENT_LIMIT: ${RATE_LIMIT_EMAIL_RECIPIENT_LIMIT:-3}
       PASSWORD_HIBP_CHECK: ${PASSWORD_HIBP_CHECK:-false}
       SETUP_TOKEN: ${SETUP_TOKEN:-}
+      APP_TIMEZONE: ${APP_TIMEZONE:-Europe/Zurich}
+      RATE_LIMIT_LEARN_WINDOW_SECONDS: ${RATE_LIMIT_LEARN_WINDOW_SECONDS:-60}
+      RATE_LIMIT_LEARN_ANSWER_LIMIT: ${RATE_LIMIT_LEARN_ANSWER_LIMIT:-60}
+      RATE_LIMIT_LEARN_RUN_LIMIT: ${RATE_LIMIT_LEARN_RUN_LIMIT:-20}
 
       BACKUP_DIR: /app/backups
       BACKUP_MANDATORY: ${BACKUP_MANDATORY:-true}
@@ -134,7 +139,8 @@ services:
   frontend:
     <<: *hardening
     build:
-      context: ./frontend
+      context: .
+      dockerfile: frontend/Dockerfile
       target: production
     image: ghcr.io/samuelba/kids-learning/murmeli-frontend:${MURMELI_VERSION:-latest}
     container_name: murmeli-frontend

@@ -289,6 +289,36 @@ export const ENV_VARS: readonly EnvVarDoc[] = [
     'Reject passwords found in the Have I Been Pwned breach list (k-anonymity range query, 2 s timeout, allowed through when the service is unreachable).',
   ),
   doc(
+    'RATE_LIMIT_LEARN_WINDOW_SECONDS',
+    'no',
+    '60',
+    'Window of the per-kid learning limits below.',
+  ),
+  doc(
+    'RATE_LIMIT_LEARN_ANSWER_LIMIT',
+    'no',
+    '60',
+    'Answers per kid allowed in the learning window. Further answers get 429 until the window ends.',
+  ),
+  doc(
+    'RATE_LIMIT_LEARN_RUN_LIMIT',
+    'no',
+    '20',
+    'Level and practice runs a kid may start in the learning window.',
+  ),
+  doc(
+    'CONTENT_DIR',
+    'no',
+    undefined,
+    'Curriculum directory (`tracks/`, `lexicon/`, `pictures.yaml`, `pictures/`). Defaults to the bundled `@murmeli/content` package. The backend refuses to start when the content does not validate.',
+  ),
+  doc(
+    'APP_TIMEZONE',
+    'no',
+    'Europe/Zurich',
+    'IANA time zone that defines the day boundary of the daily time limit and the activity statistics.',
+  ),
+  doc(
     'BACKUP_DIR',
     'no',
     '/app/backups',

@@ -59,7 +59,7 @@ All cookies are httpOnly, Secure (when `COOKIE_SECURE`) and SameSite=Strict.
 - **Admin:** an unknown user returns `404 USER_NOT_FOUND`. `PATCH /admin/settings` returns the full settings.
 - **Account:**
   - `DELETE /account` by the last active admin returns `400 LAST_ADMIN`.
-  - The export is `{ exportedAt, user, kids, progress }`.
+  - The export is `{ exportedAt, user, kids, progress }`, where `progress` has one entry per kid: `{ kidId, levels, skills, activity, badges, attempts }`. Attempts are summarized per skill and mode.
   - Confirming an email change doesn't revoke sessions.
   - A password reset also counts as email verification.
 - **Kids:**

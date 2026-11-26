@@ -103,7 +103,15 @@ describeWithDb('Account (e2e)', () => {
     expect(response.body).toMatchObject({
       user: { email },
       kids: [{ nickname: 'Mia', hasPin: true }],
-      progress: [],
+      progress: [
+        {
+          levels: [],
+          skills: [],
+          activity: [],
+          badges: [],
+          attempts: [],
+        },
+      ],
     });
     const text = JSON.stringify(response.body);
     expect(text).not.toMatch(/argon2|password|pinHash|token/i);

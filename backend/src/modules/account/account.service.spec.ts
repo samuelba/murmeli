@@ -1,3 +1,4 @@
+import type { ProgressExportService } from '../learning/progress/progress-export.service';
 import { HttpException } from '@nestjs/common';
 import type { AuditService } from '../audit/audit.service';
 import type { PasswordService } from '../auth/passwords/password.service';
@@ -89,6 +90,13 @@ function setup(current: UserEntity | null = user()) {
       .mockResolvedValue([{ id: 'k1', nickname: 'Zoë', hasPin: true }]),
   };
   const audit = { record: jest.fn().mockResolvedValue(undefined) };
+  const progressExport = {
+    forKids: jest
+      .fn()
+      .mockImplementation((ids: string[]) =>
+        Promise.resolve(ids.map((kidId) => ({ kidId, levels: [] }))),
+      ),
+  };
   const service = new AccountService(
     users as unknown as UsersService,
     passwords as unknown as PasswordService,
@@ -99,9 +107,11 @@ function setup(current: UserEntity | null = user()) {
     audit as unknown as AuditService,
     guardrail as unknown as UserGuardrail,
     dataSource as unknown as DataSource,
+    progressExport as unknown as ProgressExportService,
   );
   return {
     service,
+    progressExport,
     manager,
     guardrail,
     users,
@@ -262,7 +272,7 @@ describe('AccountService.export', () => {
       lastLoginAt: '2026-02-01T00:00:00.000Z',
     });
     expect(data.kids).toHaveLength(1);
-    expect(data.progress).toEqual([]);
+    expect(data.progress).toEqual([{ kidId: 'k1', levels: [] }]);
     expect(data.exportedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
     const json = JSON.stringify(data);
     expect(json).not.toContain('argon2id');

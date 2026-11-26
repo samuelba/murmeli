@@ -11,6 +11,10 @@ import { invalidCredentials } from '../auth/services/login.service';
 import { SessionService } from '../auth/sessions/session.service';
 import { KidsService } from '../kids/kids.service';
 import type { KidView } from '../kids/kid.types';
+import {
+  type KidProgressExport,
+  ProgressExportService,
+} from '../learning/progress/progress-export.service';
 import { deleteUserIn } from '../users/user-deletion';
 import { UserGuardrail } from '../users/user-guardrail.service';
 import { UserEntity } from '../users/user.entity';
@@ -26,7 +30,7 @@ export interface AccountExport {
   readonly exportedAt: string;
   readonly user: UserView & { readonly lastLoginAt: string | null };
   readonly kids: readonly KidView[];
-  readonly progress: readonly unknown[];
+  readonly progress: readonly KidProgressExport[];
 }
 
 /**
@@ -45,6 +49,7 @@ export class AccountService {
     private readonly audit: AuditService,
     private readonly guardrail: UserGuardrail,
     private readonly dataSource: DataSource,
+    private readonly progressExport: ProgressExportService,
   ) {}
 
   async changePassword(
@@ -115,14 +120,15 @@ export class AccountService {
 
   async export(userId: string): Promise<AccountExport> {
     const user = this.require(await this.users.findById(userId));
+    const kids = await this.kids.list(userId);
     return {
       exportedAt: new Date().toISOString(),
       user: {
         ...toUserView(user),
         lastLoginAt: user.lastLoginAt?.toISOString() ?? null,
       },
-      kids: await this.kids.list(userId),
-      progress: [],
+      kids,
+      progress: await this.progressExport.forKids(kids.map((kid) => kid.id)),
     };
   }
 

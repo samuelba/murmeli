@@ -16,9 +16,38 @@ All feature modules live in `src/modules/`.
 | `audit`    | Typed audit log with truncated IPs (/24, /48) and no PII, plus the daily retention job (180 days; expired tokens and invites).                                                                                                                                                                                         |
 | `email`    | Handlebars templates (`templates/<locale>/<name>.{html,txt}.hbs`), nodemailer, and the BullMQ `email` queue. Disabled when `SMTP_HOST` is empty.                                                                                                                                                                       |
 | `settings` | `app_settings` (`registration_enabled`, `require_admin_totp`). Env values apply until an admin changes a setting.                                                                                                                                                                                                      |
+| `learning` | The learning engine (contract: [docs/internal/learning-engine.md](../docs/internal/learning-engine.md)): trail map, level and practice runs, answers, scoring, unlocking, mastery, daily limit, badges and the parent progress view. See below.                                                                        |
 | `altcha`   | Self-hosted ALTCHA v2 challenges (SHA-256, HMAC-signed, 10 minutes, single use via Redis).                                                                                                                                                                                                                             |
 
 Global guards run in this order: `SameOriginGuard`, the Redis throttler (`default`, `auth` and `email` limits), then `AuthGuard`. Identifier-based limits (per account, user, sign-in step and kid) are in `auth/limits` and fail closed.
+
+## Learning engine
+
+The curriculum comes from `@murmeli/content` (`file:../content`), which is loaded and validated once at startup (`CONTENT_DIR`, default: the bundled package). Invalid content stops the backend and lists every issue. Build `content/` (`npm ci && npm run build` in `content/`) before installing or building the backend.
+
+| Route (all under `/api`)           | Guard       | Response (types from `content/schema/api.ts`)                                                |
+| ---------------------------------- | ----------- | -------------------------------------------------------------------------------------------- |
+| `GET /learn/map`                   | kid         | `MapResponse`: only the tracks of the kid's language, localized                              |
+| `POST /learn/levels/:levelId/runs` | kid         | `201 StartRunResponse`; `403 LEVEL_LOCKED`, `404 LEVEL_NOT_FOUND`, `403 DAILY_LIMIT_REACHED` |
+| `POST /learn/practice/runs`        | kid         | `201 PracticeRunResponse`; `409 NOTHING_TO_PRACTICE`, `403 DAILY_LIMIT_REACHED`              |
+| `POST /learn/runs/:runId/answers`  | kid         | `AnswerResponse`; `400 VALIDATION_FAILED`, `404 RUN_NOT_FOUND`, `409 ITEM_DONE`/`RUN_BUSY`   |
+| `POST /learn/runs/:runId/finish`   | kid         | `FinishRunResponse`; `404 RUN_NOT_FOUND` (also when finished already)                        |
+| `GET /parent/kids/:id/progress`    | parent gate | `ParentProgressResponse` (`learning/parent/parent-progress.types.ts`); `404 KID_NOT_FOUND`   |
+
+- **Runs** live in Redis as `murmeli:run:<runId>` (2 h TTL) with the seed, the solutions and the attempts; `murmeli:run-active:<kidId>` points at the kid's only active run, and starting a run replaces it (the replaced run's answer time still counts for the day). Updates are compare-and-set Lua scripts, so two concurrent answers cannot use the same attempt and a run is finished exactly once; if saving the result fails, the run is put back so the finish can be retried. Another kid's run answers 404 like an unknown one.
+- **Answers:** 2 attempts per item, a `hint` after a wrong first attempt, `solution` after the last one. Durations are measured on the server from when the item was served or last answered, capped at 5 minutes. Every attempt is written to `attempts` (append-only for the runtime role).
+- **Demo:** `demo` is included until the kid has seen it; it is marked as seen (`level_progress.demo_seen_at`) when the run starts.
+- **Finishing:** `score` is the mean item score (unanswered items count 0), `stars`/`passed` follow `starsFor`; `level_progress` keeps the best result; skill mastery is an EWMA (0.7 / 0.3, the first run seeds it) with Leitner boxes of 1, 2, 4, 8 and 16 days, updated only for skills with at least one answer; `daily_activity` gets the run time and a run; newly opened levels and worlds are the difference of the map before and after. Practice runs update mastery and time but not stars (their `stars` are only feedback and `passed` is always false).
+- **Unlocking:** worlds open once every `requires` world is completed; levels open in order; worlds below the kid's start class are `skipped` (open, and completed for `requires`); a passed level stays passed.
+- **Practice:** up to 3 skills of open levels: due skills (earliest review first), then never-played skills, then the weakest; 8 to 10 interleaved items from those skills' open levels.
+- **Daily limit:** the run time of the current day in `APP_TIMEZONE` is checked when a run starts.
+- **Badges** (`progress/badges.ts`): `first-level`, `first-world`, `star-collector` (5 levels with 3 stars), `first-practice`. They are never taken away and nothing depends on streaks.
+- **Rate limits:** per kid, `RATE_LIMIT_LEARN_ANSWER_LIMIT` answers and `RATE_LIMIT_LEARN_RUN_LIMIT` run starts per `RATE_LIMIT_LEARN_WINDOW_SECONDS` (`429 LEARN_RATE_LIMITED` with `Retry-After`), on top of the per-IP limit.
+- **Export:** `GET /account/export` includes per kid the level progress, mastery, daily activity, badges and the attempts summarized per skill and mode.
+
+## Docker image
+
+The image is built from the repository root, because it includes the curriculum: `docker build -f backend/Dockerfile --target production .` (`backend/Dockerfile.dockerignore` limits the context to `backend/` and `content/`). The production stage holds the backend in `/app/backend` and the built content package (`dist`, `tracks`, `lexicon`, `pictures.yaml`, `pictures/`, which the validator checks) in `/app/content`.
 
 ## Scripts
 

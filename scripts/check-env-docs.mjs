@@ -16,6 +16,7 @@ const PROCESS_ENV_INDEX = new RegExp(
 )
 const ENV_PROPERTY = new RegExp(`(?<![\\w.])env\\.(${ENV_NAME})`, 'g')
 const ZOD_KEY = new RegExp(`^\\s*(${ENV_NAME})\\s*:\\s*z\\.`, 'gm')
+const SCHEMA_KEY = new RegExp(`^\\s*(${ENV_NAME})\\s*:`, 'gm')
 const COMPOSE_VAR = new RegExp(`\\$\\{(${ENV_NAME})`, 'g')
 const DOC_NAME = new RegExp(`\`(${ENV_NAME})\``, 'g')
 
@@ -40,6 +41,7 @@ export function collectEnvNames(root) {
     collectMatches(text, ENV_PROPERTY, names)
     collectMatches(text, GET_CALL, names)
     collectMatches(text, ZOD_KEY, names)
+    if (path.basename(file) === 'env.schema.ts') collectMatches(text, SCHEMA_KEY, names)
   }
   const compose = fs.readFileSync(path.join(root, 'docker-compose.yml'), 'utf8')
   collectMatches(compose, COMPOSE_VAR, names)

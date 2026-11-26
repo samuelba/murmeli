@@ -15,6 +15,7 @@ import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { EmailModule } from './modules/email/email.module';
 import { KidsModule } from './modules/kids/kids.module';
+import { LearningModule } from './modules/learning/learning.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { RedisModule } from './redis/redis.module';
 import { RateLimitModule } from './throttler/rate-limit.module';
@@ -41,6 +42,7 @@ import { RateLimitModule } from './throttler/rate-limit.module';
     EmailModule.register(),
     AuthModule,
     KidsModule,
+    LearningModule,
     AccountModule,
     AdminModule,
   ],
