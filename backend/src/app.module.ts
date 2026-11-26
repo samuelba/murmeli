@@ -6,7 +6,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { SameOriginGuard } from './common/guards/same-origin.guard';
 import { buildLoggerOptions } from './common/logging/logger.options';
 import { type AppConfigService, pickEnv } from './config/app-config';
-import { validateEnv } from './config/validate-env';
+import { CONFIG_MODULE_OPTIONS } from './config/config-module.options';
 import { DatabaseModule } from './database/database.module';
 import { HealthModule } from './health/health.module';
 import { AccountModule } from './modules/account/account.module';
@@ -22,11 +22,7 @@ import { RateLimitModule } from './throttler/rate-limit.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      cache: true,
-      validate: validateEnv,
-    }),
+    ConfigModule.forRoot(CONFIG_MODULE_OPTIONS),
     LoggerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: AppConfigService) =>
