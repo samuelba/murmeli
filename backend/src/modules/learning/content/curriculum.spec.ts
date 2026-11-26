@@ -9,6 +9,7 @@ import {
   localize,
 } from './curriculum';
 import { CurriculumProvider } from './curriculum.provider';
+import { computeStates, isOpen } from '../progress/unlock';
 
 describe('Curriculum', () => {
   const curriculum = loadCurriculum(undefined);
@@ -17,6 +18,23 @@ describe('Curriculum', () => {
     expect(curriculum.content.tracks.length).toBeGreaterThanOrEqual(3);
     expect(curriculum.worlds.length).toBeGreaterThan(0);
   });
+
+  it.each(['de-CH', 'en-US'] as const)(
+    'gives a new %s kid open levels with generators, so practice always has items',
+    (locale) => {
+      const states = computeStates(
+        curriculum.worldsFor(locale),
+        'KG1',
+        new Map(),
+      );
+      const open = curriculum
+        .levelsFor(locale)
+        .filter((level) => isOpen(states.levels.get(level.id)));
+
+      expect(open.length).toBeGreaterThan(0);
+      expect(open.every((level) => level.generators.length > 0)).toBe(true);
+    },
+  );
 
   it('shows a kid only the tracks of their language', () => {
     expect(curriculum.tracksFor('de-CH').map((t) => t.id)).toEqual([

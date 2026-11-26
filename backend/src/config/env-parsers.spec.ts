@@ -1,4 +1,11 @@
-import { isHttpOrigin, parseBoolean, parseOriginList } from './env-parsers';
+import {
+  envEmail,
+  envPlainText,
+  isHttpOrigin,
+  normalizePlainText,
+  parseBoolean,
+  parseOriginList,
+} from './env-parsers';
 
 describe('parseBoolean', () => {
   it.each([
@@ -39,5 +46,31 @@ describe('isHttpOrigin', () => {
     ['not a url', false],
   ])('%p -> %p', (value, expected) => {
     expect(isHttpOrigin(value)).toBe(expected);
+  });
+});
+
+describe('envPlainText', () => {
+  const schema = envPlainText(20);
+
+  it('turns literal \\n into line breaks and trims every line', () => {
+    expect(schema.parse('  Weg 1 \\n 8000 Bern  ')).toBe('Weg 1\n8000 Bern');
+    expect(normalizePlainText('a\r\nb\rc')).toBe('a\nb\nc');
+    expect(schema.parse(undefined)).toBeUndefined();
+  });
+
+  it('rejects blank, too long and control characters', () => {
+    expect(schema.safeParse('  ').success).toBe(false);
+    expect(schema.safeParse('x'.repeat(21)).success).toBe(false);
+    expect(schema.safeParse('a\u0007b').success).toBe(false);
+    expect(schema.safeParse('a\tb').success).toBe(false);
+  });
+});
+
+describe('envEmail', () => {
+  it('accepts a trimmed address and rejects anything else', () => {
+    expect(envEmail().parse(' privacy@example.com ')).toBe(
+      'privacy@example.com',
+    );
+    expect(envEmail().safeParse('nope').success).toBe(false);
   });
 });

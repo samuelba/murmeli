@@ -23,8 +23,13 @@ import {
   inviteInvalid,
 } from '../auth/invites/invite.service';
 import { RegistrationService } from '../auth/services/registration.service';
+import { AuthThrottle } from '../../throttler/auth-throttle.decorator';
 import { UsersService } from '../users/users.service';
 import { CreateInviteDto, UpdateUserDto, UserSearchQuery } from './admin.dto';
+import {
+  AdminRecoveryService,
+  type PasswordResetLink,
+} from './admin-recovery.service';
 import { type AdminUserView, AdminUsersService } from './admin-users.service';
 
 @AdminOnly()
@@ -35,6 +40,7 @@ export class AdminUsersController {
     private readonly registration: RegistrationService,
     private readonly invites: InviteService,
     private readonly users: UsersService,
+    private readonly recovery: AdminRecoveryService,
   ) {}
 
   @Get('users')
@@ -74,6 +80,33 @@ export class AdminUsersController {
   async resendVerification(@UuidParam() id: string): Promise<{ ok: true }> {
     await this.registration.resendForUser(id);
     return { ok: true };
+  }
+
+  @Post('users/:id/password-reset-link')
+  @HttpCode(201)
+  @AuthThrottle()
+  passwordResetLink(
+    @CurrentAuth() auth: AuthContext,
+    @UuidParam() id: string,
+    @Req() request: Request,
+  ): Promise<PasswordResetLink> {
+    return this.recovery.passwordResetLink(
+      { userId: auth.userId, ip: requestMeta(request).ip },
+      id,
+    );
+  }
+
+  @Post('users/:id/verify-email')
+  @HttpCode(200)
+  verifyEmail(
+    @CurrentAuth() auth: AuthContext,
+    @UuidParam() id: string,
+    @Req() request: Request,
+  ): Promise<AdminUserView> {
+    return this.recovery.verifyEmail(
+      { userId: auth.userId, ip: requestMeta(request).ip },
+      id,
+    );
   }
 
   @Get('invites')

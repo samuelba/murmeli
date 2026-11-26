@@ -244,7 +244,7 @@ describeWithDb('Learning engine (e2e)', () => {
 
     const again = await start(kid);
     expect(again.demoSeen).toBe(true);
-    expect(again).not.toHaveProperty('demo');
+    expect(again.demo).toEqual(run.demo);
 
     const [attempts] = await db.query<
       { n: number; correct: boolean; level: boolean; timed: boolean }[]

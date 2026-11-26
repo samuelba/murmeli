@@ -225,9 +225,14 @@ describe('ProgressService.finish', () => {
       summary(0.8, last.skill),
       NOW,
     );
+    const opened = curriculum.content.tracks
+      .filter((track) => track.locales.includes(kid.language))
+      .flatMap((track) => track.worlds)
+      .filter((world) => world.requires.includes('math-zahlenwiese'));
+    expect(opened.length).toBeGreaterThan(0);
     expect(result.unlocked).toEqual({
-      levels: ['math-zahlenbach-01'],
-      worlds: ['math-zahlenbach'],
+      levels: opened.map((world) => world.levels[0].id),
+      worlds: opened.map((world) => world.id),
     });
     expect(result.newBadges).toEqual(['first-level', 'first-world']);
   });

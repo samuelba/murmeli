@@ -95,11 +95,9 @@ export class RunService {
       runId,
       items: items.map((item) => toPublicExercise(item)),
       demoSeen: access.demoSeen,
-      ...(!access.demoSeen && {
-        demo: toPublicDemo(
-          generateDemo(level, kid.language, this.curriculum.content),
-        ),
-      }),
+      demo: toPublicDemo(
+        generateDemo(level, kid.language, this.curriculum.content),
+      ),
     };
   }
 

@@ -8,7 +8,8 @@ const request = {
 const response = {} as Response;
 const meta = { ip: '203.0.113.1', userAgent: 'jest' };
 
-function setup() {
+function setup(operator: Record<string, string> = {}) {
+  const config = { get: jest.fn((key: string) => operator[key]) };
   const deps = {
     settings: { isRegistrationEnabled: jest.fn().mockResolvedValue(true) },
     setupService: {
@@ -31,6 +32,7 @@ function setup() {
     deps.sessionFlow as never,
     deps.issuer as never,
     deps.mailer as never,
+    config as never,
   );
   return { controller, ...deps };
 }
@@ -44,6 +46,30 @@ describe('AuthController', () => {
       emailEnabled: false,
       setupRequired: false,
       setupTokenRequired: true,
+      legal: {
+        operatorName: null,
+        contactEmail: null,
+        address: null,
+        privacyNote: null,
+      },
+    });
+  });
+
+  it('includes the operator details for the legal pages', async () => {
+    const { controller } = setup({
+      OPERATOR_NAME: 'Familie Muster',
+      OPERATOR_CONTACT_EMAIL: 'privacy@example.com',
+      OPERATOR_ADDRESS: 'Weg 1\n8000 Zürich',
+      OPERATOR_PRIVACY_NOTE: 'Hosted at home.',
+    });
+
+    await expect(controller.config()).resolves.toMatchObject({
+      legal: {
+        operatorName: 'Familie Muster',
+        contactEmail: 'privacy@example.com',
+        address: 'Weg 1\n8000 Zürich',
+        privacyNote: 'Hosted at home.',
+      },
     });
   });
 

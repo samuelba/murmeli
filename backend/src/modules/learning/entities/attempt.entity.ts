@@ -15,6 +15,7 @@ import { RUN_MODES, type RunMode } from '../learning.constants';
 
 @Entity('attempts')
 @Index('IDX_attempts_kid_created_at', ['kidId', 'createdAt'])
+@Index('IDX_attempts_created_at', ['createdAt'])
 @Index('UQ_attempts_run_item_attempt', ['runId', 'itemIndex', 'attempt'], {
   unique: true,
 })

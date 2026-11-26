@@ -7,9 +7,17 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import type { Request, Response } from 'express';
 import { Public } from '../../../common/decorators/public.decorator';
 import { requestMeta } from '../../../common/http/request-meta';
+import { pickEnv } from '../../../config/app-config';
+import type { Env } from '../../../config/env.schema';
+import {
+  type LegalInfo,
+  OPERATOR_ENV_KEYS,
+  legalInfo,
+} from '../../../config/legal-info';
 import { AuthThrottle } from '../../../throttler/auth-throttle.decorator';
 import { SettingsService } from '../../settings/settings.service';
 import type { UserView } from '../../users/user.view';
@@ -25,6 +33,7 @@ export interface AuthConfigView {
   readonly emailEnabled: boolean;
   readonly setupRequired: boolean;
   readonly setupTokenRequired: boolean;
+  readonly legal: LegalInfo;
 }
 
 @Controller('auth')
@@ -36,7 +45,12 @@ export class AuthController {
     private readonly sessionFlow: SessionFlowService,
     private readonly issuer: SessionIssuer,
     private readonly mailer: AuthMailer,
-  ) {}
+    config: ConfigService<Env, true>,
+  ) {
+    this.legal = legalInfo(pickEnv(config, OPERATOR_ENV_KEYS));
+  }
+
+  private readonly legal: LegalInfo;
 
   @Public()
   @Get('config')
@@ -50,6 +64,7 @@ export class AuthController {
       emailEnabled: this.mailer.enabled,
       setupRequired,
       setupTokenRequired: this.setupService.tokenRequired,
+      legal: this.legal,
     };
   }
 

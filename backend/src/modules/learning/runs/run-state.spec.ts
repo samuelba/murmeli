@@ -1,4 +1,5 @@
 import { generateRun } from '@murmeli/content';
+import { BODY_LIMIT } from '../../../bootstrap/configure-app';
 import { loadCurriculum } from '../content/curriculum';
 import { MAX_ITEM_DURATION_MS } from '../learning.constants';
 import {
@@ -217,5 +218,61 @@ describe('activeSeconds', () => {
     expect(activeSeconds(state, T0 + 3_600_000)).toBe(
       30 + MAX_ITEM_DURATION_MS / 1000,
     );
+  });
+});
+
+describe('trace-letter answers', () => {
+  const traceLevel =
+    curriculum.content.index.levels['reading-de-schreibwiese-01'].level;
+
+  function traceRun(): RunState {
+    const items = generateRun(traceLevel, 99, {
+      locale: 'de-CH',
+      content: curriculum.content,
+    }).map((item) => ({
+      ...item,
+      levelId: traceLevel.id,
+      skillId: traceLevel.skill,
+    }));
+    return createRunState({
+      runId: 'run-t',
+      kidId: 'kid-1',
+      levelId: traceLevel.id,
+      mode: 'level',
+      seed: 99,
+      now: T0,
+      items,
+    });
+  }
+
+  it('accepts the largest drawing within the JSON body limit', () => {
+    const state = traceRun();
+    const index = state.items.findIndex((item) => item.type === 'trace-letter');
+    const point = (i: number) => [
+      12.345678901234567 + (i % 50),
+      45.67890123456789 + (i % 30),
+    ];
+    const strokes = Array.from({ length: 6 }, () =>
+      Array.from({ length: 200 }, (_, i) => point(i)),
+    );
+    const body = JSON.stringify({ index, answer: { strokes } });
+
+    expect(Buffer.byteLength(body)).toBeLessThan(
+      parseInt(BODY_LIMIT, 10) * 1024,
+    );
+    expect(applyAnswer(state, index, { strokes }, T0 + 1000)).toMatchObject({
+      ok: true,
+      response: { correct: false, attempt: 1 },
+    });
+  });
+
+  it('accepts the model strokes as a correct tracing', () => {
+    const state = traceRun();
+    const index = state.items.findIndex((item) => item.type === 'trace-letter');
+
+    expect(
+      answer(state, index, state.items[index].solution.answer, T0 + 1000)
+        .response,
+    ).toEqual({ correct: true, attempt: 1 });
   });
 });

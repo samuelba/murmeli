@@ -1,9 +1,10 @@
 #!/bin/sh
 # Creates the least-privileged runtime role for the backend. Runs once from
 # /docker-entrypoint-initdb.d of the official postgres image, as POSTGRES_USER,
-# which owns the schema and runs the migrations. The migrations narrow the
-# default grants further: the role may only UPDATE the anonymisable columns of
-# audit_log (actor_id, ip, target_id).
+# which owns the schema and runs the migrations. The migrations (and every
+# migrate.js run after them) narrow the default grants further: the role may
+# only UPDATE the anonymisable columns of audit_log (actor_id, ip, target_id)
+# and never UPDATE attempts (src/database/narrowed-grants.ts).
 set -eu
 
 : "${POSTGRES_APP_USER:?POSTGRES_APP_USER must be set}"

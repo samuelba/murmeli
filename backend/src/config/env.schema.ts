@@ -3,7 +3,9 @@ import { errorMessage } from '../common/errors/error-message';
 import {
   envBoolean,
   envDuration,
+  envEmail,
   envInt,
+  envPlainText,
   envPort,
   envRequired,
   isHttpOrigin,
@@ -112,6 +114,13 @@ export const identifierRateLimitShape = {
   RATE_LIMIT_LEARN_RUN_LIMIT: envInt(20, 1, 10_000),
 };
 
+export const operatorEnvShape = {
+  OPERATOR_NAME: envPlainText(200),
+  OPERATOR_CONTACT_EMAIL: envEmail(),
+  OPERATOR_ADDRESS: envPlainText(500),
+  OPERATOR_PRIVACY_NOTE: envPlainText(2000),
+};
+
 export const backupEnvShape = {
   BACKUP_DIR: z.string().trim().min(1).default('/app/backups'),
   BACKUP_MANDATORY: envBoolean(true),
@@ -166,6 +175,9 @@ export const baseEnvSchema = z.object({
 
   CONTENT_DIR: optionalText,
   APP_TIMEZONE: timeZone,
+  ATTEMPTS_RETENTION_DAYS: envInt(365, 30, 3650),
+
+  ...operatorEnvShape,
 
   ...backupEnvShape,
 });

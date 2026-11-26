@@ -76,3 +76,49 @@ export function isHttpOrigin(value: string): boolean {
     return false;
   }
 }
+
+function hasControlCharacter(value: string): boolean {
+  return [...value].some((char) => {
+    const code = char.charCodeAt(0);
+    return (code < 0x20 && char !== '\n') || code === 0x7f;
+  });
+}
+
+export function normalizePlainText(raw: string): string {
+  return raw
+    .replace(/\\n/g, '\n')
+    .replace(/\r\n?/g, '\n')
+    .split('\n')
+    .map((line) => line.trim())
+    .join('\n')
+    .trim();
+}
+
+/**
+ * Optional plain text shown to users as is. A literal `\n` is a line break,
+ * so multi-line values fit on one env line; other control characters are
+ * rejected.
+ */
+export function envPlainText(max: number) {
+  return z
+    .string()
+    .transform(normalizePlainText)
+    .pipe(
+      z
+        .string()
+        .min(1, 'is empty')
+        .max(max, `must be at most ${max} characters`)
+        .refine((value) => !hasControlCharacter(value), {
+          error: 'must be plain text without control characters',
+        }),
+    )
+    .optional();
+}
+
+export function envEmail() {
+  return z
+    .string()
+    .trim()
+    .pipe(z.email({ error: 'must be an email address' }))
+    .optional();
+}

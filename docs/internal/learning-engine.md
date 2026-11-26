@@ -165,7 +165,7 @@ Every kid foreign key has `ON DELETE CASCADE`. Content ids are stored as text an
   - Answers: `409 ITEM_DONE`, and `409 RUN_BUSY` for a concurrent duplicate answer.
   - Unknown, finished or foreign runs: `404 RUN_NOT_FOUND`.
   - Run starts and answers are limited per kid. Going over the limit returns `429 LEARN_RATE_LIMITED` with `Retry-After`.
-- **Demo seen:** stored in `level_progress.demo_seen_at` and set when a run starts. There is no separate endpoint.
+- **Demo seen:** stored in `level_progress.demo_seen_at` and set when a run starts. Level runs always include `demo`, and `demoSeen` means it was seen before this run. The frontend auto-plays the demo only when `demoSeen` is false.
 - **Redis keys:** `murmeli:run:<runId>` and `murmeli:run-active:<kidId>`. If saving a finish fails, the run is restored so the finish can be retried.
 - **Mastery:**
   - The first run sets mastery to its score; later runs use the 0.7/0.3 average.
@@ -183,7 +183,8 @@ Every kid foreign key has `ON DELETE CASCADE`. Content ids are stored as text an
 - **Database:**
   - `best_score` and `mastery` are `double precision`.
   - `attempts` is append-only for the runtime role, with a unique key on `(run_id, item_index, attempt)`.
-  - `attempts` has no retention or rollup yet.
+  - Attempts older than `ATTEMPTS_RETENTION_DAYS` (default 365) are deleted in batches. Progress views never read `attempts`.
+  - `NOTHING_TO_PRACTICE` only happens when no open level has a generator, which valid content rules out.
 
 ## 8. Milestone 5 additions (content runtime)
 - **New types:**

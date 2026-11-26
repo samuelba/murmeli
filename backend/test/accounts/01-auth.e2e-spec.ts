@@ -29,6 +29,12 @@ describeWithDb('Auth (e2e, real Postgres and Redis)', () => {
     const client = newClient(app);
     const config = await client.get('/api/auth/config').expect(200);
     expect(config.body).toMatchObject({ setupRequired: true });
+    expect(config.body.legal).toEqual({
+      operatorName: process.env.OPERATOR_NAME ?? null,
+      contactEmail: process.env.OPERATOR_CONTACT_EMAIL ?? null,
+      address: process.env.OPERATOR_ADDRESS ?? null,
+      privacyNote: process.env.OPERATOR_PRIVACY_NOTE ?? null,
+    });
 
     const setup = await client
       .post('/api/auth/setup')

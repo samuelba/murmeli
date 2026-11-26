@@ -166,11 +166,11 @@ describe('RunService.startLevel', () => {
     expect(stored.items[0].solution).toBeDefined();
   });
 
-  it('leaves the demo out once seen', async () => {
+  it('still sends the demo for a replay once seen', async () => {
     const { service, progress } = setup({ demoSeen: true });
     const response = await service.startLevel(kid, LEVEL);
     expect(response.demoSeen).toBe(true);
-    expect(response).not.toHaveProperty('demo');
+    expect(response.demo).toMatchObject({ type: 'count-objects' });
     expect(progress.markDemoSeen).not.toHaveBeenCalled();
   });
 

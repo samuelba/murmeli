@@ -76,6 +76,11 @@ All cookies are httpOnly, Secure (when `COOKIE_SECURE`) and SameSite=Strict.
 - **Access token:** carries no `role`. Role changes, disabling and deletion revoke the user's sessions.
 - **New email:** `email-changed` goes to the old address. A per-recipient email limit (3 per hour per kind) silently drops extra requests and still returns 202.
 
+### Admin account recovery (milestone 6)
+- **Reset link:** `POST /admin/users/:id/password-reset-link` returns `201 { resetUrl, expiresAt }`. It issues a normal password-reset token, valid 1 h and single use, and sends no email. Errors: `404 USER_NOT_FOUND`, and `409 USER_DISABLED` for a disabled user. Audited as `admin.password_reset_link_created`.
+- **Mark verified:** `POST /admin/users/:id/verify-email` returns `200 AdminUser`. It is idempotent and invalidates open registration tokens. Audited as `admin.email_verified`.
+- **Auth config:** `GET /auth/config` returns `{ registrationEnabled, emailEnabled, setupRequired, setupTokenRequired, legal: { operatorName, contactEmail, address, privacyNote } }`. Each `legal` field is plain text or null, and comes from the `OPERATOR_*` env vars.
+
 ## Roles and guards
 - **Roles:** `parent` (the default) and `admin`. An admin can also have kids.
 - **`AuthGuard`:** a valid `mu_at` is required. This is the default for every route; `@Public()` opts a route out.

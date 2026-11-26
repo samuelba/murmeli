@@ -61,8 +61,12 @@ export class AuthMailer {
 
   passwordReset(to: Recipient, token: string): Promise<MailResult> {
     return this.send('password-reset', to, {
-      link: this.tokenLink('reset-password', token),
+      link: this.passwordResetUrl(token),
     });
+  }
+
+  passwordResetUrl(token: string): string {
+    return this.tokenLink('reset-password', token);
   }
 
   passwordChanged(to: Recipient): Promise<MailResult> {

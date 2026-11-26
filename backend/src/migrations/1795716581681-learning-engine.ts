@@ -1,22 +1,11 @@
 import type { MigrationInterface, QueryRunner } from 'typeorm';
+import { narrowGrantsSql } from '../database/narrowed-grants';
 
 /**
  * attempts is an append-only log: the runtime role keeps SELECT, INSERT and
  * DELETE from the default privileges but loses UPDATE.
  */
-export const ATTEMPTS_GRANTS_SQL = `
-DO $$
-DECLARE grantee_name text;
-BEGIN
-  FOR grantee_name IN
-    SELECT DISTINCT grantee FROM information_schema.role_table_grants
-    WHERE table_schema = 'public' AND table_name = 'attempts'
-      AND privilege_type = 'UPDATE' AND grantee <> current_user
-  LOOP
-    EXECUTE format('REVOKE UPDATE ON "attempts" FROM %I', grantee_name);
-  END LOOP;
-END
-$$`;
+export const ATTEMPTS_GRANTS_SQL = narrowGrantsSql(['attempts']);
 
 export class LearningEngine1795716581681 implements MigrationInterface {
   name = 'LearningEngine1795716581681';

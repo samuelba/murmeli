@@ -60,6 +60,35 @@ describe('EmailTokenService', () => {
     });
   });
 
+  it('returns the expiry with the token', async () => {
+    const { service, manager } = setup();
+
+    const issued = await service.issueWithExpiry('user-1', 'password_reset');
+
+    const row = manager.insert.mock.calls[0][1] as {
+      tokenHash: string;
+      expiresAt: Date;
+    };
+    expect(row.tokenHash).toBe(sha256Hex(issued.token));
+    expect(issued.expiresAt).toBe(row.expiresAt);
+  });
+
+  it('invalidates the open tokens of one type', async () => {
+    const { service, dataSource, manager } = setup();
+
+    await service.invalidate('user-1', 'registration');
+    await service.invalidate('user-2', 'password_reset', manager);
+
+    expect(dataSource.query.mock.calls[0][1]).toEqual([
+      'user-1',
+      'registration',
+    ]);
+    expect(manager.query.mock.calls[0][1]).toEqual([
+      'user-2',
+      'password_reset',
+    ]);
+  });
+
   it('invalidates every open token of a user', async () => {
     const { service, dataSource, manager } = setup();
 

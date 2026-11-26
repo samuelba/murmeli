@@ -20,6 +20,7 @@ import {
 import { AdminController } from './admin.controller';
 import { AdminOverviewService, STATS_SQL } from './admin-overview.service';
 import { AdminUsersController } from './admin-users.controller';
+import type { AdminRecoveryService } from './admin-recovery.service';
 import type { AdminUsersService } from './admin-users.service';
 
 const auth = { userId: 'a1', role: 'admin' as const, familyId: 'fam' };
@@ -187,13 +188,18 @@ describe('AdminUsersController', () => {
     const users = {
       findById: jest.fn().mockResolvedValue({ locale: 'en-US' }),
     };
+    const recovery = {
+      passwordResetLink: jest.fn().mockResolvedValue({ resetUrl: 'url' }),
+      verifyEmail: jest.fn().mockResolvedValue({ id: 'u1' }),
+    };
     const controller = new AdminUsersController(
       adminUsers as unknown as AdminUsersService,
       registration as unknown as RegistrationService,
       invites as unknown as InviteService,
       users as unknown as UsersService,
+      recovery as unknown as AdminRecoveryService,
     );
-    return { controller, adminUsers, registration, invites, users };
+    return { controller, adminUsers, registration, invites, users, recovery };
   }
 
   it('manages users', async () => {
@@ -211,6 +217,20 @@ describe('AdminUsersController', () => {
     });
     expect(adminUsers.delete).toHaveBeenCalledWith(actor, 'u1');
     expect(registration.resendForUser).toHaveBeenCalledWith('u1');
+  });
+
+  it('hands out reset links and verifies addresses as the admin', async () => {
+    const { controller, recovery } = setup();
+
+    await expect(
+      controller.passwordResetLink(auth, 'u1', request),
+    ).resolves.toEqual({ resetUrl: 'url' });
+    await expect(controller.verifyEmail(auth, 'u1', request)).resolves.toEqual({
+      id: 'u1',
+    });
+
+    expect(recovery.passwordResetLink).toHaveBeenCalledWith(actor, 'u1');
+    expect(recovery.verifyEmail).toHaveBeenCalledWith(actor, 'u1');
   });
 
   it('creates invites in the admin locale and audits them', async () => {

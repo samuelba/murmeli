@@ -10,7 +10,7 @@ import { AuditService } from '../audit/audit.service';
 import { SessionService } from '../auth/sessions/session.service';
 import type { RevocationReason } from '../auth/entities/refresh-token.entity';
 import { deleteUserIn } from '../users/user-deletion';
-import { UserGuardrail } from '../users/user-guardrail.service';
+import { UserGuardrail, userNotFound } from '../users/user-guardrail.service';
 import { UserEntity } from '../users/user.entity';
 import { type UserView, toUserView } from '../users/user.view';
 import type { UpdateUserDto, UserSearchQuery } from './admin.dto';
@@ -93,6 +93,16 @@ export class AdminUsersService {
       toAdminUserView(user, Number(raw[index]?.kid_count ?? 0)),
     );
     return toPage(items, total, window);
+  }
+
+  async view(id: string): Promise<AdminUserView> {
+    const user = await this.dataSource
+      .getRepository(UserEntity)
+      .findOneBy({ id });
+    if (!user) {
+      throw userNotFound();
+    }
+    return toAdminUserView(user, await this.kidCount(user.id));
   }
 
   async update(

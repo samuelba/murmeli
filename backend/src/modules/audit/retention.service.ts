@@ -1,7 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { DataSource } from 'typeorm';
 import { errorMessage } from '../../common/errors/error-message';
+import type { Env } from '../../config/env.schema';
 import { AUDIT_RETENTION_DAYS } from './audit.types';
 
 export const RETENTION_BATCH_SIZE = 10_000;
@@ -46,6 +48,18 @@ export const RETENTION_RULES: readonly RetentionRule[] = [
   },
 ];
 
+/** Answer attempts; progress, mastery and activity live in their own tables */
+export function attemptsRule(retentionDays: number): RetentionRule {
+  if (!Number.isInteger(retentionDays) || retentionDays < 1) {
+    throw new RangeError('retentionDays must be a positive integer');
+  }
+  return {
+    name: 'attempts',
+    table: 'attempts',
+    condition: `"created_at" < now() - make_interval(days => ${retentionDays})`,
+  };
+}
+
 export function batchDeleteSql(rule: RetentionRule): string {
   return `WITH "doomed" AS (
     SELECT "id" FROM "${rule.table}" WHERE ${rule.condition} LIMIT ${RETENTION_BATCH_SIZE}
@@ -54,20 +68,30 @@ export function batchDeleteSql(rule: RetentionRule): string {
 }
 
 /**
- * Daily cleanup: audit entries older than the retention period, and expired
- * or used tokens and invites. Deletes run in batches, so a large backlog
+ * Daily cleanup: audit entries and answer attempts older than their retention
+ * periods, and expired or used tokens and invites. Deletes run in batches, so a large backlog
  * never holds long locks.
  */
 @Injectable()
 export class RetentionService {
   private readonly logger = new Logger(RetentionService.name);
 
-  constructor(private readonly dataSource: DataSource) {}
+  private readonly rules: readonly RetentionRule[];
+
+  constructor(
+    private readonly dataSource: DataSource,
+    config: ConfigService<Env, true>,
+  ) {
+    this.rules = [
+      ...RETENTION_RULES,
+      attemptsRule(config.get('ATTEMPTS_RETENTION_DAYS', { infer: true })),
+    ];
+  }
 
   @Cron(CronExpression.EVERY_DAY_AT_3AM, { name: 'retention' })
   async purge(): Promise<Record<string, number>> {
     const results: Record<string, number> = {};
-    for (const rule of RETENTION_RULES) {
+    for (const rule of this.rules) {
       try {
         results[rule.name] = await this.purgeRule(rule);
       } catch (error) {

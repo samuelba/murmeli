@@ -319,6 +319,36 @@ export const ENV_VARS: readonly EnvVarDoc[] = [
     'IANA time zone that defines the day boundary of the daily time limit and the activity statistics.',
   ),
   doc(
+    'ATTEMPTS_RETENTION_DAYS',
+    'no',
+    '365',
+    'Delete answer attempts older than this many days (at least 30) in the daily cleanup. Progress, stars, mastery and activity are kept; only the per-answer log and the per-skill attempt summary in the export shrink.',
+  ),
+  doc(
+    'OPERATOR_NAME',
+    'no',
+    undefined,
+    'Name of the person or organisation running this instance, shown on the legal and privacy pages (plain text, at most 200 characters).',
+  ),
+  doc(
+    'OPERATOR_CONTACT_EMAIL',
+    'no',
+    undefined,
+    'Contact address for privacy and legal questions, shown on the legal pages. Must be an email address.',
+  ),
+  doc(
+    'OPERATOR_ADDRESS',
+    'no',
+    undefined,
+    'Postal address of the operator (plain text, at most 500 characters). Write `\\n` for a line break.',
+  ),
+  doc(
+    'OPERATOR_PRIVACY_NOTE',
+    'no',
+    undefined,
+    'Extra privacy note from the operator, e.g. hosting location or retention (plain text, at most 2000 characters). Write `\\n` for a line break.',
+  ),
+  doc(
     'BACKUP_DIR',
     'no',
     '/app/backups',

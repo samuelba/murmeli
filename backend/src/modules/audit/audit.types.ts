@@ -14,6 +14,8 @@ export const AUDIT_ACTIONS = [
   'admin.invite_created',
   'admin.invite_revoked',
   'admin.settings_updated',
+  'admin.password_reset_link_created',
+  'admin.email_verified',
   'kid.created',
   'kid.deleted',
   'kid.pin_locked',

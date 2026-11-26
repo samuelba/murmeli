@@ -17,6 +17,11 @@ export interface ConsumedToken {
   readonly newEmail: string | null;
 }
 
+export interface IssuedToken {
+  readonly token: string;
+  readonly expiresAt: Date;
+}
+
 export type Querier = Pick<EntityManager, 'query'>;
 
 const MAX_TOKEN_LENGTH = 128;
@@ -44,12 +49,21 @@ export class EmailTokenService {
    * Issues a new token and invalidates the user's open one of that type, in
    * one transaction serialised on the user row.
    */
-  issue(
+  async issue(
     userId: string,
     type: EmailTokenType,
     newEmail: string | null = null,
   ): Promise<string> {
+    return (await this.issueWithExpiry(userId, type, newEmail)).token;
+  }
+
+  issueWithExpiry(
+    userId: string,
+    type: EmailTokenType,
+    newEmail: string | null = null,
+  ): Promise<IssuedToken> {
     const { token, hash } = generateSecureToken();
+    const expiresAt = addSeconds(new Date(), EMAIL_TOKEN_TTL_SECONDS[type]);
     return this.dataSource.transaction(async (manager) => {
       await manager.query('SELECT 1 FROM "users" WHERE "id" = $1 FOR UPDATE', [
         userId,
@@ -60,9 +74,9 @@ export class EmailTokenService {
         type,
         tokenHash: hash,
         newEmail,
-        expiresAt: addSeconds(new Date(), EMAIL_TOKEN_TTL_SECONDS[type]),
+        expiresAt,
       });
-      return token;
+      return { token, expiresAt };
     });
   }
 
@@ -75,6 +89,14 @@ export class EmailTokenService {
     querier: Querier = this.dataSource,
   ): Promise<void> {
     await querier.query(INVALIDATE_SQL, [userId, null]);
+  }
+
+  async invalidate(
+    userId: string,
+    type: EmailTokenType,
+    querier: Querier = this.dataSource,
+  ): Promise<void> {
+    await querier.query(INVALIDATE_SQL, [userId, type]);
   }
 
   /**

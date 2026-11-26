@@ -66,7 +66,10 @@ function setup(target: UserEntity | null = user(), otherAdmins = 1) {
     ),
   };
   const dataSource = {
-    getRepository: () => ({ createQueryBuilder: () => builder }),
+    getRepository: () => ({
+      createQueryBuilder: () => builder,
+      findOneBy: jest.fn(() => Promise.resolve(current)),
+    }),
     transaction: jest.fn((work: (m: typeof manager) => unknown) =>
       work(manager),
     ),
@@ -98,6 +101,26 @@ async function failure(promise: Promise<unknown>) {
 describe('escapeLike', () => {
   it('escapes LIKE wildcards and backslashes', () => {
     expect(escapeLike('50%_off\\x')).toBe('50\\%\\_off\\\\x');
+  });
+});
+
+describe('AdminUsersService.view', () => {
+  it('returns one user with the kid count', async () => {
+    const { service } = setup();
+
+    await expect(service.view(USER_ID)).resolves.toMatchObject({
+      id: USER_ID,
+      kidCount: 3,
+    });
+  });
+
+  it('rejects an unknown user', async () => {
+    const { service } = setup(null);
+
+    expect(await failure(service.view(USER_ID))).toEqual([
+      404,
+      'USER_NOT_FOUND',
+    ]);
   });
 });
 

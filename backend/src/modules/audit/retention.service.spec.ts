@@ -4,8 +4,18 @@ import {
   RETENTION_BATCH_SIZE,
   RETENTION_RULES,
   RetentionService,
+  attemptsRule,
   batchDeleteSql,
 } from './retention.service';
+
+const config = { get: jest.fn().mockReturnValue(365) };
+
+function service(query: jest.Mock): RetentionService {
+  return new RetentionService(
+    { query } as unknown as DataSource,
+    config as never,
+  );
+}
 
 describe('RetentionService', () => {
   beforeEach(() => {
@@ -32,6 +42,16 @@ describe('RetentionService', () => {
     }
   });
 
+  it('deletes attempts after the configured number of days', () => {
+    expect(attemptsRule(30)).toEqual({
+      name: 'attempts',
+      table: 'attempts',
+      condition: `"created_at" < now() - make_interval(days => 30)`,
+    });
+    expect(() => attemptsRule(Number.NaN)).toThrow(RangeError);
+    expect(() => attemptsRule(0)).toThrow(RangeError);
+  });
+
   it('deletes in batches through a CTE with a limit', () => {
     const sql = batchDeleteSql(RETENTION_RULES[1]);
 
@@ -50,17 +70,22 @@ describe('RetentionService', () => {
       .mockResolvedValueOnce([[], 3])
       .mockResolvedValueOnce([[], undefined])
       .mockResolvedValue([[], 1]);
-    const service = new RetentionService({ query } as unknown as DataSource);
-
-    await expect(service.purge()).resolves.toEqual({
+    await expect(service(query).purge()).resolves.toEqual({
       audit_log: 2 * RETENTION_BATCH_SIZE + 3,
       refresh_tokens: 0,
       email_tokens_expired: 1,
       email_tokens_used: 1,
       invites_expired: 1,
       invites_accepted: 1,
+      attempts: 1,
     });
-    expect(query).toHaveBeenCalledTimes(8);
+    expect(query).toHaveBeenCalledTimes(9);
+    expect(query).toHaveBeenLastCalledWith(
+      expect.stringContaining('make_interval(days => 365)'),
+    );
+    expect(config.get).toHaveBeenCalledWith('ATTEMPTS_RETENTION_DAYS', {
+      infer: true,
+    });
   });
 
   it('continues after a failed rule', async () => {
@@ -68,9 +93,7 @@ describe('RetentionService', () => {
       .fn()
       .mockRejectedValueOnce(new Error('locked'))
       .mockResolvedValue([[], 2]);
-    const service = new RetentionService({ query } as unknown as DataSource);
-
-    const result = await service.purge();
+    const result = await service(query).purge();
 
     expect(result).not.toHaveProperty('audit_log');
     expect(result.invites_accepted).toBe(2);

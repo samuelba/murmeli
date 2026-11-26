@@ -1,22 +1,7 @@
 import type { MigrationInterface, QueryRunner } from 'typeorm';
+import { narrowGrantsSql } from '../database/narrowed-grants';
 
-export const AUDIT_LOG_GRANTS_SQL = `
-DO $$
-DECLARE grantee_name text;
-BEGIN
-  FOR grantee_name IN
-    SELECT DISTINCT grantee FROM information_schema.role_table_grants
-    WHERE table_schema = 'public' AND table_name = 'audit_log'
-      AND privilege_type = 'UPDATE' AND grantee <> current_user
-  LOOP
-    EXECUTE format('REVOKE UPDATE ON "audit_log" FROM %I', grantee_name);
-    EXECUTE format(
-      'GRANT UPDATE ("actor_id", "ip", "target_id") ON "audit_log" TO %I',
-      grantee_name
-    );
-  END LOOP;
-END
-$$`;
+export const AUDIT_LOG_GRANTS_SQL = narrowGrantsSql(['audit_log']);
 
 export class Accounts1795712133442 implements MigrationInterface {
   name = 'Accounts1795712133442';

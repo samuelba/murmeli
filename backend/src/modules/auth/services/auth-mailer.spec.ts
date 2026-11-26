@@ -56,6 +56,9 @@ describe('AuthMailer', () => {
       template: 'password-reset',
       context: { link: `${APP_URL}/reset-password?token=tok` },
     });
+    expect(mailer.passwordResetUrl('a/b')).toBe(
+      `${APP_URL}/reset-password?token=a%2Fb`,
+    );
   });
 
   it('points "account exists" to sign-in and forgot-password', async () => {
