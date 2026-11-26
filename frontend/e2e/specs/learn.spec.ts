@@ -263,6 +263,13 @@ const TYPES: readonly ExerciseTypeId[] = [
   'syllables',
   'word-picture',
   'build-word',
+  'times-table',
+  'division-share',
+  'clock',
+  'money-chf',
+  'trace-letter',
+  'listen-write',
+  'sentence-picture',
 ];
 
 test.describe('exercise types', () => {
@@ -275,7 +282,14 @@ test.describe('exercise types', () => {
       await player.answerCorrectly(0);
       await expect(page.getByTestId('feedback')).toHaveAttribute('data-kind', 'correct');
       const [call] = backend.callsTo('POST', `/api/learn/runs/${backend.learn.current.id}/answers`);
-      expect(call?.body).toEqual({ index: 0, answer: backend.learn.solution(0) });
+      const solution = backend.learn.solution(0);
+      if ('strokes' in solution) {
+        const sent = call?.body as { index: number; answer: { strokes: unknown[] } };
+        expect(sent.index).toBe(0);
+        expect(sent.answer.strokes).toHaveLength(solution.strokes.length);
+      } else {
+        expect(call?.body).toEqual({ index: 0, answer: solution });
+      }
     });
   }
 });

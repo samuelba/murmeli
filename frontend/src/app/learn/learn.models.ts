@@ -7,7 +7,7 @@ import type {
   FinishRunResponse,
   HintKey,
   MapLevel,
-  MapResponse,
+  MapResponse as ServerMapResponse,
   MapTrack,
   MapWorld,
   Payload,
@@ -27,7 +27,6 @@ export type {
   FinishRunResponse,
   HintKey,
   MapLevel,
-  MapResponse,
   MapTrack,
   MapWorld,
   Payload,
@@ -36,6 +35,11 @@ export type {
   PublicExercise,
   Stars,
   StartRunResponse,
+};
+
+/** The trail map. Backends older than the badge list send no `badges`. */
+export type MapResponse = Omit<ServerMapResponse, 'badges'> & {
+  readonly badges?: ServerMapResponse['badges'];
 };
 
 export const DAILY_LIMIT_REACHED = 'DAILY_LIMIT_REACHED';
@@ -58,6 +62,13 @@ export const EXERCISE_TYPE_IDS = [
   'syllables',
   'word-picture',
   'build-word',
+  'times-table',
+  'division-share',
+  'clock',
+  'money-chf',
+  'trace-letter',
+  'listen-write',
+  'sentence-picture',
 ] as const satisfies readonly ExerciseTypeId[];
 
 /** The exercise types this player has a component for. */

@@ -173,6 +173,7 @@
               [exercise]="entry.item"
               [locked]="store.phase() !== 'playing'"
               [reveal]="store.feedback()?.solution ?? null"
+              [hint]="store.hint()"
               (answered)="answer($event)"
             />
           }

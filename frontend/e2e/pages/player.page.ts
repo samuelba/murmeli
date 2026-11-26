@@ -1,8 +1,23 @@
 import { type Page, expect } from '@playwright/test';
-import type { AnyAnswer, GeneratedItem } from '@murmeli/content';
+import type { AnyAnswer, GeneratedItem, MoneyItem } from '@murmeli/content';
 import { type LearnBackend } from '../helpers/learn-fixtures';
+import {
+  type TraceStroke,
+  partialStroke,
+  strokeLength,
+  toClient,
+} from '../../src/app/learn/exercises/trace-letter/trace-geometry';
 
 type Item = GeneratedItem;
+export type TraceInput = 'mouse' | 'touch';
+
+/** Screen points along a stroke, about every two box units, like a careful kid. */
+function along(stroke: TraceStroke): TraceStroke {
+  const steps = Math.max(1, Math.round(strokeLength(stroke) / 2));
+  return stroke.length < 2
+    ? stroke
+    : Array.from({ length: steps + 1 }, (_, i) => partialStroke(stroke, i / steps).tip);
+}
 
 /** Drives the exercise player like a kid would: taps, keypad, drum and tiles. */
 export class PlayerPage {
@@ -49,6 +64,45 @@ export class PlayerPage {
     await expect(this.page.getByTestId('results')).toBeVisible();
   }
 
+  /** Traces strokes (box units) on the drawing surface with the mouse or a finger. */
+  async trace(strokes: readonly TraceStroke[], input: TraceInput = 'mouse'): Promise<void> {
+    const surface = this.page.getByTestId('trace-surface');
+    await surface.scrollIntoViewIfNeeded();
+    const box = await surface.boundingBox();
+    if (!box) {
+      throw new Error('No drawing surface');
+    }
+    const rect = { left: box.x, top: box.y, width: box.width, height: box.height };
+    const touch = input === 'touch' ? await this.page.context().newCDPSession(this.page) : null;
+    for (const stroke of strokes) {
+      const points = along(stroke).map((point) => toClient(point, rect));
+      const [first, ...rest] = points;
+      if (touch) {
+        const send = (
+          type: 'touchStart' | 'touchMove' | 'touchEnd',
+          point?: { x: number; y: number },
+        ) =>
+          touch.send('Input.dispatchTouchEvent', {
+            type,
+            touchPoints: point ? [{ x: point.x, y: point.y, id: 1, radiusX: 4, radiusY: 4 }] : [],
+          });
+        await send('touchStart', first);
+        for (const point of rest) {
+          await send('touchMove', point);
+        }
+        await send('touchEnd');
+      } else {
+        await this.page.mouse.move(first!.x, first!.y);
+        await this.page.mouse.down();
+        for (const point of rest) {
+          await this.page.mouse.move(point.x, point.y);
+        }
+        await this.page.mouse.up();
+      }
+    }
+    await touch?.detach();
+  }
+
   private async typeNumber(value: number): Promise<void> {
     for (const digit of String(value)) {
       await this.page.getByTestId(`key-${digit}`).click();
@@ -65,7 +119,15 @@ export class PlayerPage {
   private async give(item: Item, answer: AnyAnswer): Promise<void> {
     const page = this.page;
     const payload = item.payload as unknown as Record<string, unknown>;
-    if ('choiceId' in answer) {
+    if ('strokes' in answer) {
+      await this.trace(answer.strokes);
+      await page.getByTestId('trace-done').click();
+    } else if ('coins' in answer) {
+      for (const coin of answer.coins) {
+        await page.getByTestId(`wallet-${coin}`).click();
+      }
+      await page.getByTestId('check').click();
+    } else if ('choiceId' in answer) {
       await this.clickChoiceWith(undefined, answer.choiceId);
     } else if ('relation' in answer) {
       await page.getByTestId(`relation-${answer.relation}`).click();
@@ -120,6 +182,20 @@ export function wrongAnswer(item: Item): AnyAnswer {
     end?: number;
     step?: number;
   };
+  if ('strokes' in answer) {
+    return {
+      strokes: [
+        [
+          [10, 10],
+          [90, 90],
+        ],
+      ],
+    };
+  }
+  if ('coins' in answer) {
+    const wallet = (item.payload as unknown as { wallet: MoneyItem[] }).wallet;
+    return { coins: [...answer.coins, wallet[0]!.denomination] };
+  }
   if ('choiceId' in answer) {
     return { choiceId: payload.choices!.find((choice) => choice.id !== answer.choiceId)!.id };
   }

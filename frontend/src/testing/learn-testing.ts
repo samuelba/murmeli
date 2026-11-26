@@ -111,6 +111,72 @@ export const PAYLOADS: { readonly [K in SupportedExerciseType]: Payload<K> } = {
       { id: 't3', letter: 'x' },
     ],
   },
+  'times-table': { mode: 'product', a: 3, b: 2, product: null, answerMode: 'keypad' },
+  'division-share': {
+    total: 6,
+    groups: 3,
+    pictureId: 'apple',
+    answerMode: 'choices',
+    choices: [
+      { id: 'd1', value: 1 },
+      { id: 'd2', value: 2 },
+      { id: 'd3', value: 3 },
+    ],
+  },
+  clock: {
+    hour: 2,
+    minute: 30,
+    choices: [
+      { id: 'k1', label: 'halb drei', digital: '2:30' },
+      { id: 'k2', label: 'halb zwei', digital: '1:30' },
+    ],
+  },
+  'money-chf': {
+    mode: 'pay',
+    currency: 'CHF',
+    group: 'major',
+    amount: 3,
+    wallet: [
+      { denomination: 'chf-1fr', label: '1 Fr.', kind: 'coin', file: 'money/chf-1fr.svg' },
+      { denomination: 'chf-2fr', label: '2 Fr.', kind: 'coin', file: 'money/chf-2fr.svg' },
+      { denomination: 'chf-10fr', label: '10 Fr.', kind: 'note', file: 'money/chf-10fr.svg' },
+    ],
+  },
+  'trace-letter': {
+    char: 'A',
+    strokes: [
+      [
+        [50, 10],
+        [20, 80],
+      ],
+      [
+        [50, 10],
+        [80, 80],
+      ],
+      [
+        [31, 55],
+        [69, 55],
+      ],
+    ],
+    guides: { ascender: 10, xHeight: 45, baseline: 80, descender: 100 },
+    showModel: true,
+  },
+  'listen-write': {
+    length: 3,
+    tiles: [
+      { id: 't1', letter: 't' },
+      { id: 't2', letter: 'a' },
+      { id: 't3', letter: 'c' },
+    ],
+  },
+  'sentence-picture': {
+    sentence: 'Die Maus ist auf dem Bett.',
+    choices: [
+      { id: 's1', scene: { kind: 'position', subject: 'mouse', relation: 'on', object: 'bed' } },
+      { id: 's2', scene: { kind: 'position', subject: 'mouse', relation: 'under', object: 'bed' } },
+      { id: 's3', scene: { kind: 'count', pictureId: 'apple', count: 3 } },
+    ],
+  },
 };
 
 export function exercise<T extends SupportedExerciseType>(type: T, index = 0): PublicExercise {

@@ -44,6 +44,9 @@ function setup(levels: LevelProgressRow[][] = [[]]) {
     recordLevel: jest.fn().mockResolvedValue(undefined),
     saveMastery: jest.fn().mockResolvedValue(undefined),
     awardBadges: jest.fn((_k: string, ids: string[]) => Promise.resolve(ids)),
+    badges: jest
+      .fn()
+      .mockResolvedValue([{ badgeId: 'first-level', earnedAt: NOW }]),
     lockKid: jest.fn().mockResolvedValue(undefined),
     transaction: jest.fn((work: (d: typeof db) => unknown) => work(db)),
   };
@@ -86,6 +89,8 @@ describe('ProgressService.map', () => {
     expect(store.levels).toHaveBeenCalledTimes(1);
     expect(map.tracks.map((t) => t.id)).toEqual(['math', 'reading-de']);
     expect(map.tracks[0].worlds[0].levels[1].state).toBe('unlocked');
+    expect(store.badges).toHaveBeenCalledWith(kid.id);
+    expect(map.badges).toEqual(['first-level']);
   });
 });
 

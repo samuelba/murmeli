@@ -86,12 +86,16 @@ export class ProgressService {
   }
 
   async map(kid: LearningKid): Promise<MapResponse> {
-    const { lookup, states } = await this.progressOf(kid);
+    const [{ lookup, states }, badges] = await Promise.all([
+      this.progressOf(kid),
+      this.store.badges(kid.id),
+    ]);
     return buildMap(
       this.curriculum.tracksFor(kid.language),
       kid.language,
       states,
       lookup,
+      badges.map((badge) => badge.badgeId),
     );
   }
 

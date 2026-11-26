@@ -1,12 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { SafeStorage } from '../../core/storage/safe-storage';
-import { BadgeId, MapWithBadges, badgesFromMap, knownBadges } from './badges';
+import { MapResponse } from '../learn.models';
+import { BadgeId, badgesFromMap, knownBadges } from './badges';
 
 export const BADGE_STORAGE_KEY = 'mu-badges';
 
 /**
- * The kid's earned badges: what the map shows, plus the `newBadges` of finished runs, kept on
- * this device (only badge ids) so a badge the map cannot prove (first practice) stays visible.
+ * The kid's earned badges. The map lists them (`badges`, the same on every device). Older
+ * backends don't, so then what the map proves plus the `newBadges` of finished runs, kept on
+ * this device (only badge ids), stand in for it.
  */
 @Injectable({ providedIn: 'root' })
 export class KidBadges {
@@ -22,7 +24,10 @@ export class KidBadges {
     }
   }
 
-  earned(kidId: string, map: MapWithBadges): BadgeId[] {
+  earned(kidId: string, map: MapResponse): BadgeId[] {
+    if (map.badges) {
+      return knownBadges(map.badges);
+    }
     return knownBadges([...badgesFromMap(map), ...this.stored(kidId)]);
   }
 

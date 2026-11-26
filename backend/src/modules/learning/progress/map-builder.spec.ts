@@ -67,5 +67,17 @@ describe('buildMap', () => {
     );
     expect(result.tracks[0].worlds[0].state).toBe('locked');
     expect(result.tracks[0].worlds[0].levels[0].state).toBe('locked');
+    expect(result.badges).toEqual([]);
+  });
+
+  it('lists the earned badge ids', () => {
+    const result = buildMap(
+      curriculum.tracksFor('de-CH'),
+      'de-CH',
+      { levels: new Map(), worlds: new Map() },
+      new Map(),
+      ['first-level', 'first-practice'],
+    );
+    expect(result.badges).toEqual(['first-level', 'first-practice']);
   });
 });

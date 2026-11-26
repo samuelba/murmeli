@@ -2,6 +2,8 @@ import AxeBuilder from '@axe-core/playwright';
 import { type Page, expect, test } from '@playwright/test';
 import { SCENARIOS, openScenario } from '../helpers/scenarios';
 
+const isExerciseScenario = (name: string) => name.startsWith('player ') || name.startsWith('demo ');
+
 const DARK_TOO = new Set([
   'welcome',
   'login',
@@ -29,7 +31,10 @@ async function seriousViolations(page: Page) {
 }
 
 for (const scenario of SCENARIOS) {
-  const themes = DARK_TOO.has(scenario.name) ? (['light', 'dark'] as const) : (['light'] as const);
+  const themes =
+    DARK_TOO.has(scenario.name) || isExerciseScenario(scenario.name)
+      ? (['light', 'dark'] as const)
+      : (['light'] as const);
   for (const theme of themes) {
     test(`${scenario.name} has no serious accessibility violations (${theme})`, async ({
       page,

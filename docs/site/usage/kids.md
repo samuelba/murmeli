@@ -31,6 +31,12 @@ A level is a short round, usually 6 exercises. The dots at the top show how many
 3. **Feedback:** a right answer gets a cheer. After the first wrong answer, a **Tip** explains how to think about it, and your kid tries the same exercise again. After a second wrong answer, Murmeli marks the right answer and the round goes on with **Next**.
 4. **Stop:** the stop button at the top asks **Do you want to stop?** **Keep playing** goes back, **Yes, back to the map** ends the round. A round that was stopped doesn't count against your kid.
 
+### Special exercises
+- **Tracing letters:** trace the letter with a finger, a stylus or the mouse, starting at the numbered dot and following the arrow. **Again** clears the drawing, **Done** checks it, and **Show me how** lets Murmeli draw it first. Without a pointer, the arrow keys move a pen, the space bar puts it down and lifts it, and Enter checks.
+- **Paying:** tap coins and notes in the wallet to put them on the tray; tap a coin on the tray to take it back, then **Pay**. Any combination with the right amount counts.
+- **Clock:** read the time on the clock and pick it. German uses Swiss phrasing: "halb drei" is 2:30.
+- **Listening and writing:** listen to the word (the big button repeats it) and put the letters in order.
+
 ## Stars
 At the end of a round, your kid gets 0 to 3 stars:
 

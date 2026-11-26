@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { kid, mockFamily } from '../helpers/family';
+import type { ExerciseTypeId, TraceLetterPayload } from '@murmeli/content';
+import type { Page } from '@playwright/test';
 import { PlayerPage } from '../pages/player.page';
+import { partialStroke } from '../../src/app/learn/exercises/trace-letter/trace-geometry';
 
 const OUT = process.env['SHOTS_OUT'] ?? 'e2e-results/shots';
 const MIA = kid();
@@ -120,5 +123,71 @@ for (const theme of THEMES) {
     await expect(page.getByTestId('offline-screen')).toBeVisible();
     await page.screenshot({ path: name('offline') });
     await context.setOffline(false);
+  });
+}
+
+async function m5Player(
+  page: Page,
+  theme: 'light' | 'dark',
+  type: ExerciseTypeId,
+  level?: string,
+): Promise<PlayerPage> {
+  await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
+  const backend = await mockFamily(page, {
+    kids: [MIA],
+    learn: { exerciseType: type, items: 2, seed: 21, ...(level ? { exerciseLevel: level } : {}) },
+  });
+  await page.goto('/');
+  await page.getByTestId(`kid-tile-${MIA.id}`).click();
+  await page.goto('/learn/level/math-zahlenwiese-01');
+  const player = new PlayerPage(page, backend.learn);
+  await player.waitForItem(0);
+  await page.waitForTimeout(400);
+  return player;
+}
+
+for (const theme of THEMES) {
+  test(`m5 exercises ${theme}`, async ({ page }, info) => {
+    const name = (step: string) => `${OUT}/${step}-${theme}-${info.project.name}.png`;
+
+    await m5Player(page, theme, 'clock', 'math-uhrenturm-spitze-03');
+    await page.screenshot({ path: name('clock'), fullPage: true });
+
+    await m5Player(page, theme, 'money-chf', 'math-maertplatz-03');
+    await page.getByTestId('wallet-chf-2fr').click();
+    await page.getByTestId('wallet-chf-1fr').click();
+    await page.screenshot({ path: name('money-pay'), fullPage: true });
+
+    await m5Player(page, theme, 'money-chf', 'math-maertplatz-01');
+    await page.screenshot({ path: name('money-total'), fullPage: true });
+
+    const tracer = await m5Player(page, theme, 'trace-letter');
+    const strokes = (tracer.item(0).payload as TraceLetterPayload).strokes;
+    await tracer.trace([
+      ...strokes.slice(0, strokes.length - 1),
+      partialStroke(strokes.at(-1)!, 0.55).points,
+    ]);
+    await page.screenshot({ path: name('trace-mid'), fullPage: true });
+
+    const hinted = await m5Player(page, theme, 'trace-letter');
+    await hinted.answerWrong(0);
+    await expect(page.getByTestId('hint')).toBeVisible();
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: name('trace-hint'), fullPage: true });
+
+    await m5Player(page, theme, 'sentence-picture', 'reading-de-satzgarten-03');
+    await page.screenshot({ path: name('sentence-picture'), fullPage: true });
+
+    await m5Player(page, theme, 'times-table', 'math-einmaleinsalp-01');
+    await page.getByTestId('dots-toggle').click();
+    await page.screenshot({ path: name('times-table'), fullPage: true });
+
+    await m5Player(page, theme, 'division-share');
+    await page.getByTestId('plate-0').click();
+    await page.getByTestId('plate-1').click();
+    await page.screenshot({ path: name('division-share'), fullPage: true });
+
+    await m5Player(page, theme, 'listen-write');
+    await page.screenshot({ path: name('listen-write'), fullPage: true });
   });
 }

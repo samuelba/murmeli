@@ -72,9 +72,7 @@ describe('badges', () => {
       badgesFromMap(map(world('a', [3, 3, 3], 'passed'), world('b', [3, 3], 'unlocked'))),
     ).toEqual(['first-level', 'first-world', 'star-collector']);
     expect(badgesFromMap(map({ ...world('empty', [], 'passed') }))).toEqual([]);
-    expect(badgesFromMap({ ...map(), badges: ['first-practice', 'future-badge'] })).toEqual([
-      'first-practice',
-    ]);
+    expect(badgesFromMap({ ...map(), badges: ['first-practice'] })).toEqual([]);
   });
 });
 
@@ -95,6 +93,14 @@ describe('KidBadges', () => {
       'first-level',
       'first-practice',
     ]);
+  });
+
+  it('takes the badges from the map when the backend lists them, on every device', () => {
+    const badges = TestBed.inject(KidBadges);
+    badges.remember('k1', ['first-level']);
+    const listed = { ...map(world('a', [3], 'passed')), badges: ['first-practice', 'future'] };
+    expect(badges.earned('k1', listed)).toEqual(['first-practice']);
+    expect(badges.earned('k2', { ...map(), badges: [] })).toEqual([]);
   });
 
   it('ignores broken storage', () => {

@@ -8,6 +8,7 @@ import { KidBadges } from '../badges/kid-badges.service';
 import { LearnContent } from '../content/learn-content';
 import { LearnApi } from '../learn-api.service';
 import { BreakTimer } from './break-timer';
+import { cueDuration } from './demo-timing';
 import {
   AnyAnswer,
   DAILY_LIMIT_REACHED,
@@ -50,13 +51,14 @@ export interface Unlocked {
 export const MAX_ATTEMPTS = 2;
 const DEMO_MIN_STEP_MS = 1800;
 const DEMO_MS_PER_CHAR = 55;
-const DEMO_COUNT_MS = 700;
 const REVEALING: readonly (keyof DemoAction)[] = [
   'tapAnswer',
   'fillBlank',
   'placeTiles',
   'hop',
   'clap',
+  'trace',
+  'placeCoins',
 ];
 
 function wait(ms: number): Promise<void> {
@@ -367,19 +369,15 @@ export class PlayerStore {
     this.demoDone.set(false);
     for (const [index, step] of demo.steps.entries()) {
       this.demoStep.set(index);
-      const counting = step.action.countAlong ? this.countOf(demo.payload) * DEMO_COUNT_MS : 0;
-      const minimum = Math.max(DEMO_MIN_STEP_MS, step.say.length * DEMO_MS_PER_CHAR) + counting;
+      const minimum =
+        Math.max(DEMO_MIN_STEP_MS, step.say.length * DEMO_MS_PER_CHAR) +
+        cueDuration(demo.type, step.action, demo.payload, demo.answer);
       await Promise.all([this.audio.narrate(step.say), wait(minimum)]);
       if (generation !== this.demoGeneration) {
         return;
       }
     }
     this.demoDone.set(true);
-  }
-
-  private countOf(payload: unknown): number {
-    const record = payload as { objects?: unknown[]; cells?: boolean[] };
-    return record.objects?.length ?? record.cells?.filter(Boolean).length ?? 5;
   }
 
   private async unlockedAfter(results: FinishRunResponse): Promise<Unlocked> {

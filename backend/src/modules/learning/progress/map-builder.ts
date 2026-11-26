@@ -16,15 +16,17 @@ function starsOf(progress: ProgressLookup, levelId: string): Stars {
 
 /**
  * The kid's trail map: their tracks, then worlds, then levels, with states
- * and stars, localized to the kid's language.
+ * and stars, localized to the kid's language, plus their earned badge ids.
  */
 export function buildMap(
   tracks: readonly Track[],
   locale: Locale,
   states: ProgressStates,
   progress: ProgressLookup,
+  badges: readonly string[] = [],
 ): MapResponse {
   return {
+    badges: [...badges],
     tracks: tracks.map((track) => ({
       id: track.id,
       title: localize(track.title, locale),

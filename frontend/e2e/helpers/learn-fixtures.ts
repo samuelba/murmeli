@@ -43,6 +43,14 @@ export interface LearnOptions {
   dailyLimitReached?: boolean;
   /** Level runs use only this exercise type (and no demo). */
   exerciseType?: ExerciseTypeId;
+  /** With `exerciseType`: take the generators of this level (e.g. money pay or compare). */
+  exerciseLevel?: string;
+  /** Badge ids the kid already holds on the server (earned on another device). */
+  badges?: string[];
+  /** Answer the map like a backend from before the badge list (no `badges`). */
+  mapWithoutBadges?: boolean;
+  /** Runs start for any level, even a locked one (to reach a demo directly). */
+  unlockAll?: boolean;
   /** Items per run (default: the level's own count). */
   items?: number;
   seed?: number;
@@ -62,13 +70,20 @@ interface LevelState {
 }
 
 /** First level of the content whose generators include `type`, for type-focused runs. */
-export function levelWithType(type: ExerciseTypeId, locale: Locale = 'de-CH'): Level {
+export function levelWithType(
+  type: ExerciseTypeId,
+  locale: Locale = 'de-CH',
+  levelId?: string,
+): Level {
   for (const track of content().tracks) {
     if (!track.locales.includes(locale)) {
       continue;
     }
     for (const world of track.worlds) {
       for (const level of world.levels) {
+        if (levelId !== undefined && level.id !== levelId) {
+          continue;
+        }
         const generators = level.generators.filter((generator) => generator.type === type);
         if (generators.length > 0) {
           return { ...level, generators };
@@ -76,7 +91,7 @@ export function levelWithType(type: ExerciseTypeId, locale: Locale = 'de-CH'): L
       }
     }
   }
-  throw new Error(`No ${locale} level uses ${type}`);
+  throw new Error(`No ${locale} level ${levelId ?? ''} uses ${type}`);
 }
 
 /**
@@ -97,6 +112,7 @@ export class LearnBackend {
   constructor(private readonly options: LearnOptions = {}) {
     Object.entries(options.progress ?? {}).forEach(([id, stars]) => this.progress.set(id, stars));
     options.demoSeen?.forEach((id) => this.demoSeen.add(id));
+    options.badges?.forEach((id) => this.badges.add(id));
     this.seed = options.seed ?? 4242;
   }
 
@@ -170,6 +186,17 @@ export class LearnBackend {
   }
 
   map(): MapResponse {
+    if (!this.badgesSeeded) {
+      this.badgesSeeded = true;
+      this.awardBadges();
+    }
+    const map = this.trail();
+    return this.options.mapWithoutBadges
+      ? ({ tracks: map.tracks } as MapResponse)
+      : { ...map, badges: [...this.badges] };
+  }
+
+  private trail(): Omit<MapResponse, 'badges'> {
     const states = this.levelStates();
     const locale = this.locale;
     return {
@@ -235,11 +262,12 @@ export class LearnBackend {
       return apiError(403, 'DAILY_LIMIT_REACHED');
     }
     const level = levelId ? this.findLevel(levelId) : null;
-    if (!level || this.levelStates().get(level.id)?.state === 'locked') {
+    const locked = this.levelStates().get(level?.id ?? '')?.state === 'locked';
+    if (!level || (locked && !this.options.unlockAll)) {
       return apiError(404, 'LEVEL_NOT_FOUND');
     }
     const type = this.options.exerciseType;
-    const source = type ? levelWithType(type, this.locale) : level;
+    const source = type ? levelWithType(type, this.locale, this.options.exerciseLevel) : level;
     const run = this.createRun(level, this.generate(source, this.options.items ?? source.items));
     const demoSeen = this.demoSeen.has(level.id);
     this.demoSeen.add(level.id);
@@ -310,7 +338,7 @@ export class LearnBackend {
       this.awardBadges();
     }
     const before = this.levelStates();
-    const worldsBefore = this.map();
+    const worldsBefore = this.trail();
     if (!run.level) {
       this.practiced = true;
     }
@@ -327,7 +355,7 @@ export class LearnBackend {
         .filter((world) => world.state === 'locked')
         .map((world) => world.id),
     );
-    const worlds = this.map()
+    const worlds = this.trail()
       .tracks.flatMap((track) => track.worlds)
       .filter((world) => world.state !== 'locked' && lockedBefore.has(world.id))
       .map((world) => world.id);
@@ -344,7 +372,7 @@ export class LearnBackend {
   }
 
   private awardBadges(): string[] {
-    const worlds = this.map().tracks.flatMap((track) => track.worlds);
+    const worlds = this.trail().tracks.flatMap((track) => track.worlds);
     const levels = worlds.flatMap((world) => world.levels);
     const earned = {
       'first-level': levels.some((level) => level.state === 'passed'),

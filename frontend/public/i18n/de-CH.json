@@ -370,6 +370,60 @@
         "slotEmpty": "Platz {{number}}: leer",
         "tiles": "Buchstaben",
         "tile": "Buchstabe {{letter}}"
+      },
+      "times": {
+        "sign": "·",
+        "times": "mal",
+        "row": "Die {{row}}er-Reihe",
+        "showDots": "Mit Punkten zeigen",
+        "hideDots": "Punkte verstecken"
+      },
+      "share": {
+        "basket": "Im Korb: noch {{count}}",
+        "empty": "Alles verteilt!",
+        "plates": "Teller",
+        "plate": "Teller {{number}}: {{amount}}",
+        "perPlate": "pro Teller",
+        "reset": "Nochmal verteilen"
+      },
+      "clock": {
+        "face": "Uhr. Der kurze Zeiger {{hour}}. Der lange Zeiger {{minute}}.",
+        "hourOn": "zeigt auf die {{hour}}",
+        "hourBetween": "steht zwischen {{hour}} und {{next}}",
+        "minuteOn": "zeigt auf die {{number}}",
+        "minuteAt": "zeigt auf Minute {{minute}}"
+      },
+      "money": {
+        "money": "Geld",
+        "tray": "Hingelegt",
+        "trayEmpty": "Lege hier Geld hin.",
+        "wallet": "Portemonnaie: tippe, um Geld hinzulegen",
+        "put": "{{label}} hinlegen",
+        "takeBack": "{{label}} wieder wegnehmen",
+        "pay": "Bezahlen"
+      },
+      "trace": {
+        "role": "Zeichenfläche",
+        "surface": "Fahre das {{char}} nach",
+        "keys": "Mit der Tastatur: Die Pfeiltasten bewegen den Stift, die Leertaste setzt ihn auf oder hebt ihn ab, die Rücktaste löscht den letzten Strich, die Eingabetaste heisst fertig.",
+        "strokes": "Striche: {{count}}",
+        "drawn": "Gezeichnet: {{count}}",
+        "cleared": "Alles weggewischt",
+        "penDown": "Stift aufgesetzt",
+        "penUp": "Stift abgehoben",
+        "full": "Mehr Striche gehen nicht. Tippe auf Nochmal.",
+        "showMe": "Zeig mir, wie es geht",
+        "again": "Nochmal",
+        "done": "Fertig"
+      },
+      "listen": {
+        "replay": "Nochmal anhören"
+      },
+      "sentence": {
+        "scene": "{{subject}} {{relation}} {{object}}",
+        "on": "auf",
+        "under": "unter",
+        "next-to": "neben"
       }
     }
   },

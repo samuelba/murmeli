@@ -370,6 +370,60 @@
         "slotEmpty": "Spot {{number}}: empty",
         "tiles": "Letters",
         "tile": "Letter {{letter}}"
+      },
+      "times": {
+        "sign": "×",
+        "times": "times",
+        "row": "The {{row}}s row",
+        "showDots": "Show with dots",
+        "hideDots": "Hide the dots"
+      },
+      "share": {
+        "basket": "In the basket: {{count}} left",
+        "empty": "All shared!",
+        "plates": "Plates",
+        "plate": "Plate {{number}}: {{amount}}",
+        "perPlate": "per plate",
+        "reset": "Share again"
+      },
+      "clock": {
+        "face": "Clock. The short hand {{hour}}. The long hand {{minute}}.",
+        "hourOn": "points to the {{hour}}",
+        "hourBetween": "is between the {{hour}} and the {{next}}",
+        "minuteOn": "points to the {{number}}",
+        "minuteAt": "points to minute {{minute}}"
+      },
+      "money": {
+        "money": "Money",
+        "tray": "Paid",
+        "trayEmpty": "Put your money here.",
+        "wallet": "Wallet: tap to put money down",
+        "put": "Put down {{label}}",
+        "takeBack": "Take back {{label}}",
+        "pay": "Pay"
+      },
+      "trace": {
+        "role": "drawing area",
+        "surface": "Trace the {{char}}",
+        "keys": "With a keyboard: the arrow keys move the pen, Space puts it down or lifts it, Backspace removes the last line, Enter means done.",
+        "strokes": "Lines: {{count}}",
+        "drawn": "Drawn: {{count}}",
+        "cleared": "All wiped away",
+        "penDown": "Pen down",
+        "penUp": "Pen up",
+        "full": "No more lines fit. Tap Again.",
+        "showMe": "Show me how",
+        "again": "Again",
+        "done": "Done"
+      },
+      "listen": {
+        "replay": "Listen again"
+      },
+      "sentence": {
+        "scene": "{{subject}} {{relation}} {{object}}",
+        "on": "on",
+        "under": "under",
+        "next-to": "next to"
       }
     }
   },

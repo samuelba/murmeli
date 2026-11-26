@@ -56,7 +56,7 @@ test.describe('badges', () => {
     await expect(page.getByTestId('badges')).toHaveAccessibleName('Abzeichen: 1');
   });
 
-  test('first practice is remembered on this device', async ({ page }) => {
+  test('first practice comes back from the server after a reload', async ({ page }) => {
     const backend = await openMap(page, { learn: { progress: { [FIRST]: 3 }, items: 3 } });
     await page.getByTestId('practice').click();
     await expect(page.getByTestId('prompt-text')).toBeVisible();
@@ -64,6 +64,29 @@ test.describe('badges', () => {
     await player.playThrough();
     await expect(page.getByTestId('new-badge-first-practice')).toBeVisible();
 
+    await page.getByTestId('results-map').click();
+    await page.reload();
+    await expect(page.getByTestId('badges')).toHaveAccessibleName('Abzeichen: 2');
+  });
+
+  test('badges earned on another device are on the shelf', async ({ page }) => {
+    await openMap(page, { learn: { badges: ['first-practice', 'first-level'] } });
+    await expect(page.getByTestId('badges')).toHaveAccessibleName('Abzeichen: 2');
+    await page.getByTestId('badges').click();
+    await expect(page.getByTestId('shelf-badge-first-practice')).toHaveAttribute(
+      'data-earned',
+      'true',
+    );
+  });
+
+  test('an older backend without badges falls back to this device', async ({ page }) => {
+    const backend = await openMap(page, {
+      learn: { progress: { [FIRST]: 3 }, items: 3, mapWithoutBadges: true },
+    });
+    await expect(page.getByTestId('badges')).toHaveAccessibleName('Abzeichen: 1');
+    await page.getByTestId('practice').click();
+    await expect(page.getByTestId('prompt-text')).toBeVisible();
+    await new PlayerPage(page, backend.learn).playThrough();
     await page.getByTestId('results-map').click();
     await page.reload();
     await expect(page.getByTestId('badges')).toHaveAccessibleName('Abzeichen: 2');

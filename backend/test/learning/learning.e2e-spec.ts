@@ -166,6 +166,7 @@ describeWithDb('Learning engine (e2e)', () => {
     const response = await map(kid);
 
     expect(response.tracks.map((t) => t.id)).toEqual(['math', 'reading-de']);
+    expect(response.badges).toEqual([]);
     expect(worldState(response, 'math-zahlenwiese')).toMatchObject({
       title: 'Zahlenwiese',
       state: 'unlocked',
@@ -241,6 +242,7 @@ describeWithDb('Learning engine (e2e)', () => {
     });
     expect(levelState(after, 'math-zahlenwiese-02')?.state).toBe('unlocked');
     expect(worldState(after, 'math-zahlenwiese')?.stars).toBe(3);
+    expect(after.badges).toEqual(['first-level']);
 
     const again = await start(kid);
     expect(again.demoSeen).toBe(true);

@@ -39,14 +39,11 @@ export function knownBadges(ids: Iterable<string>): BadgeId[] {
   return BADGE_IDS.filter((id) => set.has(id));
 }
 
-/** A map response that may already list the kid's badges (newer backends). */
-export type MapWithBadges = MapResponse & { readonly badges?: readonly string[] };
-
 /** What the trail map itself proves; first-practice is only known from a finished run. */
-export function badgesFromMap(map: MapWithBadges): BadgeId[] {
+export function badgesFromMap(map: MapResponse): BadgeId[] {
   const worlds = map.tracks.flatMap((track) => track.worlds);
   const levels = worlds.flatMap((world) => world.levels);
-  const earned: string[] = [...(map.badges ?? [])];
+  const earned: string[] = [];
   if (levels.some((level) => level.state === 'passed')) {
     earned.push('first-level');
   }

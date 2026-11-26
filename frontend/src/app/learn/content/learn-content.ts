@@ -29,6 +29,13 @@ export function pictureUrl(id: string): string {
   return PICTURE_ID.test(id) ? `/pictures/${id}.svg` : 'data:,';
 }
 
+const MONEY_FILE = /^money\/[a-z0-9]+(?:-[a-z0-9]+)*\.svg$/;
+
+/** A coin or note picture (`money/<denomination>.svg` of the payload). */
+export function moneyUrl(file: string): string {
+  return MONEY_FILE.test(file) ? `/pictures/${file}` : 'data:,';
+}
+
 export function pictureWord(id: string, language: Language): string {
   const words = PICTURES[id];
   return words?.[language] ?? words?.['en-US'] ?? words?.['de-CH'] ?? id;

@@ -1,4 +1,5 @@
 import { type Page, expect } from '@playwright/test';
+import type { ExerciseTypeId } from '@murmeli/content';
 import { type FamilyOptions, kid, mockFamily, user } from './family';
 
 export const PIN_KID = kid({
@@ -36,6 +37,19 @@ async function openLearn(page: Page) {
   await page.getByTestId(`kid-tile-${kid().id}`).click();
   await page.getByTestId('trail').waitFor();
 }
+
+/** The milestone 5 exercise types, with a level for the modes the first level doesn't show. */
+const EXERCISE_SCENARIOS: readonly (readonly [ExerciseTypeId, string?])[] = [
+  ['times-table'],
+  ['division-share'],
+  ['clock'],
+  ['money-chf'],
+  ['money-chf', 'math-maertplatz-03'],
+  ['money-chf', 'math-maertplatz-04'],
+  ['trace-letter'],
+  ['listen-write'],
+  ['sentence-picture'],
+];
 
 /** The main pages, each with the backend state it needs. */
 export const SCENARIOS: readonly Scenario[] = [
@@ -88,6 +102,27 @@ export const SCENARIOS: readonly Scenario[] = [
       await openLearn(page);
       await page.goto('/learn/level/math-zahlenwiese-01');
       await page.getByTestId('demo').waitFor();
+    },
+  },
+  ...EXERCISE_SCENARIOS.map(([type, level]): Scenario => ({
+    name: `player ${type}${level ? ` ${level}` : ''}`,
+    options: {
+      ...family,
+      learn: { exerciseType: type, items: 2, ...(level ? { exerciseLevel: level } : {}) },
+    },
+    open: async (page) => {
+      await openLearn(page);
+      await page.goto('/learn/level/math-zahlenwiese-01');
+      await page.getByTestId('prompt-text').waitFor();
+    },
+  })),
+  {
+    name: 'demo trace-letter',
+    options: { ...family, learn: { unlockAll: true } },
+    open: async (page) => {
+      await openLearn(page);
+      await page.goto('/learn/level/reading-de-schreibwiese-01');
+      await page.getByTestId('trace-surface').waitFor();
     },
   },
   {

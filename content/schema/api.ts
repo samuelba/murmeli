@@ -102,6 +102,8 @@ export interface MapTrack {
 
 export interface MapResponse {
   readonly tracks: readonly MapTrack[];
+  /** Ids of the badges the kid has earned, oldest first. */
+  readonly badges: readonly string[];
 }
 
 export function toPublicExercise(item: GeneratedItem): PublicExercise {

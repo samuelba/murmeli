@@ -1,23 +1,32 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import type { AnyAnswer, DemoAction, PublicExercise } from '../learn.models';
+import type { AnyAnswer, DemoAction, HintKey, PublicExercise } from '../learn.models';
 import { AddSub } from './add-sub/add-sub';
 import { BuildWord } from './build-word/build-word';
+import { Clock } from './clock/clock';
 import { Compare } from './compare/compare';
 import { CountObjects } from './count-objects/count-objects';
+import { DivisionShare } from './division-share/division-share';
 import { InitialSound } from './initial-sound/initial-sound';
 import { LetterSound } from './letter-sound/letter-sound';
+import { ListenWrite } from './listen-write/listen-write';
+import { Money } from './money/money';
 import { NumberBond } from './number-bond/number-bond';
 import { NumberLine } from './number-line/number-line';
 import { NumberRecognition } from './number-recognition/number-recognition';
 import { NumberWall } from './number-wall/number-wall';
+import { SentencePicture } from './sentence-picture/sentence-picture';
 import { Sequence } from './sequence/sequence';
 import { ShapePick } from './shape-pick/shape-pick';
 import { Syllables } from './syllables/syllables';
 import { TenFrame } from './ten-frame/ten-frame';
+import { TimesTable } from './times-table/times-table';
+import { TraceLetter } from './trace-letter/trace-letter';
 import { WordPicture } from './word-picture/word-picture';
 
 /** Exercise shapes the host can show: an item of a run, or the demo instance. */
-export type ExerciseView = Pick<PublicExercise, 'type' | 'payload'>;
+export type ExerciseView = Pick<PublicExercise, 'type' | 'payload'> & {
+  readonly prompt?: PublicExercise['prompt'];
+};
 
 /** Renders the component for an exercise type. Payload and answer types follow `type`. */
 @Component({
@@ -25,18 +34,25 @@ export type ExerciseView = Pick<PublicExercise, 'type' | 'payload'>;
   imports: [
     AddSub,
     BuildWord,
+    Clock,
     Compare,
     CountObjects,
+    DivisionShare,
     InitialSound,
     LetterSound,
+    ListenWrite,
+    Money,
     NumberBond,
     NumberLine,
     NumberRecognition,
     NumberWall,
+    SentencePicture,
     Sequence,
     ShapePick,
     Syllables,
     TenFrame,
+    TimesTable,
+    TraceLetter,
     WordPicture,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -178,6 +194,71 @@ export type ExerciseView = Pick<PublicExercise, 'type' | 'payload'>;
           (answered)="answer($event)"
         />
       }
+      @case ('times-table') {
+        <mu-times-table
+          [payload]="payload()"
+          [locked]="locked()"
+          [reveal]="revealed()"
+          [cue]="cue()"
+          (answered)="answer($event)"
+        />
+      }
+      @case ('division-share') {
+        <mu-division-share
+          [payload]="payload()"
+          [locked]="locked()"
+          [reveal]="revealed()"
+          [cue]="cue()"
+          (answered)="answer($event)"
+        />
+      }
+      @case ('clock') {
+        <mu-clock
+          [payload]="payload()"
+          [locked]="locked()"
+          [reveal]="revealed()"
+          [cue]="cue()"
+          (answered)="answer($event)"
+        />
+      }
+      @case ('money-chf') {
+        <mu-money-chf
+          [payload]="payload()"
+          [locked]="locked()"
+          [reveal]="revealed()"
+          [cue]="cue()"
+          (answered)="answer($event)"
+        />
+      }
+      @case ('trace-letter') {
+        <mu-trace-letter
+          [payload]="payload()"
+          [locked]="locked()"
+          [reveal]="revealed()"
+          [cue]="cue()"
+          [hint]="hint()"
+          (answered)="answer($event)"
+        />
+      }
+      @case ('listen-write') {
+        <mu-listen-write
+          [payload]="payload()"
+          [locked]="locked()"
+          [reveal]="revealed()"
+          [cue]="cue()"
+          [speech]="exercise().prompt?.speak ?? null"
+          (answered)="answer($event)"
+        />
+      }
+      @case ('sentence-picture') {
+        <mu-sentence-picture
+          [payload]="payload()"
+          [locked]="locked()"
+          [reveal]="revealed()"
+          [cue]="cue()"
+          (answered)="answer($event)"
+        />
+      }
     }
   `,
   styles: `
@@ -192,6 +273,7 @@ export class ExerciseHost {
   readonly locked = input(false);
   readonly reveal = input<AnyAnswer | null>(null);
   readonly cue = input<DemoAction | null>(null);
+  readonly hint = input<HintKey | null>(null);
   readonly answered = output<AnyAnswer>();
 
   // The @switch guarantees each component receives the payload and answer of its own type.

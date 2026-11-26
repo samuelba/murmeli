@@ -4,7 +4,8 @@
 //   node scripts/sync-content.mjs --check  exit 1 when a copy is missing, stale or extra
 //   node scripts/sync-content.mjs --audio-from <dir>   take the audio from another folder
 //                                          (or MURMELI_AUDIO_DIR), e.g. ../tools/audio/out
-// public/pictures/ gets the picture SVGs with their LICENSE and NOTICE.md. The JSON holds the
+// public/pictures/ gets the picture SVGs (and one level of subfolders, e.g. money/) with their
+// LICENSE and NOTICE.md. The JSON holds the
 // picture words (alt texts), the hint texts and the feedback phrases, exactly as the audio
 // manifest knows them. The rendered narration (content/audio: manifest.json + <locale>/*.opus)
 // goes to public/audio/ when it exists; that copy is gitignored and not checked. It is staged
@@ -72,12 +73,33 @@ async function syncAudio() {
   console.log(`Copied the audio manifest and ${count} clips from ${source}.`);
 }
 
+const PICTURE_FILE = /\.svg$|^LICENSE$|^NOTICE\.md$/;
+const PICTURE_DIR = /^[a-z0-9-]+$/;
+
+/** Picture files as paths relative to the folder, including one level of subfolders (money/). */
+async function listPictures(root) {
+  if (!existsSync(root)) {
+    return [];
+  }
+  const files = [];
+  for (const entry of await readdir(root, { withFileTypes: true })) {
+    if (entry.isFile() && PICTURE_FILE.test(entry.name)) {
+      files.push(entry.name);
+    } else if (entry.isDirectory() && PICTURE_DIR.test(entry.name)) {
+      for (const inner of await readdir(join(root, entry.name), { withFileTypes: true })) {
+        files.push(inner.isFile() ? `${entry.name}/${inner.name}` : `${entry.name}/${inner.name}/`);
+      }
+    } else {
+      files.push(entry.isDirectory() ? `${entry.name}/` : entry.name);
+    }
+  }
+  return files.sort();
+}
+
 async function pictureFiles() {
-  const entries = await readdir(join(content, 'pictures'), { withFileTypes: true });
-  return entries
-    .filter((entry) => entry.isFile() && /\.svg$|^LICENSE$|^NOTICE\.md$/.test(entry.name))
-    .map((entry) => entry.name)
-    .sort();
+  return (await listPictures(join(content, 'pictures'))).filter(
+    (name) => !name.endsWith('/') && PICTURE_FILE.test(name.split('/').at(-1)),
+  );
 }
 
 function localized(text) {
@@ -120,9 +142,7 @@ async function check(files) {
       stale.push(`${target} (from content/pictures/${name})`);
     }
   }
-  const copied = existsSync(join(frontend, PICTURES_TARGET))
-    ? await readdir(join(frontend, PICTURES_TARGET))
-    : [];
+  const copied = await listPictures(join(frontend, PICTURES_TARGET));
   copied
     .filter((name) => !files.includes(name))
     .forEach((name) => stale.push(`${PICTURES_TARGET}/${name} (no longer in content/pictures)`));
@@ -145,6 +165,7 @@ async function sync(files) {
   await rm(target, { recursive: true, force: true });
   await mkdir(target, { recursive: true });
   for (const name of files) {
+    await mkdir(dirname(join(target, name)), { recursive: true });
     await copyFile(join(content, 'pictures', name), join(target, name));
   }
   await mkdir(dirname(join(frontend, DATA_TARGET)), { recursive: true });

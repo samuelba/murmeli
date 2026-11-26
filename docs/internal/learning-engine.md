@@ -133,7 +133,7 @@ interface Prompt {
 5. **Practice:** `POST /api/learn/practice/runs` takes the 3 skills that are due or weakest among the unlocked levels (by `next_review_at`, then lowest mastery). It builds 8 to 10 items from those levels' generators and returns the same shape as a level run. Practice runs update mastery but not stars.
 6. **Mastery:** after each run, mastery = 0.7·previous + 0.3·run score. Spacing uses Leitner boxes with intervals of 1, 2, 4, 8 and 16 days. A skill moves up a box if the score is at least 0.8 and back to box 1 if it is below 0.5.
 7. **Read endpoints:**
-   - `GET /api/learn/map` (KidGuard) returns the tracks, then worlds, then levels, each with its state (`locked`, `unlocked`, `passed` or `skipped`) and stars, all localized for the kid.
+   - `GET /api/learn/map` (KidGuard) returns the tracks, then worlds, then levels, each with its state (`locked`, `unlocked`, `passed` or `skipped`) and stars, all localized for the kid, plus `badges`: the ids of the kid's earned badges (oldest first).
    - `GET /api/parent/kids/:id/progress` (ParentGate) gives the parent dashboard data.
 8. **Time limit:** `daily_activity` adds up the run durations. When `dailyLimitMinutes` is reached, starting a run returns `403 DAILY_LIMIT_REACHED`, and the frontend shows the sleeping marmot.
 
