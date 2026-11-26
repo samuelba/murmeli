@@ -87,6 +87,10 @@ export class LearnBackend {
   readonly runs = new Map<string, Run>();
   readonly progress = new Map<string, Stars>();
   readonly demoSeen = new Set<string>();
+  /** Badge ids the kid holds (docs/internal/learning-engine.md §7). */
+  readonly badges = new Set<string>();
+  private practiced = false;
+  private badgesSeeded = false;
   private nextRun = 1;
   private seed: number;
 
@@ -301,8 +305,15 @@ export class LearnBackend {
     }
     const score = runScore(run.scores);
     const stars = starsFor(score, run.level?.passRatio ?? 0.8);
+    if (!this.badgesSeeded) {
+      this.badgesSeeded = true;
+      this.awardBadges();
+    }
     const before = this.levelStates();
     const worldsBefore = this.map();
+    if (!run.level) {
+      this.practiced = true;
+    }
     if (run.level && stars > (this.progress.get(run.level.id) ?? 0)) {
       this.progress.set(run.level.id, stars);
     }
@@ -327,8 +338,24 @@ export class LearnBackend {
         stars,
         passed: isPassed(stars),
         unlocked: { levels, worlds },
-        newBadges: [],
+        newBadges: this.awardBadges(),
       },
     };
+  }
+
+  private awardBadges(): string[] {
+    const worlds = this.map().tracks.flatMap((track) => track.worlds);
+    const levels = worlds.flatMap((world) => world.levels);
+    const earned = {
+      'first-level': levels.some((level) => level.state === 'passed'),
+      'first-world': worlds.some((world) => world.state === 'passed'),
+      'star-collector': levels.filter((level) => level.stars === 3).length >= 5,
+      'first-practice': this.practiced,
+    };
+    const fresh = Object.entries(earned)
+      .filter(([id, done]) => done && !this.badges.has(id))
+      .map(([id]) => id);
+    fresh.forEach((id) => this.badges.add(id));
+    return fresh;
   }
 }

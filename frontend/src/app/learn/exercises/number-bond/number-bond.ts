@@ -198,10 +198,16 @@ export class NumberBond extends ExerciseBase<'number-bond'> {
     }
   }
 
+  /** Submits a full house or wall; otherwise moves on to the next empty blank. */
   protected check(): void {
-    if (this.entry.complete()) {
-      const values = this.entry.values();
-      this.emit({ values: this.blankIds().map((id) => values[id]!) });
+    if (this.locked()) {
+      return;
     }
+    if (!this.entry.complete()) {
+      this.entry.press('ok');
+      return;
+    }
+    const values = this.entry.values();
+    this.emit({ values: this.blankIds().map((id) => values[id]!) });
   }
 }

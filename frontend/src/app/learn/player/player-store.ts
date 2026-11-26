@@ -1,10 +1,13 @@
 import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
 import { AudioService } from '../../core/audio/audio.service';
 import { SoundEffects } from '../../core/audio/sound-effects';
+import { AuthService } from '../../core/auth/auth.service';
 import { ErrorMessage, errorMessage } from '../../core/errors/error-message';
 import { errorCodeOf } from '../../core/http/api-error';
+import { KidBadges } from '../badges/kid-badges.service';
 import { LearnContent } from '../content/learn-content';
 import { LearnApi } from '../learn-api.service';
+import { BreakTimer } from './break-timer';
 import {
   AnyAnswer,
   DAILY_LIMIT_REACHED,
@@ -26,6 +29,7 @@ export type Phase =
   | 'finishing'
   | 'results'
   | 'resting'
+  | 'break'
   | 'error';
 
 /** first try, second try, or shown after two tries. */
@@ -94,6 +98,9 @@ export class PlayerStore {
   private readonly audio = inject(AudioService);
   private readonly effects = inject(SoundEffects);
   private readonly content = inject(LearnContent);
+  private readonly badges = inject(KidBadges);
+  private readonly breakTimer = inject(BreakTimer);
+  private readonly activeKid = inject(AuthService).activeKid;
 
   private demoGeneration = 0;
   private runGeneration = 0;
@@ -114,6 +121,8 @@ export class PlayerStore {
   readonly error = signal<ErrorMessage | null>(null);
   readonly demoStep = signal(-1);
   readonly demoDone = signal(false);
+  /** The first demo bubble is read through focus; later ones and replays through a live region. */
+  readonly demoReplayed = signal(false);
 
   readonly total = computed(() => this.run()?.items.length ?? 0);
   readonly item = computed(() => this.run()?.items[this.index()] ?? null);
@@ -126,6 +135,9 @@ export class PlayerStore {
     return steps[this.demoStep()]?.action ?? null;
   });
   readonly demoSay = computed(() => this.demo()?.steps[this.demoStep()]?.say ?? '');
+  readonly demoAnnouncement = computed(() =>
+    this.demoStep() > 0 || this.demoReplayed() ? this.demoSay() : '',
+  );
   readonly demoReveal = computed<AnyAnswer | null>(() => {
     const demo = this.demo();
     const shown = demo?.steps
@@ -158,6 +170,7 @@ export class PlayerStore {
       const run = { ...started, items: started.items.filter((item) => isExerciseType(item.type)) };
       this.run.set(run);
       this.outcomes.set(run.items.map(() => null));
+      this.prefetchAudio(run);
       if (run.demo && !run.demoSeen) {
         this.openDemo();
       } else {
@@ -171,11 +184,13 @@ export class PlayerStore {
       return;
     }
     this.audio.stop();
+    this.demoReplayed.set(false);
     this.phase.set('demo');
     void this.playDemo();
   }
 
   replayDemo(): void {
+    this.demoReplayed.set(true);
     void this.playDemo();
   }
 
@@ -232,9 +247,22 @@ export class PlayerStore {
     if (this.index() + 1 < this.total()) {
       this.index.update((index) => index + 1);
       this.attempt.set(1);
-      this.enterItem();
+      if (this.breakTimer.due()) {
+        this.breakTimer.reminded();
+        this.audio.stop();
+        this.phase.set('break');
+      } else {
+        this.enterItem();
+      }
     } else {
       void this.finish();
+    }
+  }
+
+  /** "Weiter spielen" after the break reminder. */
+  resumeAfterBreak(): void {
+    if (this.phase() === 'break') {
+      this.enterItem();
     }
   }
 
@@ -251,6 +279,10 @@ export class PlayerStore {
       const unlocked = await this.unlockedAfter(results);
       if (generation !== this.runGeneration) {
         return;
+      }
+      const kid = this.activeKid();
+      if (kid) {
+        this.badges.remember(kid.id, results.newBadges);
       }
       this.unlocked.set(unlocked);
       this.results.set(results);
@@ -290,6 +322,17 @@ export class PlayerStore {
     this.error.set(null);
     this.demoStep.set(-1);
     this.demoDone.set(false);
+    this.demoReplayed.set(false);
+  }
+
+  /** Warms the cache (service worker or HTTP) with this run's narration, for flaky Wi-Fi. */
+  private prefetchAudio(run: StartRunResponse): void {
+    const texts = [
+      ...run.items.flatMap((item) => item.prompt.speak),
+      ...(run.demo?.steps.map((step) => step.say) ?? []),
+      ...this.content.phrases(),
+    ];
+    void this.audio.prefetch(texts);
   }
 
   private enterItem(): void {

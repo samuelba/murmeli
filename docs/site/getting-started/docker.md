@@ -117,7 +117,7 @@ For good deliverability, send from a domain with SPF, DKIM and DMARC records (yo
 **Without email** (`SMTP_HOST` empty), Murmeli still works, with these limits:
 - Invitations show the link for you to share by hand.
 - Open registration is not usable, because new accounts can't confirm their address. Keep it closed.
-- "Forgot your password?", email changes and confirmation emails don't work. Parents who are signed in can still change their password in the parent area.
+- "Forgot your password?", email changes and confirmation emails don't work. Parents who are signed in can still change their password in the parent area. An admin can create a password reset link for a parent, or mark an address as verified (see [Admins](../usage/admins.md)).
 
 ## Next steps
 - [Reverse proxy and HTTPS](../deployment/reverse-proxy.md)

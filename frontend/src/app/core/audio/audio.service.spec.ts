@@ -147,6 +147,42 @@ describe('AudioService', () => {
     expect(debug).toHaveBeenCalled();
   });
 
+  it('prefetches the clips of a run once each, and stops when a newer prefetch starts', async () => {
+    const fetch = vi
+      .spyOn(window, 'fetch')
+      .mockResolvedValueOnce(new Response('a'))
+      .mockResolvedValueOnce(new Response(null, { status: 404 }))
+      .mockResolvedValue(new Response('x'));
+    const pending = service.prefetch(['Wie viel ist', '7', 'Wie viel ist', 'nope', 'evil', 'plus']);
+    http.expectOne(AUDIO_MANIFEST_URL).flush(MANIFEST);
+    expect(await pending).toBe(2);
+    expect(fetch.mock.calls.map(([url]) => url)).toEqual([
+      '/audio/de-CH/a.opus?v=v1',
+      '/audio/de-CH/b.opus?v=v1',
+      '/audio/de-CH/c.opus?v=v1',
+    ]);
+
+    fetch.mockClear();
+    const first = service.prefetch(['7', 'plus']);
+    const second = service.prefetch(['Wie viel ist']);
+    expect(await first).toBe(0);
+    expect(await second).toBe(1);
+    expect(fetch).toHaveBeenCalledTimes(1);
+
+    fetch.mockRejectedValue(new TypeError('offline'));
+    expect(await service.prefetch(['7', 'plus'])).toBe(0);
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it('prefetches nothing without a manifest', async () => {
+    vi.spyOn(console, 'debug').mockImplementation(() => undefined);
+    const fetch = vi.spyOn(window, 'fetch');
+    const pending = service.prefetch(['7']);
+    http.expectOne(AUDIO_MANIFEST_URL).flush(null, { status: 404, statusText: 'Not Found' });
+    expect(await pending).toBe(0);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
   it('plays segments in order with a short gap and skips missing clips', async () => {
     vi.spyOn(console, 'debug').mockImplementation(() => undefined);
     await loaded();

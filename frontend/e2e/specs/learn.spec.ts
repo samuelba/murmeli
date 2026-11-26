@@ -1,6 +1,7 @@
 import { type Page, expect, test } from '@playwright/test';
 import type { ExerciseTypeId } from '@murmeli/content';
 import { type FamilyBackend, type FamilyOptions, kid, mockFamily } from '../helpers/family';
+import { apiError } from '../helpers/mock-api';
 import { PlayerPage } from '../pages/player.page';
 
 const MIA = kid();
@@ -166,6 +167,10 @@ test.describe('"Zeig mir" demo', () => {
     await player.waitForItem(0);
     await expect(page.getByTestId('demo')).toHaveCount(0);
     await expect(page.getByTestId('show-demo')).toBeVisible();
+    await page.getByTestId('show-demo').click();
+    await expect(page.getByTestId('demo')).toBeVisible();
+    await page.getByTestId('demo-go').click();
+    await player.waitForItem(0);
   });
 });
 
@@ -273,4 +278,51 @@ test.describe('exercise types', () => {
       expect(call?.body).toEqual({ index: 0, answer: backend.learn.solution(0) });
     });
   }
+});
+
+test.describe('wellbeing', () => {
+  test('suggests a break between items after 20 minutes of play', async ({ page }) => {
+    await page.clock.install();
+    const { player } = await openLevel(page, { learn: { demoSeen: [FIRST], items: 3 } });
+    await player.waitForItem(0);
+    for (let step = 0; step < 5; step += 1) {
+      await page.clock.fastForward('04:30');
+      await page.getByTestId('prompt-text').click();
+    }
+    await player.answerCorrectly(0);
+    await player.next();
+
+    const reminder = page.getByTestId('break-reminder');
+    await expect(reminder).toContainText('Zeit für eine kleine Pause? Streck dich mal!');
+    await page.getByTestId('break-continue').click();
+    await player.waitForItem(1);
+
+    await player.answerCorrectly(1);
+    await player.next();
+    await player.waitForItem(2);
+    await expect(reminder).toHaveCount(0);
+  });
+
+  test('taking the break goes back to the profile picker', async ({ page }) => {
+    await page.clock.install();
+    const { player } = await openLevel(page, { learn: { demoSeen: [FIRST], items: 3 } });
+    await player.waitForItem(0);
+    for (let step = 0; step < 5; step += 1) {
+      await page.clock.fastForward('04:30');
+      await page.getByTestId('prompt-text').click();
+    }
+    await player.answerCorrectly(0);
+    await player.next();
+    await page.getByTestId('break-pause').click();
+    await expect(page.getByTestId('page-title')).toHaveText('Wer lernt heute?');
+  });
+
+  test('explains kindly when there is nothing to practice yet', async ({ page }) => {
+    const backend = await openMap(page);
+    backend.on('POST /api/learn/practice/runs', apiError(409, 'NOTHING_TO_PRACTICE'));
+    await page.getByTestId('practice').click();
+    await expect(page.getByTestId('form-error')).toContainText(
+      'Gerade gibt es nichts zu üben. Spiel doch eine neue Stufe!',
+    );
+  });
 });

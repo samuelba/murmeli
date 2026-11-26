@@ -1,0 +1,186 @@
+<div class="page">
+  <a class="back" routerLink="/parent" data-testid="progress-back">
+    <mu-icon name="back" />
+    <span>{{ 'parent.progress.back' | transloco }}</span>
+  </a>
+
+  <section class="panel" aria-labelledby="page-heading">
+    <header class="overview">
+      @if (kid(); as kid) {
+        <mu-avatar [avatar]="kid.avatar" [size]="72" />
+      }
+      <div class="overview__text">
+        <h1 id="page-heading" class="mu-page-title" data-testid="page-title">
+          @if (kid(); as kid) {
+            {{ 'parent.progress.title' | transloco: { name: kid.nickname } }}
+          } @else {
+            {{ 'parent.progress.pageTitle' | transloco }}
+          }
+        </h1>
+        @if (kid(); as kid) {
+          <p class="mu-muted" data-testid="progress-class">
+            {{ 'kid.class.' + kid.startClass | transloco }}
+          </p>
+        }
+      </div>
+    </header>
+
+    @switch (state()) {
+      @case ('loading') {
+        <p class="mu-muted" role="status" data-testid="progress-loading">
+          {{ 'parent.progress.loading' | transloco }}
+        </p>
+      }
+      @case ('error') {
+        <div class="error" data-testid="progress-error">
+          <mu-form-error [error]="error()" />
+          <button type="button" class="mu-button mu-button--primary" (click)="load()">
+            {{ 'parent.progress.retry' | transloco }}
+          </button>
+        </div>
+      }
+      @default {
+        @if (summary(); as summary) {
+          <dl class="stats" data-testid="progress-stats">
+            <div class="stat">
+              <dt>{{ 'parent.progress.summary.stars' | transloco }}</dt>
+              <dd data-testid="stat-stars">
+                {{
+                  'parent.progress.summary.outOf'
+                    | transloco: { value: summary.stars, max: summary.maxStars }
+                }}
+              </dd>
+            </div>
+            <div class="stat">
+              <dt>{{ 'parent.progress.summary.levels' | transloco }}</dt>
+              <dd data-testid="stat-levels">
+                {{
+                  'parent.progress.summary.outOf'
+                    | transloco: { value: summary.passedLevels, max: summary.levels }
+                }}
+              </dd>
+            </div>
+            <div class="stat">
+              <dt>{{ 'parent.progress.summary.minutes' | transloco }}</dt>
+              <dd data-testid="stat-minutes">
+                {{
+                  'parent.progress.activity.minutesValue' | transloco: { count: summary.minutes }
+                }}
+              </dd>
+            </div>
+            <div class="stat">
+              <dt>{{ 'parent.progress.summary.runs' | transloco }}</dt>
+              <dd data-testid="stat-runs">{{ summary.runs }}</dd>
+            </div>
+          </dl>
+        }
+        @if (progress(); as progress) {
+          <div class="badges">
+            <h2 class="section-title" id="badges-title">
+              {{ 'parent.progress.badges.title' | transloco }}
+            </h2>
+            @if (progress.badges.length === 0) {
+              <p class="mu-muted" data-testid="progress-no-badges">
+                {{ 'parent.progress.badges.none' | transloco }}
+              </p>
+            } @else {
+              <ul class="badge-list" role="list" aria-labelledby="badges-title">
+                @for (badge of progress.badges; track badge.id) {
+                  <li class="badge" [attr.data-testid]="'progress-badge-' + badge.id">
+                    <svg class="badge__icon" viewBox="0 0 24 24" aria-hidden="true">
+                      <circle cx="12" cy="10" r="7" />
+                      <path d="M8 15l-2 7 6-3 6 3-2-7" />
+                    </svg>
+                    <span class="badge__title">{{ badge.title }}</span>
+                    @if (formatDate(badge.earnedAt); as date) {
+                      <span class="badge__date">{{
+                        'parent.progress.badges.earned' | transloco: { date }
+                      }}</span>
+                    }
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+        }
+      }
+    }
+  </section>
+
+  @if (state() === 'ready' && progress(); as progress) {
+    <section class="panel explain" aria-labelledby="explain-title" data-testid="progress-explain">
+      <h2 class="section-title" id="explain-title">
+        <mu-icon name="info" />
+        {{ 'parent.progress.explain.title' | transloco }}
+      </h2>
+      <ul class="explain__list">
+        <li>{{ 'parent.progress.explain.stars' | transloco }}</li>
+        <li>{{ 'parent.progress.explain.mastery' | transloco }}</li>
+        <li>{{ 'parent.progress.explain.review' | transloco }}</li>
+        <li>{{ 'parent.progress.explain.noStreaks' | transloco }}</li>
+      </ul>
+    </section>
+
+    <section class="panel" aria-labelledby="activity-title" data-testid="progress-activity">
+      <h2 class="section-title" id="activity-title">
+        {{ 'parent.progress.activity.title' | transloco }}
+      </h2>
+      @if (!hasActivity()) {
+        <p class="mu-muted" data-testid="activity-empty">
+          {{ 'parent.progress.activity.empty' | transloco }}
+        </p>
+      }
+      <div class="charts">
+        <mu-activity-chart
+          class="chart chart--minutes"
+          [chart]="minutesChart()"
+          [title]="'parent.progress.activity.minutes' | transloco"
+        />
+        <mu-activity-chart
+          class="chart chart--runs"
+          [chart]="runsChart()"
+          [title]="'parent.progress.activity.runs' | transloco"
+        />
+      </div>
+      <details class="table-toggle" data-testid="activity-table-toggle">
+        <summary>{{ 'parent.progress.activity.table' | transloco }}</summary>
+        <div class="table-scroll">
+          <table class="table" data-testid="activity-table">
+            <caption class="mu-visually-hidden">
+              {{
+                'parent.progress.activity.title' | transloco
+              }}
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ 'parent.progress.activity.dayColumn' | transloco }}</th>
+                <th scope="col" class="num">
+                  {{ 'parent.progress.activity.minutesColumn' | transloco }}
+                </th>
+                <th scope="col" class="num">
+                  {{ 'parent.progress.activity.runsColumn' | transloco }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (bar of minutesChart().bars; track bar.day; let i = $index) {
+                <tr>
+                  <th scope="row">
+                    <span aria-hidden="true">{{ bar.shortDate }}</span>
+                    <span class="mu-visually-hidden">{{ bar.date }}</span>
+                  </th>
+                  <td class="num">{{ bar.value }}</td>
+                  <td class="num">{{ runsChart().bars[i]?.value ?? 0 }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <mu-progress-skills [rows]="skills()" />
+
+    <mu-progress-tracks [tracks]="progress.tracks" />
+  }
+</div>

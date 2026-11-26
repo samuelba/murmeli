@@ -116,7 +116,7 @@
     "SETUP_TOKEN_INVALID": "The setup code is wrong. You find it in the server configuration (SETUP_TOKEN).",
     "LEVEL_LOCKED": "This level is still locked. Play the level before it first.",
     "LEVEL_NOT_FOUND": "This level doesn’t exist. Back to the map!",
-    "NOTHING_TO_PRACTICE": "Play a level first, then you can practice.",
+    "NOTHING_TO_PRACTICE": "There is nothing to practice right now. How about a new level?",
     "RUN_NOT_FOUND": "This round is over. Just start it again."
   },
   "parentGate": {
@@ -276,7 +276,8 @@
       "loading": "Loading the mountain trail…",
       "error": "The mountain trail could not be loaded.",
       "retry": "Try again",
-      "empty": "There is nothing to learn here yet."
+      "empty": "There is nothing to learn here yet.",
+      "badges": "Badges: {{count}}"
     },
     "player": {
       "progress": "Exercise {{current}} of {{total}}",
@@ -293,7 +294,9 @@
       "demoLabel": "Murmeli shows how it works",
       "correctLabel": "Correct",
       "solutionLabel": "The right answer is marked.",
-      "hintLabel": "Tip"
+      "hintLabel": "Tip",
+      "breakContinue": "Keep playing",
+      "breakPause": "Take a break"
     },
     "results": {
       "stars": "{{stars}} of 3 stars",
@@ -312,8 +315,7 @@
         "label": "Number pad",
         "display": "Your number: {{value}}",
         "empty": "Your number: empty",
-        "delete": "Delete",
-        "ok": "Done"
+        "delete": "Delete"
       },
       "count": {
         "objects": "{{count}} pictures. Tap each picture while you count.",
@@ -411,7 +413,23 @@
       "rest": "Murmeli is taking a break now.",
       "restMore": "That’s enough learning for today. See you tomorrow!",
       "loading": "One moment, please.",
-      "locked": "This level is still closed. Play the others first."
+      "locked": "This level is still closed. Play the others first.",
+      "offline": "Murmeli is taking a nap until the internet is back.",
+      "breakTime": "Time for a little break? Have a good stretch!"
+    },
+    "badges": {
+      "title": "Your badges",
+      "new": "You got a new badge!",
+      "earned": "You have it!",
+      "notYet": "Coming soon",
+      "firstLevel": "First Signpost",
+      "firstLevelHint": "Finish your first level.",
+      "firstWorld": "First Summit Flag",
+      "firstWorldHint": "Climb to your first summit.",
+      "starCollector": "Star Collector",
+      "starCollectorHint": "Get all three stars five times.",
+      "firstPractice": "First Practice",
+      "firstPracticeHint": "Practice for the first time."
     }
   },
   "kidForm": {
@@ -456,7 +474,79 @@
     "editKid": "Edit {{name}}",
     "deleteKid": "Delete {{name}}",
     "deleteKidTitle": "Delete {{name}}?",
-    "deleteKidMessage": "The profile and all learning progress of {{name}} will be deleted for good."
+    "deleteKidMessage": "The profile and all learning progress of {{name}} will be deleted for good.",
+    "progress": {
+      "pageTitle": "Progress",
+      "title": "{{name}}’s progress",
+      "link": "Progress",
+      "linkLabel": "Progress of {{name}}",
+      "back": "Back to kid profiles",
+      "loading": "Loading progress …",
+      "retry": "Try again",
+      "summary": {
+        "stars": "Stars",
+        "levels": "Levels passed",
+        "minutes": "Learning time (14 days)",
+        "runs": "Rounds (14 days)",
+        "outOf": "{{value}} of {{max}}"
+      },
+      "badges": {
+        "title": "Badges",
+        "none": "No badges yet. The first one comes with the first level passed.",
+        "earned": "since {{date}}"
+      },
+      "explain": {
+        "title": "Good to know",
+        "stars": "Stars: each level gives up to 3 stars. With 2 stars (usually 80% right) it is passed and the next level opens. 3 stars mean everything was right on the first try.",
+        "mastery": "Confidence: how solid a skill is, worked out from the rounds played. Recent rounds count more. Below 60% it still needs practice.",
+        "review": "Review: what was learned comes back at growing intervals so it sticks. In “Practice” mode, what is due comes first.",
+        "noStreaks": "There are no streaks, and nothing is lost when a day is skipped."
+      },
+      "activity": {
+        "title": "The last 14 days",
+        "minutes": "Learning time per day (minutes)",
+        "runs": "Rounds played per day",
+        "minutesValue": "{{count}} min",
+        "minutesValueOne": "1 min",
+        "runsValue": "{{count}} rounds",
+        "runsValueOne": "1 round",
+        "summary": "{{total}} in total, on {{days}} of {{count}} days.",
+        "peak": "Most: {{value}} on {{date}}.",
+        "empty": "No learning in the last 14 days. That is perfectly fine.",
+        "table": "Show the values as a table",
+        "dayColumn": "Day",
+        "minutesColumn": "Minutes",
+        "runsColumn": "Rounds"
+      },
+      "skills": {
+        "title": "Skills",
+        "empty": "No skills practiced yet.",
+        "mastery": "Confidence {{percent}}%",
+        "level": {
+          "practice": "needs practice",
+          "growing": "getting there",
+          "solid": "solid"
+        },
+        "needsPractice": "Needs practice",
+        "nextReview": "Next review: {{date}}",
+        "due": "Due for review now",
+        "weakTitle": "Needs practice right now",
+        "weakHint": "These skills were practiced in the last 14 days and are not solid yet. They come up more often in “Practice” mode."
+      },
+      "tracks": {
+        "title": "Learning paths",
+        "levels": "{{passed}} of {{total}} levels",
+        "stars": "{{stars}} of {{max}} stars",
+        "levelStars": "{{stars}} of 3 stars",
+        "runs": "Rounds: {{count}}"
+      },
+      "state": {
+        "locked": "Still locked",
+        "unlocked": "Open",
+        "passed": "Passed",
+        "skipped": "Skipped"
+      }
+    }
   },
   "account": {
     "title": "Account",
@@ -533,7 +623,12 @@
       "resent": "Confirmation email was sent again.",
       "delete": "Delete {{email}}",
       "deleteTitle": "Delete account {{email}}?",
-      "deleteMessage": "The account, all kid profiles and all progress will be deleted for good."
+      "deleteMessage": "The account, all kid profiles and all progress will be deleted for good.",
+      "verify": "Mark email verified: {{email}}",
+      "verified": "The email address is now marked as verified.",
+      "resetLink": "Create password reset link: {{email}}",
+      "resetLinkTitle": "Password reset link",
+      "resetLinkText": "Only pass this link on to {{email}}, ideally in person or by message. It works once and until {{expires}}."
     },
     "invites": {
       "title": "Invitations",
@@ -604,10 +699,6 @@
       "rights": {
         "title": "Download and delete",
         "text": "In the parent area you can download all data at any time or delete your account with all kid profiles for good (nFADP, GDPR)."
-      },
-      "contact": {
-        "title": "Contact",
-        "text": "The person or organization running this installation is responsible. Contact details will follow."
       }
     },
     "terms": {
@@ -635,6 +726,46 @@
         "title": "Changes",
         "text": "If these terms change, we will let you know by email."
       }
+    },
+    "operator": {
+      "title": "Responsible and contact",
+      "none": "Run by the person or organization hosting this instance. Please contact them with any questions."
     }
+  },
+  "offline": {
+    "retry": "Check again",
+    "checking": "Checking …",
+    "banner": "No internet connection. Changes are only saved once the connection is back."
+  },
+  "pwa": {
+    "updateReady": "A new version is available.",
+    "reload": "Reload"
+  },
+  "about": {
+    "pageTitle": "About this app",
+    "title": "About {{brand}}",
+    "what": {
+      "title": "What is {{brand}}?",
+      "text": "{{brand}} is a learning app for kids from kindergarten to the end of 2nd grade: math, reading and writing, in Swiss German and American English. No ads, no trackers and no streaks that put on pressure."
+    },
+    "curriculum": {
+      "title": "Lehrplan 21",
+      "text": "The content is aligned with the Swiss Lehrplan 21 (cycle 1). {{brand}} is not affiliated with or endorsed by Lehrplan 21 or its publishers."
+    },
+    "voices": {
+      "title": "The voices",
+      "text": "The voices are generated with artificial intelligence (Qwen3-TTS). They were recorded once in advance and are stored on this server. Nothing is generated live while playing, and none of your kid’s data is used for it."
+    },
+    "privacy": {
+      "title": "Privacy",
+      "text": "Everything runs on this server: no fonts, scripts or pictures from other servers. The privacy page has the details."
+    },
+    "credits": {
+      "title": "Credits and licenses",
+      "pictures": "Pictures: Noto Emoji by Google",
+      "fonts": "Fonts: Nunito and Andika",
+      "artwork": "{{brand}}, the marmot, and the animal avatars are original artwork made for this app."
+    },
+    "version": "{{brand}} version {{version}}"
   }
 }

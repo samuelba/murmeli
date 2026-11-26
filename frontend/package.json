@@ -23,7 +23,9 @@
     "check:external": "node scripts/check-no-external-urls.mjs dist/murmeli-frontend/browser",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
-    "e2e:report": "playwright show-report"
+    "e2e:report": "playwright show-report",
+    "serve:dist": "node scripts/serve-dist.mjs",
+    "lighthouse": "node scripts/lighthouse.mjs"
   },
   "dependencies": {
     "@angular/cdk": "^22.3.0",
@@ -34,6 +36,7 @@
     "@angular/material": "^22.3.0",
     "@angular/platform-browser": "^22.3.0",
     "@angular/router": "^22.3.0",
+    "@angular/service-worker": "^22.3.0",
     "@fontsource-variable/nunito": "^5.3.0",
     "@fontsource/andika": "^5.3.0",
     "@jsverse/transloco": "^8.4.0",
@@ -53,8 +56,10 @@
     "@vitest/coverage-v8": "^5.1.2",
     "altcha-lib": "^2.10.0",
     "angular-eslint": "22.8.0",
+    "chrome-launcher": "^1.2.3",
     "eslint": "^10.14.0",
     "jsdom": "^31.0.0",
+    "lighthouse": "^13.6.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.74.0",

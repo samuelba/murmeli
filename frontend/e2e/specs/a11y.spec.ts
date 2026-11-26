@@ -10,6 +10,9 @@ const DARK_TOO = new Set([
   'learn',
   'player',
   'demo',
+  'parent progress',
+  'badge shelf',
+  'offline',
 ]);
 
 async function seriousViolations(page: Page) {

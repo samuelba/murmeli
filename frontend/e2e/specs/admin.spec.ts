@@ -47,6 +47,36 @@ test.describe('administration', () => {
     });
   });
 
+  test('creates a password reset link and marks an email as verified', async ({ page }) => {
+    const backend = await mockFamily(page, { gate: true, user: admin() });
+    const guest = '0190a000-0000-7000-8000-000000000002';
+    await page.goto('/admin/users');
+    const table = page.getByTestId('users-table');
+    await expect(table).toContainText('gast@example.ch');
+
+    await page.getByRole('button', { name: 'Passwort-Link erstellen: gast@example.ch' }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText('Link zum Zurücksetzen des Passworts');
+    await expect(page.getByTestId('reset-link-url')).toHaveText(
+      'http://localhost/reset-password?token=reset123token',
+    );
+    await expect(page.getByTestId('reset-link-result')).toContainText('gast@example.ch');
+    await page.getByTestId('reset-link-done').click();
+    await expect(dialog).toHaveCount(0);
+    expect(backend.callsTo('POST', `/api/admin/users/${guest}/password-reset-link`)).toHaveLength(
+      1,
+    );
+
+    await page
+      .getByRole('button', { name: 'E-Mail als bestätigt markieren: gast@example.ch' })
+      .click();
+    await expect(
+      page.getByRole('status').filter({ hasText: 'als bestätigt markiert' }),
+    ).toBeVisible();
+    await expect(page.getByTestId(`verify-email-${guest}`)).toHaveCount(0);
+    expect(backend.callsTo('POST', `/api/admin/users/${guest}/verify-email`)).toHaveLength(1);
+  });
+
   test('turns registration off', async ({ page }) => {
     const backend = await mockFamily(page, { gate: true, user: admin() });
     await page.goto('/admin/settings');

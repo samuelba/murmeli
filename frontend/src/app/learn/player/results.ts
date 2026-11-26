@@ -11,6 +11,8 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { AudioService } from '../../core/audio/audio.service';
 import { SoundEffects } from '../../core/audio/sound-effects';
 import { Icon } from '../../shared/icon/icon';
+import { BadgeIcon } from '../badges/badge-icon';
+import { BadgeId, badgeNameKey, knownBadges } from '../badges/badges';
 import { Mascot, MascotPose } from '../../shared/mascot/mascot';
 import { Speak } from '../../shared/speak/speak';
 import { FinishRunResponse, RunMode } from '../learn.models';
@@ -22,7 +24,7 @@ const STAR_DELAY_MS = 450;
 /** Stars (never a percentage), what got unlocked, and where to go next. */
 @Component({
   selector: 'mu-results',
-  imports: [TranslocoPipe, Icon, Mascot, Speak, Confetti],
+  imports: [TranslocoPipe, BadgeIcon, Icon, Mascot, Speak, Confetti],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="results" aria-labelledby="results-title" data-testid="results">
@@ -71,6 +73,19 @@ const STAR_DELAY_MS = 450;
             {{ 'kid.feedback.newLevel' | transloco }}
           </p>
         }
+      }
+      @if (newBadges().length > 0) {
+        <div class="badges" data-testid="new-badges">
+          <p class="badges__title">{{ 'kid.badges.new' | transloco }}</p>
+          <ul class="badges__list" role="list">
+            @for (badge of newBadges(); track badge) {
+              <li class="badge" [attr.data-testid]="'new-badge-' + badge">
+                <mu-badge-icon [badge]="badge" earned />
+                <span>{{ nameKey(badge) | transloco }}</span>
+              </li>
+            }
+          </ul>
+        </div>
       }
       <div class="actions">
         @if (unlocked()?.nextLevelId) {
@@ -174,6 +189,54 @@ const STAR_DELAY_MS = 450;
       font-weight: 800;
     }
 
+    .badges {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--mu-space-2);
+      padding: var(--mu-space-3) var(--mu-space-4);
+      border: 3px solid var(--mu-color-primary-edge);
+      border-radius: var(--mu-radius-md);
+      background: color-mix(in srgb, var(--mu-color-sun) 22%, var(--mu-color-surface));
+    }
+
+    .badges__title {
+      margin: 0;
+      font-size: var(--mu-font-size-lg);
+      font-weight: 800;
+    }
+
+    .badges__list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--mu-space-4);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--mu-space-1);
+      font-weight: 800;
+
+      mu-badge-icon {
+        width: 88px;
+        height: 88px;
+        animation: mu-star-in 0.6s var(--mu-ease-bounce) both;
+        animation-delay: 1.2s;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .badge mu-badge-icon {
+        animation: none;
+      }
+    }
+
     .actions {
       display: flex;
       flex-wrap: wrap;
@@ -207,6 +270,8 @@ export class Results {
       'kid.feedback.allStars',
     ][this.results().stars]!;
   });
+  protected readonly newBadges = computed(() => knownBadges(this.results().newBadges));
+  protected readonly nameKey = badgeNameKey;
   protected readonly pose = computed<MascotPose>(() =>
     this.results().stars >= 2 ? 'cheering' : this.results().stars === 1 ? 'happy' : 'encouraging',
   );
@@ -226,6 +291,11 @@ export class Results {
       lines.push(this.transloco.translate('kid.feedback.newWorld'));
     } else if (unlocked?.newLevels) {
       lines.push(this.transloco.translate('kid.feedback.newLevel'));
+    }
+    const badges: readonly BadgeId[] = this.newBadges();
+    if (badges.length > 0) {
+      lines.push(this.transloco.translate('kid.badges.new'));
+      badges.forEach((badge) => lines.push(this.transloco.translate(badgeNameKey(badge))));
     }
     void this.audio.narrate(lines);
   }

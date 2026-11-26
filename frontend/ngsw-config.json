@@ -1,0 +1,56 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "navigationUrls": ["/**", "!/**/*.*", "!/**/*__*", "!/**/*__*/**", "!/api/**", "!/healthz"],
+  "navigationRequestStrategy": "performance",
+  "assetGroups": [
+    {
+      "name": "app-shell",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js",
+          "/media/**",
+          "/altcha/*.js",
+          "/i18n/*.json",
+          "/brand/favicon.svg",
+          "/brand/mascot/*.svg"
+        ]
+      }
+    },
+    {
+      "name": "brand-and-pictures",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "resources": {
+        "files": ["/brand/**", "/pictures/**"]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "audio-manifest",
+      "urls": ["/audio/manifest.json"],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 1,
+        "maxAge": "30d",
+        "timeout": "4s"
+      }
+    },
+    {
+      "name": "audio-clips",
+      "urls": ["/audio/**"],
+      "cacheQueryOptions": { "ignoreSearch": false },
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 400,
+        "maxAge": "90d"
+      }
+    }
+  ]
+}

@@ -73,6 +73,7 @@ http {
         location = /healthz {
             access_log off;
             default_type text/plain;
+            charset utf-8;
             include /tmp/nginx/security-headers.conf;
             add_header Cache-Control "no-store" always;
             return 200 "ok\n";
@@ -137,9 +138,23 @@ http {
 
         location ^~ /pictures/ {
             include /tmp/nginx/security-headers.conf;
+            types {
+                image/svg+xml svg;
+                text/markdown md;
+            }
+            default_type text/plain;
+            charset utf-8;
             # A second, stricter CSP for SVGs opened directly (browsers enforce both).
             add_header Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; sandbox" always;
             add_header Cache-Control "public, max-age=86400" always;
+            try_files $uri =404;
+        }
+
+        # Angular service worker: the script and its manifest must always be revalidated, so
+        # an update reaches every device. Missing files are a 404, never index.html.
+        location ~ "^/(?:ngsw-worker\.js|ngsw\.json|safety-worker\.js|worker-basic\.min\.js)$" {
+            include /tmp/nginx/security-headers.conf;
+            add_header Cache-Control "no-cache" always;
             try_files $uri =404;
         }
 

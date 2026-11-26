@@ -12,7 +12,7 @@ The narrator voices are **synthetic**. They are generated offline, ahead of time
 
 Nothing is synthesized while the app runs, and no text is sent to a speech service. The browser only downloads the finished clips from your server. Math prompts are put together from short clips ("Wie viel ist" + "7" + "plus" + "5"), with a short pause between them.
 
-**Disclosure:** tell your users that the voices are AI-generated, for example in your privacy notice or terms. Clips recorded by a person are marked `human` in the audio manifest.
+**Disclosure:** the app's **About** page (linked in the footer) says that the voices are AI-generated (Qwen3-TTS). You can repeat it in your privacy note (`OPERATOR_PRIVACY_NOTE`). Clips recorded by a person are marked `human` in the audio manifest.
 
 ## How it plays
 - Each text has a speaker button. With the kid's **Read aloud** setting on **Automatic by level** (the default), prompts, hints and feedback play by themselves for kindergarten kids; school kids tap the speaker. See [For parents](../usage/parents.md#create-a-kid-profile).

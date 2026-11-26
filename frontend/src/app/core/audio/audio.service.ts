@@ -40,6 +40,8 @@ export const AUDIO_ELEMENT_FACTORY = new InjectionToken<() => HTMLAudioElement>(
 type LoadState = 'idle' | 'loading' | 'ready' | 'failed';
 
 const MANIFEST_RETRY_MS = 60_000;
+/** A run needs a few dozen clips; more than this is not worth the bandwidth up front. */
+export const PREFETCH_LIMIT = 80;
 
 /** 10 ms of silence as a WAV file (blob: URLs are allowed by the CSP media-src). */
 function silentWav(): Blob {
@@ -91,6 +93,7 @@ export class AudioService implements SpeakProvider {
   private readonly language = inject(LanguageService).language;
   private readonly activeKid = inject(AuthService).activeKid;
   private readonly createElement = inject(AUDIO_ELEMENT_FACTORY);
+  private readonly window = inject(DOCUMENT).defaultView;
 
   private readonly index = signal<ClipIndex>(EMPTY_INDEX);
   private readonly speakingState = signal(false);
@@ -101,6 +104,7 @@ export class AudioService implements SpeakProvider {
   private failedAt = 0;
   private unlocked = false;
   private generation = 0;
+  private prefetchGeneration = 0;
   private interrupt: (() => void) | null = null;
 
   readonly speaking = this.speakingState.asReadonly();
@@ -216,6 +220,41 @@ export class AudioService implements SpeakProvider {
     this.cancel();
   }
 
+  /**
+   * Downloads the clips for these texts one by one in the background, so the service worker
+   * (or the HTTP cache) has them when the kid gets there. A newer prefetch replaces this one.
+   */
+  async prefetch(texts: readonly string[]): Promise<number> {
+    const generation = ++this.prefetchGeneration;
+    const fetcher = this.window?.fetch?.bind(this.window);
+    await this.load();
+    const clips = this.index().get(this.language());
+    if (!fetcher || !clips) {
+      return 0;
+    }
+    const urls = [
+      ...new Set(
+        texts
+          .map((text) => clips.get(normalizeText(text)))
+          .filter((clip): clip is Clip => !!clip)
+          .map((clip) => this.clipUrl(clip)),
+      ),
+    ].slice(0, PREFETCH_LIMIT);
+    let fetched = 0;
+    for (const url of urls) {
+      if (generation !== this.prefetchGeneration) {
+        break;
+      }
+      try {
+        const response = await fetcher(url, { credentials: 'same-origin' });
+        fetched += response.ok ? 1 : 0;
+      } catch {
+        break;
+      }
+    }
+    return fetched;
+  }
+
   private cancel(): number {
     this.generation += 1;
     this.interrupt?.();
@@ -265,8 +304,7 @@ export class AudioService implements SpeakProvider {
       const stall = setTimeout(done, (clip.durationMs ?? UNKNOWN_DURATION_MS) + STALL_MARGIN_MS);
       element.addEventListener('ended', done);
       element.addEventListener('error', done);
-      const query = this.version ? `?v=${encodeURIComponent(this.version)}` : '';
-      element.src = `${AUDIO_BASE_URL}/${clip.file}${query}`;
+      element.src = this.clipUrl(clip);
       element.play()?.catch(() => done());
       return () => {
         clearTimeout(stall);
@@ -274,6 +312,11 @@ export class AudioService implements SpeakProvider {
         element.removeEventListener('error', done);
       };
     });
+  }
+
+  private clipUrl(clip: Clip): string {
+    const query = this.version ? `?v=${encodeURIComponent(this.version)}` : '';
+    return `${AUDIO_BASE_URL}/${clip.file}${query}`;
   }
 
   private debug(message: string): void {

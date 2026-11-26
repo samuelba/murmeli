@@ -18,6 +18,11 @@ export const PARENT_ROUTES: Routes = [
         loadComponent: () => import('./kid-form/kid-form').then((m) => m.KidForm),
       },
       {
+        path: 'kids/:id/progress',
+        title: 'parent.progress.pageTitle',
+        loadComponent: () => import('./progress/parent-progress').then((m) => m.ParentProgress),
+      },
+      {
         path: 'kids/:id',
         title: 'kidForm.editTitle',
         loadComponent: () => import('./kid-form/kid-form').then((m) => m.KidForm),

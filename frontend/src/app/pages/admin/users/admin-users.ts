@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@ang
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -10,7 +11,7 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { MatSlideToggle, MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { debounceTime, distinctUntilChanged, firstValueFrom } from 'rxjs';
 import { AdminUser, ROLES, Role } from '../../../core/api/models';
 import { AdminService } from '../../../core/admin/admin.service';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -19,6 +20,7 @@ import { LanguageService } from '../../../core/i18n/language.service';
 import { injectConfirm } from '../../../shared/confirm-dialog/confirm';
 import { FormError } from '../../../shared/form-error/form-error';
 import { Icon } from '../../../shared/icon/icon';
+import { ResetLinkDialog, ResetLinkDialogData } from './reset-link-dialog';
 
 @Component({
   selector: 'mu-admin-users',
@@ -45,6 +47,7 @@ import { Icon } from '../../../shared/icon/icon';
 export class AdminUsers implements OnInit {
   private readonly admin = inject(AdminService);
   private readonly confirm = injectConfirm();
+  private readonly dialog = inject(MatDialog);
 
   protected readonly language = inject(LanguageService).language;
   protected readonly currentUserId = inject(AuthService).user()?.id;
@@ -92,6 +95,32 @@ export class AdminUsers implements OnInit {
       await this.admin.resendVerification(user.id);
       this.notice.set('admin.users.resent');
     });
+  }
+
+  protected async markVerified(user: AdminUser): Promise<void> {
+    await this.act(async () => {
+      const updated = await this.admin.markEmailVerified(user.id);
+      this.users.update((users) => users.map((item) => (item.id === user.id ? updated : item)));
+      this.notice.set('admin.users.verified');
+    });
+  }
+
+  protected async createResetLink(user: AdminUser): Promise<void> {
+    this.error.set(null);
+    this.notice.set(null);
+    let data: ResetLinkDialogData;
+    try {
+      data = { email: user.email, ...(await this.admin.createPasswordResetLink(user.id)) };
+    } catch (error) {
+      this.error.set(errorMessage(error));
+      return;
+    }
+    const ref = this.dialog.open<ResetLinkDialog, ResetLinkDialogData>(ResetLinkDialog, {
+      data,
+      width: 'min(520px, calc(100vw - 32px))',
+      maxWidth: 'calc(100vw - 32px)',
+    });
+    await firstValueFrom(ref.afterClosed());
   }
 
   protected async remove(user: AdminUser): Promise<void> {

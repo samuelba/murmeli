@@ -26,7 +26,7 @@ Every subject is a mountain trail. Your kid climbs from the valley at the bottom
 ## Playing a level
 A level is a short round, usually 6 exercises. The dots at the top show how many are left.
 
-1. **Show me:** the first time your kid opens a level, Murmeli shows how the exercise works, step by step, and says what to do. **Show again** repeats it, **Let's go!** starts the round. During that first round, the **Show me** button brings the demo back.
+1. **Show me:** the first time your kid opens a level, Murmeli shows how the exercise works, step by step, and says what to do. **Show again** repeats it, **Let's go!** starts the round. In every later round, the **Show me** button brings the demo back.
 2. **Answer:** tap the answer, or for some exercises (number pad, number house, number wall, number line, word building) put it together and tap **Check**.
 3. **Feedback:** a right answer gets a cheer. After the first wrong answer, a **Tip** explains how to think about it, and your kid tries the same exercise again. After a second wrong answer, Murmeli marks the right answer and the round goes on with **Next**.
 4. **Stop:** the stop button at the top asks **Do you want to stop?** **Keep playing** goes back, **Yes, back to the map** ends the round. A round that was stopped doesn't count against your kid.
@@ -48,5 +48,10 @@ There are no streaks and nothing is ever taken away.
 ## Practice
 **Practice** builds a mixed round of 8 to 10 exercises from up to 3 skills: first the ones that are due for repetition, then ones not played yet, then the weakest. It never changes the stars on the map. Skills that went well come back after longer and longer breaks (1, 2, 4, 8, then 16 days), so practice stays short and useful.
 
+## Badges
+The trophy button on the trail map opens the badge shelf. Earned badges shine; the others say how to get them: the first passed level, the first completed world, 5 levels with 3 stars, and the first practice round. New badges are celebrated at the end of a round.
+
 ## Breaks
+After about 20 minutes of playing, Murmeli suggests a short break between two exercises. **Keep playing** goes on, **Take a break** goes back to the profile picker.
+
 When the daily learning time set by the parent is used up, starting a new round shows a sleeping Murmeli: "That's enough learning for today. See you tomorrow!" A round that is already running can be finished first.

@@ -1,11 +1,11 @@
-import { type Page } from '@playwright/test';
+import { type RouteTarget } from './mock-api';
 import { readFile } from 'node:fs/promises';
 import { join, normalize } from 'node:path';
 
 const FIXTURES = join(__dirname, '..', 'fixtures', 'audio');
 
 /** Serves e2e/fixtures/audio (a tiny manifest and three de-CH clips) under /audio. */
-export async function routeAudio(page: Page): Promise<string[]> {
+export async function routeAudio(page: RouteTarget): Promise<string[]> {
   const played: string[] = [];
   await page.route('**/audio/**', async (route) => {
     const path = normalize(new URL(route.request().url()).pathname.replace(/^\/audio\//, ''));
@@ -15,7 +15,8 @@ export async function routeAudio(page: Page): Promise<string[]> {
     }
     try {
       const body = await readFile(join(FIXTURES, path));
-      if (path.endsWith('.opus')) {
+      // The player also prefetches a run's clips with fetch(); only <audio> loads are "played".
+      if (path.endsWith('.opus') && route.request().resourceType() === 'media') {
         played.push(path);
       }
       await route.fulfill({

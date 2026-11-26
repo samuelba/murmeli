@@ -100,6 +100,31 @@ export const SCENARIOS: readonly Scenario[] = [
     options: parent,
     open: visit(`/parent/kids/${PIN_KID.id}`, (page) => page.getByTestId('kid-nickname').waitFor()),
   },
+  {
+    name: 'parent progress',
+    options: parent,
+    open: visit(`/parent/kids/${PIN_KID.id}/progress`, (page) =>
+      page.getByTestId('progress-tracks').waitFor(),
+    ),
+  },
+  {
+    name: 'badge shelf',
+    options: { ...family, learn: { progress: { 'math-zahlenwiese-01': 3 } } },
+    open: async (page) => {
+      await openLearn(page);
+      await page.getByTestId('badges').click();
+      await page.getByTestId('badge-shelf').waitFor();
+    },
+  },
+  {
+    name: 'offline',
+    options: family,
+    open: async (page) => {
+      await openLearn(page);
+      await page.context().setOffline(true);
+      await page.getByTestId('offline-screen').waitFor();
+    },
+  },
   { name: 'account', options: parent, open: visit('/parent/account') },
   {
     name: 'admin users',

@@ -283,3 +283,24 @@ button.mu-blank {
   font-size: var(--mu-font-size-lg);
   font-weight: 800;
 }
+
+// The badge shelf button on the trail map.
+.mu-trophy {
+  position: relative;
+  padding-inline: var(--mu-space-3);
+}
+
+.mu-trophy .mu-trophy__icon {
+  width: 48px;
+  height: 48px;
+}
+
+.mu-trophy__count {
+  min-width: 1.75rem;
+  padding: 0 var(--mu-space-2);
+  border-radius: var(--mu-radius-pill);
+  background: var(--mu-color-text);
+  color: var(--mu-color-surface);
+  font-weight: 800;
+  text-align: center;
+}

@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -22,6 +23,9 @@ import { FormError } from '../../shared/form-error/form-error';
 import { Icon } from '../../shared/icon/icon';
 import { Mascot } from '../../shared/mascot/mascot';
 import { Speak } from '../../shared/speak/speak';
+import { BadgeIcon } from '../badges/badge-icon';
+import { BadgeShelf, BadgeShelfData } from '../badges/badge-shelf';
+import { KidBadges } from '../badges/kid-badges.service';
 import { LearnApi } from '../learn-api.service';
 import { MapResponse, MapTrack } from '../learn.models';
 import { SceneView } from './scene';
@@ -33,7 +37,17 @@ export const TRACK_STORAGE_KEY = 'mu-learn-track';
 /** `/learn`: the Alpine trail per track, from the valley (first world) up to the summit. */
 @Component({
   selector: 'mu-trail-map',
-  imports: [TranslocoPipe, AvatarView, FormError, Icon, Mascot, SceneView, Signpost, Speak],
+  imports: [
+    TranslocoPipe,
+    AvatarView,
+    BadgeIcon,
+    FormError,
+    Icon,
+    Mascot,
+    SceneView,
+    Signpost,
+    Speak,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './trail-map.html',
   styleUrl: './trail-map.scss',
@@ -56,6 +70,8 @@ export class TrailMap {
   private readonly audio = inject(AudioService);
   private readonly effects = inject(SoundEffects);
   private readonly transloco = inject(TranslocoService);
+  private readonly dialog = inject(Dialog);
+  private readonly kidBadges = inject(KidBadges);
   private readonly trackKey = `${TRACK_STORAGE_KEY}:${this.kid()?.id ?? ''}`;
   private readonly chosenTrack = signal<string | null>(this.storage.get(this.trackKey));
 
@@ -63,6 +79,11 @@ export class TrailMap {
   protected readonly track = computed<MapTrack | null>(() => {
     const tracks = this.tracks();
     return tracks.find((track) => track.id === this.chosenTrack()) ?? tracks[0] ?? null;
+  });
+  protected readonly badges = computed(() => {
+    const map = this.map();
+    const kid = this.kid();
+    return map && kid ? this.kidBadges.earned(kid.id, map) : [];
   });
   protected readonly current = computed(() => currentLevelId(this.track()));
   protected readonly worlds = computed(() =>
@@ -131,6 +152,15 @@ export class TrailMap {
 
   protected play(levelId: string): void {
     void this.router.navigate(['/learn/level', levelId]);
+  }
+
+  protected openBadges(): void {
+    this.dialog.open<void, BadgeShelfData>(BadgeShelf, {
+      data: { earned: this.badges() },
+      ariaLabelledBy: 'badge-shelf-title',
+      backdropClass: 'mu-dialog-backdrop',
+      autoFocus: 'first-tabbable',
+    });
   }
 
   protected practice(): void {

@@ -77,7 +77,27 @@
               <mu-icon name="send" />
             </button>
           }
+          @if (!user.emailVerified) {
+            <button
+              matIconButton
+              type="button"
+              [attr.data-testid]="'verify-email-' + user.id"
+              [attr.aria-label]="'admin.users.verify' | transloco: { email: user.email }"
+              (click)="markVerified(user)"
+            >
+              <mu-icon name="success" />
+            </button>
+          }
           @if (user.id !== currentUserId) {
+            <button
+              matIconButton
+              type="button"
+              [attr.data-testid]="'reset-link-' + user.id"
+              [attr.aria-label]="'admin.users.resetLink' | transloco: { email: user.email }"
+              (click)="createResetLink(user)"
+            >
+              <mu-icon name="key" />
+            </button>
             <button
               matIconButton
               type="button"

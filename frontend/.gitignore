@@ -50,3 +50,8 @@ Thumbs.db
 
 # Narration copied from ../content/audio by npm run content:sync
 /public/audio
+/public/audio.tmp-*
+/public/audio.old-*
+
+# npm run lighthouse
+/lighthouse-reports

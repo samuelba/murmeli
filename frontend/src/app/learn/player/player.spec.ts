@@ -16,10 +16,13 @@ import {
 } from '../../../testing/app-testing';
 import { resetDocumentState } from '../../../testing/browser';
 import { run } from '../../../testing/learn-testing';
+import { BADGE_STORAGE_KEY } from '../badges/kid-badges.service';
 import { LearnApi } from '../learn-api.service';
 import type { FinishRunResponse } from '../learn.models';
+import { BreakTimer } from './break-timer';
 import { ExitDialog } from './exit-dialog';
 import { Player } from './player';
+import { PlayerStore } from './player-store';
 import { ProgressDots } from './progress-dots';
 import { Results } from './results';
 
@@ -38,8 +41,12 @@ describe('Player', () => {
   let navigateByUrl: ReturnType<typeof vi.spyOn>;
   let dialogResult: boolean;
   let narrate: ReturnType<typeof vi.fn>;
+  let breakDue: boolean;
+  let reminded: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
+    breakDue = false;
+    reminded = vi.fn();
     params = new BehaviorSubject(convertToParamMap({ levelId: 'l1' }));
     dialogResult = true;
     narrate = vi.fn().mockResolvedValue(undefined);
@@ -62,6 +69,7 @@ describe('Player', () => {
             speak: vi.fn(),
             play: vi.fn().mockResolvedValue(undefined),
             narrate,
+            prefetch: vi.fn().mockResolvedValue(0),
             prepare: vi.fn(),
             autoRead: signal(true),
             available: signal(false),
@@ -69,6 +77,7 @@ describe('Player', () => {
         },
         { provide: SoundEffects, useValue: { play: vi.fn() } },
         { provide: Dialog, useValue: { open: () => ({ closed: of(dialogResult) }) } },
+        { provide: BreakTimer, useValue: { due: () => breakDue, reminded } },
       ],
     });
     navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
@@ -167,6 +176,95 @@ describe('Player', () => {
     byTestId(element, 'results-again').click();
     await settle(fixture);
     expect(api.startLevel).toHaveBeenCalledTimes(2);
+  });
+
+  it('reads the first demo bubble through focus and later ones through a live region', async () => {
+    const { element, fixture } = await open();
+    const live = byTestId(element, 'demo-live');
+    expect(live.getAttribute('aria-live')).toBe('polite');
+    expect(live.textContent?.trim()).toBe('');
+    expect(byTestId(element, 'demo-say').getAttribute('aria-live')).toBeNull();
+    expect(document.activeElement).toBe(byTestId(element, 'demo-say').querySelector('h1'));
+
+    byTestId(element, 'demo-again').click();
+    await settle(fixture);
+    expect(live.textContent?.trim()).toBe('Schau, hier sind Äpfel.');
+  });
+
+  it('celebrates new badges and keeps them for the shelf', async () => {
+    TestBed.inject(AuthService).setActiveKid(KID);
+    api.startLevel.mockResolvedValue(run({ demoSeen: true, items: [run().items[0]!] }));
+    api.finish.mockResolvedValue({ ...FINISHED, newBadges: ['first-level', 'future-badge'] });
+    const { element, fixture } = await open();
+    byTestId(element, 'choice-c3').click();
+    await settle(fixture);
+    byTestId(element, 'next').click();
+    await settle(fixture);
+
+    expect(byTestId(element, 'new-badges').textContent).toContain('Du hast ein neues Abzeichen!');
+    expect(element.querySelectorAll('[data-testid^="new-badge-"]')).toHaveLength(1);
+    expect(byTestId(element, 'new-badge-first-level').textContent).toContain('Erster Wegweiser');
+    expect(narrate).toHaveBeenCalledWith([
+      'Wow, alle Sterne!',
+      'Eine neue Stufe ist offen!',
+      'Du hast ein neues Abzeichen!',
+      'Erster Wegweiser',
+    ]);
+    expect(JSON.parse(localStorage.getItem(`${BADGE_STORAGE_KEY}:${KID.id}`)!)).toEqual([
+      'first-level',
+    ]);
+  });
+
+  it('suggests a break between items after a long stretch, never mid-item', async () => {
+    api.startLevel.mockResolvedValue(run({ demoSeen: true }));
+    const deactivate = vi.spyOn(TestBed.inject(KidsService), 'deactivate').mockResolvedValue();
+    const { element, fixture } = await open();
+    breakDue = true;
+    byTestId(element, 'choice-c3').click();
+    await settle(fixture);
+    expect(byTestId(element, 'feedback')).toBeTruthy();
+    byTestId(element, 'next').click();
+    await settle(fixture);
+
+    expect(reminded).toHaveBeenCalledTimes(1);
+    expect(byTestId(element, 'break-reminder').textContent).toContain(
+      'Zeit für eine kleine Pause? Streck dich mal!',
+    );
+    expect(element.querySelector('[data-testid="exit"]')).toBeNull();
+    expect(narrate).toHaveBeenCalledWith('Zeit für eine kleine Pause? Streck dich mal!');
+    expect(document.activeElement?.id).toBe('break-title');
+    byTestId(element, 'break-continue').click();
+    await settle(fixture);
+    expect(byTestId(element, 'exercise-letter-sound')).toBeTruthy();
+
+    breakDue = true;
+    api.startLevel.mockResolvedValue(run({ demoSeen: true }));
+    byTestId(element, 'exit').click();
+    await settle(fixture);
+    navigateByUrl.mockClear();
+    const store = fixture.debugElement.injector.get(PlayerStore);
+    await store.start('level', 'l1');
+    await settle(fixture);
+    byTestId(element, 'choice-c3').click();
+    await settle(fixture);
+    byTestId(element, 'next').click();
+    await settle(fixture);
+    byTestId(element, 'break-pause').click();
+    await settle(fixture);
+    expect(deactivate).toHaveBeenCalled();
+    expect(navigateByUrl).toHaveBeenCalledWith('/');
+
+    deactivate.mockRejectedValueOnce(new Error('offline'));
+    navigateByUrl.mockClear();
+    await store.start('level', 'l1');
+    await settle(fixture);
+    byTestId(element, 'choice-c3').click();
+    await settle(fixture);
+    byTestId(element, 'next').click();
+    await settle(fixture);
+    byTestId(element, 'break-pause').click();
+    await settle(fixture);
+    expect(navigateByUrl).toHaveBeenCalledWith('/learn');
   });
 
   it('runs practice when there is no level id', async () => {

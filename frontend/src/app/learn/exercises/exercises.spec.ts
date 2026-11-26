@@ -2,7 +2,7 @@ import { Type, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { byTestId, provideAppTesting, renderComponent } from '../../../testing/app-testing';
 import { PAYLOADS, exercise } from '../../../testing/learn-testing';
-import type { PublicExercise } from '../learn.models';
+import type { SupportedExerciseType } from '../learn.models';
 import { AddSub } from './add-sub/add-sub';
 import { BuildWord } from './build-word/build-word';
 import { Compare } from './compare/compare';
@@ -110,9 +110,10 @@ describe('exercise components', () => {
       const { fixture, element } = await renderComponent(Keypad);
       const pressed: string[] = [];
       fixture.componentInstance.pressed.subscribe((key) => pressed.push(key));
+      expect(element.querySelector('[data-testid="key-ok"]')).toBeNull();
+      expect(element.querySelectorAll('button').length).toBe(11);
       byTestId(element, 'key-7').click();
       byTestId(element, 'key-back').click();
-      byTestId(element, 'key-ok').click();
       press('5');
       press('Enter');
       press('x');
@@ -120,16 +121,16 @@ describe('exercise components', () => {
       document.body.append(input);
       press('1', input);
       input.remove();
-      expect(pressed).toEqual(['7', 'back', 'ok', '5', 'ok']);
+      expect(pressed).toEqual(['7', 'back', '5', 'ok']);
 
       fixture.componentRef.setInput('canSubmit', false);
       await fixture.whenStable();
-      byTestId(element, 'key-ok').click();
-      expect(byTestId(element, 'key-ok').getAttribute('aria-disabled')).toBe('true');
+      press('Enter');
+      expect(pressed).toHaveLength(4);
       fixture.componentRef.setInput('locked', true);
       await fixture.whenStable();
       byTestId(element, 'key-1').click();
-      expect(pressed).toHaveLength(5);
+      expect(pressed).toHaveLength(4);
     });
   });
 
@@ -175,8 +176,12 @@ describe('exercise components', () => {
       });
       expect(byTestId(element, 'count-object-0').style.left).toBe('50%');
       expect(byTestId(element, 'answer-blank').textContent?.trim()).toBe('?');
+      expect(byTestId(element, 'check').getAttribute('aria-disabled')).toBe('true');
+      await click('check');
+      expect(answers).toEqual([]);
       await type('1');
-      await click('key-ok');
+      expect(byTestId(element, 'check').getAttribute('aria-disabled')).toBeNull();
+      await click('check');
       expect(answers).toEqual([{ value: 1 }]);
     });
   });
@@ -331,7 +336,7 @@ describe('exercise components', () => {
       await type('5');
       await fixture.whenStable();
       expect(byTestId(element, 'answer-blank').textContent?.trim()).toBe('5');
-      await click('key-ok');
+      await click('check');
       expect(answers).toEqual([{ value: 5 }]);
     });
 
@@ -389,11 +394,12 @@ describe('exercise components', () => {
         },
       });
       await type('3');
-      await click('key-ok');
+      await click('check');
       await type('4');
-      await click('key-ok');
+      await click('check');
+      expect(answers).toEqual([]);
       await type('5');
-      await click('key-ok');
+      await click('check');
       expect(answers).toEqual([{ values: [3, 4, 5] }]);
       expect(element.querySelectorAll('mu-quantity').length).toBe(2);
       await update({ reveal: { values: [3, 4, 5] }, locked: true, cue: { fillBlank: true } });
@@ -409,7 +415,7 @@ describe('exercise components', () => {
       expect(element.querySelectorAll('.row')[0]?.querySelectorAll('.brick').length).toBe(1);
       await click('brick-r0c1');
       await type('4');
-      await click('key-ok');
+      await click('check');
       await type('7');
       await click('check');
       expect(answers).toEqual([{ values: { r0c1: 4, r1c0: 7 } }]);
@@ -537,7 +543,7 @@ describe('exercise components', () => {
   });
 
   describe('ExerciseHost', () => {
-    const TYPES = Object.keys(PAYLOADS) as PublicExercise['type'][];
+    const TYPES = Object.keys(PAYLOADS) as SupportedExerciseType[];
 
     it.each(TYPES)('renders %s and forwards its answer', async (type) => {
       const { element, fixture } = await renderComponent(ExerciseHost, {

@@ -166,9 +166,15 @@ export class NumberWall extends ExerciseBase<'number-wall'> {
     }
   }
 
+  /** Submits a full house or wall; otherwise moves on to the next empty blank. */
   protected check(): void {
-    if (this.entry.complete()) {
-      this.emit({ values: this.entry.values() });
+    if (this.locked()) {
+      return;
     }
+    if (!this.entry.complete()) {
+      this.entry.press('ok');
+      return;
+    }
+    this.emit({ values: this.entry.values() });
   }
 }

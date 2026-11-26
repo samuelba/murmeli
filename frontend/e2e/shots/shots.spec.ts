@@ -86,3 +86,39 @@ for (const theme of THEMES) {
     await page.screenshot({ path: `${OUT}/rest-${theme}-${info.project.name}.png` });
   });
 }
+
+for (const theme of THEMES) {
+  test(`progress ${theme}`, async ({ page }, info) => {
+    await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
+    await mockFamily(page, { kids: [MIA], gate: true });
+    await page.goto(`/parent/kids/${MIA.id}/progress`);
+    await expect(page.getByTestId('progress-tracks')).toBeVisible();
+    await page.getByTestId('activity-table-toggle').locator('summary').click();
+    await page.waitForTimeout(400);
+    await page.screenshot({
+      path: `${OUT}/progress-${theme}-${info.project.name}.png`,
+      fullPage: true,
+    });
+  });
+
+  test(`m6 kid screens ${theme}`, async ({ page, context }, info) => {
+    const name = (step: string) => `${OUT}/${step}-${theme}-${info.project.name}.png`;
+    await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
+    await mockFamily(page, {
+      kids: [MIA],
+      learn: { progress: { 'math-zahlenwiese-01': 3, 'math-zahlenwiese-02': 2 } },
+    });
+    await page.goto('/');
+    await page.getByTestId(`kid-tile-${MIA.id}`).click();
+    await expect(page.getByTestId('trail')).toBeVisible();
+    await page.getByTestId('badges').click();
+    await expect(page.getByTestId('badge-shelf')).toBeVisible();
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: name('badge-shelf') });
+    await page.keyboard.press('Escape');
+    await context.setOffline(true);
+    await expect(page.getByTestId('offline-screen')).toBeVisible();
+    await page.screenshot({ path: name('offline') });
+    await context.setOffline(false);
+  });
+}

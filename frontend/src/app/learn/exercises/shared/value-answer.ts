@@ -16,7 +16,7 @@ import { Pointer } from './pointer';
 
 /**
  * The answer part of every "type one number" exercise: number choices (answer on tap) or the
- * keypad with a blank showing the typed number (answer on OK).
+ * keypad with a blank showing the typed number (answer with the "Prüfen" button or Enter).
  */
 @Component({
   selector: 'mu-value-answer',
@@ -60,6 +60,15 @@ import { Pointer } from './pointer';
           [captureKeys]="!locked()"
           (pressed)="press($event)"
         />
+        <button
+          type="button"
+          class="mu-button mu-button--primary mu-ex__check"
+          data-testid="check"
+          [attr.aria-disabled]="locked() || typed() === '' ? 'true' : null"
+          (click)="check()"
+        >
+          {{ 'learn.ex.check' | transloco }}
+        </button>
       </div>
     }
   `,
@@ -111,6 +120,12 @@ export class ValueAnswer {
   protected pick(choice: ChoiceItem): void {
     if (choice.value !== undefined) {
       this.answered.emit(choice.value);
+    }
+  }
+
+  protected check(): void {
+    if (!this.locked()) {
+      this.press('ok');
     }
   }
 

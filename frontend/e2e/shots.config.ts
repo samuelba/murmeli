@@ -6,7 +6,7 @@ export default defineConfig({
   testDir: './shots',
   outputDir: '../e2e-results/shots',
   reporter: [['list']],
-  use: { baseURL: 'http://localhost:4300', locale: 'de-CH' },
+  use: { baseURL: 'http://localhost:4300', locale: 'de-CH', serviceWorkers: 'block' },
   projects: [
     { name: 'phone', use: { ...devices['Pixel 7'] } },
     { name: 'tablet', use: { ...devices['iPad (gen 7)'], browserName: 'chromium' } },

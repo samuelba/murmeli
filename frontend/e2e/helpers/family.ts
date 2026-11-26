@@ -1,7 +1,14 @@
-import { type Page } from '@playwright/test';
 import { routeAudio } from './audio';
 import { LearnBackend, type LearnOptions } from './learn-fixtures';
-import { MockBackend, type MockRequest, altchaChallenge, apiError } from './mock-api';
+import {
+  MockBackend,
+  type MockRequest,
+  type RouteTarget,
+  altchaChallenge,
+  apiError,
+} from './mock-api';
+import { progressFixture } from './progress-fixtures';
+import type { ParentProgressResponse } from '../../src/app/pages/parent/progress/parent-progress.types';
 
 export const PASSWORD = 'correct horse battery';
 export const TOTP_CODE = '123456';
@@ -81,6 +88,15 @@ export interface FamilyOptions {
   learn?: LearnOptions;
   /** Serve the e2e narration fixtures under /audio (default true). */
   audio?: boolean;
+  /** `legal` of `GET /api/auth/config` (operator info). */
+  legal?: {
+    operatorName: string | null;
+    contactEmail: string | null;
+    address: string | null;
+    privacyNote: string | null;
+  } | null;
+  /** `GET /api/parent/kids/:id/progress` (default: progressFixture). */
+  progress?: (kidId: string) => ParentProgressResponse;
 }
 
 export interface FamilyState {
@@ -100,7 +116,7 @@ const gateTime = () => new Date(Date.now() + 10 * 60_000).toISOString();
 export class FamilyBackend extends MockBackend {
   readonly state: FamilyState;
   readonly learn: LearnBackend;
-  /** Narration files the page requested, in order. */
+  /** Narration files the audio element played, in order (prefetches not counted). */
   audioRequests: string[] = [];
 
   constructor(private readonly options: FamilyOptions = {}) {
@@ -121,7 +137,7 @@ export class FamilyBackend extends MockBackend {
     this.learn = new LearnBackend(options.learn).install(this);
   }
 
-  override async install(page: Page): Promise<this> {
+  override async install(page: RouteTarget): Promise<this> {
     await super.install(page);
     if (this.options.audio !== false) {
       this.audioRequests = await routeAudio(page);
@@ -150,6 +166,7 @@ export class FamilyBackend extends MockBackend {
           registrationEnabled: this.state.registrationEnabled,
           emailEnabled: true,
           setupRequired: this.state.setupRequired,
+          legal: this.options.legal ?? null,
         },
       }),
       'GET /api/auth/me': () => this.me(),
@@ -229,6 +246,13 @@ export class FamilyBackend extends MockBackend {
         this.state.gateExpiresAt = null;
         return { body: found };
       },
+      'GET /api/parent/kids/:id/progress': (request) => {
+        const found = this.state.kids.find((item) => item.id === request.params['id']);
+        if (!found) {
+          return apiError(404, 'KID_NOT_FOUND');
+        }
+        return { body: (this.options.progress ?? progressFixture)(found.id) };
+      },
     });
   }
 
@@ -254,6 +278,22 @@ export class FamilyBackend extends MockBackend {
             lastLoginAt: '2026-11-01T08:00:00.000Z',
           },
         ]),
+      'POST /api/admin/users/:id/password-reset-link': () => ({
+        status: 201,
+        body: {
+          resetUrl: 'http://localhost/reset-password?token=reset123token',
+          expiresAt: '2026-11-27T10:00:00.000Z',
+        },
+      }),
+      'POST /api/admin/users/:id/verify-email': (request) => ({
+        body: {
+          ...user({ id: request.params['id'], email: 'gast@example.ch' }),
+          emailVerified: true,
+          disabled: false,
+          kidCount: 0,
+          lastLoginAt: '2026-11-01T08:00:00.000Z',
+        },
+      }),
       'GET /api/admin/invites': () => page([]),
       'POST /api/admin/invites': (request) => {
         const { email, role } = request.body as { email: string; role: string };
@@ -301,6 +341,9 @@ export class FamilyBackend extends MockBackend {
   }
 }
 
-export async function mockFamily(page: Page, options: FamilyOptions = {}): Promise<FamilyBackend> {
+export async function mockFamily(
+  page: RouteTarget,
+  options: FamilyOptions = {},
+): Promise<FamilyBackend> {
   return new FamilyBackend(options).install(page);
 }

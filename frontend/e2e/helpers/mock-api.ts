@@ -1,4 +1,7 @@
-import { type Page, type Request, type Route } from '@playwright/test';
+import { type BrowserContext, type Page, type Request, type Route } from '@playwright/test';
+
+/** A page, or a whole context (which also sees the requests a service worker makes). */
+export type RouteTarget = Pick<Page | BrowserContext, 'route'>;
 import { createChallenge } from 'altcha-lib';
 import { deriveKey } from 'altcha-lib/algorithms/pbkdf2';
 
@@ -98,7 +101,7 @@ export class MockBackend {
     return this.calls.filter((call) => call.method === method && call.path === path);
   }
 
-  async install(page: Page): Promise<this> {
+  async install(page: RouteTarget): Promise<this> {
     await page.route('**/api/**', async (route) => {
       const request = route.request();
       const url = new URL(request.url());

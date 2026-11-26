@@ -1,0 +1,22 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mu-space-3);
+  min-width: 0;
+  padding: var(--mu-space-5) var(--mu-space-4);
+  border-radius: var(--mu-radius-lg);
+  background: var(--mu-color-surface);
+  box-shadow: var(--mu-shadow-card);
+
+  @media (min-width: 600px) {
+    padding: var(--mu-space-6);
+  }
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--mu-space-2);
+  margin: 0;
+  font-size: var(--mu-font-size-lg);
+}

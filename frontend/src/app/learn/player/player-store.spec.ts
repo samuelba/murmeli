@@ -77,6 +77,7 @@ describe('PlayerStore', () => {
     speak: ReturnType<typeof vi.fn>;
     narrate: ReturnType<typeof vi.fn>;
     play: ReturnType<typeof vi.fn>;
+    prefetch: ReturnType<typeof vi.fn>;
   };
   let effects: { play: ReturnType<typeof vi.fn> };
   let store: PlayerStore;
@@ -100,6 +101,7 @@ describe('PlayerStore', () => {
       speak: vi.fn(),
       narrate: vi.fn().mockResolvedValue(undefined),
       play: vi.fn().mockResolvedValue(undefined),
+      prefetch: vi.fn().mockResolvedValue(0),
     };
     effects = { play: vi.fn() };
     TestBed.configureTestingModule({

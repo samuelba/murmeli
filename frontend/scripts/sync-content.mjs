@@ -7,11 +7,12 @@
 // public/pictures/ gets the picture SVGs with their LICENSE and NOTICE.md. The JSON holds the
 // picture words (alt texts), the hint texts and the feedback phrases, exactly as the audio
 // manifest knows them. The rendered narration (content/audio: manifest.json + <locale>/*.opus)
-// goes to public/audio/ when it exists; that copy is gitignored and not checked.
+// goes to public/audio/ when it exists; that copy is gitignored and not checked. It is staged
+// in public/audio.tmp-<pid> and swapped in with a rename, so public/audio is never half copied.
 // Without ../content (an old frontend-only build context) both modes skip.
 import { createHash } from 'node:crypto';
 import { existsSync } from 'node:fs';
-import { copyFile, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -36,22 +37,38 @@ async function syncAudio() {
     return;
   }
   const target = join(frontend, AUDIO_TARGET);
-  await rm(target, { recursive: true, force: true });
-  await mkdir(target, { recursive: true });
-  await copyFile(join(source, 'manifest.json'), join(target, 'manifest.json'));
+  const staging = `${target}.tmp-${process.pid}`;
+  const previous = `${target}.old-${process.pid}`;
+  await rm(staging, { recursive: true, force: true });
+  await mkdir(staging, { recursive: true });
   let count = 0;
-  for (const locale of LOCALES) {
-    if (!existsSync(join(source, locale))) {
-      continue;
-    }
-    await mkdir(join(target, locale), { recursive: true });
-    for (const name of await readdir(join(source, locale))) {
-      if (AUDIO_FILE.test(name)) {
-        await copyFile(join(source, locale, name), join(target, locale, name));
-        count += 1;
+  try {
+    for (const locale of LOCALES) {
+      if (!existsSync(join(source, locale))) {
+        continue;
+      }
+      await mkdir(join(staging, locale), { recursive: true });
+      for (const name of await readdir(join(source, locale))) {
+        if (AUDIO_FILE.test(name)) {
+          await copyFile(join(source, locale, name), join(staging, locale, name));
+          count += 1;
+        }
       }
     }
+    // The manifest goes last, so a staging folder with a manifest is always complete.
+    await copyFile(join(source, 'manifest.json'), join(staging, 'manifest.json'));
+    if (existsSync(target)) {
+      await rename(target, previous);
+    }
+    await rename(staging, target);
+  } catch (error) {
+    await rm(staging, { recursive: true, force: true });
+    if (existsSync(previous) && !existsSync(target)) {
+      await rename(previous, target);
+    }
+    throw error;
   }
+  await rm(previous, { recursive: true, force: true });
   console.log(`Copied the audio manifest and ${count} clips from ${source}.`);
 }
 

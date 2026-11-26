@@ -16,6 +16,7 @@ import {
 import { resetDocumentState } from '../../testing/browser';
 import { ForgotPassword } from './forgot-password/forgot-password';
 import { Invite } from './invite/invite';
+import { About } from './about/about';
 import { Legal } from './legal/legal';
 import { ResetPassword } from './reset-password/reset-password';
 import { Setup } from './setup/setup';
@@ -333,6 +334,82 @@ describe('public pages', () => {
       expect(byTestId(element, 'page-title').textContent).toContain(title);
       expect(byTestId(element, 'legal-draft')).toBeTruthy();
       expect(element.textContent).toContain(section);
+      expect(byTestId(element, 'operator-none').textContent).toContain(
+        'Betrieben von der Person oder Organisation, die diese Instanz hostet.',
+      );
+      expect(element.textContent).not.toContain('folgen');
+    });
+
+    async function withLegal(kind: string, legal: Record<string, string | null>) {
+      setup({}, {}, { kind });
+      const loaded = TestBed.inject(AuthService).loadConfig();
+      http.expectOne('/api/auth/config').flush({
+        registrationEnabled: true,
+        emailEnabled: true,
+        setupRequired: false,
+        legal,
+      });
+      await loaded;
+      return (await renderComponent(Legal)).element;
+    }
+
+    it('shows the operator from the server config, with the privacy note on privacy only', async () => {
+      const legal = {
+        operatorName: 'Familie Muster',
+        contactEmail: 'hallo@example.ch',
+        address: 'Bergweg 1\n3000 Bern',
+        privacyNote: 'Wir hosten bei uns zu Hause.',
+      };
+      const privacy = await withLegal('privacy', legal);
+      expect(byTestId(privacy, 'operator-name').textContent).toBe('Familie Muster');
+      expect(byTestId(privacy, 'operator-address').textContent).toBe('Bergweg 1\n3000 Bern');
+      expect(byTestId(privacy, 'operator-email').getAttribute('href')).toBe(
+        'mailto:hallo@example.ch',
+      );
+      expect(byTestId(privacy, 'operator-privacy-note').textContent).toContain('zu Hause');
+      expect(privacy.querySelector('[data-testid="operator-none"]')).toBeNull();
+    });
+
+    it('leaves out empty fields and never links a malformed address', async () => {
+      const terms = await withLegal('terms', {
+        operatorName: '  ',
+        contactEmail: 'not an email',
+        address: null,
+        privacyNote: 'nur Datenschutz',
+      });
+      expect(terms.querySelector('[data-testid="operator-name"]')).toBeNull();
+      expect(byTestId(terms, 'operator-email').tagName).toBe('SPAN');
+      expect(terms.querySelector('[data-testid="operator-privacy-note"]')).toBeNull();
+    });
+
+    it('falls back to the neutral note when every field is empty', async () => {
+      const element = await withLegal('privacy', {
+        operatorName: null,
+        contactEmail: '',
+        address: null,
+        privacyNote: null,
+      });
+      expect(byTestId(element, 'operator-none')).toBeTruthy();
+    });
+  });
+
+  describe('About', () => {
+    it('explains the app, the AI voices, the licenses and the version', async () => {
+      setup();
+      const { element } = await renderComponent(About);
+      expect(byTestId(element, 'page-title').textContent).toContain('Über Murmeli');
+      expect(byTestId(element, 'about-curriculum').textContent).toContain(
+        'nicht mit dem Lehrplan 21',
+      );
+      expect(byTestId(element, 'about-voices').textContent).toContain(
+        'künstlicher Intelligenz erzeugt (Qwen3-TTS)',
+      );
+      const pictures = byTestId(element, 'credit-pictures');
+      expect(pictures.textContent).toContain('Noto Emoji');
+      expect(pictures.querySelector('a')?.getAttribute('href')).toBe('/pictures/LICENSE');
+      expect(byTestId(element, 'credit-fonts').textContent).toContain('SIL Open Font License');
+      expect(byTestId(element, 'credit-artwork').textContent).toContain('eigene Zeichnungen');
+      expect(byTestId(element, 'app-version').textContent).toMatch(/Version \d+\.\d+\.\d+/);
     });
   });
 });

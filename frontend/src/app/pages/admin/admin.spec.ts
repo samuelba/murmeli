@@ -1,6 +1,7 @@
 import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Clipboard } from '@angular/cdk/clipboard';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { TranslocoService } from '@jsverse/transloco';
 import { of } from 'rxjs';
@@ -25,6 +26,7 @@ import { AdminSettingsPage } from './settings/admin-settings';
 import { AdminShell } from './shell/admin-shell';
 import { AdminStatsPage } from './stats/admin-stats';
 import { AdminUsers } from './users/admin-users';
+import { ResetLinkDialog } from './users/reset-link-dialog';
 
 describe('admin area', () => {
   let http: HttpTestingController;
@@ -151,6 +153,60 @@ describe('admin area', () => {
       await settle(fixture);
       http.expectOne('/api/admin/users?page=1&pageSize=20').flush(page([]));
       await settle(fixture);
+    });
+    it('marks an email as verified, only for unverified users', async () => {
+      const { element, fixture } = await render();
+      expect(element.querySelector(`[data-testid="verify-email-${ADMIN.id}"]`)).toBeNull();
+      const verify = byTestId(element, 'verify-email-u1');
+      expect(verify.getAttribute('aria-label')).toBe(
+        `E-Mail als bestätigt markieren: ${USER.email}`,
+      );
+      verify.click();
+      http.expectOne('/api/admin/users/u1/verify-email').flush({ ...member, emailVerified: true });
+      await settle(fixture);
+      expect(element.textContent).toContain('als bestätigt markiert');
+      expect(element.querySelector('[data-testid="verify-email-u1"]')).toBeNull();
+
+      const again = (
+        fixture.componentInstance as unknown as { markVerified(u: AdminUser): Promise<void> }
+      ).markVerified(member);
+      http
+        .expectOne('/api/admin/users/u1/verify-email')
+        .flush(errorBody('INTERNAL', 500), { status: 500, statusText: 'x' });
+      await again;
+      await settle(fixture);
+      expect(byTestId(element, 'form-error').textContent).not.toBe('');
+    });
+
+    it('creates a password reset link and shows it in a dialog', async () => {
+      const open = vi.spyOn(TestBed.inject(MatDialog), 'open');
+      const { element, fixture } = await render();
+      expect(element.querySelector(`[data-testid="reset-link-${ADMIN.id}"]`)).toBeNull();
+      const button = byTestId(element, 'reset-link-u1');
+      expect(button.getAttribute('aria-label')).toBe(`Passwort-Link erstellen: ${USER.email}`);
+      button.click();
+      const link = {
+        resetUrl: 'https://murmeli.example/reset-password?token=t',
+        expiresAt: '2026-11-27T10:00:00.000Z',
+      };
+      http.expectOne('/api/admin/users/u1/password-reset-link').flush(link, {
+        status: 201,
+        statusText: 'Created',
+      });
+      await settle(fixture);
+      expect(open).toHaveBeenCalledWith(
+        ResetLinkDialog,
+        expect.objectContaining({ data: { email: USER.email, ...link } }),
+      );
+
+      open.mockClear();
+      button.click();
+      http
+        .expectOne('/api/admin/users/u1/password-reset-link')
+        .flush(errorBody('INTERNAL', 500), { status: 500, statusText: 'x' });
+      await settle(fixture);
+      expect(open).not.toHaveBeenCalled();
+      expect(byTestId(element, 'form-error').textContent).not.toBe('');
     });
   });
 
@@ -305,5 +361,35 @@ describe('admin area', () => {
     expect(intl.itemsPerPageLabel).toBe('Einträge pro Seite');
     expect(intl.getRangeLabel(1, 10, 25)).toBe('11–20 von 25');
     expect(intl.getRangeLabel(0, 10, 0)).toBe('0 von 0');
+  });
+});
+
+describe('ResetLinkDialog', () => {
+  it('shows the link, its expiry and copies it', async () => {
+    const copy = vi.fn().mockReturnValue(true);
+    TestBed.configureTestingModule({
+      providers: [
+        ...provideAppTesting(),
+        { provide: Clipboard, useValue: { copy } },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {
+            email: USER.email,
+            resetUrl: 'https://murmeli.example/reset-password?token=t',
+            expiresAt: '2026-11-27T10:00:00.000Z',
+          },
+        },
+      ],
+    });
+    const { element, fixture } = await renderComponent(ResetLinkDialog);
+    expect(byTestId(element, 'reset-link-url').textContent).toBe(
+      'https://murmeli.example/reset-password?token=t',
+    );
+    expect(byTestId(element, 'reset-link-result').textContent).toContain(USER.email);
+    expect(byTestId(element, 'reset-link-result').textContent).toContain('27.11.26');
+    byTestId(element, 'reset-link-copy').click();
+    await fixture.whenStable();
+    expect(copy).toHaveBeenCalledWith('https://murmeli.example/reset-password?token=t');
+    expect(element.textContent).toContain('Kopiert.');
   });
 });

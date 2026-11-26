@@ -62,4 +62,11 @@ export class LearnContent {
     const phrases = feedbackPhrases(kind, this.language());
     return phrases[Math.floor(random() * phrases.length)] ?? '';
   }
+
+  /** Every phrase the player may say after an answer. */
+  phrases(): string[] {
+    return (['correct', 'try_again', 'solution'] as const).flatMap((kind) => [
+      ...feedbackPhrases(kind, this.language()),
+    ]);
+  }
 }

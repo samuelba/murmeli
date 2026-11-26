@@ -37,7 +37,16 @@
 
 .kid__actions {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: var(--mu-space-1);
+}
+
+.progress-link__icon {
+  width: 20px;
+  height: 20px;
+  margin-right: var(--mu-space-1);
+  fill: currentColor;
 }
 
 .mu-danger mu-icon {

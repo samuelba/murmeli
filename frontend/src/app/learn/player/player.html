@@ -1,5 +1,5 @@
 <section class="player mu-kid-mode" [attr.data-phase]="store.phase()" data-testid="player">
-  @if (store.phase() !== 'resting' && store.phase() !== 'results') {
+  @if (store.phase() !== 'resting' && store.phase() !== 'results' && store.phase() !== 'break') {
     <header class="bar">
       <button
         type="button"
@@ -41,12 +41,15 @@
           <p class="demo-label">{{ 'learn.player.demoLabel' | transloco }}</p>
           <div class="prompt">
             <mu-mascot class="prompt__mascot" pose="happy" />
-            <div class="bubble" aria-live="polite" data-testid="demo-say">
+            <div class="bubble" data-testid="demo-say">
               <h1 class="bubble__text mu-learning-text" tabindex="-1">
                 {{ store.demoSay() || demo.prompt.text }}
               </h1>
             </div>
           </div>
+          <p class="mu-visually-hidden" aria-live="polite" data-testid="demo-live">
+            {{ store.demoAnnouncement() }}
+          </p>
           <div class="board board--demo" inert>
             <mu-exercise
               [exercise]="demo"
@@ -91,6 +94,9 @@
     }
     @case ('resting') {
       <mu-rest />
+    }
+    @case ('break') {
+      <mu-break-reminder (keepPlaying)="store.resumeAfterBreak()" (breakTaken)="takeBreak()" />
     }
     @case ('error') {
       <div class="mu-learn-state" data-testid="player-error">

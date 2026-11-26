@@ -36,6 +36,15 @@
   }
 }
 
+.offline-banner {
+  margin: 0 0 var(--mu-space-4);
+  padding: var(--mu-space-3) var(--mu-space-4);
+  border-left: 4px solid var(--mu-color-primary-edge);
+  border-radius: var(--mu-radius-md);
+  background: var(--mu-color-surface);
+  font-weight: 700;
+}
+
 .footer {
   display: flex;
   flex-wrap: wrap;

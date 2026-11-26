@@ -58,7 +58,9 @@ else
 fi
 export HSTS_HEADER
 
-# upgrade-insecure-requests would break plain-http LAN installs, so it follows HSTS.
+# upgrade-insecure-requests is only sent with HSTS_ENABLED=true, i.e. once the operator says
+# TLS is in front. It does not make plain http a supported setup: in production the backend
+# requires an https APP_URL and sets Secure cookies, so sign-in only works over https.
 UPGRADE_INSECURE=""
 if [ "${HSTS_ENABLED}" = true ]; then
   UPGRADE_INSECURE="; upgrade-insecure-requests"

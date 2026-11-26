@@ -3,3 +3,4 @@
 # Strings with {{ placeholders }} are skipped: they cannot be pre-rendered.
 kid.feedback.*
 kid.navigation.*
+kid.badges.*

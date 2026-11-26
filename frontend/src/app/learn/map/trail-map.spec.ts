@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
@@ -12,6 +13,7 @@ import {
   settle,
 } from '../../../testing/app-testing';
 import { resetDocumentState } from '../../../testing/browser';
+import { BadgeShelf } from '../badges/badge-shelf';
 import type { MapResponse, MapWorld } from '../learn.models';
 import { SceneView } from './scene';
 import { TRACK_STORAGE_KEY, TrailMap } from './trail-map';
@@ -133,6 +135,23 @@ describe('TrailMap', () => {
     expect(byTestId(element, 'world-w3').textContent).toContain('Noch gesperrt');
     expect(element.querySelectorAll('[data-testid="map-mascot"]').length).toBe(1);
     expect(Element.prototype.scrollIntoView).toHaveBeenCalled();
+  });
+
+  it('opens the badge shelf with the badges the map proves', async () => {
+    const dialog = vi.spyOn(TestBed.inject(Dialog), 'open').mockReturnValue({} as never);
+    const { element } = await open();
+    const button = byTestId(element, 'badges');
+    expect(button.getAttribute('aria-label')).toBe('Abzeichen: 2');
+    expect(button.getAttribute('aria-haspopup')).toBe('dialog');
+    expect(byTestId(element, 'badge-count').textContent?.trim()).toBe('2');
+    button.click();
+    expect(dialog).toHaveBeenCalledWith(
+      BadgeShelf,
+      expect.objectContaining({
+        data: { earned: ['first-level', 'first-world'] },
+        ariaLabelledBy: 'badge-shelf-title',
+      }),
+    );
   });
 
   it('opens unlocked levels and practice, never locked levels', async () => {

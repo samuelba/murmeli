@@ -42,7 +42,7 @@ export const DAILY_LIMIT_REACHED = 'DAILY_LIMIT_REACHED';
 
 export type RunMode = 'level' | 'practice';
 
-export const EXERCISE_TYPE_IDS: readonly ExerciseTypeId[] = [
+export const EXERCISE_TYPE_IDS = [
   'count-objects',
   'number-recognition',
   'ten-frame',
@@ -58,9 +58,12 @@ export const EXERCISE_TYPE_IDS: readonly ExerciseTypeId[] = [
   'syllables',
   'word-picture',
   'build-word',
-];
+] as const satisfies readonly ExerciseTypeId[];
+
+/** The exercise types this player has a component for. */
+export type SupportedExerciseType = (typeof EXERCISE_TYPE_IDS)[number];
 
 /** Item types this player can show; a newer server may send more. */
-export function isExerciseType(type: string): type is ExerciseTypeId {
+export function isExerciseType(type: string): type is SupportedExerciseType {
   return (EXERCISE_TYPE_IDS as readonly string[]).includes(type);
 }

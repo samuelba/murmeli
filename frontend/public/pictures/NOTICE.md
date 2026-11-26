@@ -25,3 +25,6 @@ Copyright 2013 Google, Inc. All Rights Reserved.
 
 `shape-circle.svg`, `shape-square.svg`, `shape-triangle.svg` and `shape-rectangle.svg` were drawn
 for Murmeli and use the brand palette (`brand/tokens/tokens.json`).
+
+`money/*.svg` (generic coins and notes with their value written on them) were also drawn for Murmeli.
+They do not reproduce any real coin or banknote design or national symbol.

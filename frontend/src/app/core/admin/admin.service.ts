@@ -8,6 +8,7 @@ import {
   CreatedInvite,
   Invite,
   Paginated,
+  PasswordResetLink,
   Role,
 } from '../api/models';
 import { ApiService } from '../http/api.service';
@@ -38,6 +39,18 @@ export class AdminService {
   async resendVerification(id: string): Promise<void> {
     await firstValueFrom(
       this.api.post(`admin/users/${encodeURIComponent(id)}/resend-verification`),
+    );
+  }
+
+  createPasswordResetLink(id: string): Promise<PasswordResetLink> {
+    return firstValueFrom(
+      this.api.post<PasswordResetLink>(`admin/users/${encodeURIComponent(id)}/password-reset-link`),
+    );
+  }
+
+  markEmailVerified(id: string): Promise<AdminUser> {
+    return firstValueFrom(
+      this.api.post<AdminUser>(`admin/users/${encodeURIComponent(id)}/verify-email`),
     );
   }
 

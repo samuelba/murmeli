@@ -116,7 +116,7 @@
     "SETUP_TOKEN_INVALID": "Der Einrichtungs-Code stimmt nicht. Er steht in der Server-Konfiguration (SETUP_TOKEN).",
     "LEVEL_LOCKED": "Diese Stufe ist noch gesperrt. Spiel zuerst die Stufe davor.",
     "LEVEL_NOT_FOUND": "Diese Stufe gibt es nicht. Zurück zur Karte!",
-    "NOTHING_TO_PRACTICE": "Spiel zuerst eine Stufe, dann kannst du üben.",
+    "NOTHING_TO_PRACTICE": "Gerade gibt es nichts zu üben. Spiel doch eine neue Stufe!",
     "RUN_NOT_FOUND": "Diese Runde ist vorbei. Starte sie einfach nochmal."
   },
   "parentGate": {
@@ -276,7 +276,8 @@
       "loading": "Der Bergpfad wird geladen …",
       "error": "Der Bergpfad konnte nicht geladen werden.",
       "retry": "Nochmal versuchen",
-      "empty": "Hier gibt es noch nichts zu lernen."
+      "empty": "Hier gibt es noch nichts zu lernen.",
+      "badges": "Abzeichen: {{count}}"
     },
     "player": {
       "progress": "Aufgabe {{current}} von {{total}}",
@@ -293,7 +294,9 @@
       "demoLabel": "Murmeli zeigt, wie es geht",
       "correctLabel": "Richtig",
       "solutionLabel": "Die richtige Antwort ist markiert.",
-      "hintLabel": "Tipp"
+      "hintLabel": "Tipp",
+      "breakContinue": "Weiter spielen",
+      "breakPause": "Pause machen"
     },
     "results": {
       "stars": "{{stars}} von 3 Sternen",
@@ -312,8 +315,7 @@
         "label": "Zahlenfeld",
         "display": "Deine Zahl: {{value}}",
         "empty": "Deine Zahl: noch leer",
-        "delete": "Löschen",
-        "ok": "Fertig"
+        "delete": "Löschen"
       },
       "count": {
         "objects": "{{count}} Bilder. Tippe beim Zählen jedes Bild an.",
@@ -411,7 +413,23 @@
       "rest": "Murmeli macht jetzt eine Pause.",
       "restMore": "Für heute ist genug gelernt. Bis morgen!",
       "loading": "Einen Moment, bitte.",
-      "locked": "Diese Stufe ist noch zu. Spiel zuerst die anderen."
+      "locked": "Diese Stufe ist noch zu. Spiel zuerst die anderen.",
+      "offline": "Murmeli macht ein Nickerchen, bis das Internet wieder da ist.",
+      "breakTime": "Zeit für eine kleine Pause? Streck dich mal!"
+    },
+    "badges": {
+      "title": "Deine Abzeichen",
+      "new": "Du hast ein neues Abzeichen!",
+      "earned": "Hast du schon!",
+      "notYet": "Kommt noch",
+      "firstLevel": "Erster Wegweiser",
+      "firstLevelHint": "Schaffe deine erste Stufe.",
+      "firstWorld": "Erste Gipfelfahne",
+      "firstWorldHint": "Klettere bis zum ersten Gipfel.",
+      "starCollector": "Sternensammler",
+      "starCollectorHint": "Hol fünfmal alle drei Sterne.",
+      "firstPractice": "Erste Übung",
+      "firstPracticeHint": "Übe zum ersten Mal."
     }
   },
   "kidForm": {
@@ -456,7 +474,79 @@
     "editKid": "{{name}} bearbeiten",
     "deleteKid": "{{name}} löschen",
     "deleteKidTitle": "{{name}} löschen?",
-    "deleteKidMessage": "Das Profil und der ganze Lernfortschritt von {{name}} werden endgültig gelöscht."
+    "deleteKidMessage": "Das Profil und der ganze Lernfortschritt von {{name}} werden endgültig gelöscht.",
+    "progress": {
+      "pageTitle": "Fortschritt",
+      "title": "Fortschritt von {{name}}",
+      "link": "Fortschritt",
+      "linkLabel": "Fortschritt von {{name}}",
+      "back": "Zurück zu den Kinderprofilen",
+      "loading": "Der Fortschritt wird geladen …",
+      "retry": "Nochmal versuchen",
+      "summary": {
+        "stars": "Sterne",
+        "levels": "Stufen geschafft",
+        "minutes": "Lernzeit (14 Tage)",
+        "runs": "Runden (14 Tage)",
+        "outOf": "{{value}} von {{max}}"
+      },
+      "badges": {
+        "title": "Abzeichen",
+        "none": "Noch keine Abzeichen. Das erste gibt es für die erste geschaffte Stufe.",
+        "earned": "seit {{date}}"
+      },
+      "explain": {
+        "title": "Gut zu wissen",
+        "stars": "Sterne: Jede Stufe gibt bis zu 3 Sterne. Ab 2 Sternen (meist 80 % richtig) ist sie geschafft und die nächste Stufe geht auf. 3 Sterne gibt es, wenn alles beim ersten Versuch stimmt.",
+        "mastery": "Sicherheit: So sicher sitzt eine Fertigkeit, berechnet aus den gespielten Runden. Neuere Runden zählen mehr. Unter 60 % braucht sie noch Übung.",
+        "review": "Wiederholung: Gelerntes kommt in immer grösseren Abständen wieder dran, damit es sitzen bleibt. Im Modus «Üben» kommt zuerst, was fällig ist.",
+        "noStreaks": "Es gibt keine Serien und nichts geht verloren, wenn ein Tag ausfällt."
+      },
+      "activity": {
+        "title": "Die letzten 14 Tage",
+        "minutes": "Lernzeit pro Tag (Minuten)",
+        "runs": "Gespielte Runden pro Tag",
+        "minutesValue": "{{count}} Min.",
+        "minutesValueOne": "1 Min.",
+        "runsValue": "{{count}} Runden",
+        "runsValueOne": "1 Runde",
+        "summary": "Insgesamt {{total}}, an {{days}} von {{count}} Tagen.",
+        "peak": "Am meisten: {{value}} am {{date}}.",
+        "empty": "In den letzten 14 Tagen wurde nicht gelernt. Das ist ganz in Ordnung.",
+        "table": "Werte als Tabelle anzeigen",
+        "dayColumn": "Tag",
+        "minutesColumn": "Minuten",
+        "runsColumn": "Runden"
+      },
+      "skills": {
+        "title": "Fertigkeiten",
+        "empty": "Noch keine Fertigkeiten geübt.",
+        "mastery": "Sicherheit {{percent}} %",
+        "level": {
+          "practice": "braucht Übung",
+          "growing": "wird sicherer",
+          "solid": "sitzt gut"
+        },
+        "needsPractice": "Braucht Übung",
+        "nextReview": "Nächste Wiederholung: {{date}}",
+        "due": "Jetzt zum Wiederholen fällig",
+        "weakTitle": "Braucht gerade Übung",
+        "weakHint": "Diese Fertigkeiten wurden in den letzten 14 Tagen geübt und sitzen noch nicht ganz. Im Modus «Üben» kommen sie öfter dran."
+      },
+      "tracks": {
+        "title": "Lernpfade",
+        "levels": "{{passed}} von {{total}} Stufen",
+        "stars": "{{stars}} von {{max}} Sternen",
+        "levelStars": "{{stars}} von 3 Sternen",
+        "runs": "Runden: {{count}}"
+      },
+      "state": {
+        "locked": "Noch gesperrt",
+        "unlocked": "Offen",
+        "passed": "Geschafft",
+        "skipped": "Übersprungen"
+      }
+    }
   },
   "account": {
     "title": "Konto",
@@ -533,7 +623,12 @@
       "resent": "Bestätigungs-E-Mail wurde erneut gesendet.",
       "delete": "{{email}} löschen",
       "deleteTitle": "Konto {{email}} löschen?",
-      "deleteMessage": "Das Konto, alle Kinderprofile und der Lernfortschritt werden endgültig gelöscht."
+      "deleteMessage": "Das Konto, alle Kinderprofile und der Lernfortschritt werden endgültig gelöscht.",
+      "verify": "E-Mail als bestätigt markieren: {{email}}",
+      "verified": "Die E-Mail-Adresse ist jetzt als bestätigt markiert.",
+      "resetLink": "Passwort-Link erstellen: {{email}}",
+      "resetLinkTitle": "Link zum Zurücksetzen des Passworts",
+      "resetLinkText": "Gib diesen Link nur an {{email}} weiter, am besten persönlich oder per Nachricht. Er gilt bis {{expires}} und nur einmal."
     },
     "invites": {
       "title": "Einladungen",
@@ -604,10 +699,6 @@
       "rights": {
         "title": "Herunterladen und löschen",
         "text": "Im Elternbereich kannst du jederzeit alle Daten herunterladen oder dein Konto mit allen Kinderprofilen endgültig löschen (nDSG, DSGVO)."
-      },
-      "contact": {
-        "title": "Kontakt",
-        "text": "Verantwortlich ist die Person oder Organisation, die diese Installation betreibt. Die Kontaktangaben folgen."
       }
     },
     "terms": {
@@ -635,6 +726,46 @@
         "title": "Änderungen",
         "text": "Wenn sich diese Bedingungen ändern, informieren wir per E-Mail."
       }
+    },
+    "operator": {
+      "title": "Verantwortlich und Kontakt",
+      "none": "Betrieben von der Person oder Organisation, die diese Instanz hostet. Bei Fragen wende dich an sie."
     }
+  },
+  "offline": {
+    "retry": "Nochmal schauen",
+    "checking": "Wir schauen nach …",
+    "banner": "Keine Internetverbindung. Änderungen werden erst gespeichert, wenn die Verbindung wieder da ist."
+  },
+  "pwa": {
+    "updateReady": "Eine neue Version ist da.",
+    "reload": "Neu laden"
+  },
+  "about": {
+    "pageTitle": "Über diese App",
+    "title": "Über {{brand}}",
+    "what": {
+      "title": "Was ist {{brand}}?",
+      "text": "{{brand}} ist eine Lern-App für Kinder vom Kindergarten bis Ende der 2. Klasse: Mathematik, Lesen und Schreiben, auf Deutsch (Schweiz) und Englisch (USA). Ohne Werbung, ohne Tracker und ohne Serien, die Druck machen."
+    },
+    "curriculum": {
+      "title": "Lehrplan 21",
+      "text": "Die Inhalte orientieren sich am Lehrplan 21 (Zyklus 1). {{brand}} ist nicht mit dem Lehrplan 21 oder seinen Herausgebern verbunden und wird nicht von ihnen unterstützt."
+    },
+    "voices": {
+      "title": "Die Stimmen",
+      "text": "Die Stimmen sind mit künstlicher Intelligenz erzeugt (Qwen3-TTS). Sie wurden einmal vorab aufgenommen und auf diesem Server gespeichert. Beim Spielen wird nichts live erzeugt und keine Daten deines Kindes werden dafür verwendet."
+    },
+    "privacy": {
+      "title": "Datenschutz",
+      "text": "Alles läuft auf diesem Server: keine Schriften, Skripte oder Bilder von fremden Servern. Mehr dazu steht in der Datenschutzerklärung."
+    },
+    "credits": {
+      "title": "Mitwirkende und Lizenzen",
+      "pictures": "Bilder: Noto Emoji von Google",
+      "fonts": "Schriften: Nunito und Andika",
+      "artwork": "{{brand}}, das Murmeltier, und die Tier-Avatare sind eigene Zeichnungen für diese App."
+    },
+    "version": "{{brand}} Version {{version}}"
   }
 }

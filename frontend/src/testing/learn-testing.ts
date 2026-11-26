@@ -1,7 +1,8 @@
 import type { Payload, PublicDemo, PublicExercise, StartRunResponse } from '@murmeli/content';
+import type { SupportedExerciseType } from '../app/learn/learn.models';
 
 /** One small, valid payload per exercise type (shapes as in content/README.md). */
-export const PAYLOADS: { readonly [K in PublicExercise['type']]: Payload<K> } = {
+export const PAYLOADS: { readonly [K in SupportedExerciseType]: Payload<K> } = {
   'count-objects': {
     arrangement: 'line',
     objects: [
@@ -112,7 +113,7 @@ export const PAYLOADS: { readonly [K in PublicExercise['type']]: Payload<K> } = 
   },
 };
 
-export function exercise<T extends PublicExercise['type']>(type: T, index = 0): PublicExercise {
+export function exercise<T extends SupportedExerciseType>(type: T, index = 0): PublicExercise {
   return {
     index,
     type,

@@ -57,4 +57,5 @@ The log never contains kid nicknames, passwords or tokens. IP addresses are cut 
 ## Things only the server operator can do
 - Change secrets, SMTP and rate limits: edit `.env` and run `docker compose up -d`. See the [configuration reference](../reference/configuration.md).
 - Back up and restore the database: see [Backups](../deployment/backups.md).
-- Reset a password when email isn't set up: there is no admin action for that. A parent who forgot their password and can't use "Forgot your password?" needs a new invitation after you delete the old account, which deletes its kid profiles and progress.
+- Reset a password when email isn't set up: in **Administration → Users**, choose **Create password reset link** for the account. Send the link to the parent yourself; it is valid for one hour and works once. Disabled accounts can't get a link.
+- Confirm an address by hand: for an account with an unconfirmed email, choose **Mark email verified**.

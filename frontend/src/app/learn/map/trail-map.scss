@@ -2,6 +2,9 @@
   display: flex;
   flex-direction: column;
   gap: var(--mu-space-4);
+  // The trail is always taller than the screen; reserving that while it loads keeps the
+  // footer from jumping (layout shift).
+  min-height: 100dvh;
 }
 
 .head {

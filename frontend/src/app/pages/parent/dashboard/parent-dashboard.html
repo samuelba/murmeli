@@ -30,6 +30,18 @@
         </div>
         <div class="kid__actions">
           <a
+            matButton="outlined"
+            class="progress-link"
+            [routerLink]="['/parent/kids', kid.id, 'progress']"
+            [attr.aria-label]="'parent.progress.linkLabel' | transloco: { name: kid.nickname }"
+            [attr.data-testid]="'progress-kid-' + kid.id"
+          >
+            <svg class="progress-link__icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 20V10h4v10zm6 0V4h4v16zm6 0v-7h4v7z" />
+            </svg>
+            {{ 'parent.progress.link' | transloco }}
+          </a>
+          <a
             matIconButton
             [routerLink]="['/parent/kids', kid.id]"
             [attr.aria-label]="'parent.editKid' | transloco: { name: kid.nickname }"

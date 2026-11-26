@@ -13,6 +13,8 @@ const ALLOWED_HOSTS = new Set([
   'svelte.dev',
   'altcha.org',
 ]);
+// The Angular service worker ships unminified, with a source comment linking an Angular issue.
+const ALLOWED_IN_FILE = new Map([['ngsw-worker.js', new Set(['github.com'])]]);
 const SCANNED = new Set(['.html', '.js', '.mjs', '.css', '.json', '.webmanifest', '.svg']);
 const URL_PATTERN = /(?:https?:)?\/\/([a-z0-9.-]+\.[a-z]{2,}|localhost|fake)\b/gi;
 
@@ -38,7 +40,8 @@ for await (const file of files(root)) {
   const content = await readFile(file, 'utf8');
   for (const match of content.matchAll(URL_PATTERN)) {
     const host = match[1].toLowerCase();
-    if (!ALLOWED_HOSTS.has(host)) {
+    const allowedHere = ALLOWED_IN_FILE.get(relative(root, file))?.has(host) ?? false;
+    if (!ALLOWED_HOSTS.has(host) && !allowedHere) {
       findings.push(`${relative(root, file)}: ${match[0]}`);
     }
   }

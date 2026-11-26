@@ -38,6 +38,7 @@ export class PlayerPage {
 
   /** Answers every item correctly, from the current one to the results screen. */
   async playThrough(): Promise<void> {
+    await this.waitForItem(0);
     const total = this.learn.current.items.length;
     for (let index = 0; index < total; index += 1) {
       await this.waitForItem(index);
@@ -101,7 +102,7 @@ export class PlayerPage {
       await page.getByTestId('check').click();
     } else if (payload['answerMode'] === 'keypad') {
       await this.typeNumber(answer.value);
-      await page.getByTestId('key-ok').click();
+      await page.getByTestId('check').click();
     } else {
       await this.clickChoiceWith(answer.value);
     }

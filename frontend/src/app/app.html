@@ -3,9 +3,20 @@
 }}</a>
 <mu-top-bar />
 <main #main id="main" class="main" tabindex="-1">
-  <router-outlet />
+  @if (offlineBanner()) {
+    <p class="offline-banner" role="status" data-testid="offline-banner">
+      {{ 'offline.banner' | transloco }}
+    </p>
+  }
+  @if (offlineScreen()) {
+    <mu-offline-screen />
+  }
+  <div class="outlet" [hidden]="offlineScreen()">
+    <router-outlet />
+  </div>
 </main>
 <footer class="footer">
   <a routerLink="/privacy" data-testid="footer-privacy">{{ 'legal.privacyTitle' | transloco }}</a>
   <a routerLink="/terms" data-testid="footer-terms">{{ 'legal.termsTitle' | transloco }}</a>
+  <a routerLink="/about" data-testid="footer-about">{{ 'about.pageTitle' | transloco }}</a>
 </footer>

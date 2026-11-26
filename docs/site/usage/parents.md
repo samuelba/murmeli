@@ -51,7 +51,13 @@ In **Parent area → Kids**, select the pencil icon to change any setting, inclu
 The bin icon deletes the profile with all its learning progress, for good.
 
 ## Progress
-The parent area doesn't show progress yet. Your kid sees stars per level and per world on the [trail map](kids.md#the-trail-map), and the data download (below) contains each kid's progress per level and skill.
+In **Parent area → Kids**, select **Progress** on a kid's card. The page shows:
+- **Overview:** stars, levels passed, learning time and rounds in the last 14 days, and earned badges.
+- **Last 14 days:** minutes and rounds per day as charts. **Show values as a table** lists the same numbers.
+- **Skills:** each skill with its confidence as a bar, a percentage and a word ("needs practice", "getting there", "solid"), plus when it comes up for review. Skills that need practice are listed first. In **Practice** mode they come up more often.
+- **Learning paths:** every world and level with its stars, state and number of rounds.
+
+There are no streaks, and nothing is lost when your kid skips a day. The data download (below) contains the same progress.
 
 ## Your account
 **Parent area → Account** has these sections:

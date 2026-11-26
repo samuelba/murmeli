@@ -12,16 +12,17 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { Icon } from '../../../shared/icon/icon';
 import { KeypadKey, keyFromEvent } from './number-entry';
 
-const ROWS: readonly (readonly KeypadKey[])[] = [
+const ROWS: readonly (readonly (KeypadKey | null)[])[] = [
   ['1', '2', '3'],
   ['4', '5', '6'],
   ['7', '8', '9'],
-  ['back', '0', 'ok'],
+  [null, '0', 'back'],
 ];
 
 /**
- * A big 0–9 pad with delete and OK. With `captureKeys`, the digit keys, Backspace and Enter
- * of a hardware keyboard work too (unless focus is in a text field).
+ * A big 0–9 pad with delete, laid out like a phone. Confirming is the exercise's one labeled
+ * "Prüfen" button, so the pad has no OK key; with `captureKeys`, the digit keys, Backspace and
+ * Enter (as OK) of a hardware keyboard work too (unless focus is in a text field).
  */
 @Component({
   selector: 'mu-keypad',
@@ -30,7 +31,7 @@ const ROWS: readonly (readonly KeypadKey[])[] = [
   template: `
     <div class="keypad" role="group" [attr.aria-label]="'learn.ex.keypad.label' | transloco">
       @for (row of rows; track $index) {
-        @for (key of row; track key) {
+        @for (key of row; track $index) {
           @switch (key) {
             @case ('back') {
               <button
@@ -44,17 +45,8 @@ const ROWS: readonly (readonly KeypadKey[])[] = [
                 <mu-icon name="backspace" />
               </button>
             }
-            @case ('ok') {
-              <button
-                type="button"
-                class="key key--ok"
-                data-testid="key-ok"
-                [attr.aria-label]="'learn.ex.keypad.ok' | transloco"
-                [attr.aria-disabled]="locked() || !canSubmit() ? 'true' : null"
-                (click)="press(key)"
-              >
-                <mu-icon name="check" />
-              </button>
+            @case (null) {
+              <span class="gap" aria-hidden="true"></span>
             }
             @default {
               <button
@@ -117,13 +109,6 @@ const ROWS: readonly (readonly KeypadKey[])[] = [
 
     .key--back {
       background: var(--mu-color-marmot-soft);
-    }
-
-    .key--ok {
-      border-color: var(--mu-color-meadow-deep);
-      background: var(--mu-color-meadow-strong);
-      color: var(--mu-color-on-accent);
-      box-shadow: 0 5px 0 var(--mu-color-meadow-deep);
     }
   `,
 })

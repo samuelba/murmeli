@@ -112,7 +112,7 @@ Repetition follows a Leitner box system with intervals of 1, 2, 4, 8 and 16 days
 The exercises of the chosen skills are interleaved. Practice updates mastery and learning time, but never the stars on the map.
 
 ## Badges and time
-- Murmeli records four badges: the first passed level, the first completed world, 5 levels with 3 stars, and the first practice round. Badges are never taken away, and nothing depends on streaks. They are included in the data export; the app doesn't show them yet.
+- Murmeli records four badges: the first passed level, the first completed world, 5 levels with 3 stars, and the first practice round. Badges are never taken away, and nothing depends on streaks. Kids see them on the badge shelf of the trail map, and parents on the progress page.
 - The time spent answering is added up per day (in `APP_TIMEZONE`) for the [daily learning time](../usage/parents.md#the-daily-learning-time). Each answer counts at most 5 minutes, so a kid who walks away doesn't use up the limit.
 
 ## Adding content

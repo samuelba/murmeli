@@ -14,12 +14,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { firstValueFrom, map } from 'rxjs';
+import { KidsService } from '../../core/kids/kids.service';
 import { FormError } from '../../shared/form-error/form-error';
 import { Icon } from '../../shared/icon/icon';
 import { Mascot } from '../../shared/mascot/mascot';
 import { Speak } from '../../shared/speak/speak';
 import { ExerciseHost } from '../exercises/exercise-host';
 import { AnyAnswer, RunMode } from '../learn.models';
+import { BreakReminder } from './break-reminder';
 import { Confetti } from './confetti';
 import { ExitDialog } from './exit-dialog';
 import { PlayerStore } from './player-store';
@@ -32,6 +34,7 @@ import { Results } from './results';
   selector: 'mu-player',
   imports: [
     TranslocoPipe,
+    BreakReminder,
     Confetti,
     ExerciseHost,
     FormError,
@@ -52,6 +55,7 @@ export class Player {
   private readonly dialog = inject(Dialog);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly document = inject(DOCUMENT);
+  private readonly kids = inject(KidsService);
   protected readonly store = inject(PlayerStore);
 
   private readonly params = toSignal(
@@ -81,7 +85,7 @@ export class Player {
             .querySelector('.mu-choice--revealed, .mu-blank--revealed, .flag__cloth--revealed')
             ?.scrollIntoView?.({ block: 'center' });
         });
-      } else if (['playing', 'demo', 'results', 'resting', 'error'].includes(phase)) {
+      } else if (['playing', 'demo', 'results', 'resting', 'break', 'error'].includes(phase)) {
         untracked(() => this.focus('h1[tabindex="-1"]'));
       }
     });
@@ -104,6 +108,16 @@ export class Player {
 
   protected toMap(): Promise<boolean> {
     return this.router.navigateByUrl('/learn');
+  }
+
+  /** "Pause machen": back to the profile picker, so the next kid (or a parent) can take over. */
+  protected async takeBreak(): Promise<void> {
+    try {
+      await this.kids.deactivate();
+      await this.router.navigateByUrl('/');
+    } catch {
+      await this.toMap();
+    }
   }
 
   protected playLevel(levelId: string): Promise<boolean> {

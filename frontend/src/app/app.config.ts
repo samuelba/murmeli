@@ -1,11 +1,13 @@
 import {
   ApplicationConfig,
   inject,
+  isDevMode,
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
 import { TitleStrategy, provideRouter } from '@angular/router';
+import { provideServiceWorker } from '@angular/service-worker';
 import { AudioService } from './core/audio/audio.service';
 import { AuthService } from './core/auth/auth.service';
 import { provideAppHttp } from './core/http/provide-http';
@@ -24,5 +26,9 @@ export const appConfig: ApplicationConfig = {
     provideI18n(),
     provideAppInitializer(() => inject(AuthService).init()),
     { provide: SPEAK_PROVIDER, useExisting: AudioService },
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
 };

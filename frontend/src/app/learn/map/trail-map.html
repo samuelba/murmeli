@@ -25,6 +25,23 @@
           <span id="practice-hint" class="mu-visually-hidden">{{
             'learn.map.practiceHint' | transloco
           }}</span>
+          <button
+            type="button"
+            class="mu-button mu-button--ghost mu-trophy"
+            data-testid="badges"
+            aria-haspopup="dialog"
+            [attr.aria-label]="'learn.map.badges' | transloco: { count: badges().length }"
+            (click)="openBadges()"
+          >
+            <mu-badge-icon
+              class="mu-trophy__icon"
+              [badge]="badges()[0] ?? 'first-level'"
+              [earned]="badges().length > 0"
+            />
+            <span class="mu-trophy__count" aria-hidden="true" data-testid="badge-count">{{
+              badges().length
+            }}</span>
+          </button>
         }
         <button
           type="button"

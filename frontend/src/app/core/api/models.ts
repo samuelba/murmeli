@@ -16,12 +16,22 @@ export interface User {
   readonly theme?: ThemePreference | null;
 }
 
+/** Who runs this instance, from the operator's env (shown on the privacy and terms pages). */
+export interface LegalInfo {
+  readonly operatorName: string | null;
+  readonly contactEmail: string | null;
+  readonly address: string | null;
+  readonly privacyNote: string | null;
+}
+
 export interface AuthConfig {
   readonly registrationEnabled: boolean;
   readonly emailEnabled: boolean;
   readonly setupRequired: boolean;
   /** The server has SETUP_TOKEN set: the setup form must send it. */
   readonly setupTokenRequired?: boolean;
+  /** Missing on older servers. */
+  readonly legal?: LegalInfo | null;
 }
 
 export interface MeResponse {
@@ -95,6 +105,12 @@ export interface CreatedInvite {
   readonly invite: Invite;
   readonly inviteUrl: string;
   readonly emailStatus: EmailStatus;
+}
+
+/** `POST /api/admin/users/:id/password-reset-link` */
+export interface PasswordResetLink {
+  readonly resetUrl: string;
+  readonly expiresAt: string;
 }
 
 export interface InviteDetails {

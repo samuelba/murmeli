@@ -1,3 +1,4 @@
+import { Component } from '@angular/core';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
@@ -125,5 +126,63 @@ describe('App shell', () => {
   it('renders the not-found page', async () => {
     const { page } = await render('/nope');
     expect(byTestId(page, 'page-title').textContent).toContain('Hoppla');
+  });
+});
+
+@Component({ template: '<h1 data-testid="page-title">Seite</h1>' })
+class Blank {}
+
+describe('App shell offline', () => {
+  let online: ReturnType<typeof vi.spyOn>;
+
+  beforeEach(() => {
+    online = vi.spyOn(window.navigator, 'onLine', 'get').mockReturnValue(true);
+    TestBed.configureTestingModule({
+      providers: provideAppTesting([
+        { path: 'parent', component: Blank },
+        { path: '**', component: Blank },
+      ]),
+    });
+  });
+
+  afterEach(() => resetDocumentState());
+
+  async function render(url: string) {
+    const fixture = TestBed.createComponent(App);
+    await TestBed.inject(Router).navigateByUrl(url);
+    await settle(fixture);
+    return { fixture, element: fixture.nativeElement as HTMLElement };
+  }
+
+  async function goOffline(fixture: { whenStable(): Promise<unknown> }, offline = true) {
+    online.mockReturnValue(!offline);
+    window.dispatchEvent(new Event(offline ? 'offline' : 'online'));
+    await fixture.whenStable();
+  }
+
+  it('swaps kid pages for the offline screen and keeps them alive underneath', async () => {
+    const { element, fixture } = await render('/learn');
+    expect(element.querySelector('mu-offline-screen')).toBeNull();
+    await goOffline(fixture);
+    expect(byTestId(element, 'offline-screen')).toBeTruthy();
+    const outlet = element.querySelector<HTMLElement>('.outlet')!;
+    expect(outlet.hidden).toBe(true);
+    expect(outlet.querySelector('[data-testid="page-title"]')).not.toBeNull();
+    await goOffline(fixture, false);
+    expect(element.querySelector('mu-offline-screen')).toBeNull();
+    expect(outlet.hidden).toBe(false);
+  });
+
+  it('shows parents a banner instead', async () => {
+    const { element, fixture } = await render('/parent');
+    await goOffline(fixture);
+    expect(byTestId(element, 'offline-banner').getAttribute('role')).toBe('status');
+    expect(element.querySelector('mu-offline-screen')).toBeNull();
+    expect(element.querySelector<HTMLElement>('.outlet')!.hidden).toBe(false);
+  });
+
+  it('links the about page in the footer', async () => {
+    const { element } = await render('/');
+    expect(byTestId(element, 'footer-about').getAttribute('href')).toBe('/about');
   });
 });
