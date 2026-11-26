@@ -170,8 +170,14 @@ if (!existsSync(join(root, 'index.html'))) {
 }
 
 createServer(async (request, response) => {
-  const url = new URL(request.url ?? '/', 'http://localhost');
-  const path = decodeURIComponent(url.pathname);
+  let path;
+  try {
+    path = decodeURIComponent(new URL(request.url ?? '/', 'http://localhost').pathname);
+  } catch {
+    response.writeHead(400, { ...SECURITY_HEADERS, 'Content-Type': 'text/plain' });
+    response.end('Bad request\n');
+    return;
+  }
   if (path === '/api' || path.startsWith('/api/')) {
     const { status = 200, body } = api(path);
     const payload = typeof body === 'function' ? await body() : body;
@@ -203,6 +209,6 @@ createServer(async (request, response) => {
     return;
   }
   send(request, response, 200, TYPES['.html'], '/index.html', join(root, 'index.html'));
-}).listen(port, () => {
-  console.log(`Serving ${root} on http://localhost:${port} (api mock: ${mock})`);
+}).listen(port, '127.0.0.1', () => {
+  console.log(`Serving ${root} on http://127.0.0.1:${port} (api mock: ${mock})`);
 });

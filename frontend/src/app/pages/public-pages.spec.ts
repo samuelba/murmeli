@@ -382,6 +382,16 @@ describe('public pages', () => {
       expect(terms.querySelector('[data-testid="operator-privacy-note"]')).toBeNull();
     });
 
+    it('links only plain addresses (no query, one-letter domain or odd characters)', async () => {
+      const odd = await withLegal('terms', {
+        operatorName: 'X',
+        contactEmail: 'a@b.c?subject=hi',
+        address: null,
+        privacyNote: null,
+      });
+      expect(byTestId(odd, 'operator-email').tagName).toBe('SPAN');
+    });
+
     it('falls back to the neutral note when every field is empty', async () => {
       const element = await withLegal('privacy', {
         operatorName: null,

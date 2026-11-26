@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { Icon } from '../../../shared/icon/icon';
 import { TranslocoPipe } from '@jsverse/transloco';
 import type { WallCell } from '@murmeli/content';
 import { BlankEntry } from '../shared/blank-entry';
@@ -10,7 +11,7 @@ import { Pointer } from '../shared/pointer';
 /** Rechenmauer: two bricks side by side make the brick on top of them. */
 @Component({
   selector: 'mu-number-wall',
-  imports: [TranslocoPipe, Keypad, Pointer],
+  imports: [TranslocoPipe, Icon, Keypad, Pointer],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mu-ex">
@@ -74,6 +75,7 @@ import { Pointer } from '../shared/pointer';
         [attr.aria-disabled]="locked() || !entry.complete() ? 'true' : null"
         (click)="check()"
       >
+        <mu-icon name="check" />
         {{ 'learn.ex.check' | transloco }}
       </button>
     </div>

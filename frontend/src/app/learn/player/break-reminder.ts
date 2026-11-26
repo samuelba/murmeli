@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { AudioService } from '../../core/audio/audio.service';
+import { Icon } from '../../shared/icon/icon';
 import { Mascot } from '../../shared/mascot/mascot';
 import { Speak } from '../../shared/speak/speak';
 
 /** Between two items after a long stretch of play: a gentle, skippable break suggestion. */
 @Component({
   selector: 'mu-break-reminder',
-  imports: [TranslocoPipe, Mascot, Speak],
+  imports: [TranslocoPipe, Icon, Mascot, Speak],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="break" aria-labelledby="break-title" data-testid="break-reminder">
@@ -25,6 +26,7 @@ import { Speak } from '../../shared/speak/speak';
           data-testid="break-continue"
           (click)="keepPlaying.emit()"
         >
+          <mu-icon name="play" />
           {{ 'learn.player.breakContinue' | transloco }}
         </button>
         <button
@@ -33,6 +35,7 @@ import { Speak } from '../../shared/speak/speak';
           data-testid="break-pause"
           (click)="breakTaken.emit()"
         >
+          <mu-icon name="pause" />
           {{ 'learn.player.breakPause' | transloco }}
         </button>
       </div>

@@ -137,7 +137,10 @@ test.describe('service worker', () => {
     await expect(page.getByTestId(`kid-tile-${MIA.id}`)).toBeVisible({ timeout: 15_000 });
   });
 
-  test('keeps narration clips for the level in the clip cache', async ({ page, context }) => {
+  test('leaves narration clips to the HTTP cache (no Range trouble in Safari)', async ({
+    page,
+    context,
+  }) => {
     await mockFamily(context, { kids: [MIA], learn: { demoSeen: ['math-zahlenwiese-01'] } });
     await page.goto('/');
     await expect(page.getByTestId(`kid-tile-${MIA.id}`)).toBeVisible();
@@ -147,10 +150,8 @@ test.describe('service worker', () => {
     await page.getByTestId('level-math-zahlenwiese-01').click();
     await expect(page.getByTestId('prompt-text')).toBeVisible();
 
-    await expect
-      .poll(async () => (await cachedUrls(page)).filter((path) => path.endsWith('.opus')).length)
-      .toBeGreaterThan(0);
-    expect(await cachedUrls(page)).toContain('/audio/manifest.json');
+    await expect.poll(async () => cachedUrls(page)).toContain('/audio/manifest.json');
+    expect((await cachedUrls(page)).filter((path) => path.endsWith('.opus'))).toEqual([]);
   });
 
   test('meets the browser install criteria', async ({ page, context, browserName }) => {
@@ -168,8 +169,7 @@ test.describe('service worker', () => {
     expect(manifest.ok()).toBe(true);
     const ngsw = await page.request.get('/ngsw.json');
     expect(ngsw.ok()).toBe(true);
-    expect(((await ngsw.json()) as { dataGroups: { name: string }[] }).dataGroups).toEqual(
-      expect.arrayContaining([expect.objectContaining({ name: 'audio-clips' })]),
-    );
+    const groups = ((await ngsw.json()) as { dataGroups: { name: string }[] }).dataGroups;
+    expect(groups.map((group) => group.name)).toEqual(['audio-manifest']);
   });
 });

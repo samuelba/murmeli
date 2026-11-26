@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 // Copies the brand assets (source of truth: ../brand) into the frontend.
 //   node scripts/sync-brand.mjs          copy (and write public/manifest.webmanifest)
-//   node scripts/sync-brand.mjs --check  exit 1 when a copy is missing or differs
+//   node scripts/sync-brand.mjs --check  exit 1 when a copy is missing, differs or is left over
 // The copies are committed because the Docker build only sees frontend/. Without ../brand
 // (for example inside the Docker build) both modes skip with a notice.
 import { createHash } from 'node:crypto';
 import { existsSync } from 'node:fs';
-import { copyFile, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -39,6 +39,25 @@ async function pairs() {
     }
   }
   return result.sort((a, b) => a.to.localeCompare(b.to));
+}
+
+/** Copies in the target folders that no brand file produces any more (sync removes them). */
+async function extras(list) {
+  const expected = new Set(list.map(({ to }) => to));
+  const found = [];
+  for (const rule of DIRECTORY_RULES) {
+    const dir = join(frontend, rule.to);
+    if (!existsSync(dir)) {
+      continue;
+    }
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+      const to = join(rule.to, entry.name);
+      if (entry.isFile() && rule.pattern.test(entry.name) && !expected.has(to)) {
+        found.push(to);
+      }
+    }
+  }
+  return [...new Set(found)].sort();
 }
 
 function tokenValue(css, name) {
@@ -95,6 +114,7 @@ async function check(list) {
       stale.push(`${to} (from brand/${from})`);
     }
   }
+  (await extras(list)).forEach((to) => stale.push(`${to} (no longer in brand/)`));
   const current = existsSync(join(frontend, MANIFEST))
     ? await readFile(join(frontend, MANIFEST), 'utf8')
     : null;
@@ -113,6 +133,9 @@ async function sync(list) {
     const target = join(frontend, to);
     await mkdir(dirname(target), { recursive: true });
     await copyFile(join(brand, from), target);
+  }
+  for (const to of await extras(list)) {
+    await rm(join(frontend, to));
   }
   await writeFile(join(frontend, MANIFEST), await manifest());
   console.log(

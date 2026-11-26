@@ -10,7 +10,7 @@
   padding-bottom: var(--mu-space-8);
 
   &[data-phase='feedback'] {
-    padding-bottom: 260px;
+    padding-bottom: 0;
   }
 }
 
@@ -170,10 +170,9 @@
 }
 
 .feedback {
-  position: fixed;
-  right: 0;
+  // In the flow and sticky: at the end of the page it never covers the board (zoom, landscape).
+  position: sticky;
   bottom: 0;
-  left: 0;
   z-index: 20;
   display: flex;
   flex-wrap: wrap;

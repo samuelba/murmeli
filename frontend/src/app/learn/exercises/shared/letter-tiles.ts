@@ -7,6 +7,7 @@ import {
   output,
   signal,
 } from '@angular/core';
+import { Icon } from '../../../shared/icon/icon';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Pointer } from './pointer';
 
@@ -21,7 +22,7 @@ export interface LetterTile {
  */
 @Component({
   selector: 'mu-letter-tiles',
-  imports: [TranslocoPipe, Pointer],
+  imports: [TranslocoPipe, Icon, Pointer],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ol
@@ -86,6 +87,7 @@ export interface LetterTile {
       [attr.aria-disabled]="locked() || !full() ? 'true' : null"
       (click)="check()"
     >
+      <mu-icon name="check" />
       {{ 'learn.ex.check' | transloco }}
     </button>
   `,

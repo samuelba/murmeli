@@ -168,7 +168,11 @@ describe('Player', () => {
     expect(byTestId(element, 'result-stars').getAttribute('aria-label')).toBe('3 von 3 Sternen');
     expect(byTestId(element, 'page-title').textContent).toContain('Wow, alle Sterne!');
     expect(byTestId(element, 'unlocked-level')).toBeTruthy();
-    expect(narrate).toHaveBeenCalledWith(['Wow, alle Sterne!', 'Eine neue Stufe ist offen!']);
+    expect(narrate).toHaveBeenCalledWith([
+      'Wow, alle Sterne!',
+      'Eine neue Stufe ist offen!',
+      'Weiter zur nächsten Stufe',
+    ]);
     byTestId(element, 'results-next').click();
     expect(navigate).toHaveBeenCalledWith(['/learn/level', 'l2']);
     byTestId(element, 'results-map').click();

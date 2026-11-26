@@ -271,22 +271,37 @@ describe('TraceLetter', () => {
   });
 
   it('draws with the keyboard: arrows move the pen, space sets it down and lifts it', async () => {
-    const { element, surface, fixture, answers } = await setup();
+    const line: TraceLetterPayload = {
+      ...PAYLOADS['trace-letter'],
+      char: 'I',
+      strokes: [
+        [
+          [50, 10],
+          [50, 80],
+        ],
+      ],
+    };
+    const { element, surface, fixture, answers } = await setup(line);
     surface.focus();
     keydown(surface, 'ArrowDown');
     await fixture.whenStable();
     expect(byTestId(element, 'trace-pen')).toBeTruthy();
+    expect(byTestId(element, 'trace-status').textContent).toContain('auf der Linie');
     keydown(surface, ' ');
+    await fixture.whenStable();
+    expect(byTestId(element, 'trace-status').textContent).toContain('Stift aufgesetzt');
     for (let i = 0; i < 6; i += 1) {
       keydown(surface, 'ArrowDown');
-      keydown(surface, 'ArrowLeft', { shiftKey: true });
     }
+    keydown(surface, 'ArrowDown', { shiftKey: true });
     keydown(surface, ' ');
     await fixture.whenStable();
     expect(byTestId(element, 'trace-status').textContent).toContain('Stift abgehoben');
     expect(element.querySelectorAll('[data-testid="trace-stroke"]').length).toBe(1);
     keydown(surface, ' ');
-    keydown(surface, 'ArrowRight');
+    keydown(surface, 'ArrowRight', { shiftKey: true });
+    await fixture.whenStable();
+    expect(byTestId(element, 'trace-status').textContent).toContain('neben der Linie');
     keydown(surface, 'Backspace');
     keydown(surface, 'x');
     keydown(surface, 'a', { ctrlKey: true });
@@ -296,7 +311,17 @@ describe('TraceLetter', () => {
     expect(answers).toHaveLength(1);
     const [stroke] = (answers[0] as { strokes: number[][][] }).strokes;
     expect(stroke![0]).toEqual([50, 14]);
-    expect(stroke!.at(-1)).toEqual([44, 38]);
+    expect(stroke!.at(-1)).toEqual([50, 48]);
+  });
+
+  it('keeps "Fertig" off until every stroke of the model is drawn', async () => {
+    const { element, draw, click, answers } = await setup();
+    await draw(PAYLOADS['trace-letter'].strokes.slice(0, 2));
+    expect(byTestId(element, 'trace-done').getAttribute('aria-disabled')).toBe('true');
+    await click('trace-done');
+    expect(answers).toEqual([]);
+    await draw(PAYLOADS['trace-letter'].strokes.slice(2));
+    expect(byTestId(element, 'trace-done').getAttribute('aria-disabled')).toBeNull();
   });
 
   it('plays the model with a pencil on "Zeig mir" and after a tracing hint', async () => {
@@ -365,14 +390,20 @@ describe('TraceLetter', () => {
       const item = items.find((each) => (each.payload as TraceLetterPayload).char === 'A')!;
       const payload = item.payload as TraceLetterPayload;
       const scribble = await setup(payload);
-      await scribble.draw([
-        [
-          [10, 10],
-          [90, 90],
-        ],
-      ]);
+      await scribble.draw(
+        payload.strokes.map((_, i) => [
+          [10, 10 + i * 8],
+          [90, 90 - i * 8],
+        ]),
+      );
       await scribble.click('trace-done');
       expect(checkAnswer(item.solution, scribble.answers[0] as never)).toEqual(
+        expect.objectContaining({ correct: false }),
+      );
+      const extra = await setup(payload);
+      await extra.draw([...handDrawn(payload.strokes), [[50, 90]]]);
+      await extra.click('trace-done');
+      expect(checkAnswer(item.solution, extra.answers[0] as never)).toEqual(
         expect.objectContaining({ correct: false, hint: 'stroke-count' }),
       );
       const backwards = await setup(payload);

@@ -7,6 +7,7 @@ import {
   output,
   signal,
 } from '@angular/core';
+import { Icon } from '../../../shared/icon/icon';
 import { TranslocoPipe } from '@jsverse/transloco';
 import type { AnswerMode, Choice } from '@murmeli/content';
 import { ChoiceItem, Choices } from './choices';
@@ -20,7 +21,7 @@ import { Pointer } from './pointer';
  */
 @Component({
   selector: 'mu-value-answer',
-  imports: [TranslocoPipe, Choices, Keypad, Pointer],
+  imports: [TranslocoPipe, Icon, Choices, Keypad, Pointer],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (mode() === 'choices' && choices()) {
@@ -67,6 +68,7 @@ import { Pointer } from './pointer';
           [attr.aria-disabled]="locked() || typed() === '' ? 'true' : null"
           (click)="check()"
         >
+          <mu-icon name="check" />
           {{ 'learn.ex.check' | transloco }}
         </button>
       </div>

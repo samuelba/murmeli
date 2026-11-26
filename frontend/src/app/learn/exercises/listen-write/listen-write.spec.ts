@@ -9,7 +9,7 @@ describe('ListenWrite', () => {
   let speaker: ReturnType<typeof fakeSpeaker>;
 
   beforeEach(() => {
-    speaker = fakeSpeaker();
+    speaker = fakeSpeaker(['Katze']);
     TestBed.configureTestingModule({
       providers: [...provideAppTesting(), { provide: SPEAK_PROVIDER, useValue: speaker.provider }],
     });
@@ -39,7 +39,6 @@ describe('ListenWrite', () => {
       cue: { highlight: 'prompt' },
     });
     expect(byTestId(element, 'replay').classList).toContain('mu-cue');
-    expect(byTestId(element, 'replay').getAttribute('aria-disabled')).toBe('true');
     await click('replay');
     expect(speaker.spoken).toEqual([]);
     await update({ cue: { placeTiles: true }, reveal: { letters: ['c', 'a', 't'] } });
@@ -47,5 +46,15 @@ describe('ListenWrite', () => {
     expect(byTestId(element, 'slot-2').classList).toContain('mu-blank--revealed');
     await update({ cue: { highlight: 'tiles' } });
     expect(element.querySelector('.tiles')?.classList).toContain('mu-cue');
+  });
+
+  it('shows the picture of the word when there is no clip for it', async () => {
+    const { element } = await renderExercise(ListenWrite, {
+      payload: PAYLOADS['listen-write'],
+      speech: ['Hör gut zu', 'Maus', 'Schreib das Wort.'],
+    });
+    expect(element.querySelector('[data-testid="replay"]')).toBeNull();
+    expect(byTestId(element, 'exercise-picture').querySelector('img')?.alt).toBe('Maus');
+    expect(byTestId(element, 'listen-silent').textContent).toContain('Ohne Ton');
   });
 });

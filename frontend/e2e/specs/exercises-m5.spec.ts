@@ -83,12 +83,15 @@ test.describe('tracing', () => {
     await player.waitForItem(0);
     const surface = page.getByTestId('trace-surface');
     await surface.focus();
-    await page.keyboard.press('Space');
-    for (let i = 0; i < 5; i += 1) {
-      await page.keyboard.press('ArrowDown');
+    const strokes = (player.item(0).payload as TraceLetterPayload).strokes.length;
+    for (let stroke = 0; stroke < strokes; stroke += 1) {
+      await page.keyboard.press('Space');
+      for (let i = 0; i < 3; i += 1) {
+        await page.keyboard.press('ArrowDown');
+      }
+      await page.keyboard.press('Space');
     }
-    await page.keyboard.press('Space');
-    await expect(page.getByTestId('trace-stroke')).toHaveCount(1);
+    await expect(page.getByTestId('trace-stroke')).toHaveCount(strokes);
     await expect(page.getByTestId('trace-status')).toHaveText('Stift abgehoben');
     await page.keyboard.press('Enter');
     await expect(page.getByTestId('hint').or(page.getByTestId('feedback'))).toBeVisible();
@@ -213,11 +216,15 @@ test.describe('more math and reading', () => {
     await expect(page.locator('.plate__item')).toHaveCount(0);
   });
 
-  test('listen and write: the replay button and letter tiles', async ({ page }) => {
+  test('listen and write without narration shows the picture instead', async ({ page }) => {
     const { player } = await play(page, { learn: { exerciseType: 'listen-write', items: 2 } });
     await player.waitForItem(0);
-    await expect(page.getByTestId('replay')).toBeVisible();
-    await expect(page.getByTestId('exercise-picture')).toHaveCount(0);
+    await expect(page.getByTestId('prompt-text')).not.toContainText(
+      (player.item(0).solution.answer as { letters: string[] }).letters.join(''),
+    );
+    await expect(page.getByTestId('replay')).toHaveCount(0);
+    await expect(page.getByTestId('exercise-picture')).toBeVisible();
+    await expect(page.getByTestId('listen-silent')).toContainText('Ohne Ton');
     await player.answerCorrectly(0);
     await expect(page.getByTestId('feedback')).toHaveAttribute('data-kind', 'correct');
   });

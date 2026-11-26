@@ -114,9 +114,10 @@ describe('exercise components', () => {
       expect(element.querySelectorAll('button').length).toBe(11);
       byTestId(element, 'key-7').click();
       byTestId(element, 'key-back').click();
-      press('5');
-      press('Enter');
-      press('x');
+      press('5', element);
+      press('Enter', element);
+      press('x', element);
+      press('6');
       const input = document.createElement('input');
       document.body.append(input);
       press('1', input);
@@ -125,7 +126,7 @@ describe('exercise components', () => {
 
       fixture.componentRef.setInput('canSubmit', false);
       await fixture.whenStable();
-      press('Enter');
+      press('Enter', element);
       expect(pressed).toHaveLength(4);
       fixture.componentRef.setInput('locked', true);
       await fixture.whenStable();
@@ -230,14 +231,16 @@ describe('exercise components', () => {
         'Zehnerfeld mit 7 von 10 Feldern gefüllt',
       );
       expect(element.querySelectorAll('.counter').length).toBe(7);
-      press('1');
-      press('2');
-      press('3');
+      const inside = element.querySelector('.mu-ex')!;
+      press('7');
+      press('1', inside);
+      press('2', inside);
+      press('3', inside);
       await fixture.whenStable();
       expect(byTestId(element, 'answer-blank').textContent?.trim()).toBe('12');
-      press('Backspace');
+      press('Backspace', inside);
       await fixture.whenStable();
-      press('Enter');
+      press('Enter', inside);
       expect(answers).toEqual([{ value: 1 }]);
     });
 
@@ -301,7 +304,9 @@ describe('exercise components', () => {
       expect(element.querySelectorAll('.label--low').length).toBe(0);
 
       expect(line.getAttribute('aria-valuenow')).toBe('1');
+      expect(line.getAttribute('aria-valuetext')).toBe('Strich 1 von 11, noch nicht gesetzt');
       await click('line-left');
+      expect(line.getAttribute('aria-valuetext')).toBe('Strich 1 von 11');
       expect(line.getAttribute('aria-valuenow')).toBe('1');
       await click('line-right');
       expect(line.getAttribute('aria-valuetext')).toBe('Strich 2 von 11');
@@ -544,6 +549,57 @@ describe('exercise components', () => {
 
   describe('ExerciseHost', () => {
     const TYPES = Object.keys(PAYLOADS) as SupportedExerciseType[];
+
+    /** A rough accessible name: aria-label, else text, else the alt texts of images inside. */
+    function accessibleName(element: Element): string {
+      const label = element.getAttribute('aria-label')?.trim();
+      if (label) {
+        return label;
+      }
+      const alts = [...element.querySelectorAll('img')]
+        .map((img) => img.getAttribute('alt')?.trim() ?? '')
+        .filter(Boolean);
+      return [element.textContent?.trim() ?? '', ...alts].filter(Boolean).join(' ');
+    }
+
+    it('tells an unnamed button apart from a named one', () => {
+      const unnamed = document.createElement('button');
+      unnamed.innerHTML = '<img alt="">';
+      expect(accessibleName(unnamed)).toBe('');
+      unnamed.innerHTML = '<img alt="Maus">';
+      expect(accessibleName(unnamed)).toBe('Maus');
+    });
+
+    it.each(TYPES)('names every answer button of %s', async (type) => {
+      const { element } = await renderComponent(ExerciseHost, { exercise: exercise(type) });
+      const buttons = [
+        ...element.querySelectorAll('[data-testid^="choice-"], [data-testid^="relation-"]'),
+      ];
+      for (const button of buttons) {
+        expect(accessibleName(button), button.getAttribute('data-testid') ?? '').not.toBe('');
+      }
+    });
+
+    it.each([
+      ['shape-pick', PAYLOADS['shape-pick']],
+      ['word-picture', PAYLOADS['word-picture']],
+      [
+        'sequence',
+        {
+          kind: 'pattern',
+          items: [{ pictureId: 'apple' }],
+          choices: [{ id: 'p1', pictureId: 'egg' }],
+        },
+      ],
+      ['count-objects', PAYLOADS['count-objects']],
+    ] as const)('names the picture choices of %s by their word', async (type, payload) => {
+      const { element } = await renderComponent(ExerciseHost, {
+        exercise: { ...exercise(type), payload },
+      });
+      const choices = [...element.querySelectorAll('[data-testid^="choice-"]')];
+      expect(choices.length).toBeGreaterThan(0);
+      choices.forEach((choice) => expect(accessibleName(choice)).not.toBe(''));
+    });
 
     it.each(TYPES)('renders %s and forwards its answer', async (type) => {
       const { element, fixture } = await renderComponent(ExerciseHost, {

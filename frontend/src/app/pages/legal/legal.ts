@@ -10,7 +10,7 @@ import { PageCard } from '../../shared/page-card/page-card';
 
 export type LegalPageKind = 'privacy' | 'terms';
 
-const EMAIL = /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/;
+const EMAIL = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
 function filled(value: string | null | undefined): string | null {
   const trimmed = value?.trim();

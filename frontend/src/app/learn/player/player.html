@@ -110,9 +110,11 @@
             data-testid="player-retry"
             (click)="store.retry()"
           >
+            <mu-icon name="refresh" />
             {{ 'learn.player.retry' | transloco }}
           </button>
           <button type="button" class="mu-button mu-button--ghost" (click)="toMap()">
+            <mu-icon name="map" />
             {{ 'learn.results.map' | transloco }}
           </button>
         </div>
@@ -135,12 +137,7 @@
         <div class="prompt" data-testid="prompt">
           <mu-mascot class="prompt__mascot" [pose]="store.hint() ? 'encouraging' : 'happy'" />
           <div class="bubble">
-            <h1
-              class="bubble__text mu-learning-text"
-              tabindex="-1"
-              data-testid="prompt-text"
-              [attr.aria-describedby]="store.attempt() > 1 ? 'hint' : null"
-            >
+            <h1 class="bubble__text mu-learning-text" tabindex="-1" data-testid="prompt-text">
               {{ item.prompt.text }}
             </h1>
             <mu-speak [text]="item.prompt.text" [segments]="item.prompt.speak" />
@@ -180,12 +177,7 @@
         </div>
 
         @if (store.phase() === 'feedback' && store.feedback(); as feedback) {
-          <div
-            class="feedback"
-            role="status"
-            data-testid="feedback"
-            [attr.data-kind]="feedback.kind"
-          >
+          <div class="feedback" data-testid="feedback" [attr.data-kind]="feedback.kind">
             @if (feedback.kind === 'correct') {
               <mu-confetti />
             }

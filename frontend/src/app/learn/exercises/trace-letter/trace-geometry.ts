@@ -210,3 +210,23 @@ export function labelOf(points: TraceStroke): TracePoint {
     round(clamp(start[1] - (dy / length) * 9, VIEW_MIN + 4, VIEW_MIN + VIEW_SIZE - 4)),
   ];
 }
+
+/** The shortest distance from a point to any of the strokes (a stroke of one point is a dot). */
+export function distanceToStrokes(point: TracePoint, strokes: readonly TraceStroke[]): number {
+  const [px, py] = point;
+  let best = Infinity;
+  for (const stroke of strokes) {
+    if (stroke.length === 1) {
+      best = Math.min(best, Math.hypot(px - stroke[0]![0], py - stroke[0]![1]));
+    }
+    for (let i = 1; i < stroke.length; i += 1) {
+      const [ax, ay] = stroke[i - 1]!;
+      const [bx, by] = stroke[i]!;
+      const length = (bx - ax) ** 2 + (by - ay) ** 2;
+      const t =
+        length === 0 ? 0 : clamp(((px - ax) * (bx - ax) + (py - ay) * (by - ay)) / length, 0, 1);
+      best = Math.min(best, Math.hypot(px - (ax + (bx - ax) * t), py - (ay + (by - ay) * t)));
+    }
+  }
+  return best;
+}

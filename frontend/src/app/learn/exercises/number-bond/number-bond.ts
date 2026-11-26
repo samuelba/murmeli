@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { Icon } from '../../../shared/icon/icon';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { BlankEntry } from '../shared/blank-entry';
 import { ExerciseBase } from '../shared/exercise-base';
@@ -17,7 +18,7 @@ interface Cell {
 /** Zahlenhaus: the roof is the whole, each floor holds two parts that make it. */
 @Component({
   selector: 'mu-number-bond',
-  imports: [NgTemplateOutlet, TranslocoPipe, Keypad, Pointer, Quantity],
+  imports: [NgTemplateOutlet, TranslocoPipe, Icon, Keypad, Pointer, Quantity],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mu-ex">
@@ -94,6 +95,7 @@ interface Cell {
         [attr.aria-disabled]="locked() || !entry.complete() ? 'true' : null"
         (click)="check()"
       >
+        <mu-icon name="check" />
         {{ 'learn.ex.check' | transloco }}
       </button>
     </div>

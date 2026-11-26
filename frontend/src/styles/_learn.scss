@@ -304,3 +304,39 @@ button.mu-blank {
   font-weight: 800;
   text-align: center;
 }
+
+.mu-kid-mode .mu-button .mu-icon {
+  width: 28px;
+  height: 28px;
+}
+
+// A purse of coins and notes (money exercises).
+.mu-purse {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mu-space-2);
+  margin: 0;
+  padding: var(--mu-space-3);
+  list-style: none;
+  border-radius: var(--mu-radius-rounded);
+  background: color-mix(in srgb, var(--mu-color-marmot-soft) 75%, var(--mu-color-surface));
+  --mu-coin-size: clamp(52px, 15vw, 72px);
+
+  li {
+    position: relative;
+    display: inline-flex;
+  }
+
+  &.counting li {
+    animation: mu-count-pop 0.5s var(--mu-ease-bounce) both;
+    animation-delay: calc(var(--i) * 0.7s);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mu-purse.counting li {
+    animation: none;
+  }
+}

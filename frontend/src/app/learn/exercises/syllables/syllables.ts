@@ -83,6 +83,7 @@ import { Pointer } from '../shared/pointer';
           [attr.aria-disabled]="locked() || taps() === 0 ? 'true' : null"
           (click)="check()"
         >
+          <mu-icon name="check" />
           {{ 'learn.ex.check' | transloco }}
         </button>
       </div>

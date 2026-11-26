@@ -17,6 +17,11 @@ const ALLOWED_HOSTS = new Set([
 const ALLOWED_IN_FILE = new Map([['ngsw-worker.js', new Set(['github.com'])]]);
 const SCANNED = new Set(['.html', '.js', '.mjs', '.css', '.json', '.webmanifest', '.svg']);
 const URL_PATTERN = /(?:https?:)?\/\/([a-z0-9.-]+\.[a-z]{2,}|localhost|fake)\b/gi;
+// IP literals (v4 and bracketed v6), with or without a scheme.
+const IP_PATTERN = /(?:https?:)?\/\/(\d{1,3}(?:\.\d{1,3}){3}|\[[0-9a-f:.]+\])/gi;
+// Single-label hosts: with a scheme, or protocol-relative right after a quote or url(.
+const LABEL_PATTERN = /(?:https?:\/\/|["'`(]\/\/)([a-z][a-z0-9-]*)(?=[/:?#"'`)\s]|$)/gi;
+const PATTERNS = [URL_PATTERN, IP_PATTERN, LABEL_PATTERN];
 
 async function* files(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -38,7 +43,7 @@ if (!root) {
 const findings = [];
 for await (const file of files(root)) {
   const content = await readFile(file, 'utf8');
-  for (const match of content.matchAll(URL_PATTERN)) {
+  for (const match of PATTERNS.flatMap((pattern) => [...content.matchAll(pattern)])) {
     const host = match[1].toLowerCase();
     const allowedHere = ALLOWED_IN_FILE.get(relative(root, file))?.has(host) ?? false;
     if (!ALLOWED_HOSTS.has(host) && !allowedHere) {

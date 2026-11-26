@@ -95,8 +95,10 @@ const STAR_DELAY_MS = 450;
             data-testid="results-next"
             (click)="next.emit(unlocked()!.nextLevelId!)"
           >
-            {{ 'learn.results.next' | transloco }}
+            <mu-icon name="play" />
+            {{ 'kid.navigation.nextLevel' | transloco }}
           </button>
+          <mu-speak [text]="'kid.navigation.nextLevel' | transloco" />
         }
         <button
           type="button"
@@ -104,6 +106,7 @@ const STAR_DELAY_MS = 450;
           data-testid="results-again"
           (click)="again.emit()"
         >
+          <mu-icon name="refresh" />
           {{ 'learn.results.again' | transloco }}
         </button>
         <button
@@ -112,6 +115,7 @@ const STAR_DELAY_MS = 450;
           data-testid="results-map"
           (click)="map.emit()"
         >
+          <mu-icon name="map" />
           {{ 'learn.results.map' | transloco }}
         </button>
       </div>
@@ -296,6 +300,9 @@ export class Results {
     if (badges.length > 0) {
       lines.push(this.transloco.translate('kid.badges.new'));
       badges.forEach((badge) => lines.push(this.transloco.translate(badgeNameKey(badge))));
+    }
+    if (unlocked?.nextLevelId) {
+      lines.push(this.transloco.translate('kid.navigation.nextLevel'));
     }
     void this.audio.narrate(lines);
   }

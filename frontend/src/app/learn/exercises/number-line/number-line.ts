@@ -28,9 +28,15 @@ import { ValueAnswer } from '../shared/value-answer';
           [attr.aria-valuemax]="placing() ? ticks().length : null"
           [attr.aria-valuenow]="placing() && marker() !== null ? marker()! + 1 : null"
           [attr.aria-valuetext]="
-            placing() && marker() !== null
-              ? ('learn.ex.line.tick' | transloco: { number: marker()! + 1, total: ticks().length })
-              : null
+            !placing()
+              ? null
+              : marker() !== null
+                ? ('learn.ex.line.tick'
+                    | transloco: { number: marker()! + 1, total: ticks().length }) +
+                  (moved() || reveal() !== null
+                    ? ''
+                    : ', ' + ('learn.ex.line.notPlaced' | transloco))
+                : ('learn.ex.line.notPlaced' | transloco)
           "
           (click)="tapLine($event)"
           (keydown)="onKey($event)"
@@ -104,6 +110,7 @@ import { ValueAnswer } from '../shared/value-answer';
             [attr.aria-disabled]="locked() || marker() === null ? 'true' : null"
             (click)="check()"
           >
+            <mu-icon name="check" />
             {{ 'learn.ex.check' | transloco }}
           </button>
           <button
@@ -240,6 +247,9 @@ import { ValueAnswer } from '../shared/value-answer';
 })
 export class NumberLine extends ExerciseBase<'number-line'> {
   private readonly position = signal<number | null>(0);
+  /** The flag starts at the first tick; until the kid moves it, it says so. */
+  protected readonly moved = computed(() => this.position() !== 0 || this.touched());
+  private readonly touched = signal(false);
 
   protected readonly placing = computed(() => this.payload().mode === 'place');
   protected readonly ticks = computed(() => {
@@ -287,6 +297,7 @@ export class NumberLine extends ExerciseBase<'number-line'> {
     const box = (event.currentTarget as HTMLElement).getBoundingClientRect();
     const ratio = box.width > 0 ? (event.clientX - box.left) / box.width : 0;
     const last = this.ticks().length - 1;
+    this.touched.set(true);
     this.position.set(Math.max(0, Math.min(last, Math.round(ratio * last))));
   }
 
@@ -295,6 +306,7 @@ export class NumberLine extends ExerciseBase<'number-line'> {
       return;
     }
     const last = this.ticks().length - 1;
+    this.touched.set(true);
     this.position.update((current) =>
       Math.max(0, Math.min(last, current === null ? (delta > 0 ? 0 : last) : current + delta)),
     );
@@ -309,7 +321,10 @@ export class NumberLine extends ExerciseBase<'number-line'> {
       ArrowUp: () => this.move(1),
       ArrowLeft: () => this.move(-1),
       ArrowDown: () => this.move(-1),
-      Home: () => this.position.set(0),
+      Home: () => {
+        this.touched.set(true);
+        this.position.set(0);
+      },
       End: () => this.position.set(this.ticks().length - 1),
       Enter: () => this.check(),
     };

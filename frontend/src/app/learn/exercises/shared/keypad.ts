@@ -3,6 +3,7 @@ import {
   Component,
   DOCUMENT,
   DestroyRef,
+  ElementRef,
   booleanAttribute,
   inject,
   input,
@@ -22,7 +23,8 @@ const ROWS: readonly (readonly (KeypadKey | null)[])[] = [
 /**
  * A big 0–9 pad with delete, laid out like a phone. Confirming is the exercise's one labeled
  * "Prüfen" button, so the pad has no OK key; with `captureKeys`, the digit keys, Backspace and
- * Enter (as OK) of a hardware keyboard work too (unless focus is in a text field).
+ * Enter (as OK) of a hardware keyboard work too, while focus is in the player (not in a text
+ * field).
  */
 @Component({
   selector: 'mu-keypad',
@@ -114,6 +116,7 @@ const ROWS: readonly (readonly (KeypadKey | null)[])[] = [
 })
 export class Keypad {
   private readonly document = inject(DOCUMENT);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   readonly locked = input(false, { transform: booleanAttribute });
   readonly canSubmit = input(true);
@@ -135,6 +138,12 @@ export class Keypad {
     this.pressed.emit(key);
   }
 
+  /** Keys only count while focus is in the player (or this exercise): WCAG 2.1.4. */
+  private scope(): Element {
+    const host = this.host.nativeElement;
+    return host.closest('.player') ?? host.closest('.mu-ex') ?? host;
+  }
+
   private onKey(event: KeyboardEvent): void {
     if (
       !this.captureKeys() ||
@@ -146,6 +155,9 @@ export class Keypad {
       return;
     }
     const target = event.target instanceof Element ? event.target : null;
+    if (!target || !this.scope().contains(target)) {
+      return;
+    }
     if (
       target?.closest('input, textarea, select, [contenteditable="true"], [role="dialog"]') ||
       this.document.querySelector('.cdk-overlay-container [role="dialog"]')

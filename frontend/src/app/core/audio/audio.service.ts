@@ -161,8 +161,15 @@ export class AudioService implements SpeakProvider {
     this.unlocked = true;
     const element = this.audio();
     if (!element.src && typeof URL.createObjectURL === 'function') {
-      element.src = URL.createObjectURL(silentWav());
-      element.play()?.catch(() => undefined);
+      const url = URL.createObjectURL(silentWav());
+      element.src = url;
+      const release = () => URL.revokeObjectURL?.(url);
+      const played = element.play();
+      if (played) {
+        played.then(release, release);
+      } else {
+        release();
+      }
     }
   }
 

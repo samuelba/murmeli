@@ -296,12 +296,12 @@
       "solutionLabel": "Die richtige Antwort ist markiert.",
       "hintLabel": "Tipp",
       "breakContinue": "Weiter spielen",
-      "breakPause": "Pause machen"
+      "breakPause": "Pause machen",
+      "outdated": "Diese Stufe braucht eine neuere Version der App. Tippe auf «Nochmal versuchen», dann lädt sie neu."
     },
     "results": {
       "stars": "{{stars}} von 3 Sternen",
       "newWorld": "Neue Welt: {{title}}",
-      "next": "Nächste Stufe",
       "again": "Nochmal",
       "map": "Zur Karte"
     },
@@ -341,7 +341,8 @@
         "tick": "Strich {{number}} von {{total}}",
         "marked": "Markierter Strich",
         "left": "Fahne nach links",
-        "right": "Fahne nach rechts"
+        "right": "Fahne nach rechts",
+        "notPlaced": "noch nicht gesetzt"
       },
       "blank": "Lücke",
       "blankFilled": "Lücke: {{value}}",
@@ -414,10 +415,13 @@
         "full": "Mehr Striche gehen nicht. Tippe auf Nochmal.",
         "showMe": "Zeig mir, wie es geht",
         "again": "Nochmal",
-        "done": "Fertig"
+        "done": "Fertig",
+        "onLine": "auf der Linie",
+        "offLine": "neben der Linie"
       },
       "listen": {
-        "replay": "Nochmal anhören"
+        "replay": "Nochmal anhören",
+        "silent": "Ohne Ton: Schau das Bild an und baue das Wort."
       },
       "sentence": {
         "scene": "{{subject}} {{relation}} {{object}}",
@@ -469,7 +473,8 @@
       "loading": "Einen Moment, bitte.",
       "locked": "Diese Stufe ist noch zu. Spiel zuerst die anderen.",
       "offline": "Murmeli macht ein Nickerchen, bis das Internet wieder da ist.",
-      "breakTime": "Zeit für eine kleine Pause? Streck dich mal!"
+      "breakTime": "Zeit für eine kleine Pause? Streck dich mal!",
+      "nextLevel": "Weiter zur nächsten Stufe"
     },
     "badges": {
       "title": "Deine Abzeichen",

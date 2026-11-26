@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { AudioService } from '../../core/audio/audio.service';
 import { SoundEffects } from '../../core/audio/sound-effects';
 import { provideAppTesting } from '../../../testing/app-testing';
-import { run } from '../../../testing/learn-testing';
+import { exercise, run } from '../../../testing/learn-testing';
 import { LearnApi } from '../learn-api.service';
 import type { MapResponse } from '../learn.models';
 import { PlayerStore, nextPlayable } from './player-store';
@@ -117,6 +117,22 @@ describe('PlayerStore', () => {
   });
 
   afterEach(() => vi.useRealTimers());
+
+  it('asks for a reload instead of playing a partial run with unknown exercise types', async () => {
+    const future = { ...exercise('count-objects', 1), type: 'future-type' };
+    api.startLevel.mockResolvedValue(
+      run({ items: [exercise('count-objects', 0), future as never], demo: undefined }),
+    );
+    await store.start('level', 'l1');
+    expect(store.phase()).toBe('error');
+    expect(store.error()).toEqual({ key: 'learn.player.outdated' });
+    expect(store.run()).toBeNull();
+    const reload = vi
+      .spyOn(store as unknown as { reloadApp(): void }, 'reloadApp')
+      .mockImplementation(() => undefined);
+    await store.retry();
+    expect(reload).toHaveBeenCalled();
+  });
 
   it('plays the demo before the first run, step by step', async () => {
     vi.useFakeTimers();

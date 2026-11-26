@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import type { Scene } from '@murmeli/content';
 import { SPEAK_PROVIDER } from '../../../shared/speak/speak-provider';
@@ -27,8 +27,11 @@ interface Word {
                 type="button"
                 class="word word--speak"
                 [attr.data-testid]="'word-' + $index"
+                [attr.data-word]="$index"
+                [attr.tabindex]="$index === activeWord() ? 0 : -1"
                 [attr.aria-label]="'common.readAloud' | transloco: { text: word.spoken }"
-                (click)="say(word.spoken)"
+                (click)="say(word.spoken, $index)"
+                (keydown)="roam($event)"
               >
                 {{ word.text }}
               </button>
@@ -131,8 +134,42 @@ export class SentencePicture extends ExerciseBase<'sentence-picture'> {
     return this.speaker?.canSpeak?.(word) ?? false;
   }
 
-  protected say(word: string): void {
+  /** Spoken words form one tab stop; the arrow keys, Home and End move between them. */
+  protected readonly activeWord = computed(() => {
+    const speakable = this.speakable();
+    const chosen = this.chosenWord();
+    return chosen !== null && speakable.includes(chosen) ? chosen : (speakable[0] ?? -1);
+  });
+  private readonly chosenWord = signal<number | null>(null);
+  private readonly speakable = computed(() =>
+    this.words().flatMap((word, index) => (this.canSpeak(word.spoken) ? [index] : [])),
+  );
+
+  protected say(word: string, index: number): void {
+    this.chosenWord.set(index);
     this.speaker?.speak(word);
+  }
+
+  protected roam(event: KeyboardEvent): void {
+    const speakable = this.speakable();
+    const at = speakable.indexOf(this.activeWord());
+    const next: Record<string, number> = {
+      ArrowRight: at + 1,
+      ArrowDown: at + 1,
+      ArrowLeft: at - 1,
+      ArrowUp: at - 1,
+      Home: 0,
+      End: speakable.length - 1,
+    };
+    const target = next[event.key];
+    if (target === undefined || speakable.length === 0) {
+      return;
+    }
+    event.preventDefault();
+    const index = speakable[Math.max(0, Math.min(speakable.length - 1, target))]!;
+    this.chosenWord.set(index);
+    const sentence = (event.currentTarget as HTMLElement | null)?.parentElement;
+    sentence?.querySelector<HTMLElement>(`[data-word="${index}"]`)?.focus();
   }
 
   private describe(scene: Scene): string {

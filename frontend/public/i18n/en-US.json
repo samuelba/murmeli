@@ -296,12 +296,12 @@
       "solutionLabel": "The right answer is marked.",
       "hintLabel": "Tip",
       "breakContinue": "Keep playing",
-      "breakPause": "Take a break"
+      "breakPause": "Take a break",
+      "outdated": "This level needs a newer version of the app. Tap \"Try again\" to reload it."
     },
     "results": {
       "stars": "{{stars}} of 3 stars",
       "newWorld": "New world: {{title}}",
-      "next": "Next level",
       "again": "Play again",
       "map": "Back to the map"
     },
@@ -341,7 +341,8 @@
         "tick": "Mark {{number}} of {{total}}",
         "marked": "Marked spot",
         "left": "Move the flag left",
-        "right": "Move the flag right"
+        "right": "Move the flag right",
+        "notPlaced": "not placed yet"
       },
       "blank": "Blank",
       "blankFilled": "Blank: {{value}}",
@@ -414,10 +415,13 @@
         "full": "No more lines fit. Tap Again.",
         "showMe": "Show me how",
         "again": "Again",
-        "done": "Done"
+        "done": "Done",
+        "onLine": "on the line",
+        "offLine": "off the line"
       },
       "listen": {
-        "replay": "Listen again"
+        "replay": "Listen again",
+        "silent": "No sound: look at the picture and build the word."
       },
       "sentence": {
         "scene": "{{subject}} {{relation}} {{object}}",
@@ -469,7 +473,8 @@
       "loading": "One moment, please.",
       "locked": "This level is still closed. Play the others first.",
       "offline": "Murmeli is taking a nap until the internet is back.",
-      "breakTime": "Time for a little break? Have a good stretch!"
+      "breakTime": "Time for a little break? Have a good stretch!",
+      "nextLevel": "On to the next level"
     },
     "badges": {
       "title": "Your badges",

@@ -38,6 +38,9 @@ const MANIFEST = {
       c: { text: 'plus', file: 'de-CH/c.opus', durationMs: null, status: 'ok' },
       evil: { text: 'evil', file: '../../etc/passwd', durationMs: 1, status: 'ok' },
       flagged: { text: 'wrong', file: 'de-CH/f.opus', durationMs: 1, status: 'flagged' },
+      nested: { text: 'deep', file: 'de-CH/x/y.opus', durationMs: 1, status: 'ok' },
+      mp3: { text: 'mp3', file: 'de-CH/z.mp3', durationMs: 1, status: 'ok' },
+      long: { text: 'long', file: 'de-CH/l.ogg', durationMs: 9_000_000, status: 'ok' },
     },
     'en-US': { d: { text: 'Hello', file: 'en-US/d.opus', durationMs: 500, status: 'ok' } },
   },
@@ -55,6 +58,9 @@ describe('audio manifest', () => {
     expect(index.get('de-CH')?.get('plus')?.durationMs).toBeNull();
     expect(index.get('de-CH')?.has('evil')).toBe(false);
     expect(index.get('de-CH')?.has('wrong')).toBe(false);
+    expect(index.get('de-CH')?.has('deep')).toBe(false);
+    expect(index.get('de-CH')?.has('mp3')).toBe(false);
+    expect(index.get('de-CH')?.get('long')?.durationMs).toBe(60_000);
     expect(index.get('en-US')?.size).toBe(1);
   });
 
@@ -241,15 +247,25 @@ describe('AudioService', () => {
     expect(audio.played.at(-1)).toBe('/audio/de-CH/b.opus?v=v1');
   });
 
-  it('unlocks the audio element with a silent clip on the first tap', () => {
+  it('unlocks the audio element with a silent clip on the first tap', async () => {
     const create = vi.fn(() => 'blob:silent');
+    const revoke = vi.fn();
+    const original = Object.getOwnPropertyDescriptor(URL, 'revokeObjectURL');
     Object.defineProperty(URL, 'createObjectURL', { configurable: true, value: create });
+    Object.defineProperty(URL, 'revokeObjectURL', { configurable: true, value: revoke });
     document.dispatchEvent(new Event('pointerdown'));
     document.dispatchEvent(new Event('pointerdown'));
     service.unlock();
     expect(create).toHaveBeenCalledTimes(1);
     expect(audio.played).toEqual(['blob:silent']);
+    await flushMicrotasks();
+    await flushMicrotasks();
+    expect(revoke).toHaveBeenCalledWith('blob:silent');
     Reflect.deleteProperty(URL, 'createObjectURL');
+    Reflect.deleteProperty(URL, 'revokeObjectURL');
+    if (original) {
+      Object.defineProperty(URL, 'revokeObjectURL', original);
+    }
   });
 
   it('narrates only when the kid setting reads aloud', async () => {

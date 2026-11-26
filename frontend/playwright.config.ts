@@ -4,7 +4,7 @@ const port = Number(process.env['E2E_PORT'] ?? 4300);
 const baseURL = process.env['E2E_BASE_URL'] ?? `http://localhost:${port}`;
 const isCI = !!process.env['CI'];
 const distPort = Number(process.env['E2E_DIST_PORT'] ?? 4301);
-const distURL = `http://localhost:${distPort}`;
+const distURL = `http://127.0.0.1:${distPort}`;
 
 export default defineConfig({
   // @murmeli/content is a symlinked ESM package: load it as is, never transpile it.

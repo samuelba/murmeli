@@ -184,12 +184,10 @@ export function wrongAnswer(item: Item): AnyAnswer {
   };
   if ('strokes' in answer) {
     return {
-      strokes: [
-        [
-          [10, 10],
-          [90, 90],
-        ],
-      ],
+      strokes: answer.strokes.map((_, i) => [
+        [10, 10 + i * 8],
+        [90, 90 - i * 8],
+      ]),
     };
   }
   if ('coins' in answer) {

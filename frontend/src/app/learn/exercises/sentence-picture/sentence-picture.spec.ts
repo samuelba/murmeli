@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { byTestId, provideAppTesting } from '../../../../testing/app-testing';
-import { fakeSpeaker, renderExercise } from '../../../../testing/exercise-testing';
+import { fakeSpeaker, keydown, renderExercise } from '../../../../testing/exercise-testing';
 import { PAYLOADS } from '../../../../testing/learn-testing';
 import { SPEAK_PROVIDER } from '../../../shared/speak/speak-provider';
 import { SentencePicture } from './sentence-picture';
@@ -16,7 +16,7 @@ describe('SentencePicture', () => {
   });
 
   it('shows the sentence word by word; words with a clip can be heard', async () => {
-    const { element, click } = await renderExercise(SentencePicture, {
+    const { element, click, fixture } = await renderExercise(SentencePicture, {
       payload: PAYLOADS['sentence-picture'],
     });
     const words = [...byTestId(element, 'sentence').querySelectorAll('.word')];
@@ -30,9 +30,20 @@ describe('SentencePicture', () => {
     ]);
     expect(element.querySelectorAll('button.word').length).toBe(2);
     expect(byTestId(element, 'word-5').getAttribute('aria-label')).toContain('Bett');
+    expect(byTestId(element, 'word-1').getAttribute('tabindex')).toBe('0');
+    expect(byTestId(element, 'word-5').getAttribute('tabindex')).toBe('-1');
     await click('word-1');
     await click('word-5');
     expect(speaker.spoken).toEqual(['Maus', 'Bett']);
+    expect(byTestId(element, 'word-5').getAttribute('tabindex')).toBe('0');
+    keydown(byTestId(element, 'word-5'), 'ArrowLeft');
+    await fixture.whenStable();
+    expect(document.activeElement).toBe(byTestId(element, 'word-1'));
+    expect(byTestId(element, 'word-1').getAttribute('tabindex')).toBe('0');
+    keydown(byTestId(element, 'word-1'), 'End');
+    keydown(byTestId(element, 'word-1'), 'x');
+    await fixture.whenStable();
+    expect(byTestId(element, 'word-5').getAttribute('tabindex')).toBe('0');
   });
 
   it('draws the scenes, names them and answers on tap', async () => {

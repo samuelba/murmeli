@@ -9,7 +9,10 @@ export type ClipIndex = ReadonlyMap<string, ReadonlyMap<string, Clip>>;
 
 export const EMPTY_INDEX: ClipIndex = new Map();
 
-const SAFE_FILE = /^[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_-]+)*\.(?:opus|ogg|mp3|m4a|wav)$/;
+/** `<locale>/<name>.opus|ogg`, the only clips nginx serves. */
+const SAFE_FILE = /^[a-z]{2}-[A-Z]{2}\/[A-Za-z0-9_-]+\.(?:opus|ogg)$/;
+/** No narration clip is longer; a bigger value would only delay the stall fallback. */
+export const MAX_CLIP_MS = 60_000;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -37,7 +40,8 @@ function clipOf(entry: unknown): [string, Clip] | null {
     normalizeText(entry['text']),
     {
       file: entry['file'],
-      durationMs: typeof duration === 'number' && duration > 0 ? duration : null,
+      durationMs:
+        typeof duration === 'number' && duration > 0 ? Math.min(duration, MAX_CLIP_MS) : null,
     },
   ];
 }

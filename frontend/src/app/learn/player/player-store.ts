@@ -1,4 +1,4 @@
-import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
+import { DOCUMENT, DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
 import { AudioService } from '../../core/audio/audio.service';
 import { SoundEffects } from '../../core/audio/sound-effects';
 import { AuthService } from '../../core/auth/auth.service';
@@ -103,6 +103,7 @@ export class PlayerStore {
   private readonly badges = inject(KidBadges);
   private readonly breakTimer = inject(BreakTimer);
   private readonly activeKid = inject(AuthService).activeKid;
+  private readonly document = inject(DOCUMENT);
 
   private demoGeneration = 0;
   private runGeneration = 0;
@@ -169,7 +170,11 @@ export class PlayerStore {
       if (generation !== this.runGeneration) {
         return;
       }
-      const run = { ...started, items: started.items.filter((item) => isExerciseType(item.type)) };
+      if (!started.items.every((item) => isExerciseType(item.type))) {
+        this.outdated();
+        return;
+      }
+      const run = started;
       this.run.set(run);
       this.outcomes.set(run.items.map(() => null));
       this.prefetchAudio(run);
@@ -308,6 +313,21 @@ export class PlayerStore {
     if (item) {
       this.audio.speak(item.prompt.speak);
     }
+  }
+
+  /** The server sent an exercise type this app can't show yet: a reload brings the new app. */
+  private outdated(): void {
+    this.audio.stop();
+    this.error.set({ key: 'learn.player.outdated' });
+    this.retryAction = () => {
+      this.reloadApp();
+      return Promise.resolve();
+    };
+    this.phase.set('error');
+  }
+
+  private reloadApp(): void {
+    this.document.defaultView?.location.reload();
   }
 
   private reset(): void {

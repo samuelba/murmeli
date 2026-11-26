@@ -41,16 +41,6 @@
         "maxAge": "30d",
         "timeout": "4s"
       }
-    },
-    {
-      "name": "audio-clips",
-      "urls": ["/audio/**"],
-      "cacheQueryOptions": { "ignoreSearch": false },
-      "cacheConfig": {
-        "strategy": "performance",
-        "maxSize": 400,
-        "maxAge": "90d"
-      }
     }
   ]
 }

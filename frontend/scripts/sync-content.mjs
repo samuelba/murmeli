@@ -49,18 +49,16 @@ async function syncAudio() {
         continue;
       }
       await mkdir(join(staging, locale), { recursive: true });
-      for (const name of await readdir(join(source, locale))) {
-        if (AUDIO_FILE.test(name)) {
-          await copyFile(join(source, locale, name), join(staging, locale, name));
+      for (const entry of await readdir(join(source, locale), { withFileTypes: true })) {
+        if (entry.isFile() && AUDIO_FILE.test(entry.name)) {
+          await copyFile(join(source, locale, entry.name), join(staging, locale, entry.name));
           count += 1;
         }
       }
     }
     // The manifest goes last, so a staging folder with a manifest is always complete.
     await copyFile(join(source, 'manifest.json'), join(staging, 'manifest.json'));
-    if (existsSync(target)) {
-      await rename(target, previous);
-    }
+    await moveAside(target, previous);
     await rename(staging, target);
   } catch (error) {
     await rm(staging, { recursive: true, force: true });
@@ -75,6 +73,8 @@ async function syncAudio() {
 
 const PICTURE_FILE = /\.svg$|^LICENSE$|^NOTICE\.md$/;
 const PICTURE_DIR = /^[a-z0-9-]+$/;
+/** Marks entries that are not regular files (folders, symlinks): never copied, always stale. */
+const NOT_A_FILE = ' (not a file)';
 
 /** Picture files as paths relative to the folder, including one level of subfolders (money/). */
 async function listPictures(root) {
@@ -87,10 +87,10 @@ async function listPictures(root) {
       files.push(entry.name);
     } else if (entry.isDirectory() && PICTURE_DIR.test(entry.name)) {
       for (const inner of await readdir(join(root, entry.name), { withFileTypes: true })) {
-        files.push(inner.isFile() ? `${entry.name}/${inner.name}` : `${entry.name}/${inner.name}/`);
+        files.push(`${entry.name}/${inner.name}${inner.isFile() ? '' : NOT_A_FILE}`);
       }
     } else {
-      files.push(entry.isDirectory() ? `${entry.name}/` : entry.name);
+      files.push(`${entry.name}${entry.isFile() ? '' : NOT_A_FILE}`);
     }
   }
   return files.sort();
@@ -98,7 +98,7 @@ async function listPictures(root) {
 
 async function pictureFiles() {
   return (await listPictures(join(content, 'pictures'))).filter(
-    (name) => !name.endsWith('/') && PICTURE_FILE.test(name.split('/').at(-1)),
+    (name) => !name.endsWith(NOT_A_FILE) && PICTURE_FILE.test(name.split('/').at(-1)),
   );
 }
 
@@ -160,14 +160,63 @@ async function check(files) {
   console.log(`Content copies are in sync (${files.length} picture files).`);
 }
 
-async function sync(files) {
-  const target = join(frontend, PICTURES_TARGET);
-  await rm(target, { recursive: true, force: true });
-  await mkdir(target, { recursive: true });
-  for (const name of files) {
-    await mkdir(dirname(join(target, name)), { recursive: true });
-    await copyFile(join(content, 'pictures', name), join(target, name));
+/** Leftovers of an interrupted run (staging or previous copies of public/audio and pictures). */
+async function removeLeftovers() {
+  const parent = join(frontend, 'public');
+  if (!existsSync(parent)) {
+    return;
   }
+  for (const entry of await readdir(parent, { withFileTypes: true })) {
+    if (entry.isDirectory() && /^(?:audio|pictures)\.(?:tmp|old)-\d+$/.test(entry.name)) {
+      await rm(join(parent, entry.name), { recursive: true, force: true });
+    }
+  }
+}
+
+/** Copies the pictures into a staging folder and swaps it in, so the copy is never half done. */
+async function syncPictures(files) {
+  const target = join(frontend, PICTURES_TARGET);
+  const staging = `${target}.tmp-${process.pid}`;
+  const previous = `${target}.old-${process.pid}`;
+  await mkdir(staging, { recursive: true });
+  try {
+    for (const name of files) {
+      await mkdir(dirname(join(staging, name)), { recursive: true });
+      await copyFile(join(content, 'pictures', name), join(staging, name));
+    }
+    await moveAside(target, previous);
+    await rename(staging, target);
+  } catch (error) {
+    await rm(staging, { recursive: true, force: true });
+    if (existsSync(previous) && !existsSync(target)) {
+      await rename(previous, target);
+    }
+    throw error;
+  }
+  await rm(previous, { recursive: true, force: true });
+}
+
+/**
+ * Renames the old copy out of the way. A folder from a lower Docker image layer cannot be
+ * renamed (EXDEV); there the old copy is removed instead (nothing serves it during a build).
+ */
+async function moveAside(target, previous) {
+  if (!existsSync(target)) {
+    return;
+  }
+  try {
+    await rename(target, previous);
+  } catch (error) {
+    if (error?.code !== 'EXDEV') {
+      throw error;
+    }
+    await rm(target, { recursive: true, force: true });
+  }
+}
+
+async function sync(files) {
+  await removeLeftovers();
+  await syncPictures(files);
   await mkdir(dirname(join(frontend, DATA_TARGET)), { recursive: true });
   await writeFile(join(frontend, DATA_TARGET), await learnContent());
   await syncAudio();

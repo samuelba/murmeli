@@ -69,6 +69,7 @@
       <p>{{ 'learn.map.error' | transloco }}</p>
       <mu-form-error [error]="loadError()" />
       <button type="button" class="mu-button mu-button--sun" (click)="load()">
+        <mu-icon name="refresh" />
         {{ 'learn.map.retry' | transloco }}
       </button>
     </div>
@@ -123,6 +124,7 @@
                 }
                 {{ entry.world.title }}
               </h2>
+              <mu-speak class="world__speak" [text]="entry.world.title" />
               @if (entry.world.state === 'locked') {
                 <p class="world__meta">{{ 'learn.map.worldLocked' | transloco }}</p>
               } @else {

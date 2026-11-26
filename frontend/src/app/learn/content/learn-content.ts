@@ -41,6 +41,12 @@ export function pictureWord(id: string, language: Language): string {
   return words?.[language] ?? words?.['en-US'] ?? words?.['de-CH'] ?? id;
 }
 
+/** The picture a word names in a language (the reverse of `pictureWord`), if any. */
+export function pictureIdForWord(word: string, language: Language): string | null {
+  const entry = Object.entries(PICTURES).find(([, words]) => words[language] === word);
+  return entry?.[0] ?? null;
+}
+
 export function hintText(key: HintKey | string, language: Language): string | null {
   return HINT_TEXTS[key]?.[language] ?? null;
 }
@@ -59,6 +65,10 @@ export class LearnContent {
 
   word(pictureId: string): string {
     return pictureWord(pictureId, this.language());
+  }
+
+  pictureFor(word: string): string | null {
+    return pictureIdForWord(word, this.language());
   }
 
   hint(key: HintKey | string | null | undefined): string | null {
