@@ -1,0 +1,6 @@
+# Human recordings take precedence over TTS clips.
+# locale -> { exact text: file in human/<locale>/ }, e.g.
+#   de-CH:
+#     "M wie Maus": m-wie-maus.wav
+de-CH: {}
+en-US: {}

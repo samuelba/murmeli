@@ -1,0 +1,23 @@
+# Sample content for the smoke run. The real schema lives in content/schema.
+world:
+  id: zahlenwiese
+  title:
+    de-CH: Zahlenwiese
+    en-US: Number Meadow
+  levels:
+    - id: count-to-10
+      prompt:
+        de-CH: Zähle die Blumen.
+        en-US: Count the flowers.
+      hint:
+        speak:
+          de-CH: Zeige mit dem Finger auf jede Blume.
+          en-US: Point at each flower with your finger.
+    - id: compare
+      prompt:
+        de-CH: Welche Zahl ist grösser?
+        en-US: Which number is bigger?
+      notes:
+        speak: false
+        de-CH: Nur für Lehrpersonen.
+        en-US: For teachers only.

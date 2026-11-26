@@ -1,0 +1,2 @@
+[console_scripts]
+murmeli-audio = murmeli_audio.cli:main

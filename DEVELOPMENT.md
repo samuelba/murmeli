@@ -46,3 +46,14 @@ npm start               # http://localhost:4200, proxies /api to localhost:3000
 
 ## Review process
 Every feature goes through tests, then `/verify`, then an independent review by subagents (code, TypeScript, security, database and accessibility, depending on what changed), then fixes, then a commit. The details are in [docs/internal/plan.md](docs/internal/plan.md), §9a.
+
+## Audio (offline TTS)
+The read-aloud audio is generated once, offline, on a machine with an NVIDIA GPU (about 12 GB of models and around 25 minutes for the full set). The details are in [tools/audio/README.md](tools/audio/README.md).
+```bash
+cd tools/audio
+./run.sh build        # build the GPU image (Qwen3-TTS, faster-whisper, ffmpeg)
+./run.sh all          # extract → render → ASR verify → loudness/Opus → manifest → review.html
+```
+1. Listen to the flagged clips in `tools/audio/out/review.html`, then `approve` or `reroll` them.
+2. Human recordings in `tools/audio/human/` always take precedence over generated clips.
+3. Edit lexicon words in `content/lexicon/`. `tools/audio/lexicon` is only a fallback copy.

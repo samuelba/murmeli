@@ -1,0 +1,16 @@
+{
+  "kid": {
+    "instructions": {
+      "tapNumber": "Tippe auf die richtige Zahl.",
+      "listen": "Hör gut zu.",
+      "dragItems": "Ziehe die Äpfel in den Korb."
+    },
+    "feedback": {
+      "great": "Super gemacht!",
+      "tryAgain": "Versuche es noch einmal.",
+      "almost": "Fast! Schau noch einmal genau hin.",
+      "greeting": "Hallo {{ name }}!"
+    }
+  },
+  "parent": { "title": "Elternbereich" }
+}

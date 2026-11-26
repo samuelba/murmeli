@@ -1,0 +1,181 @@
+# en-US lexicon: American English.
+
+# Numbers 0-100: `text` is the digit label, `speak` is what the TTS reads.
+numbers:
+  0: {text: "0", speak: "zero"}
+  1: {text: "1", speak: "one"}
+  2: {text: "2", speak: "two"}
+  3: {text: "3", speak: "three"}
+  4: {text: "4", speak: "four"}
+  5: {text: "5", speak: "five"}
+  6: {text: "6", speak: "six"}
+  7: {text: "7", speak: "seven"}
+  8: {text: "8", speak: "eight"}
+  9: {text: "9", speak: "nine"}
+  10: {text: "10", speak: "ten"}
+  11: {text: "11", speak: "eleven"}
+  12: {text: "12", speak: "twelve"}
+  13: {text: "13", speak: "thirteen"}
+  14: {text: "14", speak: "fourteen"}
+  15: {text: "15", speak: "fifteen"}
+  16: {text: "16", speak: "sixteen"}
+  17: {text: "17", speak: "seventeen"}
+  18: {text: "18", speak: "eighteen"}
+  19: {text: "19", speak: "nineteen"}
+  20: {text: "20", speak: "twenty"}
+  21: {text: "21", speak: "twenty-one"}
+  22: {text: "22", speak: "twenty-two"}
+  23: {text: "23", speak: "twenty-three"}
+  24: {text: "24", speak: "twenty-four"}
+  25: {text: "25", speak: "twenty-five"}
+  26: {text: "26", speak: "twenty-six"}
+  27: {text: "27", speak: "twenty-seven"}
+  28: {text: "28", speak: "twenty-eight"}
+  29: {text: "29", speak: "twenty-nine"}
+  30: {text: "30", speak: "thirty"}
+  31: {text: "31", speak: "thirty-one"}
+  32: {text: "32", speak: "thirty-two"}
+  33: {text: "33", speak: "thirty-three"}
+  34: {text: "34", speak: "thirty-four"}
+  35: {text: "35", speak: "thirty-five"}
+  36: {text: "36", speak: "thirty-six"}
+  37: {text: "37", speak: "thirty-seven"}
+  38: {text: "38", speak: "thirty-eight"}
+  39: {text: "39", speak: "thirty-nine"}
+  40: {text: "40", speak: "forty"}
+  41: {text: "41", speak: "forty-one"}
+  42: {text: "42", speak: "forty-two"}
+  43: {text: "43", speak: "forty-three"}
+  44: {text: "44", speak: "forty-four"}
+  45: {text: "45", speak: "forty-five"}
+  46: {text: "46", speak: "forty-six"}
+  47: {text: "47", speak: "forty-seven"}
+  48: {text: "48", speak: "forty-eight"}
+  49: {text: "49", speak: "forty-nine"}
+  50: {text: "50", speak: "fifty"}
+  51: {text: "51", speak: "fifty-one"}
+  52: {text: "52", speak: "fifty-two"}
+  53: {text: "53", speak: "fifty-three"}
+  54: {text: "54", speak: "fifty-four"}
+  55: {text: "55", speak: "fifty-five"}
+  56: {text: "56", speak: "fifty-six"}
+  57: {text: "57", speak: "fifty-seven"}
+  58: {text: "58", speak: "fifty-eight"}
+  59: {text: "59", speak: "fifty-nine"}
+  60: {text: "60", speak: "sixty"}
+  61: {text: "61", speak: "sixty-one"}
+  62: {text: "62", speak: "sixty-two"}
+  63: {text: "63", speak: "sixty-three"}
+  64: {text: "64", speak: "sixty-four"}
+  65: {text: "65", speak: "sixty-five"}
+  66: {text: "66", speak: "sixty-six"}
+  67: {text: "67", speak: "sixty-seven"}
+  68: {text: "68", speak: "sixty-eight"}
+  69: {text: "69", speak: "sixty-nine"}
+  70: {text: "70", speak: "seventy"}
+  71: {text: "71", speak: "seventy-one"}
+  72: {text: "72", speak: "seventy-two"}
+  73: {text: "73", speak: "seventy-three"}
+  74: {text: "74", speak: "seventy-four"}
+  75: {text: "75", speak: "seventy-five"}
+  76: {text: "76", speak: "seventy-six"}
+  77: {text: "77", speak: "seventy-seven"}
+  78: {text: "78", speak: "seventy-eight"}
+  79: {text: "79", speak: "seventy-nine"}
+  80: {text: "80", speak: "eighty"}
+  81: {text: "81", speak: "eighty-one"}
+  82: {text: "82", speak: "eighty-two"}
+  83: {text: "83", speak: "eighty-three"}
+  84: {text: "84", speak: "eighty-four"}
+  85: {text: "85", speak: "eighty-five"}
+  86: {text: "86", speak: "eighty-six"}
+  87: {text: "87", speak: "eighty-seven"}
+  88: {text: "88", speak: "eighty-eight"}
+  89: {text: "89", speak: "eighty-nine"}
+  90: {text: "90", speak: "ninety"}
+  91: {text: "91", speak: "ninety-one"}
+  92: {text: "92", speak: "ninety-two"}
+  93: {text: "93", speak: "ninety-three"}
+  94: {text: "94", speak: "ninety-four"}
+  95: {text: "95", speak: "ninety-five"}
+  96: {text: "96", speak: "ninety-six"}
+  97: {text: "97", speak: "ninety-seven"}
+  98: {text: "98", speak: "ninety-eight"}
+  99: {text: "99", speak: "ninety-nine"}
+  100: {text: "100", speak: "one hundred"}
+
+operators:
+  plus: "plus"
+  minus: "minus"
+  times: "times"
+  divided_by: "divided by"
+  equals: "equals"
+
+# Sentence frames for assembled math prompts.
+frames:
+  how_much_is: "What is"
+  count_the: "Count the"
+  which_is_bigger: "Which number is bigger?"
+  which_is_smaller: "Which number is smaller?"
+  which_is_missing: "Which number is missing?"
+  how_many: "How many do you see?"
+  what_comes_next: "What comes next?"
+  what_comes_before: "What comes before?"
+
+# Letter names. `text` is the label, `speak` is what the TTS reads.
+letters:
+  "A": {text: "A", speak: "ay"}
+  "B": {text: "B", speak: "bee"}
+  "C": {text: "C", speak: "see"}
+  "D": {text: "D", speak: "dee"}
+  "E": {text: "E", speak: "ee"}
+  "F": {text: "F", speak: "ef"}
+  "G": {text: "G", speak: "gee"}
+  "H": {text: "H", speak: "aitch"}
+  "I": {text: "I", speak: "eye"}
+  "J": {text: "J", speak: "jay"}
+  "K": {text: "K", speak: "kay"}
+  "L": {text: "L", speak: "el"}
+  "M": {text: "M", speak: "em"}
+  "N": {text: "N", speak: "en"}
+  "O": {text: "O", speak: "oh"}
+  "P": {text: "P", speak: "pee"}
+  "Q": {text: "Q", speak: "cue"}
+  "R": {text: "R", speak: "ar"}
+  "S": {text: "S", speak: "ess"}
+  "T": {text: "T", speak: "tee"}
+  "U": {text: "U", speak: "you"}
+  "V": {text: "V", speak: "vee"}
+  "W": {text: "W", speak: "double-u"}
+  "X": {text: "X", speak: "ex"}
+  "Y": {text: "Y", speak: "why"}
+  "Z": {text: "Z", speak: "zee"}
+
+# Carrier phrases: sounds are rendered inside a word, never in isolation.
+carriers:
+  "A": "A as in apple"
+  "B": "B as in ball"
+  "C": "C as in cat"
+  "D": "D as in dog"
+  "E": "E as in egg"
+  "F": "F as in fish"
+  "G": "G as in goat"
+  "H": "H as in hat"
+  "I": "I as in insect"
+  "J": "J as in jam"
+  "K": "K as in kite"
+  "L": "L as in lion"
+  "M": "M as in moon"
+  "N": "N as in nest"
+  "O": "O as in octopus"
+  "P": "P as in pig"
+  "Q": "Q as in queen"
+  "R": "R as in rabbit"
+  "S": "S as in sun"
+  "T": "T as in turtle"
+  "U": "U as in umbrella"
+  "V": "V as in van"
+  "W": "W as in web"
+  "X": "X as in box"
+  "Y": "Y as in yellow"
+  "Z": "Z as in zebra"

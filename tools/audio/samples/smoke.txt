@@ -1,0 +1,16 @@
+# --only globs for the smoke run (about 30 clips per locale).
+lexicon:numbers.[0-9]
+lexicon:numbers.1[0-5]
+lexicon:numbers.21
+lexicon:numbers.37
+lexicon:numbers.100
+lexicon:operators.*
+lexicon:frames.how_much_is
+lexicon:frames.which_is_bigger
+lexicon:letters.M
+lexicon:carriers.M
+lexicon:carriers.S
+lexicon:carriers.Ä
+lexicon:digraphs.Sch
+i18n:*
+content:*

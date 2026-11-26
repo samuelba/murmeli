@@ -1,0 +1,16 @@
+{
+  "kid": {
+    "instructions": {
+      "tapNumber": "Tap the correct number.",
+      "listen": "Listen carefully.",
+      "dragItems": "Drag the apples into the basket."
+    },
+    "feedback": {
+      "great": "Great job!",
+      "tryAgain": "Try again.",
+      "almost": "Almost! Take another close look.",
+      "greeting": "Hello {{ name }}!"
+    }
+  },
+  "parent": { "title": "Parent area" }
+}

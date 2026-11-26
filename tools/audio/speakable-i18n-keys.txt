@@ -1,0 +1,6 @@
+# i18n keys (frontend/public/i18n/<locale>.json) that get narrator audio.
+# One glob per line (fnmatch: *, ?, [abc]); nested keys are joined with dots.
+# Strings with {{ placeholders }} are skipped: they cannot be pre-rendered.
+kid.instructions.*
+kid.feedback.*
+kid.navigation.*

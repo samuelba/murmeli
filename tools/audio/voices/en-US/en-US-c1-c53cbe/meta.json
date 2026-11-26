@@ -1,0 +1,13 @@
+{
+  "voice_id": "en-US-c1-c53cbe",
+  "locale": "en-US",
+  "description": "Warm, friendly and very clear female narrator in her thirties, like a kind kindergarten teacher. Speaks General American English with precise pronunciation, slightly slow pace, calm and encouraging, smiling tone, for children aged 5 to 8.",
+  "ref_text": "Hello! I am so glad you are here. Today we will count together: one, two, three. Can you hear the sound? M as in moon. You did a really great job!",
+  "seed": 1234,
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "model_revision": "5ecdb67327fd37bb2e042aab12ff7391903235d3",
+  "package": "qwen-tts==0.1.1",
+  "sample_rate": 24000,
+  "duration_s": 14.56,
+  "created_at": "2026-11-26T16:31:22+00:00"
+}

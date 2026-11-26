@@ -1,0 +1,21 @@
+# Narrator briefs for `design-voice` (Qwen3-TTS VoiceDesign).
+# `description` is the voice instruction, `ref_text` is spoken in every candidate's
+# reference clip and later used as the transcript for voice cloning. Keep it ~10 s.
+de-CH:
+  description: >-
+    Warm, friendly and very clear female narrator in her thirties, like a kind
+    kindergarten teacher. Speaks Standard German (Hochdeutsch) with neutral,
+    precise pronunciation, slightly slow pace, calm and encouraging, smiling tone,
+    for children aged 5 to 8.
+  ref_text: >-
+    Hallo! Schön, dass du da bist. Heute zählen wir zusammen: eins, zwei, drei.
+    Hörst du den Laut? M wie Maus. Das hast du wirklich super gemacht!
+en-US:
+  description: >-
+    Warm, friendly and very clear female narrator in her thirties, like a kind
+    kindergarten teacher. Speaks General American English with precise
+    pronunciation, slightly slow pace, calm and encouraging, smiling tone,
+    for children aged 5 to 8.
+  ref_text: >-
+    Hello! I am so glad you are here. Today we will count together: one, two,
+    three. Can you hear the sound? M as in moon. You did a really great job!

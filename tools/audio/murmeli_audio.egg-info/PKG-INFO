@@ -1,0 +1,20 @@
+Metadata-Version: 2.4
+Name: murmeli-audio
+Version: 0.1.0
+Summary: Offline TTS pipeline that renders the narrator clips for the learning app
+License-Expression: Apache-2.0
+Requires-Python: <3.13,>=3.12
+Requires-Dist: pyyaml==6.0.3
+Provides-Extra: qwen
+Requires-Dist: qwen-tts==0.1.1; extra == "qwen"
+Requires-Dist: torch==2.9.1; extra == "qwen"
+Requires-Dist: torchaudio==2.9.1; extra == "qwen"
+Requires-Dist: soundfile==0.13.1; extra == "qwen"
+Requires-Dist: huggingface-hub==0.36.0; extra == "qwen"
+Provides-Extra: asr
+Requires-Dist: faster-whisper==1.2.1; extra == "asr"
+Provides-Extra: piper
+Requires-Dist: piper-tts==1.8.0; extra == "piper"
+Provides-Extra: dev
+Requires-Dist: pytest==8.4.2; extra == "dev"
+Requires-Dist: pytest-cov==7.0.0; extra == "dev"
