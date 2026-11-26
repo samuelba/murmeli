@@ -27,6 +27,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - name: Test repo scripts
         run: npm run scripts:test
+      - name: Inline Postgres init script matches backend copy
+        run: npm run check:compose-init
       - name: No ß in Swiss German
         run: npm run check:eszett
       - name: Environment variables are documented
@@ -34,6 +36,7 @@ jobs:
       - name: Validate compose files
         env:
           POSTGRES_PASSWORD: ci-placeholder
+          POSTGRES_APP_PASSWORD: ci-placeholder
           REDIS_PASSWORD: ci-placeholder
           JWT_SECRET: ci-placeholder
           ENCRYPTION_KEY: ci-placeholder

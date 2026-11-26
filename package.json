@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "check:eszett": "node scripts/check-no-eszett.mjs",
+    "check:compose-init": "node scripts/check-compose-init.mjs",
     "docs:check": "node scripts/check-env-docs.mjs",
     "scripts:test": "node --test scripts/*.test.mjs"
   }

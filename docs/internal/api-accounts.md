@@ -3,7 +3,12 @@
 The backend and the frontend both implement against this document, and a change to it must be made on both sides in the same change. All paths are under `/api`. Bodies are JSON.
 
 ## Conventions
-- **Errors:** `{ "statusCode": 400, "errorCode": "VALIDATION_FAILED", "message": "…", "details"?: [...] }`. `errorCode` is a stable machine code that the frontend translates. `message` is English text for logs only.
+- **Errors:** `{ "statusCode": 400, "errorCode": "VALIDATION_FAILED", "message": "…", "details"?: [...], "requestId": "…" }`. `errorCode` is a stable machine code that the frontend translates. `message` is English text for logs only.
+  - **`VALIDATION_FAILED`:** `details` is `[{ field, constraints: string[], messages: string[] }]`.
+  - **Request body errors:** malformed JSON returns `400 INVALID_JSON`. A body over 100kb returns `413 PAYLOAD_TOO_LARGE`.
+  - **Default codes:** without a specific code, the status maps to a default such as `NOT_FOUND`, `FORBIDDEN`, `RATE_LIMITED` or `INTERNAL_ERROR`.
+  - **Production:** 5xx bodies carry only the status, `errorCode` and a generic message.
+  - **Redis down:** auth-throttled routes return `503 RATE_LIMIT_UNAVAILABLE`. The general rate limit fails open instead.
 - **Pagination:** `?page=1&pageSize=20` (`pageSize` is at most 100). Responses look like `{ "items": [...], "total": 0, "page": 1, "pageSize": 20 }`.
 - **Timestamps:** ISO 8601 UTC strings. **IDs:** UUID v7.
 - **No account enumeration:** register, resend-verification and forgot-password always return `202 { "ok": true }`.

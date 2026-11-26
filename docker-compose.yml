@@ -9,9 +9,15 @@ services:
     image: postgres:18-alpine
     container_name: murmeli-postgres
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-murmeli}
+      POSTGRES_USER: ${POSTGRES_USER:-murmeli_owner}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
       POSTGRES_DB: ${POSTGRES_DB:-murmeli}
+      POSTGRES_APP_USER: ${POSTGRES_APP_USER:-murmeli_app}
+      POSTGRES_APP_PASSWORD: ${POSTGRES_APP_PASSWORD:?set POSTGRES_APP_PASSWORD in .env}
+    configs:
+      - source: postgres_app_role
+        target: /docker-entrypoint-initdb.d/10-app-role.sh
+        mode: 0555
     volumes:
       - murmeli_postgres_data:/var/lib/postgresql
     networks:
@@ -61,9 +67,12 @@ services:
 
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
-      DATABASE_USERNAME: ${POSTGRES_USER:-murmeli}
-      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_USERNAME: ${POSTGRES_APP_USER:-murmeli_app}
+      DATABASE_PASSWORD: ${POSTGRES_APP_PASSWORD}
       DATABASE_NAME: ${POSTGRES_DB:-murmeli}
+      DATABASE_SSL: ${DATABASE_SSL:-false}
+      DB_MIGRATION_USERNAME: ${POSTGRES_USER:-murmeli_owner}
+      DB_MIGRATION_PASSWORD: ${POSTGRES_PASSWORD}
       DB_MIGRATIONS_RUN: ${DB_MIGRATIONS_RUN:-true}
 
       REDIS_HOST: redis
@@ -94,6 +103,7 @@ services:
       BACKUP_DIR: /app/backups
       BACKUP_MANDATORY: ${BACKUP_MANDATORY:-true}
       BACKUP_KEEP_COUNT: ${BACKUP_KEEP_COUNT:-10}
+      BACKUP_MAX_AGE_DAYS: ${BACKUP_MAX_AGE_DAYS:-30}
     volumes:
       - murmeli_backups:/app/backups
     depends_on:
@@ -130,6 +140,42 @@ services:
         condition: service_healthy
     networks:
       - murmeli
+
+configs:
+  # Same as backend/docker/postgres-init/10-app-role.sh (kept in sync by scripts/check-compose-init.mjs).
+  # Runs once, on an empty data volume.
+  postgres_app_role:
+    content: |
+      #!/bin/sh
+      # Creates the least-privileged runtime role for the backend. Runs once from
+      # /docker-entrypoint-initdb.d of the official postgres image, as POSTGRES_USER,
+      # which owns the schema and runs the migrations.
+      set -eu
+
+      : "$${POSTGRES_APP_USER:?POSTGRES_APP_USER must be set}"
+      : "$${POSTGRES_APP_PASSWORD:?POSTGRES_APP_PASSWORD must be set}"
+
+      psql -v ON_ERROR_STOP=1 \
+        --username "$$POSTGRES_USER" \
+        --dbname "$$POSTGRES_DB" \
+        --set app_user="$$POSTGRES_APP_USER" \
+        --set app_password="$$POSTGRES_APP_PASSWORD" \
+        --set owner="$$POSTGRES_USER" \
+        --set db="$$POSTGRES_DB" <<'SQL'
+      CREATE ROLE :"app_user" LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION
+        PASSWORD :'app_password';
+
+      REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+      GRANT CONNECT ON DATABASE :"db" TO :"app_user";
+      GRANT USAGE ON SCHEMA public TO :"app_user";
+
+      ALTER DEFAULT PRIVILEGES FOR ROLE :"owner" IN SCHEMA public
+        GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO :"app_user";
+      ALTER DEFAULT PRIVILEGES FOR ROLE :"owner" IN SCHEMA public
+        GRANT USAGE, SELECT ON SEQUENCES TO :"app_user";
+      ALTER DEFAULT PRIVILEGES FOR ROLE :"owner" IN SCHEMA public
+        GRANT EXECUTE ON FUNCTIONS TO :"app_user";
+      SQL
 
 networks:
   murmeli:
