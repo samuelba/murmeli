@@ -1,0 +1,5 @@
+id: math
+order: 1
+locales: [de-CH, en-US]
+title: { de-CH: Mathematik, en-US: Math }
+icon: math

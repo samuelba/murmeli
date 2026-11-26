@@ -1,0 +1,1410 @@
+# Picture catalog. Each id maps to an SVG in pictures/ plus its words per locale.
+# Noto Emoji pictures (Apache-2.0, see pictures/LICENSE and pictures/NOTICE.md); shape-* are authored for Murmeli.
+# firstSound.regular: false marks an irregular grapheme-sound match or an ambiguous picture name;
+# such pictures are never used as initial-sound targets.
+pictures:
+  apple:
+    file: apple.svg
+    source: { set: noto-emoji, codepoint: "1f34e" }
+    tags: [fruit, food]
+    words: { de-CH: Apfel, en-US: apple }
+    article: der
+    plural: { de-CH: Äpfel, en-US: apples }
+    syllables:
+      de-CH: [Ap, fel]
+      en-US: [ap, ple]
+    firstSound:
+      de-CH: { grapheme: A, phoneme: "a" }
+      en-US: { grapheme: A, phoneme: "æ" }
+  banana:
+    file: banana.svg
+    source: { set: noto-emoji, codepoint: "1f34c" }
+    tags: [fruit, food]
+    words: { de-CH: Banane, en-US: banana }
+    article: die
+    plural: { de-CH: Bananen, en-US: bananas }
+    syllables:
+      de-CH: [Ba, na, ne]
+      en-US: [ba, na, na]
+    firstSound:
+      de-CH: { grapheme: B, phoneme: "b" }
+      en-US: { grapheme: B, phoneme: "b" }
+  strawberry:
+    file: strawberry.svg
+    source: { set: noto-emoji, codepoint: "1f353" }
+    tags: [fruit, food]
+    words: { de-CH: Erdbeere, en-US: strawberry }
+    article: die
+    plural: { de-CH: Erdbeeren, en-US: strawberries }
+    syllables:
+      de-CH: [Erd, bee, re]
+      en-US: [straw, ber, ry]
+    firstSound:
+      de-CH: { grapheme: E, phoneme: "eː" }
+      en-US: { grapheme: S, phoneme: "s" }
+  lemon:
+    file: lemon.svg
+    source: { set: noto-emoji, codepoint: "1f34b" }
+    tags: [fruit, food]
+    words: { de-CH: Zitrone, en-US: lemon }
+    article: die
+    plural: { de-CH: Zitronen, en-US: lemons }
+    syllables:
+      de-CH: [Zi, tro, ne]
+      en-US: [lem, "on"]
+    firstSound:
+      de-CH: { grapheme: Z, phoneme: "ts" }
+      en-US: { grapheme: L, phoneme: "l" }
+  tomato:
+    file: tomato.svg
+    source: { set: noto-emoji, codepoint: "1f345" }
+    tags: [vegetable, food]
+    words: { de-CH: Tomate, en-US: tomato }
+    article: die
+    plural: { de-CH: Tomaten, en-US: tomatoes }
+    syllables:
+      de-CH: [To, ma, te]
+      en-US: [to, ma, to]
+    firstSound:
+      de-CH: { grapheme: T, phoneme: "t" }
+      en-US: { grapheme: T, phoneme: "t" }
+  carrot:
+    file: carrot.svg
+    source: { set: noto-emoji, codepoint: "1f955" }
+    tags: [vegetable, food]
+    words: { de-CH: Karotte, en-US: carrot }
+    article: die
+    plural: { de-CH: Karotten, en-US: carrots }
+    syllables:
+      de-CH: [Ka, rot, te]
+      en-US: [car, rot]
+    firstSound:
+      de-CH: { grapheme: K, phoneme: "k" }
+      en-US: { grapheme: C, phoneme: "k" }
+  watermelon:
+    file: watermelon.svg
+    source: { set: noto-emoji, codepoint: "1f349" }
+    tags: [fruit, food]
+    words: { de-CH: Melone, en-US: watermelon }
+    article: die
+    plural: { de-CH: Melonen, en-US: watermelons }
+    syllables:
+      de-CH: [Me, lo, ne]
+      en-US: [wa, ter, mel, "on"]
+    firstSound:
+      de-CH: { grapheme: M, phoneme: "m" }
+      en-US: { grapheme: W, phoneme: "w" }
+  pineapple:
+    file: pineapple.svg
+    source: { set: noto-emoji, codepoint: "1f34d" }
+    tags: [fruit, food]
+    words: { de-CH: Ananas, en-US: pineapple }
+    article: die
+    plural: { de-CH: Ananas, en-US: pineapples }
+    syllables:
+      de-CH: [A, na, nas]
+      en-US: [pine, ap, ple]
+    firstSound:
+      de-CH: { grapheme: A, phoneme: "a" }
+      en-US: { grapheme: P, phoneme: "p" }
+  mushroom:
+    file: mushroom.svg
+    source: { set: noto-emoji, codepoint: "1f344" }
+    tags: [food, nature]
+    words: { de-CH: Pilz, en-US: mushroom }
+    article: der
+    plural: { de-CH: Pilze, en-US: mushrooms }
+    syllables:
+      de-CH: [Pilz]
+      en-US: [mush, room]
+    firstSound:
+      de-CH: { grapheme: P, phoneme: "p" }
+      en-US: { grapheme: M, phoneme: "m" }
+  cake:
+    file: cake.svg
+    source: { set: noto-emoji, codepoint: "1f382" }
+    tags: [food, party]
+    words: { de-CH: Kuchen, en-US: cake }
+    article: der
+    plural: { de-CH: Kuchen, en-US: cakes }
+    syllables:
+      de-CH: [Ku, chen]
+      en-US: [cake]
+    firstSound:
+      de-CH: { grapheme: K, phoneme: "k" }
+      en-US: { grapheme: C, phoneme: "k" }
+  egg:
+    file: egg.svg
+    source: { set: noto-emoji, codepoint: "1f95a" }
+    tags: [food]
+    words: { de-CH: Ei, en-US: egg }
+    article: das
+    plural: { de-CH: Eier, en-US: eggs }
+    syllables:
+      de-CH: [Ei]
+      en-US: [egg]
+    firstSound:
+      de-CH: { grapheme: Ei, phoneme: "aɪ" }
+      en-US: { grapheme: E, phoneme: "ɛ" }
+  dog:
+    file: dog.svg
+    source: { set: noto-emoji, codepoint: "1f436" }
+    tags: [animal, pet]
+    words: { de-CH: Hund, en-US: dog }
+    article: der
+    plural: { de-CH: Hunde, en-US: dogs }
+    syllables:
+      de-CH: [Hund]
+      en-US: [dog]
+    firstSound:
+      de-CH: { grapheme: H, phoneme: "h" }
+      en-US: { grapheme: D, phoneme: "d" }
+  cat:
+    file: cat.svg
+    source: { set: noto-emoji, codepoint: "1f431" }
+    tags: [animal, pet]
+    words: { de-CH: Katze, en-US: cat }
+    article: die
+    plural: { de-CH: Katzen, en-US: cats }
+    syllables:
+      de-CH: [Kat, ze]
+      en-US: [cat]
+    firstSound:
+      de-CH: { grapheme: K, phoneme: "k" }
+      en-US: { grapheme: C, phoneme: "k" }
+  mouse:
+    file: mouse.svg
+    source: { set: noto-emoji, codepoint: "1f42d" }
+    tags: [animal]
+    words: { de-CH: Maus, en-US: mouse }
+    article: die
+    plural: { de-CH: Mäuse, en-US: mice }
+    syllables:
+      de-CH: [Maus]
+      en-US: [mouse]
+    firstSound:
+      de-CH: { grapheme: M, phoneme: "m" }
+      en-US: { grapheme: M, phoneme: "m" }
+  pig:
+    file: pig.svg
+    source: { set: noto-emoji, codepoint: "1f437" }
+    tags: [animal, farm]
+    words: { de-CH: Schwein, en-US: pig }
+    article: das
+    plural: { de-CH: Schweine, en-US: pigs }
+    syllables:
+      de-CH: [Schwein]
+      en-US: [pig]
+    firstSound:
+      de-CH: { grapheme: Sch, phoneme: "ʃ" }
+      en-US: { grapheme: P, phoneme: "p" }
+  cow:
+    file: cow.svg
+    source: { set: noto-emoji, codepoint: "1f42e" }
+    tags: [animal, farm]
+    words: { de-CH: Kuh, en-US: cow }
+    article: die
+    plural: { de-CH: Kühe, en-US: cows }
+    syllables:
+      de-CH: [Kuh]
+      en-US: [cow]
+    firstSound:
+      de-CH: { grapheme: K, phoneme: "k" }
+      en-US: { grapheme: C, phoneme: "k" }
+  frog:
+    file: frog.svg
+    source: { set: noto-emoji, codepoint: "1f438" }
+    tags: [animal]
+    words: { de-CH: Frosch, en-US: frog }
+    article: der
+    plural: { de-CH: Frösche, en-US: frogs }
+    syllables:
+      de-CH: [Frosch]
+      en-US: [frog]
+    firstSound:
+      de-CH: { grapheme: F, phoneme: "f" }
+      en-US: { grapheme: F, phoneme: "f" }
+  monkey:
+    file: monkey.svg
+    source: { set: noto-emoji, codepoint: "1f435" }
+    tags: [animal]
+    words: { de-CH: Affe, en-US: monkey }
+    article: der
+    plural: { de-CH: Affen, en-US: monkeys }
+    syllables:
+      de-CH: [Af, fe]
+      en-US: [mon, key]
+    firstSound:
+      de-CH: { grapheme: A, phoneme: "a" }
+      en-US: { grapheme: M, phoneme: "m" }
+  lion:
+    file: lion.svg
+    source: { set: noto-emoji, codepoint: "1f981" }
+    tags: [animal]
+    words: { de-CH: Löwe, en-US: lion }
+    article: der
+    plural: { de-CH: Löwen, en-US: lions }
+    syllables:
+      de-CH: [Lö, we]
+      en-US: [li, "on"]
+    firstSound:
+      de-CH: { grapheme: L, phoneme: "l" }
+      en-US: { grapheme: L, phoneme: "l" }
+  tiger:
+    file: tiger.svg
+    source: { set: noto-emoji, codepoint: "1f42f" }
+    tags: [animal]
+    words: { de-CH: Tiger, en-US: tiger }
+    article: der
+    plural: { de-CH: Tiger, en-US: tigers }
+    syllables:
+      de-CH: [Ti, ger]
+      en-US: [ti, ger]
+    firstSound:
+      de-CH: { grapheme: T, phoneme: "t" }
+      en-US: { grapheme: T, phoneme: "t" }
+  bear:
+    file: bear.svg
+    source: { set: noto-emoji, codepoint: "1f43b" }
+    tags: [animal]
+    words: { de-CH: Bär, en-US: bear }
+    article: der
+    plural: { de-CH: Bären, en-US: bears }
+    syllables:
+      de-CH: [Bär]
+      en-US: [bear]
+    firstSound:
+      de-CH: { grapheme: B, phoneme: "b" }
+      en-US: { grapheme: B, phoneme: "b" }
+  rabbit:
+    file: rabbit.svg
+    source: { set: noto-emoji, codepoint: "1f430" }
+    tags: [animal, pet]
+    words: { de-CH: Hase, en-US: rabbit }
+    article: der
+    plural: { de-CH: Hasen, en-US: rabbits }
+    syllables:
+      de-CH: [Ha, se]
+      en-US: [rab, bit]
+    firstSound:
+      de-CH: { grapheme: H, phoneme: "h" }
+      en-US: { grapheme: R, phoneme: "r" }
+  fox:
+    file: fox.svg
+    source: { set: noto-emoji, codepoint: "1f98a" }
+    tags: [animal]
+    words: { de-CH: Fuchs, en-US: fox }
+    article: der
+    plural: { de-CH: Füchse, en-US: foxes }
+    syllables:
+      de-CH: [Fuchs]
+      en-US: [fox]
+    firstSound:
+      de-CH: { grapheme: F, phoneme: "f" }
+      en-US: { grapheme: F, phoneme: "f" }
+  sheep:
+    file: sheep.svg
+    source: { set: noto-emoji, codepoint: "1f411" }
+    tags: [animal, farm]
+    words: { de-CH: Schaf, en-US: sheep }
+    article: das
+    plural: { de-CH: Schafe, en-US: sheep }
+    syllables:
+      de-CH: [Schaf]
+      en-US: [sheep]
+    firstSound:
+      de-CH: { grapheme: Sch, phoneme: "ʃ" }
+      en-US: { grapheme: Sh, phoneme: "ʃ" }
+  goat:
+    file: goat.svg
+    source: { set: noto-emoji, codepoint: "1f410" }
+    tags: [animal, farm]
+    words: { de-CH: Ziege, en-US: goat }
+    article: die
+    plural: { de-CH: Ziegen, en-US: goats }
+    syllables:
+      de-CH: [Zie, ge]
+      en-US: [goat]
+    firstSound:
+      de-CH: { grapheme: Z, phoneme: "ts" }
+      en-US: { grapheme: G, phoneme: "g" }
+  hen:
+    file: hen.svg
+    source: { set: noto-emoji, codepoint: "1f414" }
+    tags: [animal, farm]
+    words: { de-CH: Huhn, en-US: hen }
+    article: das
+    plural: { de-CH: Hühner, en-US: hens }
+    syllables:
+      de-CH: [Huhn]
+      en-US: [hen]
+    firstSound:
+      de-CH: { grapheme: H, phoneme: "h" }
+      en-US: { grapheme: H, phoneme: "h" }
+  chick:
+    file: chick.svg
+    source: { set: noto-emoji, codepoint: "1f424" }
+    tags: [animal, farm]
+    words: { de-CH: Küken, en-US: chick }
+    article: das
+    plural: { de-CH: Küken, en-US: chicks }
+    syllables:
+      de-CH: [Kü, ken]
+      en-US: [chick]
+    firstSound:
+      de-CH: { grapheme: K, phoneme: "k" }
+      en-US: { grapheme: Ch, phoneme: "tʃ" }
+  duck:
+    file: duck.svg
+    source: { set: noto-emoji, codepoint: "1f986" }
+    tags: [animal]
+    words: { de-CH: Ente, en-US: duck }
+    article: die
+    plural: { de-CH: Enten, en-US: ducks }
+    syllables:
+      de-CH: [En, te]
+      en-US: [duck]
+    firstSound:
+      de-CH: { grapheme: E, phoneme: "ɛ" }
+      en-US: { grapheme: D, phoneme: "d" }
+  owl:
+    file: owl.svg
+    source: { set: noto-emoji, codepoint: "1f989" }
+    tags: [animal]
+    words: { de-CH: Eule, en-US: owl }
+    article: die
+    plural: { de-CH: Eulen, en-US: owls }
+    syllables:
+      de-CH: [Eu, le]
+      en-US: [owl]
+    firstSound:
+      de-CH: { grapheme: Eu, phoneme: "ɔʏ" }
+      en-US: { grapheme: O, phoneme: "aʊ", regular: false }
+  penguin:
+    file: penguin.svg
+    source: { set: noto-emoji, codepoint: "1f427" }
+    tags: [animal]
+    words: { de-CH: Pinguin, en-US: penguin }
+    article: der
+    plural: { de-CH: Pinguine, en-US: penguins }
+    syllables:
+      de-CH: [Pin, gu, in]
+      en-US: [pen, guin]
+    firstSound:
+      de-CH: { grapheme: P, phoneme: "p" }
+      en-US: { grapheme: P, phoneme: "p" }
+  fish:
+    file: fish.svg
+    source: { set: noto-emoji, codepoint: "1f41f" }
+    tags: [animal]
+    words: { de-CH: Fisch, en-US: fish }
+    article: der
+    plural: { de-CH: Fische, en-US: fish }
+    syllables:
+      de-CH: [Fisch]
+      en-US: [fish]
+    firstSound:
+      de-CH: { grapheme: F, phoneme: "f" }
+      en-US: { grapheme: F, phoneme: "f" }
+  whale:
+    file: whale.svg
+    source: { set: noto-emoji, codepoint: "1f433" }
+    tags: [animal]
+    words: { de-CH: Wal, en-US: whale }
+    article: der
+    plural: { de-CH: Wale, en-US: whales }
+    syllables:
+      de-CH: [Wal]
+      en-US: [whale]
+    firstSound:
+      de-CH: { grapheme: W, phoneme: "v" }
+      en-US: { grapheme: Wh, phoneme: "w", regular: false }
+  dolphin:
+    file: dolphin.svg
+    source: { set: noto-emoji, codepoint: "1f42c" }
+    tags: [animal]
+    words: { de-CH: Delfin, en-US: dolphin }
+    article: der
+    plural: { de-CH: Delfine, en-US: dolphins }
+    syllables:
+      de-CH: [Del, fin]
+      en-US: [dol, phin]
+    firstSound:
+      de-CH: { grapheme: D, phoneme: "d" }
+      en-US: { grapheme: D, phoneme: "d" }
+  octopus:
+    file: octopus.svg
+    source: { set: noto-emoji, codepoint: "1f419" }
+    tags: [animal]
+    words: { de-CH: Krake, en-US: octopus }
+    article: der
+    plural: { de-CH: Kraken, en-US: octopuses }
+    syllables:
+      de-CH: [Kra, ke]
+      en-US: [oc, to, pus]
+    firstSound:
+      de-CH: { grapheme: K, phoneme: "k", regular: false }
+      en-US: { grapheme: O, phoneme: "ɑ" }
+  snail:
+    file: snail.svg
+    source: { set: noto-emoji, codepoint: "1f40c" }
+    tags: [animal]
+    words: { de-CH: Schnecke, en-US: snail }
+    article: die
+    plural: { de-CH: Schnecken, en-US: snails }
+    syllables:
+      de-CH: [Schne, cke]
+      en-US: [snail]
+    firstSound:
+      de-CH: { grapheme: Sch, phoneme: "ʃ" }
+      en-US: { grapheme: S, phoneme: "s" }
+  bee:
+    file: bee.svg
+    source: { set: noto-emoji, codepoint: "1f41d" }
+    tags: [animal, insect]
+    words: { de-CH: Biene, en-US: bee }
+    article: die
+    plural: { de-CH: Bienen, en-US: bees }
+    syllables:
+      de-CH: [Bie, ne]
+      en-US: [bee]
+    firstSound:
+      de-CH: { grapheme: B, phoneme: "b" }
+      en-US: { grapheme: B, phoneme: "b" }
+  ladybug:
+    file: ladybug.svg
+    source: { set: noto-emoji, codepoint: "1f41e" }
+    tags: [animal, insect]
+    words: { de-CH: Marienkäfer, en-US: ladybug }
+    article: der
+    plural: { de-CH: Marienkäfer, en-US: ladybugs }
+    syllables:
+      de-CH: [Ma, ri, en, kä, fer]
+      en-US: [la, dy, bug]
+    firstSound:
+      de-CH: { grapheme: M, phoneme: "m" }
+      en-US: { grapheme: L, phoneme: "l" }
+  butterfly:
+    file: butterfly.svg
+    source: { set: noto-emoji, codepoint: "1f98b" }
+    tags: [animal, insect]
+    words: { de-CH: Schmetterling, en-US: butterfly }
+    article: der
+    plural: { de-CH: Schmetterlinge, en-US: butterflies }
+    syllables:
+      de-CH: [Schmet, ter, ling]
+      en-US: [but, ter, fly]
+    firstSound:
+      de-CH: { grapheme: Sch, phoneme: "ʃ" }
+      en-US: { grapheme: B, phoneme: "b" }
+  caterpillar:
+    file: caterpillar.svg
+    source: { set: noto-emoji, codepoint: "1f41b" }
+    tags: [animal, insect]
+    words: { de-CH: Raupe, en-US: caterpillar }
+    article: die
+    plural: { de-CH: Raupen, en-US: caterpillars }
+    syllables:
+      de-CH: [Rau, pe]
+      en-US: [cat, er, pil, lar]
+    firstSound:
+      de-CH: { grapheme: R, phoneme: "ʁ" }
+      en-US: { grapheme: C, phoneme: "k" }
+  ant:
+    file: ant.svg
+    source: { set: noto-emoji, codepoint: "1f41c" }
+    tags: [animal, insect]
+    words: { de-CH: Ameise, en-US: ant }
+    article: die
+    plural: { de-CH: Ameisen, en-US: ants }
+    syllables:
+      de-CH: [A, mei, se]
+      en-US: [ant]
+    firstSound:
+      de-CH: { grapheme: A, phoneme: "aː" }
+      en-US: { grapheme: A, phoneme: "æ" }
+  snake:
+    file: snake.svg
+    source: { set: noto-emoji, codepoint: "1f40d" }
+    tags: [animal]
+    words: { de-CH: Schlange, en-US: snake }
+    article: die
+    plural: { de-CH: Schlangen, en-US: snakes }
+    syllables:
+      de-CH: [Schlan, ge]
+      en-US: [snake]
+    firstSound:
+      de-CH: { grapheme: Sch, phoneme: "ʃ" }
+      en-US: { grapheme: S, phoneme: "s" }
+  turtle:
+    file: turtle.svg
+    source: { set: noto-emoji, codepoint: "1f422" }
+    tags: [animal]
+    words: { de-CH: Schildkröte, en-US: turtle }
+    article: die
+    plural: { de-CH: Schildkröten, en-US: turtles }
+    syllables:
+      de-CH: [Schild, krö, te]
+      en-US: [tur, tle]
+    firstSound:
+      de-CH: { grapheme: Sch, phoneme: "ʃ" }
+      en-US: { grapheme: T, phoneme: "t" }
+  donkey:
+    file: donkey.svg
+    source: { set: noto-emoji, codepoint: "1facf" }
+    tags: [animal, farm]
+    words: { de-CH: Esel, en-US: donkey }
+    article: der
+    plural: { de-CH: Esel, en-US: donkeys }
+    syllables:
+      de-CH: [E, sel]
+      en-US: [don, key]
+    firstSound:
+      de-CH: { grapheme: E, phoneme: "eː" }
+      en-US: { grapheme: D, phoneme: "d" }
+  elephant:
+    file: elephant.svg
+    source: { set: noto-emoji, codepoint: "1f418" }
+    tags: [animal]
+    words: { de-CH: Elefant, en-US: elephant }
+    article: der
+    plural: { de-CH: Elefanten, en-US: elephants }
+    syllables:
+      de-CH: [E, le, fant]
+      en-US: [el, e, phant]
+    firstSound:
+      de-CH: { grapheme: E, phoneme: "e" }
+      en-US: { grapheme: E, phoneme: "ɛ" }
+  zebra:
+    file: zebra.svg
+    source: { set: noto-emoji, codepoint: "1f993" }
+    tags: [animal]
+    words: { de-CH: Zebra, en-US: zebra }
+    article: das
+    plural: { de-CH: Zebras, en-US: zebras }
+    syllables:
+      de-CH: [Ze, bra]
+      en-US: [ze, bra]
+    firstSound:
+      de-CH: { grapheme: Z, phoneme: "ts" }
+      en-US: { grapheme: Z, phoneme: "z" }
+  giraffe:
+    file: giraffe.svg
+    source: { set: noto-emoji, codepoint: "1f992" }
+    tags: [animal]
+    words: { de-CH: Giraffe, en-US: giraffe }
+    article: die
+    plural: { de-CH: Giraffen, en-US: giraffes }
+    syllables:
+      de-CH: [Gi, raf, fe]
+      en-US: [gi, raffe]
+    firstSound:
+      de-CH: { grapheme: G, phoneme: "g" }
+      en-US: { grapheme: G, phoneme: "dʒ", regular: false }
+  hedgehog:
+    file: hedgehog.svg
+    source: { set: noto-emoji, codepoint: "1f994" }
+    tags: [animal]
+    words: { de-CH: Igel, en-US: hedgehog }
+    article: der
+    plural: { de-CH: Igel, en-US: hedgehogs }
+    syllables:
+      de-CH: [I, gel]
+      en-US: [hedge, hog]
+    firstSound:
+      de-CH: { grapheme: I, phoneme: "iː" }
+      en-US: { grapheme: H, phoneme: "h" }
+  llama:
+    file: llama.svg
+    source: { set: noto-emoji, codepoint: "1f999" }
+    tags: [animal]
+    words: { de-CH: Lama, en-US: llama }
+    article: das
+    plural: { de-CH: Lamas, en-US: llamas }
+    syllables:
+      de-CH: [La, ma]
+      en-US: [lla, ma]
+    firstSound:
+      de-CH: { grapheme: L, phoneme: "l" }
+      en-US: { grapheme: L, phoneme: "l" }
+  dinosaur:
+    file: dinosaur.svg
+    source: { set: noto-emoji, codepoint: "1f995" }
+    tags: [animal]
+    words: { de-CH: Dino, en-US: dinosaur }
+    article: der
+    plural: { de-CH: Dinos, en-US: dinosaurs }
+    syllables:
+      de-CH: [Di, "no"]
+      en-US: [di, "no", saur]
+    firstSound:
+      de-CH: { grapheme: D, phoneme: "d" }
+      en-US: { grapheme: D, phoneme: "d" }
+  unicorn:
+    file: unicorn.svg
+    source: { set: noto-emoji, codepoint: "1f984" }
+    tags: [animal, fantasy]
+    words: { de-CH: Einhorn, en-US: unicorn }
+    article: das
+    plural: { de-CH: Einhörner, en-US: unicorns }
+    syllables:
+      de-CH: [Ein, horn]
+      en-US: [u, ni, corn]
+    firstSound:
+      de-CH: { grapheme: Ei, phoneme: "aɪ" }
+      en-US: { grapheme: U, phoneme: "juː", regular: false }
+  worm:
+    file: worm.svg
+    source: { set: noto-emoji, codepoint: "1fab1" }
+    tags: [animal]
+    words: { de-CH: Wurm, en-US: worm }
+    article: der
+    plural: { de-CH: Würmer, en-US: worms }
+    syllables:
+      de-CH: [Wurm]
+      en-US: [worm]
+    firstSound:
+      de-CH: { grapheme: W, phoneme: "v" }
+      en-US: { grapheme: W, phoneme: "w" }
+  hippo:
+    file: hippo.svg
+    source: { set: noto-emoji, codepoint: "1f99b" }
+    tags: [animal]
+    words: { de-CH: Nilpferd, en-US: hippo }
+    article: das
+    plural: { de-CH: Nilpferde, en-US: hippos }
+    syllables:
+      de-CH: [Nil, pferd]
+      en-US: [hip, po]
+    firstSound:
+      de-CH: { grapheme: "N", phoneme: "n" }
+      en-US: { grapheme: H, phoneme: "h" }
+  jellyfish:
+    file: jellyfish.svg
+    source: { set: noto-emoji, codepoint: "1fabc" }
+    tags: [animal]
+    words: { de-CH: Qualle, en-US: jellyfish }
+    article: die
+    plural: { de-CH: Quallen, en-US: jellyfish }
+    syllables:
+      de-CH: [Qual, le]
+      en-US: [jel, ly, fish]
+    firstSound:
+      de-CH: { grapheme: Qu, phoneme: "kv" }
+      en-US: { grapheme: J, phoneme: "dʒ" }
+  otter:
+    file: otter.svg
+    source: { set: noto-emoji, codepoint: "1f9a6" }
+    tags: [animal]
+    words: { de-CH: Otter, en-US: otter }
+    article: der
+    plural: { de-CH: Otter, en-US: otters }
+    syllables:
+      de-CH: [Ot, ter]
+      en-US: [ot, ter]
+    firstSound:
+      de-CH: { grapheme: O, phoneme: "ɔ" }
+      en-US: { grapheme: O, phoneme: "ɑ" }
+  bat:
+    file: bat.svg
+    source: { set: noto-emoji, codepoint: "1f987" }
+    tags: [animal]
+    words: { de-CH: Fledermaus, en-US: bat }
+    article: die
+    plural: { de-CH: Fledermäuse, en-US: bats }
+    syllables:
+      de-CH: [Fle, der, maus]
+      en-US: [bat]
+    firstSound:
+      de-CH: { grapheme: F, phoneme: "f" }
+      en-US: { grapheme: B, phoneme: "b" }
+  star:
+    file: star.svg
+    source: { set: noto-emoji, codepoint: "2b50" }
+    tags: [nature, sky]
+    words: { de-CH: Stern, en-US: star }
+    article: der
+    plural: { de-CH: Sterne, en-US: stars }
+    syllables:
+      de-CH: [Stern]
+      en-US: [star]
+    firstSound:
+      de-CH: { grapheme: St, phoneme: "ʃt", regular: false }
+      en-US: { grapheme: S, phoneme: "s" }
+  sun:
+    file: sun.svg
+    source: { set: noto-emoji, codepoint: "2600" }
+    tags: [nature, sky]
+    words: { de-CH: Sonne, en-US: sun }
+    article: die
+    syllables:
+      de-CH: [Son, ne]
+      en-US: [sun]
+    firstSound:
+      de-CH: { grapheme: S, phoneme: "z" }
+      en-US: { grapheme: S, phoneme: "s" }
+  moon:
+    file: moon.svg
+    source: { set: noto-emoji, codepoint: "1f319" }
+    tags: [nature, sky]
+    words: { de-CH: Mond, en-US: moon }
+    article: der
+    syllables:
+      de-CH: [Mond]
+      en-US: [moon]
+    firstSound:
+      de-CH: { grapheme: M, phoneme: "m" }
+      en-US: { grapheme: M, phoneme: "m" }
+  cloud:
+    file: cloud.svg
+    source: { set: noto-emoji, codepoint: "2601" }
+    tags: [nature, sky]
+    words: { de-CH: Wolke, en-US: cloud }
+    article: die
+    plural: { de-CH: Wolken, en-US: clouds }
+    syllables:
+      de-CH: [Wol, ke]
+      en-US: [cloud]
+    firstSound:
+      de-CH: { grapheme: W, phoneme: "v" }
+      en-US: { grapheme: C, phoneme: "k" }
+  rainbow:
+    file: rainbow.svg
+    source: { set: noto-emoji, codepoint: "1f308" }
+    tags: [nature, sky]
+    words: { de-CH: Regenbogen, en-US: rainbow }
+    article: der
+    syllables:
+      de-CH: [Re, gen, bo, gen]
+      en-US: [rain, bow]
+    firstSound:
+      de-CH: { grapheme: R, phoneme: "ʁ" }
+      en-US: { grapheme: R, phoneme: "r" }
+  flower:
+    file: flower.svg
+    source: { set: noto-emoji, codepoint: "1f33c" }
+    tags: [nature, plant]
+    words: { de-CH: Blume, en-US: flower }
+    article: die
+    plural: { de-CH: Blumen, en-US: flowers }
+    syllables:
+      de-CH: [Blu, me]
+    firstSound:
+      de-CH: { grapheme: B, phoneme: "b" }
+      en-US: { grapheme: F, phoneme: "f" }
+  rose:
+    file: rose.svg
+    source: { set: noto-emoji, codepoint: "1f339" }
+    tags: [nature, plant]
+    words: { de-CH: Rose, en-US: rose }
+    article: die
+    plural: { de-CH: Rosen, en-US: roses }
+    syllables:
+      de-CH: [Ro, se]
+      en-US: [rose]
+    firstSound:
+      de-CH: { grapheme: R, phoneme: "ʁ" }
+      en-US: { grapheme: R, phoneme: "r" }
+  tree:
+    file: tree.svg
+    source: { set: noto-emoji, codepoint: "1f333" }
+    tags: [nature, plant]
+    words: { de-CH: Baum, en-US: tree }
+    article: der
+    plural: { de-CH: Bäume, en-US: trees }
+    syllables:
+      de-CH: [Baum]
+      en-US: [tree]
+    firstSound:
+      de-CH: { grapheme: B, phoneme: "b" }
+      en-US: { grapheme: T, phoneme: "t" }
+  leaf:
+    file: leaf.svg
+    source: { set: noto-emoji, codepoint: "1f341" }
+    tags: [nature, plant]
+    words: { de-CH: Blatt, en-US: leaf }
+    article: das
+    plural: { de-CH: Blätter, en-US: leaves }
+    syllables:
+      de-CH: [Blatt]
+      en-US: [leaf]
+    firstSound:
+      de-CH: { grapheme: B, phoneme: "b" }
+      en-US: { grapheme: L, phoneme: "l" }
+  volcano:
+    file: volcano.svg
+    source: { set: noto-emoji, codepoint: "1f30b" }
+    tags: [nature]
+    words: { de-CH: Vulkan, en-US: volcano }
+    article: der
+    syllables:
+      de-CH: [Vul, kan]
+      en-US: [vol, ca, "no"]
+    firstSound:
+      de-CH: { grapheme: V, phoneme: "v", regular: false }
+      en-US: { grapheme: V, phoneme: "v" }
+  nest:
+    file: nest.svg
+    source: { set: noto-emoji, codepoint: "1fab9" }
+    tags: [nature]
+    words: { de-CH: Nest, en-US: nest }
+    article: das
+    syllables:
+      de-CH: [Nest]
+      en-US: [nest]
+    firstSound:
+      de-CH: { grapheme: "N", phoneme: "n" }
+      en-US: { grapheme: "N", phoneme: "n" }
+  web:
+    file: web.svg
+    source: { set: noto-emoji, codepoint: "1f578" }
+    tags: [nature]
+    words: { de-CH: Netz, en-US: web }
+    article: das
+    syllables:
+      de-CH: [Netz]
+      en-US: [web]
+    firstSound:
+      de-CH: { grapheme: "N", phoneme: "n" }
+      en-US: { grapheme: W, phoneme: "w" }
+  log:
+    file: log.svg
+    source: { set: noto-emoji, codepoint: "1fab5" }
+    tags: [nature]
+    words: { de-CH: Holz, en-US: log }
+    article: das
+    plural: { en-US: logs }
+    syllables:
+      de-CH: [Holz]
+      en-US: [log]
+    firstSound:
+      de-CH: { grapheme: H, phoneme: "h" }
+      en-US: { grapheme: L, phoneme: "l" }
+  car:
+    file: car.svg
+    source: { set: noto-emoji, codepoint: "1f697" }
+    tags: [vehicle]
+    words: { de-CH: Auto, en-US: car }
+    article: das
+    plural: { de-CH: Autos, en-US: cars }
+    syllables:
+      de-CH: [Au, to]
+      en-US: [car]
+    firstSound:
+      de-CH: { grapheme: Au, phoneme: "aʊ" }
+      en-US: { grapheme: C, phoneme: "k" }
+  bus:
+    file: bus.svg
+    source: { set: noto-emoji, codepoint: "1f68c" }
+    tags: [vehicle]
+    words: { de-CH: Bus, en-US: bus }
+    article: der
+    plural: { de-CH: Busse, en-US: buses }
+    syllables:
+      de-CH: [Bus]
+      en-US: [bus]
+    firstSound:
+      de-CH: { grapheme: B, phoneme: "b" }
+      en-US: { grapheme: B, phoneme: "b" }
+  rocket:
+    file: rocket.svg
+    source: { set: noto-emoji, codepoint: "1f680" }
+    tags: [vehicle, sky]
+    words: { de-CH: Rakete, en-US: rocket }
+    article: die
+    plural: { de-CH: Raketen, en-US: rockets }
+    syllables:
+      de-CH: [Ra, ke, te]
+      en-US: [rock, et]
+    firstSound:
+      de-CH: { grapheme: R, phoneme: "ʁ" }
+      en-US: { grapheme: R, phoneme: "r" }
+  ship:
+    file: ship.svg
+    source: { set: noto-emoji, codepoint: "1f6a2" }
+    tags: [vehicle]
+    words: { de-CH: Schiff, en-US: ship }
+    article: das
+    plural: { de-CH: Schiffe, en-US: ships }
+    syllables:
+      de-CH: [Schiff]
+      en-US: [ship]
+    firstSound:
+      de-CH: { grapheme: Sch, phoneme: "ʃ" }
+      en-US: { grapheme: Sh, phoneme: "ʃ" }
+  van:
+    file: van.svg
+    source: { set: noto-emoji, codepoint: "1f690" }
+    tags: [vehicle]
+    words: { de-CH: Kleinbus, en-US: van }
+    article: der
+    plural: { de-CH: Kleinbusse, en-US: vans }
+    syllables:
+      de-CH: [Klein, bus]
+      en-US: [van]
+    firstSound:
+      de-CH: { grapheme: K, phoneme: "k" }
+      en-US: { grapheme: V, phoneme: "v" }
+  ball:
+    file: ball.svg
+    source: { set: noto-emoji, codepoint: "26bd" }
+    tags: [toy]
+    words: { de-CH: Ball, en-US: ball }
+    article: der
+    plural: { de-CH: Bälle, en-US: balls }
+    syllables:
+      de-CH: [Ball]
+      en-US: [ball]
+    firstSound:
+      de-CH: { grapheme: B, phoneme: "b" }
+      en-US: { grapheme: B, phoneme: "b" }
+  balloon:
+    file: balloon.svg
+    source: { set: noto-emoji, codepoint: "1f388" }
+    tags: [toy, party]
+    words: { de-CH: Ballon, en-US: balloon }
+    article: der
+    plural: { de-CH: Ballone, en-US: balloons }
+    syllables:
+      de-CH: [Bal, lon]
+      en-US: [bal, loon]
+    firstSound:
+      de-CH: { grapheme: B, phoneme: "b" }
+      en-US: { grapheme: B, phoneme: "b" }
+  kite:
+    file: kite.svg
+    source: { set: noto-emoji, codepoint: "1fa81" }
+    tags: [toy]
+    words: { de-CH: Drachen, en-US: kite }
+    article: der
+    plural: { de-CH: Drachen, en-US: kites }
+    syllables:
+      de-CH: [Dra, chen]
+      en-US: [kite]
+    firstSound:
+      de-CH: { grapheme: D, phoneme: "d" }
+      en-US: { grapheme: K, phoneme: "k" }
+  yoyo:
+    file: yoyo.svg
+    source: { set: noto-emoji, codepoint: "1fa80" }
+    tags: [toy]
+    words: { de-CH: Jojo, en-US: yo-yo }
+    article: das
+    plural: { de-CH: Jojos, en-US: yo-yos }
+    syllables:
+      de-CH: [Jo, jo]
+      en-US: [yo, yo]
+    firstSound:
+      de-CH: { grapheme: J, phoneme: "j" }
+      en-US: { grapheme: "Y", phoneme: "j" }
+  teddy:
+    file: teddy.svg
+    source: { set: noto-emoji, codepoint: "1f9f8" }
+    tags: [toy]
+    words: { de-CH: Teddy, en-US: teddy }
+    article: der
+    plural: { de-CH: Teddys, en-US: teddies }
+    syllables:
+      de-CH: [Ted, dy]
+      en-US: [ted, dy]
+    firstSound:
+      de-CH: { grapheme: T, phoneme: "t" }
+      en-US: { grapheme: T, phoneme: "t" }
+  gift:
+    file: gift.svg
+    source: { set: noto-emoji, codepoint: "1f381" }
+    tags: [toy, party]
+    words: { de-CH: Geschenk, en-US: gift }
+    article: das
+    plural: { de-CH: Geschenke, en-US: gifts }
+    syllables:
+      de-CH: [Ge, schenk]
+      en-US: [gift]
+    firstSound:
+      de-CH: { grapheme: G, phoneme: "g" }
+      en-US: { grapheme: G, phoneme: "g" }
+  house:
+    file: house.svg
+    source: { set: noto-emoji, codepoint: "1f3e0" }
+    tags: [building]
+    words: { de-CH: Haus, en-US: house }
+    article: das
+    plural: { de-CH: Häuser, en-US: houses }
+    syllables:
+      de-CH: [Haus]
+      en-US: [house]
+    firstSound:
+      de-CH: { grapheme: H, phoneme: "h" }
+      en-US: { grapheme: H, phoneme: "h" }
+  umbrella:
+    file: umbrella.svg
+    source: { set: noto-emoji, codepoint: "2602" }
+    tags: [thing]
+    words: { de-CH: Schirm, en-US: umbrella }
+    article: der
+    plural: { de-CH: Schirme, en-US: umbrellas }
+    syllables:
+      de-CH: [Schirm]
+      en-US: [um, brel, la]
+    firstSound:
+      de-CH: { grapheme: Sch, phoneme: "ʃ" }
+      en-US: { grapheme: U, phoneme: "ʌ" }
+  hat:
+    file: hat.svg
+    source: { set: noto-emoji, codepoint: "1f3a9" }
+    tags: [clothing]
+    words: { de-CH: Hut, en-US: hat }
+    article: der
+    plural: { de-CH: Hüte, en-US: hats }
+    syllables:
+      de-CH: [Hut]
+      en-US: [hat]
+    firstSound:
+      de-CH: { grapheme: H, phoneme: "h" }
+      en-US: { grapheme: H, phoneme: "h" }
+  cap:
+    file: cap.svg
+    source: { set: noto-emoji, codepoint: "1f9e2" }
+    tags: [clothing]
+    words: { de-CH: Kappe, en-US: cap }
+    article: die
+    plural: { de-CH: Kappen, en-US: caps }
+    syllables:
+      de-CH: [Kap, pe]
+      en-US: [cap]
+    firstSound:
+      de-CH: { grapheme: K, phoneme: "k" }
+      en-US: { grapheme: C, phoneme: "k" }
+  coat:
+    file: coat.svg
+    source: { set: noto-emoji, codepoint: "1f9e5" }
+    tags: [clothing]
+    words: { de-CH: Jacke, en-US: coat }
+    article: die
+    plural: { de-CH: Jacken, en-US: coats }
+    syllables:
+      de-CH: [Ja, cke]
+      en-US: [coat]
+    firstSound:
+      de-CH: { grapheme: J, phoneme: "j" }
+      en-US: { grapheme: C, phoneme: "k" }
+  shoe:
+    file: shoe.svg
+    source: { set: noto-emoji, codepoint: "1f45f" }
+    tags: [clothing]
+    words: { de-CH: Schuh, en-US: shoe }
+    article: der
+    plural: { de-CH: Schuhe, en-US: shoes }
+    syllables:
+      de-CH: [Schuh]
+      en-US: [shoe]
+    firstSound:
+      de-CH: { grapheme: Sch, phoneme: "ʃ" }
+      en-US: { grapheme: Sh, phoneme: "ʃ" }
+  bag:
+    file: bag.svg
+    source: { set: noto-emoji, codepoint: "1f45c" }
+    tags: [clothing]
+    words: { de-CH: Tasche, en-US: bag }
+    article: die
+    plural: { de-CH: Taschen, en-US: bags }
+    syllables:
+      de-CH: [Ta, sche]
+      en-US: [bag]
+    firstSound:
+      de-CH: { grapheme: T, phoneme: "t" }
+      en-US: { grapheme: B, phoneme: "b" }
+  bed:
+    file: bed.svg
+    source: { set: noto-emoji, codepoint: "1f6cf" }
+    tags: [furniture]
+    words: { de-CH: Bett, en-US: bed }
+    article: das
+    plural: { de-CH: Betten, en-US: beds }
+    syllables:
+      de-CH: [Bett]
+      en-US: [bed]
+    firstSound:
+      de-CH: { grapheme: B, phoneme: "b" }
+      en-US: { grapheme: B, phoneme: "b" }
+  chair:
+    file: chair.svg
+    source: { set: noto-emoji, codepoint: "1fa91" }
+    tags: [furniture]
+    words: { de-CH: Stuhl, en-US: chair }
+    article: der
+    plural: { de-CH: Stühle, en-US: chairs }
+    syllables:
+      de-CH: [Stuhl]
+      en-US: [chair]
+    firstSound:
+      de-CH: { grapheme: St, phoneme: "ʃt", regular: false }
+      en-US: { grapheme: Ch, phoneme: "tʃ" }
+  sofa:
+    file: sofa.svg
+    source: { set: noto-emoji, codepoint: "1f6cb" }
+    tags: [furniture]
+    words: { de-CH: Sofa, en-US: couch }
+    article: das
+    plural: { de-CH: Sofas, en-US: couches }
+    syllables:
+      de-CH: [So, fa]
+      en-US: [couch]
+    firstSound:
+      de-CH: { grapheme: S, phoneme: "z" }
+      en-US: { grapheme: C, phoneme: "k" }
+  cup:
+    file: cup.svg
+    source: { set: noto-emoji, codepoint: "2615" }
+    tags: [kitchen]
+    words: { de-CH: Tasse, en-US: cup }
+    article: die
+    plural: { de-CH: Tassen, en-US: cups }
+    syllables:
+      de-CH: [Tas, se]
+      en-US: [cup]
+    firstSound:
+      de-CH: { grapheme: T, phoneme: "t" }
+      en-US: { grapheme: C, phoneme: "k" }
+  map:
+    file: map.svg
+    source: { set: noto-emoji, codepoint: "1f5fa" }
+    tags: [thing]
+    words: { de-CH: Karte, en-US: map }
+    article: die
+    plural: { de-CH: Karten, en-US: maps }
+    syllables:
+      de-CH: [Kar, te]
+      en-US: [map]
+    firstSound:
+      de-CH: { grapheme: K, phoneme: "k" }
+      en-US: { grapheme: M, phoneme: "m" }
+  box:
+    file: box.svg
+    source: { set: noto-emoji, codepoint: "1f4e6" }
+    tags: [thing]
+    words: { de-CH: Paket, en-US: box }
+    article: das
+    plural: { de-CH: Pakete, en-US: boxes }
+    syllables:
+      de-CH: [Pa, ket]
+      en-US: [box]
+    firstSound:
+      de-CH: { grapheme: P, phoneme: "p" }
+      en-US: { grapheme: B, phoneme: "b" }
+  pen:
+    file: pen.svg
+    source: { set: noto-emoji, codepoint: "1f58a" }
+    tags: [school]
+    words: { de-CH: Stift, en-US: pen }
+    article: der
+    plural: { de-CH: Stifte, en-US: pens }
+    syllables:
+      de-CH: [Stift]
+      en-US: [pen]
+    firstSound:
+      de-CH: { grapheme: St, phoneme: "ʃt", regular: false }
+      en-US: { grapheme: P, phoneme: "p" }
+  book:
+    file: book.svg
+    source: { set: noto-emoji, codepoint: "1f4d6" }
+    tags: [school]
+    words: { de-CH: Buch, en-US: book }
+    article: das
+    plural: { de-CH: Bücher, en-US: books }
+    syllables:
+      de-CH: [Buch]
+      en-US: [book]
+    firstSound:
+      de-CH: { grapheme: B, phoneme: "b" }
+      en-US: { grapheme: B, phoneme: "b" }
+  key:
+    file: key.svg
+    source: { set: noto-emoji, codepoint: "1f511" }
+    tags: [thing]
+    words: { de-CH: Schlüssel, en-US: key }
+    article: der
+    plural: { de-CH: Schlüssel, en-US: keys }
+    syllables:
+      de-CH: [Schlüs, sel]
+      en-US: [key]
+    firstSound:
+      de-CH: { grapheme: Sch, phoneme: "ʃ" }
+      en-US: { grapheme: K, phoneme: "k" }
+  saw:
+    file: saw.svg
+    source: { set: noto-emoji, codepoint: "1fa9a" }
+    tags: [tool]
+    words: { de-CH: Säge, en-US: saw }
+    article: die
+    plural: { de-CH: Sägen, en-US: saws }
+    syllables:
+      de-CH: [Sä, ge]
+      en-US: [saw]
+    firstSound:
+      de-CH: { grapheme: S, phoneme: "z" }
+      en-US: { grapheme: S, phoneme: "s" }
+  ladder:
+    file: ladder.svg
+    source: { set: noto-emoji, codepoint: "1fa9c" }
+    tags: [tool]
+    words: { de-CH: Leiter, en-US: ladder }
+    article: die
+    plural: { de-CH: Leitern, en-US: ladders }
+    syllables:
+      de-CH: [Lei, ter]
+      en-US: [lad, der]
+    firstSound:
+      de-CH: { grapheme: L, phoneme: "l" }
+      en-US: { grapheme: L, phoneme: "l" }
+  watch:
+    file: watch.svg
+    source: { set: noto-emoji, codepoint: "231a" }
+    tags: [thing]
+    words: { de-CH: Uhr, en-US: watch }
+    article: die
+    plural: { de-CH: Uhren, en-US: watches }
+    syllables:
+      de-CH: [Uhr]
+      en-US: [watch]
+    firstSound:
+      de-CH: { grapheme: U, phoneme: "uː" }
+      en-US: { grapheme: W, phoneme: "w" }
+  guitar:
+    file: guitar.svg
+    source: { set: noto-emoji, codepoint: "1f3b8" }
+    tags: [music]
+    words: { de-CH: Gitarre, en-US: guitar }
+    article: die
+    plural: { de-CH: Gitarren, en-US: guitars }
+    syllables:
+      de-CH: [Gi, tar, re]
+      en-US: [gui, tar]
+    firstSound:
+      de-CH: { grapheme: G, phoneme: "g" }
+      en-US: { grapheme: G, phoneme: "g" }
+  violin:
+    file: violin.svg
+    source: { set: noto-emoji, codepoint: "1f3bb" }
+    tags: [music]
+    words: { de-CH: Geige, en-US: violin }
+    article: die
+    plural: { de-CH: Geigen, en-US: violins }
+    syllables:
+      de-CH: [Gei, ge]
+      en-US: [vi, o, lin]
+    firstSound:
+      de-CH: { grapheme: G, phoneme: "g" }
+      en-US: { grapheme: V, phoneme: "v" }
+  nose:
+    file: nose.svg
+    source: { set: noto-emoji, codepoint: "1f443" }
+    tags: [body]
+    words: { de-CH: Nase, en-US: nose }
+    article: die
+    syllables:
+      de-CH: [Na, se]
+      en-US: [nose]
+    firstSound:
+      de-CH: { grapheme: "N", phoneme: "n" }
+      en-US: { grapheme: "N", phoneme: "n" }
+  ear:
+    file: ear.svg
+    source: { set: noto-emoji, codepoint: "1f442" }
+    tags: [body]
+    words: { de-CH: Ohr, en-US: ear }
+    article: das
+    syllables:
+      de-CH: [Ohr]
+      en-US: [ear]
+    firstSound:
+      de-CH: { grapheme: O, phoneme: "oː" }
+      en-US: { grapheme: E, phoneme: "ɪ", regular: false }
+  eye:
+    file: eye.svg
+    source: { set: noto-emoji, codepoint: "1f441" }
+    tags: [body]
+    words: { de-CH: Auge, en-US: eye }
+    article: das
+    syllables:
+      de-CH: [Au, ge]
+      en-US: [eye]
+    firstSound:
+      de-CH: { grapheme: Au, phoneme: "aʊ" }
+      en-US: { grapheme: E, phoneme: "aɪ", regular: false }
+  leg:
+    file: leg.svg
+    source: { set: noto-emoji, codepoint: "1f9b5" }
+    tags: [body]
+    words: { de-CH: Bein, en-US: leg }
+    article: das
+    syllables:
+      de-CH: [Bein]
+      en-US: [leg]
+    firstSound:
+      de-CH: { grapheme: B, phoneme: "b" }
+      en-US: { grapheme: L, phoneme: "l" }
+  thumb:
+    file: thumb.svg
+    source: { set: noto-emoji, codepoint: "1f44d" }
+    tags: [body]
+    words: { de-CH: Daumen, en-US: thumb }
+    article: der
+    syllables:
+      de-CH: [Dau, men]
+      en-US: [thumb]
+    firstSound:
+      de-CH: { grapheme: D, phoneme: "d" }
+      en-US: { grapheme: Th, phoneme: "θ" }
+  shape-circle:
+    file: shape-circle.svg
+    source: { set: murmeli }
+    tags: [shape]
+    words: { de-CH: Kreis, en-US: circle }
+    article: der
+    plural: { de-CH: Kreise, en-US: circles }
+    syllables:
+      de-CH: [Kreis]
+      en-US: [cir, cle]
+    firstSound:
+      de-CH: { grapheme: K, phoneme: "k" }
+      en-US: { grapheme: C, phoneme: "s", regular: false }
+  shape-square:
+    file: shape-square.svg
+    source: { set: murmeli }
+    tags: [shape]
+    words: { de-CH: Quadrat, en-US: square }
+    article: das
+    plural: { de-CH: Quadrate, en-US: squares }
+    syllables:
+      de-CH: [Qua, drat]
+      en-US: [square]
+    firstSound:
+      de-CH: { grapheme: Qu, phoneme: "kv" }
+      en-US: { grapheme: S, phoneme: "s" }
+  shape-triangle:
+    file: shape-triangle.svg
+    source: { set: murmeli }
+    tags: [shape]
+    words: { de-CH: Dreieck, en-US: triangle }
+    article: das
+    plural: { de-CH: Dreiecke, en-US: triangles }
+    syllables:
+      de-CH: [Drei, eck]
+      en-US: [tri, an, gle]
+    firstSound:
+      de-CH: { grapheme: D, phoneme: "d" }
+      en-US: { grapheme: T, phoneme: "t" }
+  shape-rectangle:
+    file: shape-rectangle.svg
+    source: { set: murmeli }
+    tags: [shape]
+    words: { de-CH: Rechteck, en-US: rectangle }
+    article: das
+    plural: { de-CH: Rechtecke, en-US: rectangles }
+    syllables:
+      de-CH: [Recht, eck]
+      en-US: [rec, tan, gle]
+    firstSound:
+      de-CH: { grapheme: R, phoneme: "ʁ" }
+      en-US: { grapheme: R, phoneme: "r" }

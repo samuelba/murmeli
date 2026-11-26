@@ -1,0 +1,183 @@
+# Sound Garden: letter sounds and initial sounds in US phonics order (s a t p i n | m d g o c k | e u r | h b f l).
+# Letters are shown in lowercase. c and k are never choices together, because both say /k/.
+id: reading-en-sound-garden
+order: 1
+grade: KG2
+requires: []
+title: { en-US: Sound Garden }
+scene: garden
+skills:
+  - { id: en.phonics.letter-sound, ccss: RF.K.3a, title: { en-US: Letter sounds } }
+  - { id: en.phonics.initial-sound, ccss: RF.K.2d, title: { en-US: First sounds in words } }
+levels:
+  - id: reading-en-sound-garden-01
+    title: { en-US: "s, a and t" }
+    skill: en.phonics.letter-sound
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: letter-sound, params: { letters: [S], distractors: [A], choices: 2, display: lower } }
+      steps:
+        - say: { en-US: "Listen: s as in sun." }
+          action: { highlight: prompt }
+        - say: { en-US: "I look for the letter s. It looks like a snake." }
+          action: { highlight: choices }
+        - say: { en-US: "There it is! I tap the s." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 1, params: { letters: [S, A, T], choices: 2, display: lower } }
+
+  - id: reading-en-sound-garden-02
+    title: { en-US: What sound comes first? }
+    skill: en.phonics.initial-sound
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: initial-sound, params: { letters: [S], distractors: [A, T], pictures: [sun], choices: 3, display: lower } }
+      steps:
+        - say: { en-US: "Look, the sun!" }
+          action: { highlight: picture }
+        - say: { en-US: "Sun. The first sound I hear is s." }
+          action: { highlight: letters }
+        - say: { en-US: "I tap the s." }
+          action: { tapAnswer: true }
+    generators:
+      - type: initial-sound
+        weight: 1
+        params:
+          letters: [S, A, T]
+          pictures: [sun, saw, apple, ant, tiger, tomato, turtle, teddy]
+          choices: 3
+          display: lower
+
+  - id: reading-en-sound-garden-03
+    title: { en-US: "p, i and n" }
+    skill: en.phonics.letter-sound
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: letter-sound, params: { letters: [P], distractors: [S, A], choices: 3, display: lower } }
+      steps:
+        - say: { en-US: "Listen: p as in pig." }
+          action: { highlight: prompt }
+        - say: { en-US: "I look for the letter p." }
+          action: { highlight: choices }
+        - say: { en-US: "There it is! I tap the p." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 2, params: { letters: [P, I, N], distractors: [S, A, T], choices: 3, display: lower } }
+      - { type: letter-sound, weight: 1, params: { letters: [S, A, T, P, I, N], choices: 3, display: lower } }
+
+  - id: reading-en-sound-garden-04
+    title: { en-US: First sounds p and n }
+    skill: en.phonics.initial-sound
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: initial-sound, params: { letters: [N], distractors: [S, P], pictures: [nest], choices: 3, display: lower } }
+      steps:
+        - say: { en-US: "Look, a nest!" }
+          action: { highlight: picture }
+        - say: { en-US: "Nest. The first sound I hear is n." }
+          action: { highlight: letters }
+        - say: { en-US: "I tap the n." }
+          action: { tapAnswer: true }
+    generators:
+      - type: initial-sound
+        weight: 2
+        params: { letters: [P, N], distractors: [S, A, T], pictures: [pig, pen, penguin, nest, nose], choices: 3, display: lower }
+      - type: initial-sound
+        weight: 1
+        params: { letters: [S, A, T], distractors: [P, N], pictures: [sun, saw, apple, ant, tiger, tomato], choices: 3, display: lower }
+
+  - id: reading-en-sound-garden-05
+    title: { en-US: "m, d, g, o, c and k" }
+    skill: en.phonics.letter-sound
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: letter-sound, params: { letters: [M], distractors: [S, T], choices: 3, display: lower } }
+      steps:
+        - say: { en-US: "Listen: m as in moon." }
+          action: { highlight: prompt }
+        - say: { en-US: "I look for the letter m. It has two humps." }
+          action: { highlight: choices }
+        - say: { en-US: "There it is! I tap the m." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 2, params: { letters: [M, D, G, O, C, K], distractors: [S, A, T, P, N], choices: 3, display: lower } }
+      - { type: letter-sound, weight: 1, params: { letters: [S, A, T, P, I, N], choices: 3, display: lower } }
+
+  - id: reading-en-sound-garden-06
+    title: { en-US: "First sounds m, d, g, o and k" }
+    skill: en.phonics.initial-sound
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: initial-sound, params: { letters: [D], distractors: [M, O], pictures: [dog], choices: 3, display: lower } }
+      steps:
+        - say: { en-US: "Look, a dog!" }
+          action: { highlight: picture }
+        - say: { en-US: "Dog. The first sound I hear is d." }
+          action: { highlight: letters }
+        - say: { en-US: "I tap the d." }
+          action: { tapAnswer: true }
+    generators:
+      - type: initial-sound
+        weight: 1
+        params:
+          letters: [M, D, G, O, K]
+          distractors: [S, A, P]
+          pictures: [mouse, moon, monkey, map, dog, duck, dolphin, donkey, goat, gift, octopus, otter, kite, key]
+          choices: 3
+          display: lower
+
+  - id: reading-en-sound-garden-07
+    title: { en-US: "c, e, u and r" }
+    skill: en.phonics.initial-sound
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: initial-sound, params: { letters: [U], distractors: [M, S], pictures: [umbrella], choices: 3, display: lower } }
+      steps:
+        - say: { en-US: "Look, an umbrella!" }
+          action: { highlight: picture }
+        - say: { en-US: "Umbrella. The first sound I hear is u." }
+          action: { highlight: letters }
+        - say: { en-US: "I tap the u." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 1, params: { letters: [C, E, U, R], distractors: [M, D, S], choices: 3, display: lower } }
+      - type: initial-sound
+        weight: 2
+        params:
+          letters: [C, E, U, R]
+          distractors: [M, S]
+          pictures: [cat, cup, cow, cap, egg, elephant, umbrella, rabbit, rocket, rose]
+          choices: 3
+          display: lower
+
+  - id: reading-en-sound-garden-08
+    title: { en-US: "h, b, f and l" }
+    skill: en.phonics.letter-sound
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: letter-sound, params: { letters: [F], distractors: [M, S], choices: 3, display: lower } }
+      steps:
+        - say: { en-US: "Listen: f as in fish." }
+          action: { highlight: prompt }
+        - say: { en-US: "I look for the letter f." }
+          action: { highlight: choices }
+        - say: { en-US: "There it is! I tap the f." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 1, params: { letters: [H, B, F, L], distractors: [M, S, T], choices: 3, display: lower } }
+      - type: initial-sound
+        weight: 1
+        params:
+          letters: [H, B, F, L]
+          distractors: [M, S]
+          pictures: [hen, hat, house, hippo, ball, bus, bed, bee, bear, fish, fox, frog, lion, leaf, leg, log, lemon]
+          choices: 3
+          display: lower

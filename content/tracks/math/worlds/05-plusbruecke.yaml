@@ -1,0 +1,145 @@
+# Plusbrücke: adding and subtracting within 10, first with pictures and ten-frames, then with numbers only.
+id: math-plusbruecke
+order: 5
+grade: '1'
+requires: [math-zehnerhuette]
+title: { de-CH: Plusbrücke, en-US: Plus Bridge }
+scene: bridge
+skills:
+  - id: math.add.to10
+    lp21: MA.1.A.2
+    title: { de-CH: Addieren bis 10, en-US: Adding within 10 }
+  - id: math.sub.to10
+    lp21: MA.1.A.2
+    title: { de-CH: Subtrahieren bis 10, en-US: Subtracting within 10 }
+levels:
+  - id: math-plusbruecke-01
+    title: { de-CH: Dazulegen, en-US: Putting Together }
+    skill: math.add.to10
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [add], max: 5, a: { min: 2, max: 2 }, b: { min: 1, max: 1 }, manipulatives: objects, objects: [apple] } }
+      target: 3
+      steps:
+        - say: { de-CH: "Hier liegen zwei Äpfel.", en-US: "Here are two apples." }
+          action: { highlight: objects }
+        - say: { de-CH: "Ein Apfel kommt dazu. Zwei plus eins.", en-US: "One more apple comes. Two plus one." }
+          action: { countAlong: true }
+        - say: { de-CH: "Jetzt sind es drei Äpfel!", en-US: "Now there are three apples!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 1, params: { operations: [add], max: 5, manipulatives: objects, objects: [apple, strawberry, ball, duck] } }
+
+  - id: math-plusbruecke-02
+    title: { de-CH: Wegnehmen, en-US: Taking Away }
+    skill: math.sub.to10
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [sub], max: 5, a: { min: 5, max: 5 }, b: { min: 2, max: 2 }, manipulatives: objects, objects: [balloon] } }
+      target: 3
+      steps:
+        - say: { de-CH: "Ich habe fünf Ballone.", en-US: "I have five balloons." }
+          action: { highlight: objects }
+        - say: { de-CH: "Zwei fliegen weg. Fünf minus zwei.", en-US: "Two fly away. Five minus two." }
+          action: { countAlong: true }
+        - say: { de-CH: "Jetzt sind es noch drei.", en-US: "Now there are three left." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 1, params: { operations: [sub], max: 5, manipulatives: objects, objects: [balloon, apple, star, cake] } }
+
+  - id: math-plusbruecke-03
+    title: { de-CH: Plus mit dem Zehnerfeld, en-US: Adding with the Ten-Frame }
+    skill: math.add.to10
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [add], max: 10, a: { min: 5, max: 5 }, b: { min: 3, max: 3 }, manipulatives: ten-frame } }
+      target: 8
+      steps:
+        - say: { de-CH: "Fünf Punkte sind schon da.", en-US: "Five dots are already there." }
+          action: { highlight: frame }
+        - say: { de-CH: "Drei kommen dazu. Fünf plus drei.", en-US: "Three more come. Five plus three." }
+          action: { countAlong: true }
+        - say: { de-CH: "Das sind acht!", en-US: "That makes eight!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 2, params: { operations: [add], max: 10, manipulatives: ten-frame } }
+      - { type: add-sub, weight: 1, params: { operations: [add], max: 10, manipulatives: objects, objects: [fish, flower, car] } }
+
+  - id: math-plusbruecke-04
+    title: { de-CH: Minus mit dem Zehnerfeld, en-US: Subtracting with the Ten-Frame }
+    skill: math.sub.to10
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [sub], max: 10, a: { min: 9, max: 9 }, b: { min: 4, max: 4 }, manipulatives: ten-frame } }
+      target: 5
+      steps:
+        - say: { de-CH: "Im Zehnerfeld sind neun Punkte.", en-US: "The ten-frame has nine dots." }
+          action: { highlight: frame }
+        - say: { de-CH: "Ich nehme vier weg. Neun minus vier.", en-US: "I take four away. Nine minus four." }
+          action: { countAlong: true }
+        - say: { de-CH: "Es bleiben fünf!", en-US: "Five are left!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 2, params: { operations: [sub], max: 10, manipulatives: ten-frame } }
+      - { type: add-sub, weight: 1, params: { operations: [sub], max: 10, manipulatives: objects, objects: [carrot, egg, leaf] } }
+
+  - id: math-plusbruecke-05
+    title: { de-CH: Plus bis 10, en-US: Adding to 10 }
+    skill: math.add.to10
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [add], max: 10, a: { min: 6, max: 6 }, b: { min: 3, max: 3 } } }
+      target: 9
+      steps:
+        - say: { de-CH: "Sechs plus drei. Ich merke mir die Sechs.", en-US: "Six plus three. I keep six in my head." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Dann zähle ich drei weiter: sieben, acht, neun.", en-US: "Then I count on three: seven, eight, nine." }
+          action: { countAlong: true }
+        - say: { de-CH: "Sechs plus drei ist neun!", en-US: "Six plus three is nine!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 2, params: { operations: [add], max: 10, choices: 4 } }
+      - { type: add-sub, weight: 1, params: { operations: [add], max: 10, answerMode: keypad } }
+
+  - id: math-plusbruecke-06
+    title: { de-CH: Minus bis 10, en-US: Subtracting to 10 }
+    skill: math.sub.to10
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [sub], max: 10, a: { min: 8, max: 8 }, b: { min: 2, max: 2 } } }
+      target: 6
+      steps:
+        - say: { de-CH: "Acht minus zwei. Ich merke mir die Acht.", en-US: "Eight minus two. I keep eight in my head." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich zähle zwei zurück: sieben, sechs.", en-US: "I count back two: seven, six." }
+          action: { countAlong: true }
+        - say: { de-CH: "Acht minus zwei ist sechs!", en-US: "Eight minus two is six!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 2, params: { operations: [sub], max: 10, choices: 4 } }
+      - { type: add-sub, weight: 1, params: { operations: [sub], max: 10, answerMode: keypad } }
+
+  - id: math-plusbruecke-07
+    title: { de-CH: Plus und Minus gemischt, en-US: Plus and Minus Mixed }
+    skill: math.add.to10
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [add], max: 10, a: { min: 6, max: 6 }, b: { min: 3, max: 3 }, unknown: operand } }
+      target: 3
+      steps:
+        - say: { de-CH: "Wie viel fehlt von sechs bis neun?", en-US: "What do you add to six to make nine?" }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich zähle von sechs weiter: sieben, acht, neun. Das sind drei Schritte.", en-US: "I count on from six: seven, eight, nine. That is three steps." }
+          action: { hop: true }
+        - say: { de-CH: "Es fehlen drei!", en-US: "Three is missing!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 2, params: { operations: [add, sub], max: 10, answerMode: keypad } }
+      - { type: add-sub, weight: 1, params: { operations: [add], max: 10, unknown: operand, answerMode: keypad } }

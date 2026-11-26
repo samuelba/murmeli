@@ -1,0 +1,261 @@
+# de-CH lexicon: Standard German pronunciation, Swiss spelling (ss, never the sharp s).
+# Superset of tools/audio/lexicon/de-CH.yaml (same keys and texts, plus more sections).
+# `speak: false` keeps the generic content-YAML extractor of the audio pipeline out of this file;
+# the pipeline's lexicon extractor reads it directly.
+speak: false
+
+# Numbers 0-100: `text` is the digit label, `speak` is what the TTS reads.
+numbers:
+  0: {text: "0", speak: "null"}
+  1: {text: "1", speak: "eins"}
+  2: {text: "2", speak: "zwei"}
+  3: {text: "3", speak: "drei"}
+  4: {text: "4", speak: "vier"}
+  5: {text: "5", speak: "fünf"}
+  6: {text: "6", speak: "sechs"}
+  7: {text: "7", speak: "sieben"}
+  8: {text: "8", speak: "acht"}
+  9: {text: "9", speak: "neun"}
+  10: {text: "10", speak: "zehn"}
+  11: {text: "11", speak: "elf"}
+  12: {text: "12", speak: "zwölf"}
+  13: {text: "13", speak: "dreizehn"}
+  14: {text: "14", speak: "vierzehn"}
+  15: {text: "15", speak: "fünfzehn"}
+  16: {text: "16", speak: "sechzehn"}
+  17: {text: "17", speak: "siebzehn"}
+  18: {text: "18", speak: "achtzehn"}
+  19: {text: "19", speak: "neunzehn"}
+  20: {text: "20", speak: "zwanzig"}
+  21: {text: "21", speak: "einundzwanzig"}
+  22: {text: "22", speak: "zweiundzwanzig"}
+  23: {text: "23", speak: "dreiundzwanzig"}
+  24: {text: "24", speak: "vierundzwanzig"}
+  25: {text: "25", speak: "fünfundzwanzig"}
+  26: {text: "26", speak: "sechsundzwanzig"}
+  27: {text: "27", speak: "siebenundzwanzig"}
+  28: {text: "28", speak: "achtundzwanzig"}
+  29: {text: "29", speak: "neunundzwanzig"}
+  30: {text: "30", speak: "dreissig"}
+  31: {text: "31", speak: "einunddreissig"}
+  32: {text: "32", speak: "zweiunddreissig"}
+  33: {text: "33", speak: "dreiunddreissig"}
+  34: {text: "34", speak: "vierunddreissig"}
+  35: {text: "35", speak: "fünfunddreissig"}
+  36: {text: "36", speak: "sechsunddreissig"}
+  37: {text: "37", speak: "siebenunddreissig"}
+  38: {text: "38", speak: "achtunddreissig"}
+  39: {text: "39", speak: "neununddreissig"}
+  40: {text: "40", speak: "vierzig"}
+  41: {text: "41", speak: "einundvierzig"}
+  42: {text: "42", speak: "zweiundvierzig"}
+  43: {text: "43", speak: "dreiundvierzig"}
+  44: {text: "44", speak: "vierundvierzig"}
+  45: {text: "45", speak: "fünfundvierzig"}
+  46: {text: "46", speak: "sechsundvierzig"}
+  47: {text: "47", speak: "siebenundvierzig"}
+  48: {text: "48", speak: "achtundvierzig"}
+  49: {text: "49", speak: "neunundvierzig"}
+  50: {text: "50", speak: "fünfzig"}
+  51: {text: "51", speak: "einundfünfzig"}
+  52: {text: "52", speak: "zweiundfünfzig"}
+  53: {text: "53", speak: "dreiundfünfzig"}
+  54: {text: "54", speak: "vierundfünfzig"}
+  55: {text: "55", speak: "fünfundfünfzig"}
+  56: {text: "56", speak: "sechsundfünfzig"}
+  57: {text: "57", speak: "siebenundfünfzig"}
+  58: {text: "58", speak: "achtundfünfzig"}
+  59: {text: "59", speak: "neunundfünfzig"}
+  60: {text: "60", speak: "sechzig"}
+  61: {text: "61", speak: "einundsechzig"}
+  62: {text: "62", speak: "zweiundsechzig"}
+  63: {text: "63", speak: "dreiundsechzig"}
+  64: {text: "64", speak: "vierundsechzig"}
+  65: {text: "65", speak: "fünfundsechzig"}
+  66: {text: "66", speak: "sechsundsechzig"}
+  67: {text: "67", speak: "siebenundsechzig"}
+  68: {text: "68", speak: "achtundsechzig"}
+  69: {text: "69", speak: "neunundsechzig"}
+  70: {text: "70", speak: "siebzig"}
+  71: {text: "71", speak: "einundsiebzig"}
+  72: {text: "72", speak: "zweiundsiebzig"}
+  73: {text: "73", speak: "dreiundsiebzig"}
+  74: {text: "74", speak: "vierundsiebzig"}
+  75: {text: "75", speak: "fünfundsiebzig"}
+  76: {text: "76", speak: "sechsundsiebzig"}
+  77: {text: "77", speak: "siebenundsiebzig"}
+  78: {text: "78", speak: "achtundsiebzig"}
+  79: {text: "79", speak: "neunundsiebzig"}
+  80: {text: "80", speak: "achtzig"}
+  81: {text: "81", speak: "einundachtzig"}
+  82: {text: "82", speak: "zweiundachtzig"}
+  83: {text: "83", speak: "dreiundachtzig"}
+  84: {text: "84", speak: "vierundachtzig"}
+  85: {text: "85", speak: "fünfundachtzig"}
+  86: {text: "86", speak: "sechsundachtzig"}
+  87: {text: "87", speak: "siebenundachtzig"}
+  88: {text: "88", speak: "achtundachtzig"}
+  89: {text: "89", speak: "neunundachtzig"}
+  90: {text: "90", speak: "neunzig"}
+  91: {text: "91", speak: "einundneunzig"}
+  92: {text: "92", speak: "zweiundneunzig"}
+  93: {text: "93", speak: "dreiundneunzig"}
+  94: {text: "94", speak: "vierundneunzig"}
+  95: {text: "95", speak: "fünfundneunzig"}
+  96: {text: "96", speak: "sechsundneunzig"}
+  97: {text: "97", speak: "siebenundneunzig"}
+  98: {text: "98", speak: "achtundneunzig"}
+  99: {text: "99", speak: "neunundneunzig"}
+  100: {text: "100", speak: "hundert"}
+
+operators:
+  plus: "plus"
+  minus: "minus"
+  times: "mal"
+  divided_by: "geteilt durch"
+  equals: "gleich"
+
+# Sentence frames for assembled math prompts.
+frames:
+  how_much_is: "Wie viel ist"
+  count_the: "Zähle die"
+  which_is_bigger: "Welche Zahl ist grösser?"
+  which_is_smaller: "Welche Zahl ist kleiner?"
+  which_is_missing: "Welche Zahl fehlt?"
+  how_many: "Wie viele siehst du?"
+  what_comes_next: "Was kommt danach?"
+  what_comes_before: "Was kommt davor?"
+
+# Letter names. `text` is the label, `speak` is what the TTS reads.
+letters:
+  "A": {text: "A", speak: "A"}
+  "B": {text: "B", speak: "Beh"}
+  "C": {text: "C", speak: "Zeh"}
+  "D": {text: "D", speak: "Deh"}
+  "E": {text: "E", speak: "Eh"}
+  "F": {text: "F", speak: "Ef"}
+  "G": {text: "G", speak: "Geh"}
+  "H": {text: "H", speak: "Hah"}
+  "I": {text: "I", speak: "I"}
+  "J": {text: "J", speak: "Jott"}
+  "K": {text: "K", speak: "Kah"}
+  "L": {text: "L", speak: "El"}
+  "M": {text: "M", speak: "Em"}
+  "N": {text: "N", speak: "En"}
+  "O": {text: "O", speak: "O"}
+  "P": {text: "P", speak: "Peh"}
+  "Q": {text: "Q", speak: "Kuh"}
+  "R": {text: "R", speak: "Er"}
+  "S": {text: "S", speak: "Es"}
+  "T": {text: "T", speak: "Teh"}
+  "U": {text: "U", speak: "Uh"}
+  "V": {text: "V", speak: "Vau"}
+  "W": {text: "W", speak: "Weh"}
+  "X": {text: "X", speak: "Ix"}
+  "Y": {text: "Y", speak: "Ypsilon"}
+  "Z": {text: "Z", speak: "Zett"}
+  "Ä": {text: "Ä", speak: "Ä"}
+  "Ö": {text: "Ö", speak: "Ö"}
+  "Ü": {text: "Ü", speak: "Ü"}
+
+# Carrier phrases: sounds are rendered inside a word, never in isolation.
+carriers:
+  "A": "A wie Affe"
+  "B": "B wie Ball"
+  "C": "C wie Clown"
+  "D": "D wie Dach"
+  "E": "E wie Esel"
+  "F": "F wie Fisch"
+  "G": "G wie Gabel"
+  "H": "H wie Haus"
+  "I": "I wie Igel"
+  "J": "J wie Jacke"
+  "K": "K wie Katze"
+  "L": "L wie Löwe"
+  "M": "M wie Maus"
+  "N": "N wie Nase"
+  "O": "O wie Ofen"
+  "P": "P wie Papagei"
+  "Q": "Q wie Qualle"
+  "R": "R wie Rabe"
+  "S": "S wie Sonne"
+  "T": "T wie Tiger"
+  "U": "U wie Uhu"
+  "V": "V wie Vogel"
+  "W": "W wie Wolke"
+  "X": "X wie Xylofon"
+  "Y": "Y wie Yoga"
+  "Z": "Z wie Zebra"
+  "Ä": "Ä wie Ärmel"
+  "Ö": "Ö wie Öl"
+  "Ü": "Ü wie Übung"
+
+digraphs:
+  "Sch": "Sch wie Schule"
+  "Ch": "Ch wie Buch"
+  "Ei": "Ei wie Eis"
+  "Au": "Au wie Auto"
+  "Eu": "Eu wie Eule"
+  "Ie": "ie wie Biene"
+  "Qu": "Qu wie Qualle"
+
+comparison:
+  greater: "grösser als"
+  less: "kleiner als"
+  equal: "gleich"
+  more: "mehr"
+  fewer: "weniger"
+  same: "gleich viele"
+
+ordinals:
+  1: "erste"
+  2: "zweite"
+  3: "dritte"
+  4: "vierte"
+  5: "fünfte"
+  6: "sechste"
+  7: "siebte"
+  8: "achte"
+  9: "neunte"
+  10: "zehnte"
+
+positions:
+  before: "davor"
+  after: "danach"
+  between: "dazwischen"
+  left: "links"
+  right: "rechts"
+  top: "oben"
+  bottom: "unten"
+  next_to: "neben"
+
+# Kind feedback, never punishing. The player picks one phrase per category at random.
+feedback:
+  correct:
+    - "Super!"
+    - "Toll gemacht!"
+    - "Richtig!"
+    - "Genau!"
+    - "Prima!"
+    - "Du hast es geschafft!"
+  almost:
+    - "Fast!"
+    - "Ganz knapp!"
+  try_again:
+    - "Probier es nochmal!"
+    - "Versuch es noch einmal."
+    - "Schau nochmal genau hin."
+  encourage:
+    - "Du schaffst das!"
+    - "Schritt für Schritt."
+    - "Lass dir Zeit."
+  hint:
+    - "Ich helfe dir."
+    - "Hier ist ein Tipp."
+  solution:
+    - "Schau, so geht es."
+    - "So ist es richtig."
+  level_done:
+    - "Geschafft!"
+    - "Du bist super geklettert!"
+    - "Weiter so!"

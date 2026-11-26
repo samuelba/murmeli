@@ -1,0 +1,56 @@
+{
+  "name": "@murmeli/content",
+  "version": "0.0.0",
+  "description": "Murmeli curriculum content: zod schemas, exercise type registry, loader and validator",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=24.11"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "tracks",
+    "lexicon",
+    "pictures",
+    "pictures.yaml"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "validate": "node schema/cli.ts validate",
+    "stats": "node schema/cli.ts stats",
+    "speakables": "node schema/cli.ts speakables",
+    "test": "node --test \"test/**/*.test.ts\"",
+    "test:cov": "node --test --experimental-test-coverage --test-coverage-include=\"schema/**/*.ts\" --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 \"test/**/*.test.ts\"",
+    "test:cjs": "npm run build && node --test test/cjs-smoke.test.cjs",
+    "lint": "eslint \"{schema,test}/**/*.ts\"",
+    "lint:fix": "eslint \"{schema,test}/**/*.ts\" --fix",
+    "format": "prettier --write \"{schema,test}/**/*.{ts,cjs}\"",
+    "format:check": "prettier --check \"{schema,test}/**/*.{ts,cjs}\""
+  },
+  "dependencies": {
+    "yaml": "^2.9.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.19.4",
+    "eslint": "^10.15.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.7",
+    "globals": "^17.14.0",
+    "prettier": "^3.10.1",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.74.0"
+  }
+}

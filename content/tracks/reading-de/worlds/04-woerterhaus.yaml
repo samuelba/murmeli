@@ -1,0 +1,123 @@
+# Wörterhaus: read a word and tap the matching picture.
+# Uppercase with syllable marks first, then natural case, then words that look alike.
+id: reading-de-woerterhaus
+order: 4
+grade: "1"
+requires: [reading-de-buchstabenbach]
+title: { de-CH: Wörterhaus }
+scene: house
+skills:
+  - { id: de.read.upper, lp21: D.2.A.1, title: { de-CH: Wörter in Grossbuchstaben lesen } }
+  - { id: de.read.words, lp21: D.2.A.1, title: { de-CH: Einfache Wörter lesen } }
+levels:
+  - id: reading-de-woerterhaus-01
+    title: { de-CH: Kurze Wörter }
+    skill: de.read.upper
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: word-picture, params: { words: [hat, egg], choices: 2, case: upper, showSyllables: true } }
+      steps:
+        - say: { de-CH: "Schau, hier steht ein Wort." }
+          action: { highlight: word }
+        - say: { de-CH: "Ich lese langsam, Buchstabe für Buchstabe." }
+          action: { highlight: letters }
+        - say: { de-CH: "Jetzt weiss ich es. Ich tippe auf das passende Bild!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: word-picture, weight: 1, params: { words: [egg, watch, ear, hat, mouse], choices: 2, case: upper, showSyllables: true } }
+
+  - id: reading-de-woerterhaus-02
+    title: { de-CH: Wörter mit zwei Silben }
+    skill: de.read.upper
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: word-picture, params: { words: [sofa, rose, nose], choices: 3, case: upper, showSyllables: true } }
+      steps:
+        - say: { de-CH: "Die Bögen zeigen die Silben." }
+          action: { highlight: word }
+        - say: { de-CH: "Ich lese Silbe für Silbe." }
+          action: { highlight: choices }
+        - say: { de-CH: "Da ist das passende Bild. Ich tippe drauf!" }
+          action: { tapAnswer: true }
+    generators:
+      - type: word-picture
+        weight: 1
+        params: { words: [sofa, rose, nose, llama, donkey, hedgehog, rabbit, car], choices: 3, case: upper, showSyllables: true }
+
+  - id: reading-de-woerterhaus-03
+    title: { de-CH: Wörter mit drei Silben }
+    skill: de.read.upper
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: word-picture, params: { words: [tomato, banana, rocket], choices: 3, case: upper, showSyllables: true } }
+      steps:
+        - say: { de-CH: "Ein langes Wort. Ich lese Silbe für Silbe." }
+          action: { highlight: word }
+        - say: { de-CH: "Dann sage ich das ganze Wort." }
+          action: { highlight: choices }
+        - say: { de-CH: "Da ist das passende Bild. Ich tippe drauf!" }
+          action: { tapAnswer: true }
+    generators:
+      - type: word-picture
+        weight: 1
+        params: { words: [tomato, watermelon, banana, sun, rocket, ant], choices: 3, case: upper, showSyllables: true }
+
+  - id: reading-de-woerterhaus-04
+    title: { de-CH: Gross und klein }
+    skill: de.read.words
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: word-picture, params: { words: [mouse, moon, sun], choices: 3, showSyllables: true } }
+      steps:
+        - say: { de-CH: "Jetzt sind die Buchstaben gross und klein." }
+          action: { highlight: word }
+        - say: { de-CH: "Ich lese das Wort ganz langsam." }
+          action: { highlight: choices }
+        - say: { de-CH: "Da ist das passende Bild. Ich tippe drauf!" }
+          action: { tapAnswer: true }
+    generators:
+      - type: word-picture
+        weight: 1
+        params: { words: [mouse, moon, sofa, rose, nose, llama, tomato, banana, sun, hat], choices: 3, showSyllables: true }
+
+  - id: reading-de-woerterhaus-05
+    title: { de-CH: Ohne Bögen lesen }
+    skill: de.read.words
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: word-picture, params: { words: [fish, dog, whale], choices: 3 } }
+      steps:
+        - say: { de-CH: "Jetzt lese ich ohne Bögen." }
+          action: { highlight: word }
+        - say: { de-CH: "Buchstabe für Buchstabe, dann das ganze Wort." }
+          action: { highlight: choices }
+        - say: { de-CH: "Da ist das passende Bild. Ich tippe drauf!" }
+          action: { tapAnswer: true }
+    generators:
+      - type: word-picture
+        weight: 1
+        params: { words: [donkey, hedgehog, rabbit, car, egg, watch, ear, dog, fish, whale], choices: 3 }
+
+  - id: reading-de-woerterhaus-06
+    title: { de-CH: Genau hinschauen }
+    skill: de.read.words
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: word-picture, params: { words: [rabbit, nose, hat, house], choices: 4 } }
+      steps:
+        - say: { de-CH: "Manche Wörter sehen fast gleich aus." }
+          action: { highlight: word }
+        - say: { de-CH: "Ich schaue jeden Buchstaben genau an." }
+          action: { highlight: letters }
+        - say: { de-CH: "Da ist das passende Bild. Ich tippe drauf!" }
+          action: { tapAnswer: true }
+    generators:
+      - type: word-picture
+        weight: 1
+        params: { words: [rabbit, nose, hat, dog, house, mouse, moon, rose], choices: 4 }

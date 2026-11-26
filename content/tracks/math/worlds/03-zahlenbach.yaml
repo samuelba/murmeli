@@ -1,0 +1,142 @@
+# Zahlenbach: comparing, counting on and back, and the number line to 20 (Kindergarten 2).
+id: math-zahlenbach
+order: 3
+grade: KG2
+requires: [math-zahlenwiese]
+title: { de-CH: Zahlenbach, en-US: Number Brook }
+scene: brook
+skills:
+  - id: math.compare.to10
+    lp21: MA.1.A.1
+    title: { de-CH: Mengen und Zahlen vergleichen, en-US: Comparing amounts and numbers }
+  - id: math.sequence.to20
+    lp21: MA.1.A.1
+    title: { de-CH: Vorwärts und rückwärts zählen, en-US: Counting on and back }
+  - id: math.numberline.to20
+    lp21: MA.1.C.1
+    title: { de-CH: Zahlenstrahl bis 20, en-US: Number line to 20 }
+levels:
+  - id: math-zahlenbach-01
+    title: { de-CH: Wo sind mehr?, en-US: Which Has More? }
+    skill: math.compare.to10
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: compare, params: { mode: quantities, min: 2, max: 5, allowEqual: false, objects: [duck] } }
+      steps:
+        - say: { de-CH: "Links und rechts schwimmen Enten.", en-US: "There are ducks on the left and on the right." }
+          action: { highlight: objects }
+        - say: { de-CH: "Ich zähle beide Seiten.", en-US: "I count both sides." }
+          action: { countAlong: true }
+        - say: { de-CH: "Auf dieser Seite sind mehr. Ich tippe drauf!", en-US: "This side has more. I tap it!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: compare, weight: 1, params: { mode: quantities, min: 1, max: 5, allowEqual: false, objects: [duck, fish, apple] } }
+
+  - id: math-zahlenbach-02
+    title: { de-CH: Gleich viele, en-US: The Same Amount }
+    skill: math.compare.to10
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: compare, params: { mode: quantities, min: 4, max: 4, objects: [ball] } }
+      steps:
+        - say: { de-CH: "Ich zähle links: vier Bälle.", en-US: "I count the left side: four balls." }
+          action: { countAlong: true }
+        - say: { de-CH: "Rechts sind auch vier Bälle.", en-US: "The right side has four balls too." }
+          action: { highlight: objects }
+        - say: { de-CH: "Das sind gleich viele!", en-US: "They are the same!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: compare, weight: 1, params: { mode: quantities, min: 1, max: 10, maxDifference: 3, objects: [ball, star, flower] } }
+
+  - id: math-zahlenbach-03
+    title: { de-CH: Grösser oder kleiner, en-US: Greater or Less }
+    skill: math.compare.to10
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: compare, params: { mode: numbers, min: 2, max: 9 } }
+      steps:
+        - say: { de-CH: "Hier sind zwei Zahlen. Welche ist grösser?", en-US: "Here are two numbers. Which one is greater?" }
+          action: { highlight: numbers }
+        - say: { de-CH: "Das Krokodil hat Hunger. Es will immer die grössere Zahl fressen.", en-US: "The crocodile is hungry. It always wants to eat the greater number." }
+          action: { highlight: signs }
+        - say: { de-CH: "Das Maul geht zur grösseren Zahl auf.", en-US: "Its mouth opens toward the greater number." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: compare, weight: 1, params: { mode: numbers, min: 0, max: 10 } }
+
+  - id: math-zahlenbach-04
+    title: { de-CH: Was kommt danach?, en-US: What Comes Next? }
+    skill: math.sequence.to20
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: sequence, params: { kind: numbers, min: 3, max: 6, length: 4, ask: next } }
+      target: 6
+      steps:
+        - say: { de-CH: "Drei, vier, fünf …", en-US: "Three, four, five …" }
+          action: { highlight: numbers }
+        - say: { de-CH: "Nach der Fünf kommt die Sechs.", en-US: "After five comes six." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sequence, weight: 2, params: { kind: numbers, min: 0, max: 10, length: 4, ask: next } }
+      - { type: sequence, weight: 1, params: { kind: numbers, min: 0, max: 10, length: 4, ask: before } }
+
+  - id: math-zahlenbach-05
+    title: { de-CH: Der Zahlenstrahl, en-US: The Number Line }
+    skill: math.numberline.to20
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: number-line, params: { mode: missing, start: 0, end: 10, labels: all } }
+      steps:
+        - say: { de-CH: "Das ist ein Zahlenstrahl. Die Zahlen stehen in einer Reihe.", en-US: "This is a number line. The numbers stand in a row." }
+          action: { highlight: number-line }
+        - say: { de-CH: "Hier fehlt eine Zahl. Ich schaue links und rechts.", en-US: "One number is missing. I look left and right." }
+          action: { hop: true }
+        - say: { de-CH: "Jetzt weiss ich, welche Zahl fehlt!", en-US: "Now I know which number is missing!" }
+          action: { fillBlank: true }
+    generators:
+      - { type: number-line, weight: 2, params: { mode: missing, start: 0, end: 10, labels: all } }
+      - { type: number-line, weight: 1, params: { mode: place, start: 0, end: 10, labels: ends } }
+
+  - id: math-zahlenbach-06
+    title: { de-CH: Zählen bis 20, en-US: Counting to 20 }
+    skill: math.sequence.to20
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: sequence, params: { kind: numbers, min: 15, max: 18, length: 4, direction: down, ask: next } }
+      target: 15
+      steps:
+        - say: { de-CH: "Heute zählen wir rückwärts: achtzehn, siebzehn, sechzehn …", en-US: "Today we count back: eighteen, seventeen, sixteen …" }
+          action: { highlight: numbers }
+        - say: { de-CH: "Rückwärts wird es immer eins weniger.", en-US: "Counting back, it gets one less each time." }
+          action: { hop: true }
+        - say: { de-CH: "Jetzt kommt fünfzehn!", en-US: "Next comes fifteen!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sequence, weight: 2, params: { kind: numbers, min: 5, max: 20, length: 4, ask: next } }
+      - { type: sequence, weight: 1, params: { kind: numbers, min: 0, max: 20, length: 4, direction: down, ask: next } }
+      - { type: sequence, weight: 1, params: { kind: numbers, min: 0, max: 20, length: 5, ask: missing } }
+
+  - id: math-zahlenbach-07
+    title: { de-CH: Zahlenstrahl bis 20, en-US: Number Line to 20 }
+    skill: math.numberline.to20
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: number-line, params: { mode: place, start: 0, end: 20, labels: tens } }
+      steps:
+        - say: { de-CH: "Hier stehen nur die Null, die Zehn und die Zwanzig.", en-US: "Only zero, ten and twenty are written here." }
+          action: { highlight: number-line }
+        - say: { de-CH: "Ich hüpfe von der Zehn weiter.", en-US: "I hop on from ten." }
+          action: { hop: true }
+        - say: { de-CH: "Hier ist die Zahl. Ich tippe drauf!", en-US: "Here is the number. I tap it!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: number-line, weight: 2, params: { mode: place, start: 0, end: 20, labels: tens } }
+      - { type: number-line, weight: 1, params: { mode: missing, start: 0, end: 20, labels: all } }
+      - { type: compare, weight: 1, params: { mode: numbers, min: 0, max: 20 } }

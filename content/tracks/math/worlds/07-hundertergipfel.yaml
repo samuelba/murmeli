@@ -1,0 +1,164 @@
+# Hundertergipfel: numbers to 100, tens and ones, adding and subtracting tens and ones (2nd class).
+id: math-hundertergipfel
+order: 7
+grade: '2'
+requires: [math-rechenberg]
+title: { de-CH: Hundertergipfel, en-US: Hundred Peak }
+scene: peak
+skills:
+  - id: math.numbers.to100
+    lp21: MA.1.A.1
+    title: { de-CH: Zahlen bis 100, en-US: Numbers to 100 }
+  - id: math.addsub.tens
+    lp21: MA.1.A.2
+    title: { de-CH: Mit Zehnern rechnen, en-US: Adding and subtracting tens }
+  - id: math.addsub.to100
+    lp21: MA.1.A.2
+    title: { de-CH: Plus und Minus bis 100, en-US: Adding and subtracting within 100 }
+levels:
+  - id: math-hundertergipfel-01
+    title: { de-CH: Zehnerzahlen, en-US: Counting by Tens }
+    skill: math.numbers.to100
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: sequence, params: { kind: numbers, min: 20, max: 50, step: 10, length: 4, ask: next } }
+      target: 50
+      steps:
+        - say: { de-CH: "Zwanzig, dreissig, vierzig. Wir machen Zehnerschritte.", en-US: "Twenty, thirty, forty. We take steps of ten." }
+          action: { highlight: numbers }
+        - say: { de-CH: "Nach vierzig kommt fünfzig.", en-US: "After forty comes fifty." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sequence, weight: 2, params: { kind: numbers, min: 0, max: 100, step: 10, length: 4, ask: next } }
+      - { type: sequence, weight: 1, params: { kind: numbers, min: 0, max: 100, step: 10, length: 5, ask: missing } }
+      - { type: number-line, weight: 1, params: { mode: place, start: 0, end: 100, step: 10, labels: ends } }
+
+  - id: math-hundertergipfel-02
+    title: { de-CH: Zahlen bis 100, en-US: Numbers to 100 }
+    skill: math.numbers.to100
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: number-recognition, params: { min: 20, max: 99, mode: hear, choices: 3 } }
+      target: 47
+      steps:
+        - say: { de-CH: "Siebenundvierzig: Zuerst hörst du die Sieben, aber zuerst schreibst du die Vier.", en-US: "Forty-seven: you hear forty first, so the four comes first." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Vier Zehner und sieben Einer.", en-US: "Four tens and seven ones." }
+          action: { highlight: choices }
+        - say: { de-CH: "Das ist die Siebenundvierzig!", en-US: "This is forty-seven!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: number-recognition, weight: 2, params: { min: 11, max: 100, mode: hear, choices: 4 } }
+      - { type: number-line, weight: 1, params: { mode: place, start: 40, end: 60, labels: tens } }
+      - { type: number-line, weight: 1, params: { mode: missing, start: 30, end: 50, labels: all } }
+
+  - id: math-hundertergipfel-03
+    title: { de-CH: Vergleichen bis 100, en-US: Comparing to 100 }
+    skill: math.numbers.to100
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: compare, params: { mode: numbers, min: 30, max: 70 } }
+      steps:
+        - say: { de-CH: "Zuerst schaue ich auf die Zehner.", en-US: "First I look at the tens." }
+          action: { highlight: numbers }
+        - say: { de-CH: "Mehr Zehner heisst: Die Zahl ist grösser. Sind die Zehner gleich, schaue ich auf die Einer.", en-US: "More tens means the number is greater. If the tens are the same, I look at the ones." }
+          action: { highlight: signs }
+        - say: { de-CH: "Das Krokodil frisst die grössere Zahl.", en-US: "The crocodile eats the greater number." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: compare, weight: 2, params: { mode: numbers, min: 10, max: 100, maxDifference: 20 } }
+      - { type: compare, weight: 1, params: { mode: numbers, min: 10, max: 100 } }
+
+  - id: math-hundertergipfel-04
+    title: { de-CH: Zehner plus Zehner, en-US: Tens Plus Tens }
+    skill: math.addsub.tens
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [add], max: 100, a: { min: 30, max: 30 }, b: { min: 40, max: 40 }, aMultipleOf: 10, bMultipleOf: 10 } }
+      target: 70
+      steps:
+        - say: { de-CH: "Dreissig plus vierzig. Das sind drei Zehner und vier Zehner.", en-US: "Thirty plus forty. That is three tens and four tens." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Drei plus vier ist sieben. Also sieben Zehner.", en-US: "Three plus four is seven. So seven tens." }
+          action: { highlight: numbers }
+        - say: { de-CH: "Dreissig plus vierzig ist siebzig!", en-US: "Thirty plus forty is seventy!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 1, params: { operations: [add, sub], max: 100, aMultipleOf: 10, bMultipleOf: 10, answerMode: keypad } }
+
+  - id: math-hundertergipfel-05
+    title: { de-CH: Einer dazu und weg, en-US: Adding and Taking Ones }
+    skill: math.addsub.to100
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [add], max: 100, a: { min: 43, max: 43 }, b: { min: 5, max: 5 } } }
+      target: 48
+      steps:
+        - say: { de-CH: "Dreiundvierzig plus fünf. Die Zehner bleiben gleich.", en-US: "Forty-three plus five. The tens stay the same." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Drei plus fünf ist acht.", en-US: "Three plus five is eight." }
+          action: { highlight: numbers }
+        - say: { de-CH: "Dreiundvierzig plus fünf ist achtundvierzig!", en-US: "Forty-three plus five is forty-eight!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 1, params: { operations: [add, sub], max: 100, a: { min: 20, max: 99 }, b: { min: 1, max: 9 }, crossTen: never, answerMode: keypad } }
+
+  - id: math-hundertergipfel-06
+    title: { de-CH: Zehner dazu und weg, en-US: Adding and Taking Tens }
+    skill: math.addsub.tens
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [add], max: 100, a: { min: 34, max: 34 }, b: { min: 20, max: 20 }, bMultipleOf: 10 } }
+      target: 54
+      steps:
+        - say: { de-CH: "Vierunddreissig plus zwanzig. Die Einer bleiben gleich.", en-US: "Thirty-four plus twenty. The ones stay the same." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Drei Zehner plus zwei Zehner sind fünf Zehner.", en-US: "Three tens plus two tens are five tens." }
+          action: { highlight: numbers }
+        - say: { de-CH: "Vierunddreissig plus zwanzig ist vierundfünfzig!", en-US: "Thirty-four plus twenty is fifty-four!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 1, params: { operations: [add, sub], max: 100, a: { min: 11, max: 99 }, b: { min: 10, max: 80 }, bMultipleOf: 10, answerMode: keypad } }
+
+  - id: math-hundertergipfel-07
+    title: { de-CH: Über den Zehner, en-US: Across the Ten }
+    skill: math.addsub.to100
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [add], max: 100, a: { min: 37, max: 37 }, b: { min: 5, max: 5 } } }
+      target: 42
+      steps:
+        - say: { de-CH: "Siebenunddreissig plus fünf. Bis vierzig fehlen drei.", en-US: "Thirty-seven plus five. Three more makes forty." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Siebenunddreissig plus drei ist vierzig. Dann noch zwei.", en-US: "Thirty-seven plus three is forty. Then two more." }
+          action: { hop: true }
+        - say: { de-CH: "Vierzig plus zwei ist zweiundvierzig!", en-US: "Forty plus two is forty-two!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 2, params: { operations: [add, sub], max: 100, a: { min: 21, max: 98 }, b: { min: 2, max: 9 }, crossTen: always, answerMode: keypad } }
+      - { type: add-sub, weight: 1, params: { operations: [add, sub], max: 100, a: { min: 11, max: 99 }, b: { min: 1, max: 9 }, answerMode: keypad } }
+
+  - id: math-hundertergipfel-08
+    title: { de-CH: Rechenmauern bis 100, en-US: Number Walls to 100 }
+    skill: math.addsub.to100
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: number-wall, params: { rows: 3, max: 100 } }
+      steps:
+        - say: { de-CH: "Eine Rechenmauer mit grossen Zahlen!", en-US: "A number wall with big numbers!" }
+          action: { highlight: wall }
+        - say: { de-CH: "Zwei Steine zusammen ergeben den Stein darüber. Ich rechne Schritt für Schritt.", en-US: "Two bricks together make the brick on top. I work step by step." }
+          action: { highlight: numbers }
+        - say: { de-CH: "Ich fülle den leeren Stein.", en-US: "I fill in the empty brick." }
+          action: { fillBlank: true }
+    generators:
+      - { type: number-wall, weight: 1, params: { rows: 3, max: 50 } }
+      - { type: number-wall, weight: 2, params: { rows: 3, max: 100, blanks: 2, blankPosition: any } }

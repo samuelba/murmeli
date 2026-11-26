@@ -1,0 +1,148 @@
+# Formenwald: naming flat shapes and continuing picture patterns (Kindergarten 1).
+# Independent of the counting worlds, so it is open from the start.
+id: math-formenwald
+order: 2
+grade: KG1
+requires: []
+title: { de-CH: Formenwald, en-US: Shape Forest }
+scene: forest
+skills:
+  - id: math.shapes.basic
+    lp21: MA.2.A.1
+    title: { de-CH: Formen erkennen, en-US: Recognizing shapes }
+  - id: math.patterns.pictures
+    lp21: MA.2.B.1
+    title: { de-CH: Muster fortsetzen, en-US: Continuing patterns }
+levels:
+  - id: math-formenwald-01
+    title: { de-CH: Kreis und Quadrat, en-US: Circle and Square }
+    skill: math.shapes.basic
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: shape-pick, params: { shapes: [shape-circle, shape-square], choices: 2 } }
+      target: shape-circle
+      steps:
+        - say: { de-CH: "Ein Kreis ist rund. Er hat keine Ecken.", en-US: "A circle is round. It has no corners." }
+          action: { highlight: shapes }
+        - say: { de-CH: "Ein Quadrat hat vier Ecken.", en-US: "A square has four corners." }
+          action: { highlight: choices }
+        - say: { de-CH: "Wo ist der Kreis? Hier!", en-US: "Where is the circle? Here!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: shape-pick, weight: 1, params: { shapes: [shape-circle, shape-square], choices: 2 } }
+
+  - id: math-formenwald-02
+    title: { de-CH: Das Dreieck, en-US: The Triangle }
+    skill: math.shapes.basic
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: shape-pick, params: { shapes: [shape-triangle, shape-circle, shape-square], choices: 3 } }
+      target: shape-triangle
+      steps:
+        - say: { de-CH: "Ein Dreieck hat drei Ecken.", en-US: "A triangle has three corners." }
+          action: { highlight: shapes }
+        - say: { de-CH: "Ich zähle die Ecken: eins, zwei, drei.", en-US: "I count the corners: one, two, three." }
+          action: { countAlong: true }
+        - say: { de-CH: "Das ist das Dreieck!", en-US: "This is the triangle!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: shape-pick, weight: 1, params: { shapes: [shape-circle, shape-square, shape-triangle], choices: 3 } }
+
+  - id: math-formenwald-03
+    title: { de-CH: Das Rechteck, en-US: The Rectangle }
+    skill: math.shapes.basic
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: shape-pick, params: { shapes: [shape-rectangle, shape-square], choices: 2 } }
+      target: shape-rectangle
+      steps:
+        - say: { de-CH: "Das Quadrat und das Rechteck haben beide vier Ecken.", en-US: "The square and the rectangle both have four corners." }
+          action: { highlight: shapes }
+        - say: { de-CH: "Beim Rechteck sind zwei Seiten länger.", en-US: "The rectangle has two longer sides." }
+          action: { highlight: choices }
+        - say: { de-CH: "Das ist das Rechteck!", en-US: "This is the rectangle!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: shape-pick, weight: 2, params: { shapes: [shape-rectangle, shape-square, shape-triangle], choices: 3 } }
+      - { type: shape-pick, weight: 1, params: { shapes: [shape-circle, shape-square, shape-triangle, shape-rectangle], choices: 3 } }
+
+  - id: math-formenwald-04
+    title: { de-CH: Formen gross und klein, en-US: Big and Small Shapes }
+    skill: math.shapes.basic
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: shape-pick, params: { shapes: [shape-triangle, shape-square, shape-circle], choices: 3, varySize: true, varyRotation: true } }
+      target: shape-triangle
+      steps:
+        - say: { de-CH: "Die Formen sind gross, klein oder gedreht.", en-US: "The shapes are big, small or turned." }
+          action: { highlight: shapes }
+        - say: { de-CH: "Ein Dreieck bleibt ein Dreieck. Es hat immer drei Ecken.", en-US: "A triangle stays a triangle. It always has three corners." }
+          action: { highlight: choices }
+        - say: { de-CH: "Hier ist das Dreieck!", en-US: "Here is the triangle!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: shape-pick, weight: 1, params: { shapes: [shape-circle, shape-square, shape-triangle, shape-rectangle], choices: 4, varySize: true, varyRotation: true } }
+
+  - id: math-formenwald-05
+    title: { de-CH: Muster mit zwei Bildern, en-US: Patterns with Two Pictures }
+    skill: math.patterns.pictures
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: sequence, params: { kind: pattern, pictures: [apple, banana], unit: AB, shown: 5, choices: 2 } }
+      target: banana
+      steps:
+        - say: { de-CH: "Apfel, Banane, Apfel, Banane, Apfel.", en-US: "Apple, banana, apple, banana, apple." }
+          action: { highlight: pattern }
+        - say: { de-CH: "Das Muster wiederholt sich immer.", en-US: "The pattern repeats again and again." }
+          action: { highlight: choices }
+        - say: { de-CH: "Jetzt kommt die Banane!", en-US: "Next comes the banana!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sequence, weight: 1, params: { kind: pattern, pictures: [apple, banana], unit: AB } }
+      - { type: sequence, weight: 1, params: { kind: pattern, pictures: [shape-circle, shape-square], unit: AB } }
+      - { type: sequence, weight: 1, params: { kind: pattern, pictures: [cat, dog], unit: AB } }
+
+  - id: math-formenwald-06
+    title: { de-CH: Knifflige Muster, en-US: Tricky Patterns }
+    skill: math.patterns.pictures
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: sequence, params: { kind: pattern, pictures: [star, moon], unit: AAB, shown: 5, choices: 2 } }
+      target: moon
+      steps:
+        - say: { de-CH: "Stern, Stern, Mond. Stern, Stern …", en-US: "Star, star, moon. Star, star …" }
+          action: { highlight: pattern }
+        - say: { de-CH: "Nach zwei Sternen kommt immer ein Mond.", en-US: "After two stars there is always a moon." }
+          action: { highlight: choices }
+        - say: { de-CH: "Jetzt kommt der Mond!", en-US: "Now comes the moon!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sequence, weight: 1, params: { kind: pattern, pictures: [star, moon], unit: AAB } }
+      - { type: sequence, weight: 1, params: { kind: pattern, pictures: [shape-triangle, shape-circle], unit: ABB } }
+      - { type: sequence, weight: 1, params: { kind: pattern, pictures: [frog, fish], unit: AABB, shown: 7 } }
+
+  - id: math-formenwald-07
+    title: { de-CH: Muster mit drei Bildern, en-US: Patterns with Three Pictures }
+    skill: math.patterns.pictures
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: sequence, params: { kind: pattern, pictures: [shape-circle, shape-square, shape-triangle], unit: ABC, shown: 5, choices: 3 } }
+      target: shape-triangle
+      steps:
+        - say: { de-CH: "Kreis, Quadrat, Dreieck. Kreis, Quadrat …", en-US: "Circle, square, triangle. Circle, square …" }
+          action: { highlight: pattern }
+        - say: { de-CH: "Nach dem Quadrat kommt immer das Dreieck.", en-US: "After the square there is always the triangle." }
+          action: { highlight: choices }
+        - say: { de-CH: "Jetzt kommt das Dreieck!", en-US: "Next comes the triangle!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: sequence, weight: 2, params: { kind: pattern, pictures: [shape-circle, shape-square, shape-triangle], unit: ABC, choices: 3 } }
+      - { type: sequence, weight: 1, params: { kind: pattern, pictures: [apple, banana, strawberry], unit: ABC, choices: 3 } }
+      - { type: sequence, weight: 1, params: { kind: pattern, pictures: [car, bus], unit: ABB } }

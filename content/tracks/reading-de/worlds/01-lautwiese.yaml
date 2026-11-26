@@ -1,0 +1,183 @@
+# Lautwiese: the first letters in the order of Swiss initial-sound charts.
+# Vowels and continuous consonants first (A M I L O S E U R N F); every level adds 2-4 letters.
+id: reading-de-lautwiese
+order: 1
+grade: KG2
+requires: []
+title: { de-CH: Lautwiese }
+scene: meadow
+skills:
+  - { id: de.letters.first, lp21: D.2.A.1, title: { de-CH: Erste Buchstaben erkennen } }
+  - { id: de.anlaut.first, lp21: D.1.A.1, title: { de-CH: Anlaute hören } }
+levels:
+  - id: reading-de-lautwiese-01
+    title: { de-CH: A und M }
+    skill: de.letters.first
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: letter-sound, params: { letters: [A], distractors: [M], choices: 2 } }
+      steps:
+        - say: { de-CH: "Hör gut zu: A wie Affe." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich suche den Buchstaben A." }
+          action: { highlight: choices }
+        - say: { de-CH: "Da ist das A. Ich tippe drauf!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 1, params: { letters: [A, M], choices: 2 } }
+
+  - id: reading-de-lautwiese-02
+    title: { de-CH: Was hörst du am Anfang? }
+    skill: de.anlaut.first
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: initial-sound, params: { letters: [M], distractors: [A], pictures: [mouse], choices: 2 } }
+      steps:
+        - say: { de-CH: "Schau mal, eine Maus!" }
+          action: { highlight: picture }
+        - say: { de-CH: "Maus. Am Anfang höre ich M." }
+          action: { highlight: letters }
+        - say: { de-CH: "Ich tippe auf das M." }
+          action: { tapAnswer: true }
+    generators:
+      - type: initial-sound
+        weight: 2
+        params: { letters: [A, M], pictures: [apple, pineapple, monkey, ant, mouse, moon, watermelon], choices: 2 }
+      - { type: letter-sound, weight: 1, params: { letters: [A, M], choices: 2 } }
+
+  - id: reading-de-lautwiese-03
+    title: { de-CH: I und L }
+    skill: de.letters.first
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: letter-sound, params: { letters: [L], distractors: [A, M], choices: 3 } }
+      steps:
+        - say: { de-CH: "Hör gut zu: L wie Löwe." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Welcher Buchstabe ist das L?" }
+          action: { highlight: choices }
+        - say: { de-CH: "Hier ist das L. Ich tippe drauf!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 2, params: { letters: [I, L], distractors: [A, M], choices: 3 } }
+      - { type: letter-sound, weight: 1, params: { letters: [A, M, I, L], choices: 3 } }
+
+  - id: reading-de-lautwiese-04
+    title: { de-CH: Anlaute A M I L }
+    skill: de.anlaut.first
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: initial-sound, params: { letters: [I], distractors: [A, L], pictures: [hedgehog], choices: 3 } }
+      steps:
+        - say: { de-CH: "Schau, ein Igel!" }
+          action: { highlight: picture }
+        - say: { de-CH: "Igel. Am Anfang höre ich I." }
+          action: { highlight: letters }
+        - say: { de-CH: "Ich tippe auf das I." }
+          action: { tapAnswer: true }
+    generators:
+      - type: initial-sound
+        weight: 1
+        params:
+          letters: [A, M, I, L]
+          pictures: [apple, pineapple, monkey, ant, mouse, moon, watermelon, hedgehog, lion, llama, ladder]
+          choices: 3
+
+  - id: reading-de-lautwiese-05
+    title: { de-CH: "O, S und E" }
+    skill: de.letters.first
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: letter-sound, params: { letters: [S], distractors: [M, L], choices: 3 } }
+      steps:
+        - say: { de-CH: "Hör gut zu: S wie Sonne." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Das S sieht aus wie eine Schlange." }
+          action: { highlight: choices }
+        - say: { de-CH: "Da ist das S. Ich tippe drauf!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 2, params: { letters: [O, S, E], distractors: [A, M, I, L], choices: 3 } }
+      - { type: letter-sound, weight: 1, params: { letters: [A, M, I, L, O, S, E], choices: 3 } }
+
+  - id: reading-de-lautwiese-06
+    title: { de-CH: Anlaute O S E }
+    skill: de.anlaut.first
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: initial-sound, params: { letters: [S], distractors: [O, E], pictures: [sun], choices: 3 } }
+      steps:
+        - say: { de-CH: "Schau, die Sonne!" }
+          action: { highlight: picture }
+        - say: { de-CH: "Sonne. Am Anfang höre ich S." }
+          action: { highlight: letters }
+        - say: { de-CH: "Ich tippe auf das S." }
+          action: { tapAnswer: true }
+    generators:
+      - type: initial-sound
+        weight: 2
+        params:
+          letters: [O, S, E]
+          distractors: [A, M, L]
+          pictures: [otter, ear, sun, sofa, saw, duck, donkey, elephant]
+          choices: 3
+      - type: initial-sound
+        weight: 1
+        params:
+          letters: [A, M, I, L]
+          distractors: [O, S, E]
+          pictures: [apple, monkey, mouse, moon, hedgehog, lion, llama]
+          choices: 3
+
+  - id: reading-de-lautwiese-07
+    title: { de-CH: "U, R, N und F" }
+    skill: de.letters.first
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: letter-sound, params: { letters: [F], distractors: [A, O], choices: 3 } }
+      steps:
+        - say: { de-CH: "Hör gut zu: F wie Fisch." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich suche das F." }
+          action: { highlight: choices }
+        - say: { de-CH: "Da ist es. Ich tippe auf das F!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 2, params: { letters: [U, R, N, F], distractors: [A, M, O, S], choices: 3 } }
+      - { type: letter-sound, weight: 1, params: { letters: [A, M, I, L, O, S, E, U, R, N, F], choices: 4 } }
+
+  - id: reading-de-lautwiese-08
+    title: { de-CH: Alle Anlaute der Wiese }
+    skill: de.anlaut.first
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: initial-sound, params: { letters: [R], distractors: [N, F], pictures: [rose], choices: 3 } }
+      steps:
+        - say: { de-CH: "Schau, eine Rose!" }
+          action: { highlight: picture }
+        - say: { de-CH: "Rose. Am Anfang höre ich R." }
+          action: { highlight: letters }
+        - say: { de-CH: "Ich tippe auf das R." }
+          action: { tapAnswer: true }
+    generators:
+      - type: initial-sound
+        weight: 2
+        params:
+          letters: [U, R, N, F]
+          distractors: [A, M, S, E]
+          pictures: [watch, rose, rocket, rainbow, caterpillar, nose, nest, hippo, fish, fox, frog, bat]
+          choices: 3
+      - type: initial-sound
+        weight: 1
+        params:
+          letters: [A, M, I, L, O, S, E]
+          pictures: [apple, ant, mouse, moon, hedgehog, lion, llama, otter, ear, sun, sofa, duck, donkey]
+          choices: 4

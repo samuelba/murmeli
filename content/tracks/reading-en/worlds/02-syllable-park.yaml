@@ -1,0 +1,127 @@
+# Syllable Park: hear a word and tap the drum once per syllable, from 1-2 syllables up to 4.
+id: reading-en-syllable-park
+order: 2
+grade: KG2
+requires: [reading-en-sound-garden]
+title: { en-US: Syllable Park }
+scene: park
+skills:
+  - { id: en.syllables.short, ccss: RF.K.2b, title: { en-US: "Syllables: short words" } }
+  - { id: en.syllables.long, ccss: RF.K.2b, title: { en-US: "Syllables: long words" } }
+levels:
+  - id: reading-en-syllable-park-01
+    title: { en-US: One or two? }
+    skill: en.syllables.short
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: syllables, params: { pictures: [sun, dog], maxSyllables: 2 } }
+      steps:
+        - say: { en-US: "Listen and look at the picture." }
+          action: { highlight: picture }
+        - say: { en-US: "I clap along. Just once!" }
+          action: { clap: true }
+        - say: { en-US: "I tap the drum one time." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: syllables, weight: 1, params: { pictures: [sun, dog, cat, apple, tiger, lion, monkey, rabbit], maxSyllables: 2 } }
+
+  - id: reading-en-syllable-park-02
+    title: { en-US: Clap along! }
+    skill: en.syllables.short
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: syllables, params: { pictures: [zebra, tiger], maxSyllables: 2 } }
+      steps:
+        - say: { en-US: "Listen and look at the picture." }
+          action: { highlight: picture }
+        - say: { en-US: "I clap each syllable. Two claps!" }
+          action: { clap: true }
+        - say: { en-US: "I tap the drum two times." }
+          action: { tapAnswer: true }
+    generators:
+      - type: syllables
+        weight: 1
+        params: { pictures: [fish, moon, zebra, teddy, turtle, rocket, carrot, bee, star, ball], maxSyllables: 2 }
+
+  - id: reading-en-syllable-park-03
+    title: { en-US: Three syllables }
+    skill: en.syllables.short
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: syllables, params: { pictures: [banana, tomato], maxSyllables: 3 } }
+      steps:
+        - say: { en-US: "Listen. This word is longer." }
+          action: { highlight: picture }
+        - say: { en-US: "I clap each syllable. Three claps!" }
+          action: { clap: true }
+        - say: { en-US: "I tap the drum three times." }
+          action: { tapAnswer: true }
+    generators:
+      - type: syllables
+        weight: 1
+        params: { pictures: [banana, tomato, elephant, dinosaur, octopus, cat, rabbit, sun], maxSyllables: 3 }
+
+  - id: reading-en-syllable-park-04
+    title: { en-US: "One, two or three?" }
+    skill: en.syllables.long
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: syllables, params: { pictures: [butterfly, ladybug], maxSyllables: 3 } }
+      steps:
+        - say: { en-US: "Listen and clap with me." }
+          action: { highlight: picture }
+        - say: { en-US: "I clap and count: one, two, three." }
+          action: { clap: true }
+        - say: { en-US: "Three syllables! I tap three times." }
+          action: { tapAnswer: true }
+    generators:
+      - type: syllables
+        weight: 1
+        params:
+          pictures: [butterfly, ladybug, pineapple, strawberry, umbrella, violin, volcano, monkey, pig, penguin]
+          maxSyllables: 3
+
+  - id: reading-en-syllable-park-05
+    title: { en-US: Long words }
+    skill: en.syllables.long
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: syllables, params: { pictures: [caterpillar, watermelon], maxSyllables: 4 } }
+      steps:
+        - say: { en-US: "This is a long word. Listen carefully." }
+          action: { highlight: picture }
+        - say: { en-US: "I clap each syllable. Four claps!" }
+          action: { clap: true }
+        - say: { en-US: "I tap the drum four times." }
+          action: { tapAnswer: true }
+    generators:
+      - type: syllables
+        weight: 1
+        params: { pictures: [caterpillar, watermelon, butterfly, elephant, dinosaur, lion, frog, rocket], maxSyllables: 4 }
+
+  - id: reading-en-syllable-park-06
+    title: { en-US: See the syllables }
+    skill: en.syllables.long
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: syllables, params: { pictures: [caterpillar, watermelon], maxSyllables: 4, showWord: true } }
+      steps:
+        - say: { en-US: "Look, here is the word." }
+          action: { highlight: word }
+        - say: { en-US: "I clap each syllable and count." }
+          action: { clap: true }
+        - say: { en-US: "I tap the drum that many times." }
+          action: { tapAnswer: true }
+    generators:
+      - type: syllables
+        weight: 1
+        params:
+          pictures: [caterpillar, watermelon, banana, ladybug, apple, zebra, dog, fish]
+          maxSyllables: 4
+          showWord: true

@@ -1,0 +1,116 @@
+# Word Workshop: build CVC words from letter tiles, first after hearing the word, then from the picture.
+id: reading-en-word-workshop
+order: 4
+grade: "1"
+requires: [reading-en-blending-bay]
+title: { en-US: Word Workshop }
+scene: workshop
+skills:
+  - { id: en.spell.listen, ccss: L.K.2d, title: { en-US: Spell words you hear } }
+  - { id: en.spell.picture, ccss: L.K.2d, title: { en-US: Spell words for a picture } }
+levels:
+  - id: reading-en-word-workshop-01
+    title: { en-US: Build a word }
+    skill: en.spell.listen
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: build-word, params: { words: [cat], maxLength: 3 } }
+      steps:
+        - say: { en-US: "Listen: cat." }
+          action: { highlight: picture }
+        - say: { en-US: "c, a, t. I put the letters in a row." }
+          action: { placeTiles: true }
+        - say: { en-US: "Done! It says cat." }
+          action: { highlight: word }
+    generators:
+      - { type: build-word, weight: 1, params: { words: [ant, cat, map, cap, pig, dog], maxLength: 3 } }
+
+  - id: reading-en-word-workshop-02
+    title: { en-US: One extra letter }
+    skill: en.spell.listen
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: build-word, params: { words: [map], extraTiles: 1, maxLength: 3 } }
+      steps:
+        - say: { en-US: "Listen: map. One letter does not fit." }
+          action: { highlight: tiles }
+        - say: { en-US: "m, a, p. I put the letters in a row." }
+          action: { placeTiles: true }
+        - say: { en-US: "I do not need one letter. Done!" }
+          action: { highlight: word }
+    generators:
+      - { type: build-word, weight: 1, params: { words: [ant, cat, map, cap, pig, dog], extraTiles: 1, maxLength: 3 } }
+
+  - id: reading-en-word-workshop-03
+    title: { en-US: "Words with e and u" }
+    skill: en.spell.listen
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: build-word, params: { words: [duck], extraTiles: 1, maxLength: 4 } }
+      steps:
+        - say: { en-US: "Listen: duck." }
+          action: { highlight: picture }
+        - say: { en-US: "d, u, and then c k together at the end." }
+          action: { placeTiles: true }
+        - say: { en-US: "Done! It says duck." }
+          action: { highlight: word }
+    generators:
+      - type: build-word
+        weight: 1
+        params: { words: [sun, cup, pen, egg, bed, hen, duck], extraTiles: 1, maxLength: 4 }
+
+  - id: reading-en-word-workshop-04
+    title: { en-US: More words }
+    skill: en.spell.listen
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: build-word, params: { words: [bus], extraTiles: 2, maxLength: 3 } }
+      steps:
+        - say: { en-US: "Listen: bus." }
+          action: { highlight: picture }
+        - say: { en-US: "b, u, s. I put the letters in a row." }
+          action: { placeTiles: true }
+        - say: { en-US: "Done! It says bus." }
+          action: { highlight: word }
+    generators:
+      - { type: build-word, weight: 1, params: { words: [hat, bat, bag, bus, log, leg], extraTiles: 2, maxLength: 3 } }
+
+  - id: reading-en-word-workshop-05
+    title: { en-US: Look at the picture }
+    skill: en.spell.picture
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: build-word, params: { words: [sun], audio: false, extraTiles: 1, maxLength: 3 } }
+      steps:
+        - say: { en-US: "Now I do not say the word. Look at the picture." }
+          action: { highlight: picture }
+        - say: { en-US: "It is the sun. s, u, n." }
+          action: { placeTiles: true }
+        - say: { en-US: "Done! It says sun." }
+          action: { highlight: word }
+    generators:
+      - { type: build-word, weight: 1, params: { words: [cat, dog, pig, sun, hat, bus], audio: false, extraTiles: 1, maxLength: 3 } }
+
+  - id: reading-en-word-workshop-06
+    title: { en-US: Word builder }
+    skill: en.spell.picture
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: build-word, params: { words: [fox], audio: false, extraTiles: 2, maxLength: 4 } }
+      steps:
+        - say: { en-US: "Look at the picture. It is a fox." }
+          action: { highlight: picture }
+        - say: { en-US: "f, o, x. I put the letters in a row." }
+          action: { placeTiles: true }
+        - say: { en-US: "Done! It says fox." }
+          action: { highlight: word }
+    generators:
+      - type: build-word
+        weight: 1
+        params: { words: [fox, box, web, van, cup, bed, duck], audio: false, extraTiles: 2, maxLength: 4 }

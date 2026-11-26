@@ -1,0 +1,190 @@
+# Buchstabenbach: the remaining letters and the first letter groups (Sch, Ei, Au, Eu, Ch, Ie).
+# Picture pools leave out pictures with names that kids may say differently (e.g. Kleinbus, Holz, Karte).
+id: reading-de-buchstabenbach
+order: 3
+grade: "1"
+requires: [reading-de-silbenwald]
+title: { de-CH: Buchstabenbach }
+scene: brook
+skills:
+  - { id: de.letters.more, lp21: D.2.A.1, title: { de-CH: Weitere Buchstaben erkennen } }
+  - { id: de.anlaut.more, lp21: D.1.A.1, title: { de-CH: Weitere Anlaute hören } }
+  - { id: de.letters.groups, lp21: D.2.A.1, title: { de-CH: "Buchstabengruppen: Sch, Ei, Au" } }
+levels:
+  - id: reading-de-buchstabenbach-01
+    title: { de-CH: "T, P und K" }
+    skill: de.letters.more
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: initial-sound, params: { letters: [T], distractors: [M, S], pictures: [tiger], choices: 3 } }
+      steps:
+        - say: { de-CH: "Schau, ein Tiger!" }
+          action: { highlight: picture }
+        - say: { de-CH: "Tiger. Am Anfang höre ich T." }
+          action: { highlight: letters }
+        - say: { de-CH: "Ich tippe auf das T." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 1, params: { letters: [T, P, K], distractors: [M, S, L], choices: 3 } }
+      - type: initial-sound
+        weight: 1
+        params:
+          letters: [T, P, K]
+          distractors: [M, S]
+          pictures: [tomato, tiger, teddy, cup, mushroom, penguin, carrot, cake, cat, cow, chick]
+          choices: 3
+
+  - id: reading-de-buchstabenbach-02
+    title: { de-CH: "H, B und W" }
+    skill: de.letters.more
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: letter-sound, params: { letters: [H], distractors: [A, M], choices: 3 } }
+      steps:
+        - say: { de-CH: "Hör gut zu: H wie Haus." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich suche das H. Es sieht aus wie eine Leiter." }
+          action: { highlight: choices }
+        - say: { de-CH: "Da ist das H. Ich tippe drauf!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 1, params: { letters: [H, B, W], distractors: [A, M, T], choices: 3 } }
+      - type: initial-sound
+        weight: 1
+        params:
+          letters: [H, B, W]
+          distractors: [A, M]
+          pictures: [dog, rabbit, hen, house, hat, banana, bear, bee, ball, bus, bed, book, tree, whale, worm, cloud]
+          choices: 3
+
+  - id: reading-de-buchstabenbach-03
+    title: { de-CH: "D, G und Z" }
+    skill: de.letters.more
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: letter-sound, params: { letters: [Z], distractors: [O, S], choices: 3 } }
+      steps:
+        - say: { de-CH: "Hör gut zu: Z wie Zebra." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Welcher Buchstabe ist das Z?" }
+          action: { highlight: choices }
+        - say: { de-CH: "Hier ist das Z. Ich tippe drauf!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 1, params: { letters: [D, G, Z], distractors: [O, S, L], choices: 3 } }
+      - type: initial-sound
+        weight: 1
+        params:
+          letters: [D, G, Z]
+          distractors: [O, L]
+          pictures: [dolphin, dinosaur, thumb, gift, guitar, giraffe, lemon, goat, zebra]
+          choices: 3
+
+  - id: reading-de-buchstabenbach-04
+    title: { de-CH: J und Qu }
+    skill: de.anlaut.more
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: initial-sound, params: { letters: [Qu], distractors: [T, K], pictures: [jellyfish], choices: 3 } }
+      steps:
+        - say: { de-CH: "Schau, eine Qualle!" }
+          action: { highlight: picture }
+        - say: { de-CH: "Qualle. Am Anfang höre ich Qu. Das sind zwei Buchstaben." }
+          action: { highlight: letters }
+        - say: { de-CH: "Ich tippe auf Qu." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 1, params: { letters: [J, Q], distractors: [T, K, H], choices: 3 } }
+      - type: initial-sound
+        weight: 2
+        params: { letters: [J, Qu], distractors: [T, K], pictures: [yoyo, coat, jellyfish], choices: 3 }
+
+  - id: reading-de-buchstabenbach-05
+    title: { de-CH: "Sch, Ei und Au" }
+    skill: de.letters.groups
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: initial-sound, params: { letters: [Sch], distractors: [S, A], pictures: [sheep], choices: 3 } }
+      steps:
+        - say: { de-CH: "Schau, ein Schaf!" }
+          action: { highlight: picture }
+        - say: { de-CH: "Schaf. Am Anfang höre ich Sch. Das sind drei Buchstaben." }
+          action: { highlight: letters }
+        - say: { de-CH: "Ich tippe auf Sch." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 1, params: { letters: [Sch, Ei, Au], distractors: [S, E, A], choices: 3 } }
+      - type: initial-sound
+        weight: 2
+        params:
+          letters: [Sch, Ei, Au]
+          distractors: [S, E, A]
+          pictures: [pig, sheep, snail, snake, ship, shoe, egg, unicorn, car, eye]
+          choices: 3
+
+  - id: reading-de-buchstabenbach-06
+    title: { de-CH: "Eu, Ch und Ie" }
+    skill: de.letters.groups
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: letter-sound, params: { letters: [Eu], distractors: [Ei, Au], choices: 3 } }
+      steps:
+        - say: { de-CH: "Hör gut zu: Eu wie Eule." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich suche E und u zusammen." }
+          action: { highlight: choices }
+        - say: { de-CH: "Da ist Eu. Ich tippe drauf!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 2, params: { letters: [Eu, Ch, Ie], distractors: [Ei, Au, Sch], choices: 3 } }
+      - type: initial-sound
+        weight: 1
+        params: { letters: [Eu, Ei, Au], pictures: [owl, egg, unicorn, car, eye], choices: 3 }
+
+  - id: reading-de-buchstabenbach-07
+    title: { de-CH: Seltene Buchstaben }
+    skill: de.letters.more
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: letter-sound, params: { letters: [X], distractors: [W, Z], choices: 3 } }
+      steps:
+        - say: { de-CH: "Hör gut zu: X wie Xylofon." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Das X sieht aus wie ein Kreuz." }
+          action: { highlight: choices }
+        - say: { de-CH: "Da ist das X. Ich tippe drauf!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: letter-sound, weight: 1, params: { letters: [V, X, Y], distractors: [W, Z, J], choices: 3 } }
+
+  - id: reading-de-buchstabenbach-08
+    title: { de-CH: Alle Anlaute vom Bach }
+    skill: de.anlaut.more
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: initial-sound, params: { letters: [W], distractors: [H, G, Sch], pictures: [whale], choices: 4 } }
+      steps:
+        - say: { de-CH: "Schau, ein Wal!" }
+          action: { highlight: picture }
+        - say: { de-CH: "Wal. Am Anfang höre ich W." }
+          action: { highlight: letters }
+        - say: { de-CH: "Ich tippe auf das W." }
+          action: { tapAnswer: true }
+    generators:
+      - type: initial-sound
+        weight: 2
+        params:
+          letters: [T, K, H, W, G, Z, J]
+          pictures: [tomato, tiger, teddy, cat, cow, cake, dog, house, hat, whale, worm, cloud, gift, guitar, zebra, goat, yoyo]
+          choices: 4
+      - type: initial-sound
+        weight: 1
+        params: { letters: [Sch, Ei, Au, Eu], pictures: [pig, sheep, ship, shoe, egg, unicorn, car, eye, owl], choices: 3 }

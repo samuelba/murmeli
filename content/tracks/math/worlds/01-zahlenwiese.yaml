@@ -1,0 +1,150 @@
+# Zahlenwiese: counting small sets, then number recognition up to 10 (Kindergarten 1).
+id: math-zahlenwiese
+order: 1
+grade: KG1
+requires: []
+title: { de-CH: Zahlenwiese, en-US: Number Meadow }
+scene: meadow
+skills:
+  - id: math.count.to5
+    lp21: MA.1.A.1
+    title: { de-CH: Zählen bis 5, en-US: Counting to 5 }
+  - id: math.count.to10
+    lp21: MA.1.A.1
+    title: { de-CH: Zählen bis 10, en-US: Counting to 10 }
+  - id: math.numerals.to10
+    lp21: MA.1.A.1
+    title: { de-CH: Zahlen bis 10 erkennen, en-US: Numbers to 10 }
+levels:
+  - id: math-zahlenwiese-01
+    title: { de-CH: Zählen bis 3, en-US: Counting to 3 }
+    skill: math.count.to5
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: count-objects, params: { min: 2, max: 2, objects: [apple], arrangement: line } }
+      target: 2
+      steps:
+        - say: { de-CH: "Schau, hier sind Äpfel.", en-US: "Look, here are some apples." }
+          action: { highlight: objects }
+        - say: { de-CH: "Wir zählen: eins, zwei.", en-US: "Let's count: one, two." }
+          action: { countAlong: true }
+        - say: { de-CH: "Es sind zwei. Ich tippe auf die Zwei!", en-US: "There are two. I tap the two!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: count-objects, weight: 1, params: { min: 1, max: 3, objects: [apple, star, ball], arrangement: line } }
+
+  - id: math-zahlenwiese-02
+    title: { de-CH: Zählen bis 5, en-US: Counting to 5 }
+    skill: math.count.to5
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: count-objects, params: { min: 4, max: 4, objects: [strawberry], arrangement: line } }
+      target: 4
+      steps:
+        - say: { de-CH: "Ich zeige auf jede Erdbeere.", en-US: "I point to each strawberry." }
+          action: { highlight: objects }
+        - say: { de-CH: "Eins, zwei, drei, vier.", en-US: "One, two, three, four." }
+          action: { countAlong: true }
+        - say: { de-CH: "Es sind vier!", en-US: "There are four!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: count-objects, weight: 2, params: { min: 1, max: 5, objects: [strawberry, flower, ball, duck, star], arrangement: line } }
+      - { type: count-objects, weight: 1, params: { min: 1, max: 5, objects: [ladybug, fish, balloon], arrangement: scattered } }
+
+  - id: math-zahlenwiese-03
+    title: { de-CH: Würfelbilder, en-US: Dice Pictures }
+    skill: math.count.to5
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: count-objects, params: { min: 5, max: 5, objects: [star], arrangement: dice } }
+      target: 5
+      steps:
+        - say: { de-CH: "Das sieht aus wie ein Würfel.", en-US: "This looks like a dice." }
+          action: { highlight: objects }
+        - say: { de-CH: "Vier in den Ecken und eins in der Mitte. Das sind fünf.", en-US: "Four in the corners and one in the middle. That makes five." }
+          action: { countAlong: true }
+        - say: { de-CH: "Ich tippe auf die Fünf.", en-US: "I tap the five." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: count-objects, weight: 2, params: { min: 1, max: 6, objects: [star, ball, apple], arrangement: dice } }
+      - { type: number-recognition, weight: 1, params: { min: 1, max: 5, mode: match-quantity, representation: dots } }
+
+  - id: math-zahlenwiese-04
+    title: { de-CH: Zahlen bis 5, en-US: Numbers to 5 }
+    skill: math.numerals.to10
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: number-recognition, params: { min: 1, max: 5, mode: hear } }
+      target: 3
+      steps:
+        - say: { de-CH: "Hör gut zu: Tippe auf die Zahl drei.", en-US: "Listen: Tap the number three." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich schaue mir alle Zahlen an.", en-US: "I look at all the numbers." }
+          action: { highlight: choices }
+        - say: { de-CH: "Das ist die Drei. Ich tippe drauf!", en-US: "This is the three. I tap it!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: number-recognition, weight: 2, params: { min: 1, max: 5, mode: hear, choices: 3 } }
+      - { type: number-recognition, weight: 1, params: { min: 1, max: 5, mode: match-quantity, representation: fingers } }
+
+  - id: math-zahlenwiese-05
+    title: { de-CH: Zählen bis 10, en-US: Counting to 10 }
+    skill: math.count.to10
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: count-objects, params: { min: 7, max: 7, objects: [balloon], arrangement: line } }
+      target: 7
+      steps:
+        - say: { de-CH: "Viele Ballone! Ich zähle langsam.", en-US: "So many balloons! I count slowly." }
+          action: { highlight: objects }
+        - say: { de-CH: "Eins, zwei, drei, vier, fünf, sechs, sieben.", en-US: "One, two, three, four, five, six, seven." }
+          action: { countAlong: true }
+        - say: { de-CH: "Es sind sieben.", en-US: "There are seven." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: count-objects, weight: 2, params: { min: 5, max: 10, objects: [balloon, leaf, apple, car, butterfly], arrangement: line } }
+      - { type: count-objects, weight: 1, params: { min: 3, max: 8, objects: [fish, bee, star], arrangement: scattered } }
+
+  - id: math-zahlenwiese-06
+    title: { de-CH: Zahlen bis 10, en-US: Numbers to 10 }
+    skill: math.numerals.to10
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: number-recognition, params: { min: 6, max: 10, mode: match-quantity, representation: dots } }
+      target: 8
+      steps:
+        - say: { de-CH: "Ich suche das Bild mit acht Punkten.", en-US: "I look for the picture with eight dots." }
+          action: { highlight: choices }
+        - say: { de-CH: "Ich zähle die Punkte.", en-US: "I count the dots." }
+          action: { countAlong: true }
+        - say: { de-CH: "Hier sind acht. Ich tippe drauf!", en-US: "Here are eight. I tap it!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: number-recognition, weight: 2, params: { min: 1, max: 10, mode: hear, choices: 3 } }
+      - { type: number-recognition, weight: 1, params: { min: 4, max: 10, mode: match-quantity, representation: dots } }
+      - { type: number-recognition, weight: 1, params: { min: 1, max: 10, mode: match-quantity, representation: fingers } }
+
+  - id: math-zahlenwiese-07
+    title: { de-CH: Null und mehr, en-US: Zero and More }
+    skill: math.count.to10
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: count-objects, params: { min: 0, max: 0, objects: [fish], arrangement: scattered } }
+      target: 0
+      steps:
+        - say: { de-CH: "Der Teich ist leer. Ich sehe keinen Fisch.", en-US: "The pond is empty. I see no fish." }
+          action: { highlight: objects }
+        - say: { de-CH: "Kein Fisch heisst null.", en-US: "No fish means zero." }
+          action: { highlight: choices }
+        - say: { de-CH: "Ich tippe auf die Null.", en-US: "I tap the zero." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: count-objects, weight: 1, params: { min: 0, max: 4, objects: [fish, duck, bee], arrangement: scattered } }
+      - { type: count-objects, weight: 2, params: { min: 0, max: 10, objects: [apple, star, flower, ball], arrangement: line, choices: 4 } }

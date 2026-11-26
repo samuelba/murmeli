@@ -1,0 +1,123 @@
+# Wörterwerkstatt: build words from letter tiles.
+# With the word read aloud first, then with extra tiles, then from the picture alone.
+id: reading-de-woerterwerkstatt
+order: 5
+grade: "1"
+requires: [reading-de-woerterhaus]
+title: { de-CH: Wörterwerkstatt }
+scene: workshop
+skills:
+  - { id: de.write.listen, lp21: D.5.E.1, title: { de-CH: Gehörte Wörter mit Buchstaben bauen } }
+  - { id: de.write.picture, lp21: D.5.E.1, title: { de-CH: Wörter zum Bild bauen } }
+levels:
+  - id: reading-de-woerterwerkstatt-01
+    title: { de-CH: Kurze Wörter bauen }
+    skill: de.write.listen
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: build-word, params: { words: [egg], case: upper, maxLength: 3 } }
+      steps:
+        - say: { de-CH: "Hör gut zu: Ei." }
+          action: { highlight: picture }
+        - say: { de-CH: "Ich höre E und dann i. Ich lege die Buchstaben hin." }
+          action: { placeTiles: true }
+        - say: { de-CH: "Fertig! Hier steht Ei." }
+          action: { highlight: word }
+    generators:
+      - { type: build-word, weight: 1, params: { words: [egg, watch, ear, hat, bus], case: upper, maxLength: 3 } }
+
+  - id: reading-de-woerterwerkstatt-02
+    title: { de-CH: Wörter mit vier Buchstaben }
+    skill: de.write.listen
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: build-word, params: { words: [mouse], case: upper, maxLength: 4 } }
+      steps:
+        - say: { de-CH: "Hör gut zu: Maus." }
+          action: { highlight: picture }
+        - say: { de-CH: "M - au - s. Ich lege M, A, U und S hin." }
+          action: { placeTiles: true }
+        - say: { de-CH: "Fertig! Hier steht Maus." }
+          action: { highlight: word }
+    generators:
+      - type: build-word
+        weight: 1
+        params: { words: [mouse, moon, dog, hedgehog, donkey, nose, rose, sofa, llama, car], case: upper, maxLength: 4 }
+
+  - id: reading-de-woerterwerkstatt-03
+    title: { de-CH: Ein Buchstabe zu viel }
+    skill: de.write.listen
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: build-word, params: { words: [sofa], extraTiles: 1, maxLength: 4 } }
+      steps:
+        - say: { de-CH: "Hör gut zu: Sofa. Ein Buchstabe passt nicht." }
+          action: { highlight: tiles }
+        - say: { de-CH: "So - fa. Ich lege S, o, f und a hin." }
+          action: { placeTiles: true }
+        - say: { de-CH: "Einen Buchstaben brauche ich nicht. Fertig!" }
+          action: { highlight: word }
+    generators:
+      - type: build-word
+        weight: 1
+        params: { words: [mouse, moon, dog, hedgehog, donkey, nose, rose, sofa, llama, car], extraTiles: 1, maxLength: 4 }
+
+  - id: reading-de-woerterwerkstatt-04
+    title: { de-CH: Mehr Wörter bauen }
+    skill: de.write.listen
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: build-word, params: { words: [fish], extraTiles: 2, maxLength: 5 } }
+      steps:
+        - say: { de-CH: "Hör gut zu: Fisch." }
+          action: { highlight: picture }
+        - say: { de-CH: "F, i und sch. Sch sind drei Buchstaben: S, c, h." }
+          action: { placeTiles: true }
+        - say: { de-CH: "Fertig! Hier steht Fisch." }
+          action: { highlight: word }
+    generators:
+      - type: build-word
+        weight: 1
+        params: { words: [web, nest, house, duck, whale, cow, fish, rabbit], extraTiles: 2, maxLength: 5 }
+
+  - id: reading-de-woerterwerkstatt-05
+    title: { de-CH: Schau aufs Bild }
+    skill: de.write.picture
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: build-word, params: { words: [hat], audio: false, extraTiles: 1, maxLength: 4 } }
+      steps:
+        - say: { de-CH: "Jetzt sage ich das Wort nicht. Schau aufs Bild." }
+          action: { highlight: picture }
+        - say: { de-CH: "Das ist ein Hut. H - u - t." }
+          action: { placeTiles: true }
+        - say: { de-CH: "Fertig! Hier steht Hut." }
+          action: { highlight: word }
+    generators:
+      - type: build-word
+        weight: 1
+        params: { words: [egg, hat, bus, mouse, car, sofa, nose], audio: false, extraTiles: 1, maxLength: 4 }
+
+  - id: reading-de-woerterwerkstatt-06
+    title: { de-CH: Lange Wörter bauen }
+    skill: de.write.picture
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: build-word, params: { words: [tomato], audio: false, extraTiles: 2, maxLength: 6 } }
+      steps:
+        - say: { de-CH: "Schau aufs Bild. Das ist eine Tomate." }
+          action: { highlight: picture }
+        - say: { de-CH: "Ich sage es leise: To - ma - te. Ich lege Silbe für Silbe hin." }
+          action: { placeTiles: true }
+        - say: { de-CH: "Fertig! Hier steht Tomate." }
+          action: { highlight: word }
+    generators:
+      - type: build-word
+        weight: 1
+        params: { words: [tomato, banana, sun, rocket, fish, rabbit], audio: false, extraTiles: 2, maxLength: 6 }

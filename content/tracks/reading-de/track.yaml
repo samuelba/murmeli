@@ -1,0 +1,5 @@
+id: reading-de
+order: 2
+locales: [de-CH]
+title: { de-CH: Lesen und Schreiben }
+icon: reading

@@ -74,6 +74,11 @@ interface Prompt {
   speak: string[]                        // segments played in order; each is a manifest text (see §5)
 }
 ```
+**Extensions agreed during content authoring:**
+- A demo may set `target`, the answer it shows.
+- A demo exercise may pin a single instance. Generators still need at least 3 distinct problems.
+- Prompts are rendered with `renderPrompt()` from `@murmeli/content`, which returns `{ text, speak[] }`. Every possible segment can be listed with `npm run speakables -- --json`.
+
 **Determinism:** `rng` is a seeded PRNG (mulberry32) passed in by the caller, so a run can be replayed from `(seed, levelId)`. **Security:** solutions stay on the server, and the client gets only `prompt` and `payload`.
 
 **First set of types (milestone 3/4):**
@@ -141,4 +146,4 @@ Every kid foreign key has `ON DELETE CASCADE`. Content ids are stored as text an
 - The `content` validator lists every `say` and prompt frame so the TTS `extract` step can find them.
 
 ## 6. Pictures
-`content/pictures.yaml` maps picture ids (`apple`, `mouse`, `sun`…) to SVG files in `frontend/public/pictures/`, plus the word for each picture in every locale. Literacy exercises take their words from there. The first pictures are a curated subset of **Noto Emoji** SVGs (Apache-2.0), self-hosted, with the license file shipped next to them. Custom illustrations can replace them later.
+`content/pictures.yaml` maps picture ids (`apple`, `mouse`, `sun`…) to SVG files in `content/pictures/`, plus the word for each picture in every locale. The frontend copies the SVGs into `public/pictures/` with a sync script, the same way it copies the brand assets. Literacy exercises take their words from there. The first pictures are a curated subset of **Noto Emoji** SVGs (Apache-2.0), self-hosted, with the license file shipped next to them. Custom illustrations can replace them later.

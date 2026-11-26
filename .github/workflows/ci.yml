@@ -46,6 +46,28 @@ jobs:
           docker compose -f docker-compose.yml config -q
           docker compose -f docker-compose.dev.yml config -q
 
+  content:
+    name: Content
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: content
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: content/package-lock.json
+      - run: npm install -g npm@12.0.2
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run validate
+      - run: npm run test:cov
+      - run: npm run test:cjs
+
   backend:
     name: Backend
     runs-on: ubuntu-latest

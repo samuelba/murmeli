@@ -1,0 +1,129 @@
+# Silbenwald: clapping syllables (Silben klatschen), from 1-2 syllables up to 5.
+id: reading-de-silbenwald
+order: 2
+grade: KG2
+requires: [reading-de-lautwiese]
+title: { de-CH: Silbenwald }
+scene: forest
+skills:
+  - { id: de.syllables.short, lp21: D.1.A.1, title: { de-CH: "Silben klatschen: kurze Wörter" } }
+  - { id: de.syllables.long, lp21: D.1.A.1, title: { de-CH: "Silben klatschen: lange Wörter" } }
+levels:
+  - id: reading-de-silbenwald-01
+    title: { de-CH: Eins oder zwei? }
+    skill: de.syllables.short
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: syllables, params: { pictures: [sun, sofa], maxSyllables: 2 } }
+      steps:
+        - say: { de-CH: "Hör gut zu und schau das Bild an." }
+          action: { highlight: picture }
+        - say: { de-CH: "Ich klatsche jede Silbe mit. Zweimal!" }
+          action: { clap: true }
+        - say: { de-CH: "Ich tippe zweimal auf die Trommel." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: syllables, weight: 1, params: { pictures: [ball, mouse, dog, moon, sun, rabbit, car, sofa], maxSyllables: 2 } }
+
+  - id: reading-de-silbenwald-02
+    title: { de-CH: Klatsch mit! }
+    skill: de.syllables.short
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: syllables, params: { pictures: [fish, house], maxSyllables: 2 } }
+      steps:
+        - say: { de-CH: "Hör gut zu und schau das Bild an." }
+          action: { highlight: picture }
+        - say: { de-CH: "Ich klatsche mit. Nur einmal!" }
+          action: { clap: true }
+        - say: { de-CH: "Ich tippe einmal auf die Trommel." }
+          action: { tapAnswer: true }
+    generators:
+      - type: syllables
+        weight: 1
+        params: { pictures: [fish, house, hat, tree, lion, rose, nose, cat, duck, bear, cow, shoe], maxSyllables: 2 }
+
+  - id: reading-de-silbenwald-03
+    title: { de-CH: Drei Silben }
+    skill: de.syllables.short
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: syllables, params: { pictures: [banana, tomato], maxSyllables: 3 } }
+      steps:
+        - say: { de-CH: "Hör gut zu. Das Wort ist länger." }
+          action: { highlight: picture }
+        - say: { de-CH: "Ich klatsche jede Silbe mit. Dreimal!" }
+          action: { clap: true }
+        - say: { de-CH: "Ich tippe dreimal auf die Trommel." }
+          action: { tapAnswer: true }
+    generators:
+      - type: syllables
+        weight: 1
+        params: { pictures: [banana, tomato, rocket, ant, ball, moon, sofa, car], maxSyllables: 3 }
+
+  - id: reading-de-silbenwald-04
+    title: { de-CH: "Eins, zwei oder drei?" }
+    skill: de.syllables.short
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: syllables, params: { pictures: [lemon, penguin], maxSyllables: 3 } }
+      steps:
+        - say: { de-CH: "Hör gut zu und klatsche mit mir." }
+          action: { highlight: picture }
+        - say: { de-CH: "Ich klatsche und zähle: eins, zwei, drei." }
+          action: { clap: true }
+        - say: { de-CH: "Drei Silben! Ich tippe dreimal." }
+          action: { tapAnswer: true }
+    generators:
+      - type: syllables
+        weight: 1
+        params:
+          pictures: [lemon, penguin, strawberry, carrot, giraffe, elephant, watermelon, guitar, fox, frog, zebra, monkey]
+          maxSyllables: 3
+
+  - id: reading-de-silbenwald-05
+    title: { de-CH: Lange Wörter }
+    skill: de.syllables.long
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: syllables, params: { pictures: [rainbow, ladybug], maxSyllables: 5 } }
+      steps:
+        - say: { de-CH: "Das ist ein langes Wort. Hör gut zu." }
+          action: { highlight: picture }
+        - say: { de-CH: "Ich klatsche jede Silbe und zähle mit." }
+          action: { clap: true }
+        - say: { de-CH: "So oft tippe ich auf die Trommel." }
+          action: { tapAnswer: true }
+    generators:
+      - type: syllables
+        weight: 1
+        params:
+          pictures: [rainbow, ladybug, butterfly, turtle, bat, banana, tomato, rocket, hedgehog, owl]
+          maxSyllables: 5
+
+  - id: reading-de-silbenwald-06
+    title: { de-CH: Silben sehen }
+    skill: de.syllables.long
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: syllables, params: { pictures: [ladybug, rainbow], maxSyllables: 5, showWord: true } }
+      steps:
+        - say: { de-CH: "Schau, hier steht das Wort." }
+          action: { highlight: word }
+        - say: { de-CH: "Ich klatsche jede Silbe und zähle mit." }
+          action: { clap: true }
+        - say: { de-CH: "So oft tippe ich auf die Trommel." }
+          action: { tapAnswer: true }
+    generators:
+      - type: syllables
+        weight: 1
+        params:
+          pictures: [ladybug, rainbow, butterfly, turtle, watermelon, pineapple, elephant, sofa, llama, nose, mouse, sun]
+          maxSyllables: 5
+          showWord: true

@@ -1,0 +1,5 @@
+id: reading-en
+order: 3
+locales: [en-US]
+title: { en-US: Reading and Phonics }
+icon: reading

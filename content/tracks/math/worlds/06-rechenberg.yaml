@@ -1,0 +1,163 @@
+# Rechenberg: adding and subtracting within 20, crossing ten step by step, and number walls (1st class).
+id: math-rechenberg
+order: 6
+grade: '1'
+requires: [math-plusbruecke]
+title: { de-CH: Rechenberg, en-US: Calculation Mountain }
+scene: mountain
+skills:
+  - id: math.addsub.to20
+    lp21: MA.1.A.2
+    title: { de-CH: Plus und Minus bis 20, en-US: Adding and subtracting within 20 }
+  - id: math.crossten.to20
+    lp21: MA.1.A.2
+    title: { de-CH: Zehnerübergang, en-US: Crossing ten }
+  - id: math.wall.to20
+    lp21: MA.1.B.1
+    title: { de-CH: Rechenmauern, en-US: Number walls }
+levels:
+  - id: math-rechenberg-01
+    title: { de-CH: Plus im zweiten Zehner, en-US: Adding in the Teens }
+    skill: math.addsub.to20
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [add], max: 20, a: { min: 13, max: 13 }, b: { min: 4, max: 4 } } }
+      target: 17
+      steps:
+        - say: { de-CH: "Dreizehn plus vier. Das ist wie drei plus vier.", en-US: "Thirteen plus four. That is like three plus four." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Drei plus vier ist sieben. Mit dem Zehner sind es siebzehn.", en-US: "Three plus four is seven. With the ten it is seventeen." }
+          action: { highlight: numbers }
+        - say: { de-CH: "Dreizehn plus vier ist siebzehn!", en-US: "Thirteen plus four is seventeen!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 1, params: { operations: [add], max: 20, a: { min: 10, max: 19 }, b: { min: 1, max: 9 }, crossTen: never, answerMode: keypad } }
+
+  - id: math-rechenberg-02
+    title: { de-CH: Minus im zweiten Zehner, en-US: Subtracting in the Teens }
+    skill: math.addsub.to20
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [sub], max: 20, a: { min: 18, max: 18 }, b: { min: 5, max: 5 } } }
+      target: 13
+      steps:
+        - say: { de-CH: "Achtzehn minus fünf. Das ist wie acht minus fünf.", en-US: "Eighteen minus five. That is like eight minus five." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Acht minus fünf ist drei. Mit dem Zehner sind es dreizehn.", en-US: "Eight minus five is three. With the ten it is thirteen." }
+          action: { highlight: numbers }
+        - say: { de-CH: "Achtzehn minus fünf ist dreizehn!", en-US: "Eighteen minus five is thirteen!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 1, params: { operations: [sub], max: 20, a: { min: 11, max: 19 }, b: { min: 1, max: 9 }, crossTen: never, answerMode: keypad } }
+
+  - id: math-rechenberg-03
+    title: { de-CH: Über die Zehn mit dem Zwanzigerfeld, en-US: Crossing Ten with the Twenty-Frame }
+    skill: math.crossten.to20
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [add], max: 20, a: { min: 8, max: 8 }, b: { min: 5, max: 5 }, manipulatives: twenty-frame } }
+      target: 13
+      steps:
+        - say: { de-CH: "Acht plus fünf. Zuerst mache ich die Zehn voll.", en-US: "Eight plus five. First I fill up the ten." }
+          action: { highlight: frame }
+        - say: { de-CH: "Acht plus zwei ist zehn. Dann kommen noch drei dazu.", en-US: "Eight plus two is ten. Then three more." }
+          action: { countAlong: true }
+        - say: { de-CH: "Zehn plus drei ist dreizehn!", en-US: "Ten plus three is thirteen!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 1, params: { operations: [add], max: 20, a: { min: 2, max: 9 }, b: { min: 2, max: 9 }, crossTen: always, manipulatives: twenty-frame } }
+
+  - id: math-rechenberg-04
+    title: { de-CH: Über die Zehn plus, en-US: Adding Across Ten }
+    skill: math.crossten.to20
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [add], max: 20, a: { min: 7, max: 7 }, b: { min: 6, max: 6 } } }
+      target: 13
+      steps:
+        - say: { de-CH: "Sieben plus sechs. Bis zur Zehn fehlen drei.", en-US: "Seven plus six. Three more makes ten." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich teile die Sechs: drei und drei. Sieben plus drei ist zehn.", en-US: "I split the six: three and three. Seven plus three is ten." }
+          action: { highlight: numbers }
+        - say: { de-CH: "Zehn plus drei ist dreizehn!", en-US: "Ten plus three is thirteen!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 2, params: { operations: [add], max: 20, a: { min: 2, max: 9 }, b: { min: 2, max: 9 }, crossTen: always, answerMode: keypad } }
+      - { type: add-sub, weight: 1, params: { operations: [add], max: 20, crossTen: allowed, answerMode: keypad } }
+
+  - id: math-rechenberg-05
+    title: { de-CH: Über die Zehn zurück mit dem Zwanzigerfeld, en-US: Back Across Ten with the Twenty-Frame }
+    skill: math.crossten.to20
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [sub], max: 20, a: { min: 13, max: 13 }, b: { min: 5, max: 5 }, manipulatives: twenty-frame } }
+      target: 8
+      steps:
+        - say: { de-CH: "Dreizehn minus fünf. Zuerst gehe ich zurück bis zur Zehn.", en-US: "Thirteen minus five. First I go back to ten." }
+          action: { highlight: frame }
+        - say: { de-CH: "Dreizehn minus drei ist zehn. Dann noch zwei weg.", en-US: "Thirteen minus three is ten. Then two more away." }
+          action: { countAlong: true }
+        - say: { de-CH: "Zehn minus zwei ist acht!", en-US: "Ten minus two is eight!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 1, params: { operations: [sub], max: 20, a: { min: 11, max: 18 }, b: { min: 2, max: 9 }, crossTen: always, manipulatives: twenty-frame } }
+
+  - id: math-rechenberg-06
+    title: { de-CH: Über die Zehn minus, en-US: Subtracting Across Ten }
+    skill: math.crossten.to20
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: add-sub, params: { operations: [sub], max: 20, a: { min: 15, max: 15 }, b: { min: 7, max: 7 } } }
+      target: 8
+      steps:
+        - say: { de-CH: "Fünfzehn minus sieben. Bis zur Zehn sind es fünf.", en-US: "Fifteen minus seven. Five takes me back to ten." }
+          action: { highlight: prompt }
+        - say: { de-CH: "Ich teile die Sieben: fünf und zwei. Fünfzehn minus fünf ist zehn.", en-US: "I split the seven: five and two. Fifteen minus five is ten." }
+          action: { highlight: numbers }
+        - say: { de-CH: "Zehn minus zwei ist acht!", en-US: "Ten minus two is eight!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: add-sub, weight: 2, params: { operations: [sub], max: 20, a: { min: 11, max: 18 }, b: { min: 2, max: 9 }, crossTen: always, answerMode: keypad } }
+      - { type: add-sub, weight: 1, params: { operations: [add, sub], max: 20, answerMode: keypad } }
+
+  - id: math-rechenberg-07
+    title: { de-CH: Rechenmauern, en-US: Number Walls }
+    skill: math.wall.to20
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: number-wall, params: { rows: 2, max: 10 } }
+      steps:
+        - say: { de-CH: "Das ist eine Rechenmauer.", en-US: "This is a number wall." }
+          action: { highlight: wall }
+        - say: { de-CH: "Zwei Steine nebeneinander ergeben zusammen den Stein darüber.", en-US: "Two bricks side by side add up to the brick on top." }
+          action: { highlight: numbers }
+        - say: { de-CH: "Ich rechne plus und fülle den leeren Stein.", en-US: "I add them and fill the empty brick." }
+          action: { fillBlank: true }
+    generators:
+      - { type: number-wall, weight: 1, params: { rows: 2, max: 10 } }
+      - { type: number-wall, weight: 2, params: { rows: 3, max: 20 } }
+
+  - id: math-rechenberg-08
+    title: { de-CH: Knifflige Rechenmauern, en-US: Tricky Number Walls }
+    skill: math.wall.to20
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: number-wall, params: { rows: 3, max: 20, blanks: 1, blankPosition: any } }
+      steps:
+        - say: { de-CH: "Jetzt fehlt auch unten ein Stein.", en-US: "Now a brick at the bottom is missing too." }
+          action: { highlight: wall }
+        - say: { de-CH: "Ich rechne minus: Der obere Stein minus der Nachbar.", en-US: "I subtract: the top brick minus its neighbor." }
+          action: { highlight: numbers }
+        - say: { de-CH: "So finde ich den fehlenden Stein.", en-US: "That is how I find the missing brick." }
+          action: { fillBlank: true }
+    generators:
+      - { type: number-wall, weight: 2, params: { rows: 3, max: 20, blanks: 2, blankPosition: any } }
+      - { type: number-wall, weight: 1, params: { rows: 2, max: 20, blankPosition: any } }

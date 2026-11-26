@@ -1,0 +1,121 @@
+# Blending Bay: read CVC words and tap the picture. Words use only letters from Sound Garden,
+# except the last level, which brings in x, w and v.
+id: reading-en-blending-bay
+order: 3
+grade: "1"
+requires: [reading-en-syllable-park]
+title: { en-US: Blending Bay }
+scene: bay
+skills:
+  - { id: en.read.cvc, ccss: RF.1.3b, title: { en-US: Read short words } }
+  - { id: en.read.similar, ccss: RF.K.3d, title: { en-US: Tell similar words apart } }
+levels:
+  - id: reading-en-blending-bay-01
+    title: { en-US: First words }
+    skill: en.read.cvc
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: word-picture, params: { words: [cat, map], choices: 2 } }
+      steps:
+        - say: { en-US: "Look, here is a word." }
+          action: { highlight: word }
+        - say: { en-US: "I say each sound. Then I put the sounds together." }
+          action: { highlight: letters }
+        - say: { en-US: "Now I know the word. I tap the picture!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: word-picture, weight: 1, params: { words: [ant, cat, map, cap], choices: 2 } }
+
+  - id: reading-en-blending-bay-02
+    title: { en-US: Dog and pig }
+    skill: en.read.cvc
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: word-picture, params: { words: [dog, pig, cat], choices: 3 } }
+      steps:
+        - say: { en-US: "I read the word sound by sound." }
+          action: { highlight: word }
+        - say: { en-US: "Then I say the whole word fast." }
+          action: { highlight: choices }
+        - say: { en-US: "There is the picture. I tap it!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: word-picture, weight: 1, params: { words: [ant, cat, map, cap, dog, pig], choices: 3 } }
+
+  - id: reading-en-blending-bay-03
+    title: { en-US: "Words with e and u" }
+    skill: en.read.cvc
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: word-picture, params: { words: [sun, cup, pen], choices: 3 } }
+      steps:
+        - say: { en-US: "I read the word sound by sound." }
+          action: { highlight: word }
+        - say: { en-US: "Then I say the whole word fast." }
+          action: { highlight: choices }
+        - say: { en-US: "There is the picture. I tap it!" }
+          action: { tapAnswer: true }
+    generators:
+      - type: word-picture
+        weight: 1
+        params: { words: [sun, cup, duck, egg, pen, cat, dog, pig], choices: 3 }
+
+  - id: reading-en-blending-bay-04
+    title: { en-US: "Words with h, b and l" }
+    skill: en.read.cvc
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: word-picture, params: { words: [hat, bed, log], choices: 3 } }
+      steps:
+        - say: { en-US: "I read the word sound by sound." }
+          action: { highlight: word }
+        - say: { en-US: "Then I say the whole word fast." }
+          action: { highlight: choices }
+        - say: { en-US: "There is the picture. I tap it!" }
+          action: { tapAnswer: true }
+    generators:
+      - type: word-picture
+        weight: 1
+        params: { words: [hat, hen, bed, bat, bag, bus, log, leg], choices: 3 }
+
+  - id: reading-en-blending-bay-05
+    title: { en-US: Look closely }
+    skill: en.read.similar
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: word-picture, params: { words: [hat, bat, cat, cap], choices: 4 } }
+      steps:
+        - say: { en-US: "Some words look almost the same." }
+          action: { highlight: word }
+        - say: { en-US: "I look at every letter carefully." }
+          action: { highlight: letters }
+        - say: { en-US: "There is the right picture. I tap it!" }
+          action: { tapAnswer: true }
+    generators:
+      - type: word-picture
+        weight: 1
+        params: { words: [hat, bat, cat, hen, pen, log, leg, dog, cap, map], choices: 4 }
+
+  - id: reading-en-blending-bay-06
+    title: { en-US: "New letters x, w and v" }
+    skill: en.read.cvc
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: word-picture, params: { words: [fox, web, van], choices: 3 } }
+      steps:
+        - say: { en-US: "Some words have new letters: x, w and v." }
+          action: { highlight: word }
+        - say: { en-US: "I read sound by sound, then the whole word." }
+          action: { highlight: choices }
+        - say: { en-US: "There is the picture. I tap it!" }
+          action: { tapAnswer: true }
+    generators:
+      - type: word-picture
+        weight: 1
+        params: { words: [fox, box, web, van, sun, bus, bed, cup], choices: 3 }
