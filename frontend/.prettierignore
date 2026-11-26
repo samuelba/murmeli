@@ -1,0 +1,9 @@
+node_modules
+dist
+coverage
+.angular
+e2e-results
+playwright-report
+test-results
+package-lock.json
+src/styles/_theme-colors.scss

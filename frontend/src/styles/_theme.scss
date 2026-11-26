@@ -1,0 +1,80 @@
+@use '@angular/material' as mat;
+@use './theme-colors';
+
+html {
+  color-scheme: light dark;
+
+  @include mat.theme(
+    (
+      color: (
+        primary: theme-colors.$primary-palette,
+        tertiary: theme-colors.$tertiary-palette,
+        theme-type: color-scheme,
+      ),
+      typography: (
+        plain-family: var(--mu-font-ui),
+        brand-family: var(--mu-font-ui),
+        bold-weight: 800,
+        medium-weight: 700,
+        regular-weight: 500,
+      ),
+      density: 0,
+    )
+  );
+
+  @include mat.button-overrides(
+    (
+      filled-container-height: var(--mu-touch-target),
+      filled-container-shape: var(--mu-radius-pill),
+      filled-horizontal-padding: var(--mu-space-5),
+      filled-label-text-size: var(--mu-font-size-body),
+      filled-label-text-weight: 800,
+      outlined-container-height: var(--mu-touch-target),
+      outlined-container-shape: var(--mu-radius-pill),
+      outlined-horizontal-padding: var(--mu-space-5),
+      outlined-label-text-size: var(--mu-font-size-body),
+      outlined-label-text-weight: 800,
+      tonal-container-height: var(--mu-touch-target),
+      tonal-container-shape: var(--mu-radius-pill),
+      tonal-horizontal-padding: var(--mu-space-5),
+      tonal-label-text-size: var(--mu-font-size-body),
+      tonal-label-text-weight: 800,
+      text-container-height: var(--mu-touch-target),
+      text-container-shape: var(--mu-radius-pill),
+      text-label-text-size: var(--mu-font-size-body),
+      text-label-text-weight: 800,
+    )
+  );
+
+  @include mat.icon-button-overrides(
+    (
+      state-layer-size: var(--mu-touch-target),
+      touch-target-size: var(--mu-touch-target),
+    )
+  );
+
+  @include mat.button-toggle-overrides(
+    (
+      height: var(--mu-touch-target),
+      shape: var(--mu-radius-pill),
+    )
+  );
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+@media (prefers-contrast: more) {
+  html {
+    @include theme-colors.high-contrast-overrides(color-scheme);
+  }
+}
+
+.mat-button-toggle-button {
+  min-width: var(--mu-touch-target);
+}

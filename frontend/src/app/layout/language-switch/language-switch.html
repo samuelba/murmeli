@@ -1,0 +1,18 @@
+<mat-button-toggle-group
+  hideSingleSelectionIndicator
+  data-testid="language-switch"
+  [attr.aria-label]="'language.label' | transloco"
+  [value]="language()"
+  (change)="select($event.value)"
+>
+  @for (lang of languages; track lang) {
+    <mat-button-toggle
+      [value]="lang"
+      [attr.lang]="lang"
+      [attr.data-testid]="'language-' + lang"
+      [aria-label]="'language.' + lang | transloco"
+    >
+      {{ shortLabels[lang] }}
+    </mat-button-toggle>
+  }
+</mat-button-toggle-group>

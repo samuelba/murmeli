@@ -1,0 +1,41 @@
+{
+  "app": {
+    "skipToContent": "Zum Inhalt springen",
+    "home": "{{brand}}, zur Startseite",
+    "mainNav": "Hauptnavigation"
+  },
+  "theme": {
+    "switchToDark": "Dunkles Design einschalten",
+    "switchToLight": "Helles Design einschalten"
+  },
+  "language": {
+    "label": "Sprache",
+    "de-CH": "Deutsch",
+    "en-US": "English"
+  },
+  "common": {
+    "backHome": "Zur Startseite",
+    "comingSoon": "Hier wird noch gebaut. Bald geht es los!"
+  },
+  "welcome": {
+    "pageTitle": "Willkommen",
+    "title": "Hallo! Willkommen bei {{brand}}",
+    "intro": "{{brand}} ist eine Lern-App für Kinder vom Kindergarten bis Ende der 2. Klasse. Rechnen, Lesen und Schreiben üben, Schritt für Schritt auf einem Bergpfad, orientiert am Lehrplan 21.",
+    "start": "Los geht’s!",
+    "register": "Elternkonto erstellen",
+    "subjects": "1 2 3 · A B C · Mama Papa"
+  },
+  "login": {
+    "pageTitle": "Anmelden",
+    "title": "Anmelden"
+  },
+  "register": {
+    "pageTitle": "Konto erstellen",
+    "title": "Konto erstellen"
+  },
+  "notFound": {
+    "pageTitle": "Seite nicht gefunden",
+    "title": "Hoppla, hier gibt es keinen Weg!",
+    "message": "Das Murmeltier hat überall gesucht, aber diese Seite gibt es nicht. Komm, wir gehen zurück zum Start."
+  }
+}

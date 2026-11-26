@@ -1,0 +1,15 @@
+<header class="top-bar">
+  <a
+    class="brand"
+    routerLink="/"
+    data-testid="brand-link"
+    [attr.aria-label]="'app.home' | transloco: { brand: brandName }"
+  >
+    <mu-logo animated />
+    <span class="brand__name">{{ brandName }}</span>
+  </a>
+  <div class="actions">
+    <mu-theme-toggle />
+    <mu-language-switch />
+  </div>
+</header>

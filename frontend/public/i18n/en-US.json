@@ -1,0 +1,41 @@
+{
+  "app": {
+    "skipToContent": "Skip to content",
+    "home": "{{brand}}, go to the start page",
+    "mainNav": "Main navigation"
+  },
+  "theme": {
+    "switchToDark": "Switch to dark theme",
+    "switchToLight": "Switch to light theme"
+  },
+  "language": {
+    "label": "Language",
+    "de-CH": "Deutsch",
+    "en-US": "English"
+  },
+  "common": {
+    "backHome": "Back to the start",
+    "comingSoon": "We are still building this part. It’s coming soon!"
+  },
+  "welcome": {
+    "pageTitle": "Welcome",
+    "title": "Hi! Welcome to {{brand}}",
+    "intro": "{{brand}} is a learning app for kids from kindergarten to the end of 2nd grade. Practice math, reading and writing step by step along a mountain trail, aligned with the Swiss Lehrplan 21.",
+    "start": "Let’s go!",
+    "register": "Create a parent account",
+    "subjects": "1 2 3 · A B C · Mom Dad"
+  },
+  "login": {
+    "pageTitle": "Sign in",
+    "title": "Sign in"
+  },
+  "register": {
+    "pageTitle": "Create account",
+    "title": "Create account"
+  },
+  "notFound": {
+    "pageTitle": "Page not found",
+    "title": "Oops, there’s no trail here!",
+    "message": "The marmot looked everywhere, but this page does not exist. Let’s head back to the start."
+  }
+}

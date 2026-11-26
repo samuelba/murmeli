@@ -1,0 +1,98 @@
+// App design tokens. The brand package (`brand/tokens/tokens.css`) is the source of truth
+// and will replace these values once it lands; keep the `--mu-` names in sync with it.
+
+@mixin light {
+  --mu-color-meadow: #4c9a2a;
+  --mu-color-meadow-strong: #256d00;
+  --mu-color-sky: #3b8ed0;
+  --mu-color-sky-strong: #00639c;
+  --mu-color-sun: #f5c400;
+  --mu-color-sun-soft: #fff1b8;
+  --mu-color-marmot: #8b5e3c;
+  --mu-color-marmot-soft: #e9d6c3;
+  --mu-color-snow: #fffdf8;
+  --mu-color-night: #14213d;
+
+  --mu-color-bg: var(--mu-color-snow);
+  --mu-color-surface: #ffffff;
+  --mu-color-surface-alt: #f6efe6;
+  --mu-color-text: #2b1d12;
+  --mu-color-text-muted: #5f4b3a;
+  --mu-color-border: #d8c7b4;
+  --mu-color-focus: #00639c;
+  --mu-color-on-accent: #ffffff;
+  --mu-color-on-sun: #2b1d12;
+
+  --mu-shadow-card: 0 4px 0 rgb(139 94 60 / 0.25), 0 8px 24px rgb(43 29 18 / 0.08);
+}
+
+@mixin dark {
+  --mu-color-meadow: #88db63;
+  --mu-color-meadow-strong: #a3f87c;
+  --mu-color-sky: #98cbff;
+  --mu-color-sky-strong: #cee5ff;
+  --mu-color-sun: #f1c100;
+  --mu-color-sun-soft: #3f3100;
+  --mu-color-marmot: #d9b28f;
+  --mu-color-marmot-soft: #4a3423;
+
+  --mu-color-bg: var(--mu-color-night);
+  --mu-color-surface: #1c2a4a;
+  --mu-color-surface-alt: #22325a;
+  --mu-color-text: #f5efe6;
+  --mu-color-text-muted: #cdbfae;
+  --mu-color-border: #3d4f78;
+  --mu-color-focus: #ffd84d;
+  --mu-color-on-accent: #0e1a33;
+  --mu-color-on-sun: #1c1105;
+
+  --mu-shadow-card: 0 4px 0 rgb(0 0 0 / 0.35), 0 8px 24px rgb(0 0 0 / 0.3);
+}
+
+:root {
+  --mu-font-ui: 'Nunito Variable', 'Nunito', system-ui, sans-serif;
+  --mu-font-learning: 'Andika', 'Nunito Variable', system-ui, sans-serif;
+
+  --mu-touch-adult: 48px;
+  --mu-touch-kid: 64px;
+  --mu-touch-target: var(--mu-touch-adult);
+
+  --mu-radius-sm: 8px;
+  --mu-radius-md: 16px;
+  --mu-radius-lg: 24px;
+  --mu-radius-pill: 999px;
+
+  --mu-space-1: 4px;
+  --mu-space-2: 8px;
+  --mu-space-3: 12px;
+  --mu-space-4: 16px;
+  --mu-space-5: 24px;
+  --mu-space-6: 32px;
+  --mu-space-7: 48px;
+
+  --mu-font-size-body: 1.125rem;
+  --mu-font-size-lg: 1.375rem;
+  --mu-font-size-xl: clamp(1.75rem, 1.2rem + 2.5vw, 2.75rem);
+
+  --mu-focus-ring: 0 0 0 4px var(--mu-color-focus);
+  --mu-motion-fast: 120ms;
+  --mu-motion-base: 220ms;
+  --mu-content-max: 960px;
+
+  @include light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  @include dark;
+}
+
+.mu-kid-mode {
+  --mu-touch-target: var(--mu-touch-kid);
+  --mu-font-size-body: 1.375rem;
+}

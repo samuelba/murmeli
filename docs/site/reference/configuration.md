@@ -59,4 +59,13 @@ In production, `JWT_SECRET`, `ENCRYPTION_KEY` and `ALTCHA_HMAC_KEY` must each be
 | `BACKEND_URL` | `http://backend:3000` | Upstream for `/api/`. Only scheme, host and port, no path. |
 | `HSTS_ENABLED` | `false` | Send `Strict-Transport-Security`. Turn it on only when the site is served over HTTPS. |
 | `HSTS_MAX_AGE` | `31536000` | HSTS max-age, in seconds. |
-| `NGINX_RESOLVER` | from `/etc/resolv.conf` | DNS resolver nginx uses to look up `BACKEND_URL`. |
+| `HSTS_INCLUDE_SUBDOMAINS` | `false` | Add `includeSubDomains` to HSTS. |
+| `TRUSTED_PROXIES` | (empty) | Comma-separated IPs or CIDRs of the TLS reverse proxy in front of the app. Only these may set `X-Forwarded-For` and `X-Forwarded-Proto`; when empty, clients' forwarded headers are ignored. `/0` is rejected. |
+| `NGINX_RESOLVER` | from `/etc/resolv.conf` | Advanced. DNS resolver nginx uses to look up `BACKEND_URL`. |
+
+### Reverse proxy and client IPs
+When TLS terminates at a reverse proxy (Traefik, Caddy, nginx…), set `TRUSTED_PROXIES` to that proxy's address or network. The frontend's nginx then resolves the real client IP and passes exactly one `X-Forwarded-For` address to the backend, which trusts one hop (`TRUST_PROXY=1`). Rate limits rely on that IP, so without `TRUSTED_PROXIES` every visitor shares the proxy's IP.
+
+HSTS is off by default because TLS usually ends at the reverse proxy; the container logs a warning while it is off. Enable it here, or at the proxy.
+
+`/api/health/ready` is not reachable from outside (404). Access logs are JSON and never contain query strings.

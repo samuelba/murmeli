@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+import { readdir, readFile } from 'node:fs/promises';
+import { extname, join, relative } from 'node:path';
+
+// Hosts that appear as plain strings in framework code (XML namespaces, error links,
+// URL parsing bases) and never cause a network request.
+const ALLOWED_HOSTS = new Set(['www.w3.org', 'angular.dev', 'fake', 'localhost']);
+const SCANNED = new Set(['.html', '.js', '.mjs', '.css', '.json', '.webmanifest', '.svg']);
+const URL_PATTERN = /(?:https?:)?\/\/([a-z0-9.-]+\.[a-z]{2,}|localhost|fake)\b/gi;
+
+async function* files(dir) {
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      yield* files(path);
+    } else if (SCANNED.has(extname(entry.name))) {
+      yield path;
+    }
+  }
+}
+
+const root = process.argv[2];
+if (!root) {
+  console.error('Usage: check-no-external-urls.mjs <dist-dir>');
+  process.exit(2);
+}
+
+const findings = [];
+for await (const file of files(root)) {
+  const content = await readFile(file, 'utf8');
+  for (const match of content.matchAll(URL_PATTERN)) {
+    const host = match[1].toLowerCase();
+    if (!ALLOWED_HOSTS.has(host)) {
+      findings.push(`${relative(root, file)}: ${match[0]}`);
+    }
+  }
+}
+
+if (findings.length > 0) {
+  console.error(`External hosts found in ${root}:\n${[...new Set(findings)].join('\n')}`);
+  process.exit(1);
+}
+console.log(`No external hosts referenced in ${root}.`);

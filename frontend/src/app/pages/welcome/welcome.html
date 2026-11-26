@@ -1,0 +1,18 @@
+<section class="hero mu-kid-mode" aria-labelledby="welcome-title">
+  <mu-logo class="hero__logo" animated />
+  <h1 id="welcome-title" class="hero__title" data-testid="welcome-title">
+    {{ 'welcome.title' | transloco: brand }}
+  </h1>
+  <p class="hero__intro" data-testid="welcome-intro">{{ 'welcome.intro' | transloco: brand }}</p>
+  <p class="hero__subjects mu-learning-text" aria-hidden="true">
+    {{ 'welcome.subjects' | transloco }}
+  </p>
+  <div class="hero__actions">
+    <a class="mu-button mu-button--sun hero__start" routerLink="/login" data-testid="start-cta">
+      {{ 'welcome.start' | transloco }}
+    </a>
+    <a class="mu-button mu-button--ghost" routerLink="/register" data-testid="register-link">
+      {{ 'welcome.register' | transloco }}
+    </a>
+  </div>
+</section>

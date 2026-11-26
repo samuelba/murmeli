@@ -1,0 +1,117 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  background: var(--mu-color-bg);
+  color: var(--mu-color-text);
+  font-family: var(--mu-font-ui);
+  font-size: var(--mu-font-size-body);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+a {
+  color: var(--mu-color-sky-strong);
+}
+
+:focus-visible {
+  outline: 4px solid var(--mu-color-focus);
+  outline-offset: 3px;
+  border-radius: var(--mu-radius-sm);
+}
+
+.mu-learning-text {
+  font-family: var(--mu-font-learning);
+  letter-spacing: 0.02em;
+}
+
+.mu-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mu-space-2);
+  min-height: var(--mu-touch-target);
+  min-width: var(--mu-touch-target);
+  padding: var(--mu-space-2) var(--mu-space-5);
+  border: 0;
+  border-radius: var(--mu-radius-pill);
+  font: inherit;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgb(0 0 0 / 0.2);
+  transition:
+    transform var(--mu-motion-fast) ease-out,
+    box-shadow var(--mu-motion-fast) ease-out;
+
+  &:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.2);
+  }
+}
+
+.mu-button--primary {
+  background: var(--mu-color-meadow-strong);
+  color: var(--mu-color-on-accent);
+}
+
+.mu-button--sun {
+  background: var(--mu-color-sun);
+  color: var(--mu-color-on-sun);
+}
+
+.mu-button--ghost {
+  background: transparent;
+  color: var(--mu-color-text);
+  box-shadow: inset 0 0 0 3px var(--mu-color-border);
+}
+
+.mu-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
