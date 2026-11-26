@@ -1,0 +1,160 @@
+/* Murmeli design tokens. Generated from tokens.json by brand/scripts/build.mjs; do not edit by hand. */
+:root {
+  --mu-color-meadow: #4FA84A;
+  --mu-color-meadow-deep: #2E7D4F;
+  --mu-color-sky: #5BB8E8;
+  --mu-color-sky-deep: #1F6FB8;
+  --mu-color-sun: #F7C600;
+  --mu-color-signpost-yellow: #F7C600;
+  --mu-color-signpost-black: #1B1B1B;
+  --mu-color-marmot-brown: #A86F3E;
+  --mu-color-marmot-cream: #F8E7CC;
+  --mu-color-ink: #3B2A20;
+  --mu-color-snow: #FBF7EE;
+  --mu-color-night: #14213D;
+  --mu-radius-sm: 8px;
+  --mu-radius-md: 14px;
+  --mu-radius-rounded: 20px;
+  --mu-radius-chunky: 28px;
+  --mu-radius-pill: 999px;
+  --mu-space-1: 4px;
+  --mu-space-2: 8px;
+  --mu-space-3: 12px;
+  --mu-space-4: 16px;
+  --mu-space-5: 24px;
+  --mu-space-6: 32px;
+  --mu-space-7: 48px;
+  --mu-space-8: 64px;
+  --mu-shadow-sm: 0 1px 2px rgb(var(--mu-shadow-color) / 0.12);
+  --mu-shadow-md: 0 4px 12px rgb(var(--mu-shadow-color) / 0.14);
+  --mu-shadow-lg: 0 12px 28px rgb(var(--mu-shadow-color) / 0.18);
+  --mu-shadow-chunky: 0 5px 0 var(--mu-color-primary-edge);
+  --mu-touch-kid: 64px;
+  --mu-touch-adult: 48px;
+  --mu-font-ui: "Nunito", "Fredoka", system-ui, sans-serif;
+  --mu-font-learn: "Andika", "Nunito", system-ui, sans-serif;
+  --mu-font-size-sm: 0.875rem;
+  --mu-font-size-md: 1rem;
+  --mu-font-size-lg: 1.25rem;
+  --mu-font-size-xl: 1.75rem;
+  --mu-font-size-learn: 2.5rem;
+  --mu-font-weight-regular: 500;
+  --mu-font-weight-bold: 800;
+  --mu-duration-fast: 120ms;
+  --mu-duration-base: 200ms;
+  --mu-duration-slow: 350ms;
+  --mu-duration-logo: 5s;
+  --mu-ease-brand: cubic-bezier(.45, 0, .25, 1);
+  --mu-ease-bounce: cubic-bezier(.34, 1.56, .64, 1);
+  --mu-avatar-bg-1: #FFD8A8;
+  --mu-avatar-bg-2: #FFF1A0;
+  --mu-avatar-bg-3: #C3F0C8;
+  --mu-avatar-bg-4: #A5E8F0;
+  --mu-avatar-bg-5: #B9D3FF;
+  --mu-avatar-bg-6: #D3C6FF;
+  --mu-avatar-bg-7: #FFC9E6;
+  --mu-avatar-bg-8: #FFC0B5;
+  --mu-avatar-bg-9: #D8EEC0;
+  --mu-avatar-bg-10: #E3E8EF;
+}
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+  --mu-color-bg: #FBF7EE;
+  --mu-color-surface: #FFFDF8;
+  --mu-color-surface-raised: #FFFFFF;
+  --mu-color-text: #1E2A3E;
+  --mu-color-text-muted: #566179;
+  --mu-color-border: #E4DCCB;
+  --mu-color-primary: #F7C600;
+  --mu-color-primary-hover: #FFD52E;
+  --mu-color-primary-edge: #8F6F00;
+  --mu-color-on-primary: #1B1B1B;
+  --mu-color-secondary: #1F6FB8;
+  --mu-color-on-secondary: #FFFFFF;
+  --mu-color-success: #1E7A46;
+  --mu-color-on-success: #FFFFFF;
+  --mu-color-warning: #F59E0B;
+  --mu-color-on-warning: #1B1B1B;
+  --mu-color-error: #FF8A73;
+  --mu-color-on-error: #1B1B1B;
+  --mu-color-focus-ring: #1D6FD8;
+  --mu-color-math: #1F6FB8;
+  --mu-color-on-math: #FFFFFF;
+  --mu-color-reading: #2E7D4F;
+  --mu-color-on-reading: #FFFFFF;
+  --mu-color-writing: #B4480C;
+  --mu-color-on-writing: #FFFFFF;
+  --mu-shadow-color: 30 42 62;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --mu-color-bg: #0F1A2E;
+  --mu-color-surface: #17243D;
+  --mu-color-surface-raised: #22334F;
+  --mu-color-text: #F3F6FB;
+  --mu-color-text-muted: #A9B6CC;
+  --mu-color-border: #2E4263;
+  --mu-color-primary: #F7C600;
+  --mu-color-primary-hover: #FFD52E;
+  --mu-color-primary-edge: #B88F00;
+  --mu-color-on-primary: #1B1B1B;
+  --mu-color-secondary: #5BB8E8;
+  --mu-color-on-secondary: #10192B;
+  --mu-color-success: #7EE0A6;
+  --mu-color-on-success: #10192B;
+  --mu-color-warning: #F5A524;
+  --mu-color-on-warning: #1B1B1B;
+  --mu-color-error: #F06A52;
+  --mu-color-on-error: #1B1B1B;
+  --mu-color-focus-ring: #8EC5FF;
+  --mu-color-math: #7CC4F2;
+  --mu-color-on-math: #10192B;
+  --mu-color-reading: #7FD6A0;
+  --mu-color-on-reading: #10192B;
+  --mu-color-writing: #FFA273;
+  --mu-color-on-writing: #10192B;
+  --mu-shadow-color: 0 0 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --mu-color-bg: #0F1A2E;
+    --mu-color-surface: #17243D;
+    --mu-color-surface-raised: #22334F;
+    --mu-color-text: #F3F6FB;
+    --mu-color-text-muted: #A9B6CC;
+    --mu-color-border: #2E4263;
+    --mu-color-primary: #F7C600;
+    --mu-color-primary-hover: #FFD52E;
+    --mu-color-primary-edge: #B88F00;
+    --mu-color-on-primary: #1B1B1B;
+    --mu-color-secondary: #5BB8E8;
+    --mu-color-on-secondary: #10192B;
+    --mu-color-success: #7EE0A6;
+    --mu-color-on-success: #10192B;
+    --mu-color-warning: #F5A524;
+    --mu-color-on-warning: #1B1B1B;
+    --mu-color-error: #F06A52;
+    --mu-color-on-error: #1B1B1B;
+    --mu-color-focus-ring: #8EC5FF;
+    --mu-color-math: #7CC4F2;
+    --mu-color-on-math: #10192B;
+    --mu-color-reading: #7FD6A0;
+    --mu-color-on-reading: #10192B;
+    --mu-color-writing: #FFA273;
+    --mu-color-on-writing: #10192B;
+    --mu-shadow-color: 0 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --mu-duration-fast: 0ms;
+    --mu-duration-base: 0ms;
+    --mu-duration-slow: 0ms;
+  }
+}

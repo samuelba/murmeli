@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="mu-avatar mu-avatar--penguin" role="img" aria-label="Penguin">
+<path d="M57 28Q56 17 64 12M62 28Q66 20 74 20" fill="none" stroke="#2C3446" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M60 26C83.56 26 98 39.68 98 62C98 86.8 83.56 102 60 102C36.44 102 22 86.8 22 62C22 39.68 36.44 26 60 26Z" fill="#2C3446" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M60 98C40 98 26 84 28 66C30 52 42 46 52 52Q60 57 68 52C78 46 90 52 92 66C94 84 80 98 60 98Z" fill="#fff"/>
+<path d="M40.5 68.5Q46 61 51.5 68.5" fill="none" stroke="#3B2A20" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M68.5 68.5Q74 61 79.5 68.5" fill="none" stroke="#3B2A20" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M51 77Q60 70 69 77Q60 88 51 77Z" fill="#F59E0B" stroke="#3B2A20" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="37" cy="82" rx="6.5" ry="4" fill="#FF8FA3" opacity="0.7"/><ellipse cx="83" cy="82" rx="6.5" ry="4" fill="#FF8FA3" opacity="0.7"/>
+</svg>

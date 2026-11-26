@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Murmeli">
+<defs>
+  <linearGradient id="mu-fav-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BEE5FA"/><stop offset="1" stop-color="#EAF7FD"/></linearGradient>
+  <linearGradient id="mu-fav-fur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C99262"/><stop offset="1" stop-color="#A66C3C"/></linearGradient>
+  <clipPath id="mu-fav-tile"><rect width="64" height="64" rx="15"/></clipPath>
+</defs>
+<g clip-path="url(#mu-fav-tile)">
+  <rect width="64" height="64" fill="url(#mu-fav-sky)"/>
+  <path d="M0 52C18 46 46 46 64 52V64H0Z" fill="#3F9B3A"/>
+  <circle cx="10.5" cy="22" r="6.2" fill="#B67D4A" stroke="#3B2A20" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="53.5" cy="22" r="6.2" fill="#B67D4A" stroke="#3B2A20" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="11.2" cy="22.6" r="2.9" fill="#7F4F2C"/>
+  <circle cx="52.8" cy="22.6" r="2.9" fill="#7F4F2C"/>
+  <path d="M32 11C48 11 59 21 59 35C59 50 46 62 32 62C18 62 5 50 5 35C5 21 16 11 32 11Z" fill="url(#mu-fav-fur)"/>
+  <path d="M5.7 29C8 18 18 11.6 32 11.6C46 11.6 56 18 58.3 29C50.5 23.5 40.5 22.6 32 27C23.5 22.6 13.5 23.5 5.7 29Z" fill="#93603A"/>
+  <path d="M32 11C48 11 59 21 59 35C59 50 46 62 32 62C18 62 5 50 5 35C5 21 16 11 32 11Z" fill="none" stroke="#3B2A20" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+  <ellipse cx="32" cy="46" rx="13.5" ry="10" fill="#F8E7CC"/>
+  <ellipse cx="22" cy="33.5" rx="4.4" ry="5.4" fill="#3B2A20"/>
+  <ellipse cx="42" cy="33.5" rx="4.4" ry="5.4" fill="#3B2A20"/>
+  <circle cx="20.6" cy="31.6" r="1.7" fill="#FFFFFF"/>
+  <circle cx="40.6" cy="31.6" r="1.7" fill="#FFFFFF"/>
+  <path d="M27.6 40.2Q32 37.8 36.4 40.2Q35.4 44.2 32 44.8Q28.6 44.2 27.6 40.2Z" fill="#3B2A20"/>
+  <path d="M32 44.8V46.6M26.4 47.4Q29.4 50.2 32 46.6Q34.6 50.2 37.6 47.4" fill="none" stroke="#3B2A20" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="29" y="48" width="6" height="5.4" rx="1.2" fill="#FFFFFF" stroke="#3B2A20" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+  <ellipse cx="15" cy="43" rx="4" ry="2.4" fill="#F2917F" opacity=".7"/>
+  <ellipse cx="49" cy="43" rx="4" ry="2.4" fill="#F2917F" opacity=".7"/>
+</g>
+</svg>

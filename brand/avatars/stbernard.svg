@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="mu-avatar mu-avatar--stbernard" role="img" aria-label="St. Bernard">
+<path d="M30 40C13 40 8 62 12 80C14 91 27 89 31 76Z" fill="#B4532A" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><g transform="matrix(-1 0 0 1 120 0)"><path d="M30 40C13 40 8 62 12 80C14 91 27 89 31 76Z" fill="#B4532A" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></g>
+<defs><clipPath id="mu-av-stbernard-clip"><path d="M60 28C81.08 28 94 40.92 94 62C94 86.8 81.08 102 60 102C38.92 102 26 86.8 26 62C26 40.92 38.92 28 60 28Z"/></clipPath></defs>
+<path d="M60 28C81.08 28 94 40.92 94 62C94 86.8 81.08 102 60 102C38.92 102 26 86.8 26 62C26 40.92 38.92 28 60 28Z" fill="#fff"/>
+<g clip-path="url(#mu-av-stbernard-clip)" fill="#B4532A">
+  <ellipse cx="41" cy="50" rx="16" ry="21"/><ellipse cx="79" cy="50" rx="16" ry="21"/>
+</g>
+<path d="M60 28C81.08 28 94 40.92 94 62C94 86.8 81.08 102 60 102C38.92 102 26 86.8 26 62C26 40.92 38.92 28 60 28Z" fill="none" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="45" cy="58" rx="5" ry="6" fill="#3B2A20"/><circle cx="43.4" cy="55.84" r="1.9" fill="#fff"/><circle cx="46.7" cy="59.8" r="0.8" fill="#fff"/><ellipse cx="75" cy="58" rx="5" ry="6" fill="#3B2A20"/><circle cx="73.4" cy="55.84" r="1.9" fill="#fff"/><circle cx="76.7" cy="59.8" r="0.8" fill="#fff"/>
+<path d="M38 50Q45 46 51 49M69 49Q75 46 82 50" fill="none" stroke="#3B2A20" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M54.5 90V102.5Q54.5 109 61 109Q67.5 109 67.5 102.5V90Z" fill="#F06C8C" stroke="#3B2A20" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M61 92V104" fill="none" stroke="#3B2A20" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity=".45"/>
+<ellipse cx="51" cy="87" rx="11" ry="8.5" fill="#fff" stroke="#3B2A20" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="70" cy="87" rx="11" ry="8.5" fill="#fff" stroke="#3B2A20" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="60.5" cy="75" rx="8.5" ry="6" fill="#3B2A20"/><ellipse cx="58" cy="73" rx="2.8" ry="1.5" fill="#fff" opacity=".6"/>
+<ellipse cx="34" cy="80" rx="6" ry="3.6" fill="#FF8FA3" opacity="0.55"/><ellipse cx="87" cy="80" rx="6" ry="3.6" fill="#FF8FA3" opacity="0.55"/>
+</svg>

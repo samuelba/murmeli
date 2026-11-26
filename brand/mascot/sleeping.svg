@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="mu-mascot mu-mascot--sleeping" role="img" aria-label="Murmeli sleeping">
+<defs><linearGradient id="mu-mascot-fur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C99262"/><stop offset="1" stop-color="#A66C3C"/></linearGradient></defs>
+<ellipse cx="100" cy="184" rx="72" ry="6" fill="#3B2A20" opacity=".12"/>
+<g class="mu-mascot-body">
+<path d="M36 170C30 134 66 106 110 108C150 110 172 136 166 166C164 178 150 182 100 182C56 182 40 180 36 170Z" fill="url(#mu-mascot-fur)" stroke="#3B2A20" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M164 160C162 182 128 186 108 180C98 177 98 168 108 168C126 172 144 168 152 156C156 150 165 152 164 160Z" fill="#7F4F2C" stroke="#3B2A20" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<g class="mu-mascot-head" transform="translate(78 128) rotate(-8) scale(.86)">
+  <circle cx="-40" cy="-24" r="11" fill="#B67D4A" stroke="#3B2A20" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="40" cy="-24" r="11" fill="#B67D4A" stroke="#3B2A20" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="-38.8" cy="-23.2" r="5.2" fill="#7F4F2C"/><circle cx="38.8" cy="-23.2" r="5.2" fill="#7F4F2C"/>
+  <path d="M0 -38C30 -38 48 -22 48 2C48 26 26 38 0 38C-26 38 -48 26 -48 2C-48 -22 -30 -38 0 -38Z" fill="url(#mu-mascot-fur)"/>
+  <path d="M-46.8 -6C-44 -26 -26 -36.8 0 -36.8C26 -36.8 44 -26 46.8 -6C34 -17 16 -19 0 -11C-16 -19 -34 -17 -46.8 -6Z" fill="#93603A"/>
+  <path d="M0 -38C30 -38 48 -22 48 2C48 26 26 38 0 38C-26 38 -48 26 -48 2C-48 -22 -30 -38 0 -38Z" fill="none" stroke="#3B2A20" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+  <ellipse cx="0" cy="17" rx="23" ry="16.8" fill="#F8E7CC"/>
+  <ellipse cx="-30" cy="15" rx="8.4" ry="5.2" fill="#F2917F" opacity=".6"/><ellipse cx="30" cy="15" rx="8.4" ry="5.2" fill="#F2917F" opacity=".6"/>
+  <g class="mu-mascot-eyes"><path d="M-25 -5Q-17 3 -9 -5M9 -5Q17 3 25 -5" fill="none" stroke="#3B2A20" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+  
+  <path d="M-6.8 6.8Q0 3.2 6.8 6.8Q5.2 13.2 0 14Q-5.2 13.2 -6.8 6.8Z" fill="#3B2A20"/><ellipse cx="-2" cy="7" rx="2" ry="1.1" fill="#FFFFFF" opacity=".6"/>
+  <path d="M0 14V17.2M-10.4 18.4Q-4.8 23.6 0 17.2Q4.8 23.6 10.4 18.4" fill="none" stroke="#3B2A20" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="-4.8" y="20" width="9.6" height="8.8" rx="2" fill="#FFFFFF" stroke="#3B2A20" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M0 20V28.8" stroke="#3B2A20" stroke-width="1.6"/>
+  <circle cx="15" cy="15" r="7.5" fill="#D9F1FF" stroke="#7DB9E3" stroke-width="2" opacity=".9"/><circle cx="12.5" cy="12.5" r="2" fill="#FFFFFF"/>
+</g>
+<ellipse cx="64" cy="165" rx="10.5" ry="7" fill="#7F4F2C" stroke="#3B2A20" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="89" cy="166" rx="10.5" ry="7" fill="#7F4F2C" stroke="#3B2A20" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+</g>
+<g class="mu-mascot-z"><path d="M126 96H137L126 107H137" fill="none" stroke="#3B2A20" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M126 96H137L126 107H137" fill="none" stroke="#8EC5FF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g class="mu-mascot-z"><path d="M146 66H161L146 81H161" fill="none" stroke="#3B2A20" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M146 66H161L146 81H161" fill="none" stroke="#8EC5FF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g class="mu-mascot-z"><path d="M168 32H187L168 51H187" fill="none" stroke="#3B2A20" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M168 32H187L168 51H187" fill="none" stroke="#8EC5FF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>

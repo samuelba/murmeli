@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="mu-avatar mu-avatar--bear" role="img" aria-label="Bear">
+<circle cx="30" cy="36" r="11" fill="#8B5A3C" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="30.8" cy="36.8" r="5.5" fill="#D7A77B"/><g transform="matrix(-1 0 0 1 120 0)"><circle cx="30" cy="36" r="11" fill="#8B5A3C" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="30.8" cy="36.8" r="5.5" fill="#D7A77B"/></g>
+<path d="M60 30C82.32 30 96 42.92 96 64C96 87.56 82.32 102 60 102C37.68 102 24 87.56 24 64C24 42.92 37.68 30 60 30Z" fill="#8B5A3C" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M46 32Q60 26 74 32L74 36Q72.5 43 70 37Q67 32 64.5 40Q62 47 59 38Q56 32 53 37Q50 42 47.5 36Z" fill="#F5B70A" stroke="#3B2A20" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="60" cy="82" rx="17" ry="13" fill="#E8C9A0"/>
+<path d="M40.5 61.5Q46 54 51.5 61.5" fill="none" stroke="#3B2A20" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M68.5 61.5Q74 54 79.5 61.5" fill="none" stroke="#3B2A20" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M53 74Q60 70 67 74Q65 80 60 80.5Q55 80 53 74Z" fill="#3B2A20"/>
+<ellipse cx="71" cy="89" rx="4" ry="5.5" transform="rotate(-35 71 89)" fill="#F06C8C" stroke="#3B2A20" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M60 81V83M51 84Q55.5 87.5 60 83Q64.5 87.5 69 84" fill="none" stroke="#3B2A20" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="32" cy="76" rx="6" ry="3.6" fill="#FF8FA3" opacity="0.55"/><ellipse cx="88" cy="76" rx="6" ry="3.6" fill="#FF8FA3" opacity="0.55"/>
+</svg>
