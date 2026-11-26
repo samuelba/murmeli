@@ -4,6 +4,7 @@ import { exerciseTypeDef } from './exercises/registry.ts';
 import type { ExerciseSpec } from './exercises/registry.ts';
 import type { SlotKind, SlotValue } from './exercises/types.ts';
 import type { Lexicon } from './lexicon.ts';
+import { HINT_KEYS, HINTS } from './runtime/hints.ts';
 import type { Locale, LocalizedText } from './locale.ts';
 
 export interface Speakable {
@@ -138,6 +139,9 @@ export function collectSpeakables(
         }
       }
     }
+  }
+  for (const key of HINT_KEYS) {
+    set.add(HINTS[key][locale], `hint:${key}`);
   }
   addLexicon(set, content.lexicons[locale]);
   return set.list();

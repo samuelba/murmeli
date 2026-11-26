@@ -80,6 +80,10 @@ export const numberRecognition = defineExerciseType({
         'de-CH': 'Tippe auf die Zahl {number:target}.',
         'en-US': 'Tap the number {number:target}.',
       },
+      display: {
+        'de-CH': 'Welche Zahl hörst du?',
+        'en-US': 'Which number do you hear?',
+      },
     },
     match: {
       speak: {
@@ -478,7 +482,16 @@ export const numberBond = defineExerciseType({
       'dots show at most 10',
     ),
   ],
-  frameUses: (p) => [{ frame: p.rows === 1 ? 'one' : 'many', slots: {} }],
+  frameUses: (p) => {
+    const frames = new Set<string>();
+    if (p.missing !== 'whole') {
+      frames.add(p.rows === 1 ? 'one' : 'many');
+    }
+    if (p.missing !== 'part') {
+      frames.add('one');
+    }
+    return [...frames].map((frame) => ({ frame, slots: {} }));
+  },
 });
 
 export const NumberWallParamsSchema = z.strictObject({

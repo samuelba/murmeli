@@ -132,6 +132,10 @@ export const syllables = defineExerciseType({
         'de-CH': 'Hör gut zu: {word:picture}. Wie viele Silben hörst du?',
         'en-US': 'Listen: {word:picture}. How many syllables do you hear?',
       },
+      display: {
+        'de-CH': 'Wie viele Silben hörst du?',
+        'en-US': 'How many syllables do you hear?',
+      },
     },
   },
   requirements: (p) =>

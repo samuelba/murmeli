@@ -14,4 +14,19 @@ test('require(esm) exposes the loader and the exercise registry', () => {
     max: 10,
   });
   assert.equal(parsed.success, true);
+  const level = loaded.index.levels['math-zahlenwiese-01'].level;
+  const [item] = content.generateRun(level, 42, {
+    locale: 'de-CH',
+    content: loaded,
+  });
+  assert.equal(
+    content.checkAnswer(item.solution, item.solution.answer).correct,
+    true,
+  );
+  assert.deepEqual(Object.keys(content.toPublicExercise(item)).sort(), [
+    'index',
+    'payload',
+    'prompt',
+    'type',
+  ]);
 });

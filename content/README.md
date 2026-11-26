@@ -161,6 +161,58 @@ everything in the single-locale reading tracks and all prompt segments, which li
 superset of `tools/audio/lexicon/*.yaml` (same keys and texts). It starts with `speak: false` so that the generic
 extractor skips it, while the lexicon extractor reads it unchanged.
 
+## Exercise runtime (generate, check, demos)
+
+The backend generates and checks exercises with this code, and the frontend renders the payload types it defines. Both sides therefore work from the same shapes. Everything is deterministic for a given seed.
+
+```ts
+import { createRng, generateRun, generateDemo, parseAnswer, checkAnswer, toPublicExercise, randomSeed } from '@murmeli/content';
+
+const runSeed = randomSeed();                                    // store it with the run (Redis)
+const items = generateRun(level, runSeed, { locale, content });  // level.items items, solutions included
+const publicItems = items.map(toPublicExercise);                // { index, type, prompt, payload } only
+const parsed = parseAnswer(item.type, body.answer);             // zod answerSchema of the type
+const result = parsed.success ? checkAnswer(item.solution, parsed.answer) : { correct: false };
+// result: { correct: true } or { correct: false, hint: 'make-ten' }
+```
+
+- **Randomness:** `createRng(seed)` is mulberry32 with `int`, `bool`, `pick`, `shuffle` (returns a new array), `sample` (without replacement), `weighted` and `id`.
+- **Seeds:** `itemSeed(runSeed, levelId, index)` gives each item its own seed, so any item can be replayed from `(runSeed, levelId, index)`. `generateItem` picks the generator by weight and retries a few times so that the same exercise does not come twice in a row.
+- **Generated exercises:** `generateExercise(spec, rng, ctx)` returns `{ type, prompt, payload, solution, focus }`. `prompt` comes from `renderPrompt()`, so every speak segment is in the speakables list (a property test checks this). `solution` is `{ answer, hint }`, where `answer` is exactly the correct answer object; the backend reveals it after the second attempt. `focus` is the item asked about (a number, picture id, letter or relation) and is used internally for demos and to avoid repeats.
+- **Checking:** `checkAnswer` compares the answer with `solution.answer` by deep equality and returns the hint of the instance when it is wrong.
+- **Types:** `Payload<T>`, `Answer<T>` and `Solution<T>` per type id, plus `GeneratedExercise`, `PublicExercise`, `AnyAnswer` and `EXERCISE_RUNTIMES` (with `answerSchema` per type).
+- **Choices:** every choice gets an id of 10 random base-36 characters, drawn from the rng. The ids are deterministic per seed but can't be guessed, and the choices are shuffled. Number choices are near the answer and never repeat.
+
+**Demos.** `generateDemo(level, locale, content)` builds a deterministic instance from a seed derived from the level id, and returns the localized steps with it. If the demo has a `target`, the instance asks for it: a number (count, result, next number), a picture id (shape, pattern answer, syllables, word-picture, build-word or initial-sound picture) or a letter. Without a target, picture lists keep their order and the first entry is used. The narration can therefore name the pictures in the order the params list them. `toPublicDemo()` adds the `answer` so that Murmeli can show it.
+
+**Hints.** The `HINTS` table holds short localized hint texts per `HintKey`, such as `touch-each`, `power-of-five`, `crocodile`, `make-ten`, `first-sound` and `clap-along`. They are part of the speakables output (`hint:<key>`).
+
+### Payload shapes
+
+| Type | Payload | Answer |
+|---|---|---|
+| count-objects | `arrangement`, `objects[{pictureId, x, y}]` (0-1 coordinates), `answerMode`, `choices?` | `{ value }` |
+| number-recognition | `mode`, `representation` (`numeral` for hear), `pictureId?`, `choices[{id, value, label}]` | `{ value }` |
+| ten-frame | `frame` 10 or 20, `cells: boolean[]` (row-major, 5 per row; the second frame starts at cell 10), `answerMode`, `choices?` | `{ value }` |
+| compare | `mode`, `left`/`right`: `{ value }` (numbers) or `{ count, pictureId? }` (quantities) | `{ relation: lt\|gt\|eq }` |
+| number-line | `mode`, `start`, `end`, `step`, `labels: number[]`, missing: `markedTick` (tick index) + `choices` | `{ value }` |
+| add-sub | `op`, `a`, `b` (null if it is the unknown), `result` (null unless the operand is unknown), `manipulatives`, `pictureId?`, `answerMode`, `choices?` | `{ value }` |
+| number-bond | `whole` (null if missing), `rows[{left, right}]` (null = blank), `representation` | `{ values }` in reading order (row by row; the whole comes last) |
+| number-wall | `rows`, `cells[{id: "r<row>c<col>", row, col, value \| null}]` (row 0 is the base) | `{ values: { [cellId]: number } }` |
+| sequence | numbers: `items: (number\|null)[]`, `answerMode`, `choices?`; pattern: `items[{pictureId}]`, `choices[{id, pictureId}]` | `{ value }` or `{ choiceId }` |
+| shape-pick | `choices[{id, pictureId, scale, rotation}]` | `{ choiceId }` |
+| letter-sound | `choices[{id, label}]` (label already in the display case) | `{ choiceId }` |
+| initial-sound | `pictureId`, `choices[{id, label}]` | `{ choiceId }` |
+| syllables | `pictureId`, `maxCount` (drum taps allowed), `word?` (only with `showWord`) | `{ count }` |
+| word-picture | `word` (already in the display case), `syllables?`, `choices[{id, pictureId}]` | `{ choiceId }` |
+| build-word | `pictureId`, `audio`, `length`, `tiles[{id, letter}]` (shuffled, plus `extraTiles` distractors) | `{ letters }`, case-sensitive and in order |
+
+### API shapes and scoring (`api.ts`)
+
+- **Types:** `StartRunResponse` (`{ runId, items, demoSeen, demo? }`), `PracticeRunResponse` (the same shape), `AnswerRequest` / `AnswerRequestSchema`, `AnswerResponse` (`{ correct, attempt, hint?, solution? }`), `FinishRunResponse`, and `MapResponse` (tracks, then worlds with `state`, `stars` and `maxStars`, then levels with `state` and `stars`).
+- **Shared logic:** `itemScore(correct, attempt)`, `runScore`, `starsFor(score, passRatio)` and `isPassed`, following contract section 3.
+- **Constants:** `MAX_ATTEMPTS` and `DAILY_LIMIT_REACHED`.
+
 ## How to
 
 **Add a level:** append it to the world's `levels` with the id `<world-id>-NN`, a skill of that world, a demo with 2-4 short

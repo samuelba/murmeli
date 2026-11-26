@@ -79,6 +79,16 @@ interface Prompt {
 - A demo exercise may pin a single instance. Generators still need at least 3 distinct problems.
 - Prompts are rendered with `renderPrompt()` from `@murmeli/content`, which returns `{ text, speak[] }`. Every possible segment can be listed with `npm run speakables -- --json`.
 
+**Runtime implementation:** the generators, the checkers and all payload, answer and API types live in `@murmeli/content` (`schema/runtime/`, `schema/api.ts`). The backend generates and checks with them, and the frontend imports only the types.
+- **Solution:** `Solution = { answer, hint }`. `AnswerResponse.solution` reveals `answer`.
+- **Answer details:**
+  - `sequence` answers `{ value }` for number sequences and `{ choiceId }` for patterns.
+  - `number-wall` cell ids are positional (`r<row>c<col>`).
+  - `number-bond` values go row by row, with the whole last.
+  - `build-word` compares letters case-sensitively and in order.
+- **Additions to the response shapes:** `StartRunResponse.demo?` carries the demo instance, its revealed answer and the localized steps. `MapWorld` has `stars` and `maxStars`.
+- **Hidden answers on screen:** the displayed text never gives the answer away. For example, number-recognition in "hear" mode shows "Welche Zahl hörst du?", and syllables doesn't show the word. The spoken prompt is unchanged.
+
 **Determinism:** `rng` is a seeded PRNG (mulberry32) passed in by the caller, so a run can be replayed from `(seed, levelId)`. **Security:** solutions stay on the server, and the client gets only `prompt` and `payload`.
 
 **First set of types (milestone 3/4):**

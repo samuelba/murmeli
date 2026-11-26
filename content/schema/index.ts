@@ -109,3 +109,88 @@ export type {
   Track,
   World,
 } from './world.ts';
+export {
+  AnswerRequestSchema,
+  DAILY_LIMIT_REACHED,
+  isPassed,
+  itemScore,
+  MAX_ATTEMPTS,
+  runScore,
+  starsFor,
+  toPublicDemo,
+  toPublicExercise,
+} from './api.ts';
+export type {
+  AnswerRequest,
+  AnswerResponse,
+  FinishRunResponse,
+  MapLevel,
+  MapResponse,
+  MapTrack,
+  MapWorld,
+  PracticeRunResponse,
+  ProgressState,
+  PublicDemo,
+  PublicExercise,
+  Stars,
+  StartRunResponse,
+} from './api.ts';
+export * from './runtime/answers.ts';
+export {
+  checkAnswer,
+  EXERCISE_RUNTIMES,
+  generateDemo,
+  generateExercise,
+  generateItem,
+  generateRun,
+  parseAnswer,
+} from './runtime/exercise.ts';
+export type {
+  Answer,
+  AnyAnswer,
+  AnyPayload,
+  DemoInstance,
+  GeneratedExercise,
+  GeneratedItem,
+  GenerateOptions,
+  ParseAnswerResult,
+  Payload,
+  Solution,
+} from './runtime/exercise.ts';
+export { HINT_KEYS, HINTS } from './runtime/hints.ts';
+export type { HintKey } from './runtime/hints.ts';
+export { caseWord, displayGrapheme, wordLetters } from './runtime/literacy.ts';
+export {
+  createRng,
+  hashString,
+  itemSeed,
+  mixSeed,
+  randomSeed,
+} from './runtime/rng.ts';
+export type { Rng } from './runtime/rng.ts';
+export type {
+  AddSubPayload,
+  AnswerMode,
+  CheckResult,
+  Choice,
+  ComparePayload,
+  CompareSide,
+  CountObjectsPayload,
+  ExerciseRuntime,
+  InitialSoundPayload,
+  LetterSoundPayload,
+  NumberBondPayload,
+  NumberLinePayload,
+  NumberRecognitionPayload,
+  NumberWallPayload,
+  Point,
+  RuntimeContext,
+  SequencePayload,
+  ShapeChoice,
+  ShapePickPayload,
+  SyllablesPayload,
+  TenFramePayload,
+  WallCell,
+  WordPicturePayload,
+  BuildWordPayload,
+} from './runtime/types.ts';
