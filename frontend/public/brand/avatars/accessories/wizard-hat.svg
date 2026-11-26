@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="mu-accessory mu-accessory--wizard-hat" aria-hidden="true">
+<path d="M38 34L55 8Q60 1 69 3Q62 6 61 12L82 34Z" fill="#6E4BC4" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="60" cy="35" rx="34" ry="7" fill="#5A3BA8" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M57 17.5 Q58.54 21.46 62.5 23 Q58.54 24.54 57 28.5 Q55.46 24.54 51.5 23 Q55.46 21.46 57 17.5 Z" fill="#F7C600" stroke="#3B2A20" stroke-width="1.6" stroke-linejoin="round"/><path d="M69 25 Q69.84 27.16 72 28 Q69.84 28.84 69 31 Q68.16 28.84 66 28 Q68.16 27.16 69 25 Z" fill="#F7C600" stroke="#3B2A20" stroke-width="1.6" stroke-linejoin="round"/><path d="M62 10.6 Q62.672 12.328 64.4 13 Q62.672 13.672 62 15.4 Q61.328 13.672 59.6 13 Q61.328 12.328 62 10.6 Z" fill="#fff" stroke="#3B2A20" stroke-width="1.6" stroke-linejoin="round"/>
+</svg>

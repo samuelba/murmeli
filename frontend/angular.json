@@ -30,6 +30,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "{pbkdf2,sha}.js",
+                "input": "node_modules/altcha/dist/workers",
+                "output": "altcha"
               }
             ],
             "styles": [
@@ -38,6 +43,7 @@
               "node_modules/@fontsource/andika/latin-700.css",
               "node_modules/@fontsource/andika/latin-ext-400.css",
               "node_modules/@fontsource/andika/latin-ext-700.css",
+              "node_modules/altcha/dist/external/altcha.css",
               "src/styles.scss"
             ]
           },
@@ -104,7 +110,8 @@
               "branches": 80,
               "functions": 80,
               "lines": 80
-            }
+            },
+            "setupFiles": ["src/testing/setup.ts"]
           }
         },
         "lint": {

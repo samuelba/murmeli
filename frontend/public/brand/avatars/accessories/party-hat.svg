@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="mu-accessory mu-accessory--party-hat" aria-hidden="true">
+<g transform="rotate(16 60 34)">
+  <clipPath id="mu-acc-party-clip"><path d="M45 34L60 2L75 34Z"/></clipPath>
+  <path d="M45 34L60 2L75 34Z" fill="#5BB8E8"/>
+  <g clip-path="url(#mu-acc-party-clip)" fill="#F7C600"><path d="M40 22L80 12V18L40 28Z"/><path d="M40 34L80 24V30L40 40Z"/></g>
+  <path d="M45 34L60 2L75 34Z" fill="none" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <rect x="42" y="31" width="36" height="6" rx="3" fill="#FF8A73" stroke="#3B2A20" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="60" cy="3" r="6" fill="#FF8A73" stroke="#3B2A20" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+</g>
+</svg>

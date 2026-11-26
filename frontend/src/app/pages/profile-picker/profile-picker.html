@@ -1,0 +1,97 @@
+<section class="picker mu-kid-mode">
+  @if (selected(); as kid) {
+    <div class="pin-view" data-testid="pin-view">
+      <button
+        type="button"
+        class="back mu-button mu-button--ghost"
+        data-testid="pin-back"
+        (click)="back()"
+      >
+        <mu-icon name="back" />
+        <span>{{ 'picker.back' | transloco }}</span>
+      </button>
+      <mu-avatar [avatar]="kid.avatar" [size]="112" />
+      <div class="title-row">
+        <h1 #pinHeading id="pin-heading" class="title" tabindex="-1" data-testid="page-title">
+          {{ 'pin.title' | transloco: { name: kid.nickname } }}
+        </h1>
+        <mu-speak [text]="'pin.title' | transloco: { name: kid.nickname }" />
+      </div>
+      <mu-pin-pad
+        labelledBy="pin-heading"
+        [disabled]="busy() || locked()"
+        (completed)="onPin($event)"
+      />
+      <div class="feedback" role="alert">
+        @if (pinError(); as message) {
+          <div class="feedback__body" data-testid="pin-feedback">
+            <mu-mascot pose="encouraging" />
+            <p>{{ message.key | transloco: message.params }}</p>
+            <mu-speak [text]="message.key | transloco: message.params" />
+          </div>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="title-row">
+      <h1 #pickerHeading id="page-heading" class="title" tabindex="-1" data-testid="page-title">
+        {{ 'picker.title' | transloco }}
+      </h1>
+      <mu-speak [text]="'picker.title' | transloco" />
+    </div>
+
+    @if (loading()) {
+      <div role="status" class="loading">
+        <mu-mascot pose="thinking" animated />
+        <span class="mu-visually-hidden">{{ 'common.loading' | transloco }}</span>
+      </div>
+    } @else {
+      <mu-form-error [error]="loadError()" />
+      @if (kids().length === 0 && !loadError()) {
+        <div class="empty" data-testid="picker-empty">
+          <mu-mascot pose="happy" />
+          <p>{{ 'picker.empty' | transloco }}</p>
+          <mu-speak [text]="'picker.empty' | transloco" />
+        </div>
+      }
+      <ul class="tiles" role="list">
+        @for (kid of kids(); track kid.id) {
+          <li>
+            <button
+              type="button"
+              class="tile"
+              [attr.data-testid]="'kid-tile-' + kid.id"
+              [disabled]="busy()"
+              (click)="choose(kid)"
+            >
+              <mu-avatar [avatar]="kid.avatar" [size]="96" />
+              <span class="tile__name">{{ kid.nickname }}</span>
+              @if (kid.hasPin) {
+                <span class="tile__lock" data-testid="tile-lock"><mu-icon name="lock" /></span>
+                <span class="mu-visually-hidden">{{ 'picker.hasPin' | transloco }}</span>
+              }
+            </button>
+          </li>
+        }
+        @if (kids().length < maxKids) {
+          <li>
+            <button
+              type="button"
+              class="tile tile--add"
+              data-testid="add-profile"
+              (click)="addProfile()"
+            >
+              <span class="plus"><mu-icon name="add" /></span>
+              <span class="tile__name">{{ 'picker.add' | transloco }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    }
+
+    <button type="button" class="parents" data-testid="parents-button" (click)="openParentArea()">
+      <mu-icon name="lock" />
+      <span>{{ 'picker.parents' | transloco }}</span>
+    </button>
+  }
+</section>

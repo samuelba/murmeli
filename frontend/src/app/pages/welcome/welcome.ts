@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
+import { AuthService } from '../../core/auth/auth.service';
 import { BRAND_NAME } from '../../core/brand';
 import { Logo } from '../../shared/logo/logo';
 
@@ -13,4 +14,5 @@ import { Logo } from '../../shared/logo/logo';
 })
 export class Welcome {
   protected readonly brand = { brand: BRAND_NAME };
+  protected readonly config = inject(AuthService).config;
 }

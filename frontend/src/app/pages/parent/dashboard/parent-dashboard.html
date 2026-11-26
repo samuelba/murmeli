@@ -1,0 +1,54 @@
+<mu-page-card>
+  <div class="header">
+    <h1 id="page-heading" class="mu-page-title" data-testid="page-title">
+      {{ 'parent.kidsTitle' | transloco }}
+    </h1>
+    @if (kids().length < maxKids) {
+      <a matButton="filled" routerLink="/parent/kids/new" data-testid="create-kid">
+        <mu-icon name="add" />
+        {{ 'parent.addKid' | transloco }}
+      </a>
+    }
+  </div>
+  <mu-form-error [error]="error()" />
+  @if (!loading() && kids().length === 0) {
+    <p class="mu-muted" data-testid="no-kids">{{ 'parent.noKids' | transloco }}</p>
+  }
+  <ul class="kids" role="list">
+    @for (kid of kids(); track kid.id) {
+      <li class="kid" [attr.data-testid]="'kid-row-' + kid.id">
+        <mu-avatar [avatar]="kid.avatar" [size]="64" />
+        <div class="kid__info">
+          <h2 class="kid__name">{{ kid.nickname }}</h2>
+          <p class="mu-muted">
+            {{ 'kid.class.' + kid.startClass | transloco }} ·
+            {{ 'language.' + kid.language | transloco }}
+            @if (kid.hasPin) {
+              · {{ 'parent.withPin' | transloco }}
+            }
+          </p>
+        </div>
+        <div class="kid__actions">
+          <a
+            matIconButton
+            [routerLink]="['/parent/kids', kid.id]"
+            [attr.aria-label]="'parent.editKid' | transloco: { name: kid.nickname }"
+            [attr.data-testid]="'edit-kid-' + kid.id"
+          >
+            <mu-icon name="edit" />
+          </a>
+          <button
+            matIconButton
+            type="button"
+            class="mu-danger"
+            [attr.aria-label]="'parent.deleteKid' | transloco: { name: kid.nickname }"
+            [attr.data-testid]="'delete-kid-' + kid.id"
+            (click)="remove(kid)"
+          >
+            <mu-icon name="delete" />
+          </button>
+        </div>
+      </li>
+    }
+  </ul>
+</mu-page-card>

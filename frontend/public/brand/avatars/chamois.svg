@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="mu-avatar mu-avatar--chamois" role="img" aria-label="Chamois">
+<path d="M48 34C46 18 45 9 37 10" fill="none" stroke="#3B2A20" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><g transform="matrix(-1 0 0 1 120 0)"><path d="M48 34C46 18 45 9 37 10" fill="none" stroke="#3B2A20" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<path d="M32 46Q10 42 11 30Q28 31 37 42Z" fill="#C08A55" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M30 43Q17 40 16 34Q26 35 32 41Z" fill="#E9B98C"/><g transform="matrix(-1 0 0 1 120 0)"><path d="M32 46Q10 42 11 30Q28 31 37 42Z" fill="#C08A55" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M30 43Q17 40 16 34Q26 35 32 41Z" fill="#E9B98C"/></g>
+<defs><clipPath id="mu-av-chamois-clip"><path d="M60 30C78.6 30 90 42.92 90 64C90 88.8 78.6 104 60 104C41.4 104 30 88.8 30 64C30 42.92 41.4 30 60 30Z"/></clipPath></defs>
+<path d="M60 30C78.6 30 90 42.92 90 64C90 88.8 78.6 104 60 104C41.4 104 30 88.8 30 64C30 42.92 41.4 30 60 30Z" fill="#C08A55"/>
+<g clip-path="url(#mu-av-chamois-clip)">
+  <path d="M50 28Q60 24 70 28C75 50 73 74 64 104H56C47 74 45 50 50 28Z" fill="#FBF1DE"/>
+  <path d="M43 30C37 50 38 70 49 92Q53 94 56 90C50 70 50 48 53 30Z" fill="#4A3528"/><g transform="matrix(-1 0 0 1 120 0)"><path d="M43 30C37 50 38 70 49 92Q53 94 56 90C50 70 50 48 53 30Z" fill="#4A3528"/></g>
+</g>
+<path d="M60 30C78.6 30 90 42.92 90 64C90 88.8 78.6 104 60 104C41.4 104 30 88.8 30 64C30 42.92 41.4 30 60 30Z" fill="none" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="47" cy="61" r="7.5" fill="#fff" stroke="#3B2A20" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="47" cy="61.5" r="4.4" fill="#3B2A20"/><circle cx="45.46" cy="59.68" r="1.6720000000000002" fill="#fff"/><circle cx="73" cy="61" r="7.5" fill="#fff" stroke="#3B2A20" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="73" cy="61.5" r="4.4" fill="#3B2A20"/><circle cx="71.46" cy="59.68" r="1.6720000000000002" fill="#fff"/>
+<path d="M38 44Q46 38 54 44M66 44Q74 38 82 44" fill="none" stroke="#3B2A20" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="60" cy="84" rx="5.5" ry="3.6" fill="#3B2A20"/>
+<ellipse cx="60" cy="94" rx="4.4" ry="5.4" fill="#8C3B33" stroke="#3B2A20" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="36" cy="80" rx="6" ry="3.6" fill="#FF8FA3" opacity="0.7"/><ellipse cx="84" cy="80" rx="6" ry="3.6" fill="#FF8FA3" opacity="0.7"/>
+</svg>

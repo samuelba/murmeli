@@ -4,5 +4,5 @@ add_header X-Frame-Options "DENY" always;
 add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 add_header Permissions-Policy "${PERMISSIONS_POLICY}" always;
 add_header Cross-Origin-Opener-Policy "same-origin" always;
-add_header Cross-Origin-Resource-Policy "same-origin" always;
+add_header Cross-Origin-Resource-Policy "${CORP}" always;
 ${HSTS_HEADER}

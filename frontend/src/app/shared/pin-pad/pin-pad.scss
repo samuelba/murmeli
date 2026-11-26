@@ -1,0 +1,113 @@
+.pin-pad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mu-space-4);
+}
+
+.shake {
+  animation: pin-shake 0.5s var(--mu-ease-brand);
+}
+
+.dots {
+  display: flex;
+  gap: var(--mu-space-3);
+}
+
+.dots.error .dot {
+  border-style: dashed;
+  border-color: var(--mu-color-error-text);
+  background: transparent;
+}
+
+.dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 3px solid var(--mu-color-text);
+  background: transparent;
+  transition: transform var(--mu-duration-fast) var(--mu-ease-bounce);
+
+  &.filled {
+    background: var(--mu-color-text);
+    transform: scale(1.1);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(72px, 104px));
+  gap: var(--mu-space-3);
+}
+
+.picture {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  min-height: var(--mu-touch-kid);
+  padding: var(--mu-space-1);
+  border: 3px solid var(--mu-color-ink);
+  border-radius: var(--mu-radius-chunky);
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgb(0 0 0 / 0.25);
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+
+  &:active:not([aria-disabled='true']) {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.25);
+  }
+
+  &:focus-visible {
+    outline: 4px solid var(--mu-color-focus);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 3px var(--mu-color-bg);
+  }
+
+  &[aria-disabled='true'] {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.undo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--mu-touch-kid);
+  min-height: var(--mu-touch-kid);
+  border: 2px solid var(--mu-color-border-strong);
+  border-radius: var(--mu-radius-pill);
+  background: var(--mu-color-surface-alt);
+  color: var(--mu-color-text);
+  cursor: pointer;
+
+  mu-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  &[aria-disabled='true'] {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+@keyframes pin-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-10px);
+  }
+  40%,
+  80% {
+    transform: translateX(10px);
+  }
+}

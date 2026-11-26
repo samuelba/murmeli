@@ -1,0 +1,70 @@
+<mu-page-card narrow>
+  <h1 id="page-heading" class="mu-page-title" data-testid="page-title">
+    {{ 'register.title' | transloco }}
+  </h1>
+
+  @if (!config()?.registrationEnabled) {
+    <p class="mu-notice" data-testid="registration-closed">
+      <mu-icon name="info" />
+      <span>{{ 'register.closed' | transloco }}</span>
+    </p>
+    <a class="mu-link" routerLink="/login">{{ 'register.toLogin' | transloco }}</a>
+  } @else if (done()) {
+    <p class="mu-notice mu-notice--success" data-testid="register-done" role="status">
+      <mu-icon name="success" />
+      <span>{{ 'register.done' | transloco: { email: form.controls.email.value } }}</span>
+    </p>
+    <a class="mu-link" routerLink="/login">{{ 'register.toLogin' | transloco }}</a>
+  } @else {
+    <p class="mu-muted">{{ 'register.intro' | transloco }}</p>
+    <form class="mu-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'fields.email' | transloco }}</mat-label>
+        <input
+          matInput
+          type="email"
+          autocomplete="email"
+          formControlName="email"
+          data-testid="register-email"
+        />
+        <mat-error>{{ fieldError(form.controls.email) ?? '' | transloco }}</mat-error>
+      </mat-form-field>
+      <mu-new-password [group]="form.controls.passwords" labelKey="fields.password" />
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'fields.locale' | transloco }}</mat-label>
+        <mat-select formControlName="locale" data-testid="register-locale">
+          @for (language of languages; track language) {
+            <mat-option [value]="language">{{ 'language.' + language | transloco }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <div class="mu-check-row">
+        <mat-checkbox formControlName="acceptTerms" data-testid="register-terms">
+          {{ 'register.acceptBefore' | transloco }}
+          <a routerLink="/privacy" target="_blank" rel="noopener">{{
+            'legal.privacyTitle' | transloco
+          }}</a>
+          {{ 'register.acceptAnd' | transloco }}
+          <a routerLink="/terms" target="_blank" rel="noopener">{{
+            'legal.termsTitle' | transloco
+          }}</a>
+          {{ 'register.acceptAfter' | transloco }}
+        </mat-checkbox>
+      </div>
+      @if (form.controls.acceptTerms.touched && form.controls.acceptTerms.invalid) {
+        <p class="field-error" role="alert">{{ 'register.termsRequired' | transloco }}</p>
+      }
+      <mu-altcha (verified)="onVerified($event)" />
+      @if (altchaMissing()) {
+        <p class="field-error" role="alert">{{ 'register.altchaRequired' | transloco }}</p>
+      }
+      <mu-form-error [error]="error()" />
+      <div class="mu-actions">
+        <button matButton="filled" type="submit" data-testid="register-submit" [disabled]="busy()">
+          {{ 'register.submit' | transloco }}
+        </button>
+        <a class="mu-link" routerLink="/login">{{ 'register.haveAccount' | transloco }}</a>
+      </div>
+    </form>
+  }
+</mu-page-card>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="mu-accessory mu-accessory--beanie" aria-hidden="true">
+<path d="M24 38C24 12 96 12 96 38Z" fill="#D52B1E" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M44 18Q48 26 46 34M60 15V34M76 18Q72 26 74 34" fill="none" stroke="#A81F16" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+<rect x="20" y="32" width="80" height="13" rx="6.5" fill="#B5231A" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M29 35.5V41.5M37 35.5V41.5M45 35.5V41.5M53 35.5V41.5M61 35.5V41.5M69 35.5V41.5M77 35.5V41.5M85 35.5V41.5M93 35.5V41.5" stroke="#7E1710" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+<circle cx="60" cy="11" r="8" fill="#fff" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

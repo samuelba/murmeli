@@ -22,6 +22,24 @@ html {
     )
   );
 
+  // Brand colors drive Material. Primary is the brand blue (AA as text and as a fill with
+  // white text); filled buttons use the signpost yellow with dark text (12:1).
+  @include mat.theme-overrides(
+    (
+      primary: var(--mu-color-secondary),
+      on-primary: var(--mu-color-on-secondary),
+      background: var(--mu-color-bg),
+      on-background: var(--mu-color-text),
+      surface: var(--mu-color-surface),
+      on-surface: var(--mu-color-text),
+      on-surface-variant: var(--mu-color-text-muted),
+      surface-container: var(--mu-color-surface-raised),
+      surface-container-high: var(--mu-color-surface-raised),
+      surface-container-low: var(--mu-color-surface),
+      error: var(--mu-color-error-text),
+    )
+  );
+
   @include mat.button-overrides(
     (
       filled-container-height: var(--mu-touch-target),
@@ -29,6 +47,8 @@ html {
       filled-horizontal-padding: var(--mu-space-5),
       filled-label-text-size: var(--mu-font-size-body),
       filled-label-text-weight: 800,
+      filled-container-color: var(--mu-color-primary),
+      filled-label-text-color: var(--mu-color-on-primary),
       outlined-container-height: var(--mu-touch-target),
       outlined-container-shape: var(--mu-radius-pill),
       outlined-horizontal-padding: var(--mu-space-5),

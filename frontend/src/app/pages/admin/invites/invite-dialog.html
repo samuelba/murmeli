@@ -1,0 +1,71 @@
+<h2 mat-dialog-title>{{ 'admin.invites.createTitle' | transloco }}</h2>
+<mat-dialog-content>
+  @if (created(); as result) {
+    <div class="url" data-testid="invite-result">
+      <p class="mu-muted">
+        {{
+          'admin.invites.email_' + result.emailStatus | transloco: { email: result.invite.email }
+        }}
+      </p>
+      <p class="mu-code" data-testid="invite-url">{{ result.inviteUrl }}</p>
+      <div class="mu-actions">
+        <button
+          matButton="outlined"
+          type="button"
+          data-testid="invite-copy"
+          (click)="copy(result.inviteUrl)"
+        >
+          <mu-icon name="copy" /> {{ 'common.copy' | transloco }}
+        </button>
+        <span role="status" class="mu-muted">
+          @if (copied()) {
+            {{ 'common.copied' | transloco }}
+          }
+        </span>
+      </div>
+    </div>
+  } @else {
+    <form id="invite-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'fields.email' | transloco }}</mat-label>
+        <input
+          matInput
+          type="email"
+          autocomplete="off"
+          formControlName="email"
+          data-testid="invite-email"
+        />
+        <mat-error>{{ fieldError(form.controls.email) ?? '' | transloco }}</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'admin.users.role' | transloco }}</mat-label>
+        <mat-select formControlName="role" data-testid="invite-role">
+          @for (role of roles; track role) {
+            <mat-option [value]="role">{{ 'roles.' + role | transloco }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mu-form-error [error]="error()" />
+    </form>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  @if (created()) {
+    <button matButton="filled" type="button" [mat-dialog-close]="true" data-testid="invite-done">
+      {{ 'common.done' | transloco }}
+    </button>
+  } @else {
+    <button matButton="text" type="button" [mat-dialog-close]="false">
+      {{ 'common.cancel' | transloco }}
+    </button>
+    <button
+      matButton="filled"
+      type="submit"
+      form="invite-form"
+      data-testid="invite-submit"
+      [disabled]="busy()"
+    >
+      {{ 'admin.invites.create' | transloco }}
+    </button>
+  }
+</mat-dialog-actions>

@@ -1,0 +1,45 @@
+<div
+  class="pin-pad mu-kid-mode"
+  role="group"
+  [attr.aria-labelledby]="labelledBy()"
+  [attr.aria-describedby]="hintId"
+  [class.shake]="shaking()"
+  (keydown)="onKey($event)"
+>
+  <p [id]="hintId" class="mu-visually-hidden">{{ 'pin.keyboardHint' | transloco }}</p>
+  <div class="dots" aria-hidden="true" data-testid="pin-dots" [class.error]="rejected()">
+    @for (filled of dots(); track $index) {
+      <span class="dot" [class.filled]="filled"></span>
+    }
+  </div>
+  <p class="mu-visually-hidden" aria-live="polite" aria-atomic="true" data-testid="pin-progress">
+    {{ 'pin.progress' | transloco: { count: entered().length, total: length } }}
+  </p>
+  <div class="grid">
+    @for (picture of pictures(); track picture.index) {
+      <button
+        type="button"
+        class="picture"
+        [style.background-color]="picture.background"
+        [attr.aria-label]="
+          'pin.picture' | transloco: { name: picture.name, number: picture.number, total: 9 }
+        "
+        [attr.aria-disabled]="disabled() ? 'true' : null"
+        [attr.data-testid]="'pin-picture-' + picture.index"
+        (click)="select(picture.index)"
+      >
+        <img [src]="picture.src" alt="" />
+      </button>
+    }
+  </div>
+  <button
+    type="button"
+    class="undo"
+    data-testid="pin-undo"
+    [attr.aria-label]="'pin.undo' | transloco"
+    [attr.aria-disabled]="disabled() || entered().length === 0 ? 'true' : null"
+    (click)="undo()"
+  >
+    <mu-icon name="backspace" />
+  </button>
+</div>

@@ -32,9 +32,17 @@ http {
         "~^(?<path>[^?]*)" $path;
     }
 
+    # Secrets that travel in the path (invite tokens) never reach the access log.
+    map $request_path $log_path {
+        "~^/api/invites/[^/]+/accept/?$" "/api/invites/:token/accept";
+        "~^/api/invites/[^/]+/?$"        "/api/invites/:token";
+        "~^/invite/[^/]+/?$"             "/invite/:token";
+        default                          $request_path;
+    }
+
     log_format murmeli escape=json
         '{"time":"$time_iso8601","client":"$remote_addr","method":"$request_method",'
-        '"path":"$request_path","status":$status,"bytes":$body_bytes_sent,'
+        '"path":"$log_path","status":$status,"bytes":$body_bytes_sent,'
         '"request_time":$request_time}';
     access_log /dev/stdout murmeli;
 
@@ -98,6 +106,21 @@ http {
             proxy_hide_header Cross-Origin-Opener-Policy;
             proxy_hide_header Cross-Origin-Resource-Policy;
             proxy_hide_header Strict-Transport-Security;
+        }
+
+        # Emails load the logo from other origins, so brand assets allow cross-origin embedding.
+        location ^~ /brand/ {
+            include /tmp/nginx/security-headers-cross-origin.conf;
+            add_header Cache-Control "public, max-age=86400" always;
+            try_files $uri =404;
+        }
+
+        location = /manifest.webmanifest {
+            include /tmp/nginx/security-headers.conf;
+            add_header Cache-Control "no-cache" always;
+            types { }
+            default_type application/manifest+json;
+            try_files $uri =404;
         }
 
         location ~ "^/(?:media/)?[^/]+-[A-Za-z0-9]{8}\.(?:js|css|woff2?)$" {

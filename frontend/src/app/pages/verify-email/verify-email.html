@@ -1,0 +1,61 @@
+<mu-page-card narrow>
+  <h1 id="page-heading" class="mu-page-title" data-testid="page-title">
+    {{ 'verifyEmail.title' | transloco }}
+  </h1>
+  @switch (state()) {
+    @case ('verifying') {
+      <div class="mu-stack" role="status">
+        <mu-mascot pose="thinking" animated />
+        <p class="mu-muted">{{ 'verifyEmail.verifying' | transloco }}</p>
+      </div>
+    }
+    @case ('registration') {
+      <p class="mu-notice mu-notice--success" role="status" data-testid="verify-success">
+        <mu-icon name="success" />
+        <span>{{ 'verifyEmail.registrationDone' | transloco }}</span>
+      </p>
+      <a class="mu-link" routerLink="/login">{{ 'register.toLogin' | transloco }}</a>
+    }
+    @case ('email_change') {
+      <p class="mu-notice mu-notice--success" role="status" data-testid="verify-success">
+        <mu-icon name="success" />
+        <span>{{ 'verifyEmail.emailChangeDone' | transloco }}</span>
+      </p>
+      <a class="mu-link" routerLink="/">{{ 'common.backHome' | transloco }}</a>
+    }
+    @case ('resent') {
+      <p class="mu-notice mu-notice--success" role="status" data-testid="verify-resent">
+        <mu-icon name="success" />
+        <span>{{ 'verifyEmail.resent' | transloco }}</span>
+      </p>
+    }
+    @default {
+      @if (state() === 'failed') {
+        <mu-form-error [error]="error()" />
+      }
+      <p class="mu-muted">{{ 'verifyEmail.resendIntro' | transloco }}</p>
+      <form class="mu-form" (submit)="$event.preventDefault(); resend()" novalidate>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'fields.email' | transloco }}</mat-label>
+          <input
+            matInput
+            type="email"
+            autocomplete="email"
+            [formControl]="email"
+            data-testid="resend-email"
+          />
+          <mat-error>{{ fieldError(email) ?? '' | transloco }}</mat-error>
+        </mat-form-field>
+        <mu-altcha (verified)="altcha.set($event)" />
+        @if (state() !== 'failed') {
+          <mu-form-error [error]="error()" />
+        }
+        <div class="mu-actions">
+          <button matButton="filled" type="submit" data-testid="resend-submit" [disabled]="busy()">
+            {{ 'verifyEmail.resend' | transloco }}
+          </button>
+        </div>
+      </form>
+    }
+  }
+</mu-page-card>

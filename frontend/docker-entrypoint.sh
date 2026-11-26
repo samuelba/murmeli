@@ -33,7 +33,6 @@ IPV4="${OCTET}(\.${OCTET}){3}"
 IPV4_CIDR="^${IPV4}(/([1-9]|[12][0-9]|3[0-2]))?$"
 IPV6_CIDR='^[0-9A-Fa-f]{0,4}(:[0-9A-Fa-f]{0,4}){2,7}(/([1-9]|[1-9][0-9]|1[01][0-9]|12[0-8]))?$'
 
-export CSP="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
 export PERMISSIONS_POLICY="accelerometer=(), autoplay=(self), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), publickey-credentials-get=(), screen-wake-lock=(), usb=(), xr-spatial-tracking=()"
 
 BACKEND_URL="${BACKEND_URL:-http://backend:3000}"
@@ -59,6 +58,13 @@ else
 fi
 export HSTS_HEADER
 
+# upgrade-insecure-requests would break plain-http LAN installs, so it follows HSTS.
+UPGRADE_INSECURE=""
+if [ "${HSTS_ENABLED}" = true ]; then
+  UPGRADE_INSECURE="; upgrade-insecure-requests"
+fi
+export CSP="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'${UPGRADE_INSECURE}"
+
 if [ -z "${NGINX_RESOLVER:-}" ]; then
   NGINX_RESOLVER="$(awk '/^nameserver/ { print $2; exit }' /etc/resolv.conf)"
   case "${NGINX_RESOLVER}" in
@@ -73,6 +79,9 @@ export NGINX_RESOLVER
 mkdir -p "${CONF_DIR}"
 : >"${CONF_DIR}/real-ip.conf"
 : >"${CONF_DIR}/trusted-proxies.conf"
+if [ -z "${TRUSTED_PROXIES:-}" ]; then
+  echo "WARNING: TRUSTED_PROXIES is empty. Behind a reverse proxy every client then shares the proxy's IP, so per-IP rate limits (login, register, PIN) hit all users together. Set it to the proxy's IP or CIDR." >&2
+fi
 if [ -n "${TRUSTED_PROXIES:-}" ]; then
   case "${TRUSTED_PROXIES}" in
     *"${NL}"* | *"${CR}"*) fail "TRUSTED_PROXIES must be a single line" ;;
@@ -87,8 +96,10 @@ if [ -n "${TRUSTED_PROXIES:-}" ]; then
   printf 'real_ip_header X-Forwarded-For;\nreal_ip_recursive on;\n' >>"${CONF_DIR}/real-ip.conf"
 fi
 
-envsubst '${CSP} ${PERMISSIONS_POLICY} ${HSTS_HEADER}' \
+CORP=same-origin envsubst '${CSP} ${PERMISSIONS_POLICY} ${HSTS_HEADER} ${CORP}' \
   <"${TEMPLATE_DIR}/security-headers.conf.template" >"${CONF_DIR}/security-headers.conf"
+CORP=cross-origin envsubst '${CSP} ${PERMISSIONS_POLICY} ${HSTS_HEADER} ${CORP}' \
+  <"${TEMPLATE_DIR}/security-headers.conf.template" >"${CONF_DIR}/security-headers-cross-origin.conf"
 envsubst '${BACKEND_URL} ${NGINX_RESOLVER}' \
   <"${TEMPLATE_DIR}/nginx.conf.template" >"${CONF_DIR}/nginx.conf"
 

@@ -1,0 +1,114 @@
+<h2 #heading id="totp-heading" class="mu-section-title" tabindex="-1">
+  {{ 'totp.title' | transloco }}
+</h2>
+@if (required() && !enabled()) {
+  <p class="mu-notice" role="status" data-testid="totp-required-notice">
+    <mu-icon name="shield" />
+    <span>{{ 'totp.requiredNotice' | transloco }}</span>
+  </p>
+}
+<p class="mu-muted" data-testid="totp-status">
+  {{ (enabled() ? 'totp.statusOn' : 'totp.statusOff') | transloco }}
+</p>
+
+@if (codes(); as list) {
+  <mu-recovery-codes [codes]="list" />
+}
+
+@if (!enabled()) {
+  @if (setup(); as data) {
+    <div class="qr">
+      <img
+        [src]="data.qrDataUrl"
+        [alt]="'totp.qrAlt' | transloco"
+        width="200"
+        height="200"
+        data-testid="totp-qr"
+      />
+      <div class="secret">
+        <p>{{ 'totp.scan' | transloco }}</p>
+        <p class="mu-muted">{{ 'totp.manual' | transloco }}</p>
+        <p class="mu-code" data-testid="totp-secret">{{ secret() }}</p>
+      </div>
+    </div>
+    <form class="mu-form" (submit)="$event.preventDefault(); enable()" novalidate>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'fields.totpCode' | transloco }}</mat-label>
+        <input
+          matInput
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          maxlength="6"
+          [formControl]="enableCode"
+          data-testid="totp-enable-code"
+        />
+        <mat-error>{{ 'forms.totpCode' | transloco }}</mat-error>
+      </mat-form-field>
+      <div class="mu-actions">
+        <button matButton="filled" type="submit" data-testid="totp-enable" [disabled]="busy()">
+          {{ 'totp.enable' | transloco }}
+        </button>
+        <button matButton="text" type="button" (click)="cancel()">
+          {{ 'common.cancel' | transloco }}
+        </button>
+      </div>
+    </form>
+  } @else {
+    <div class="mu-actions">
+      <button
+        matButton="filled"
+        type="button"
+        data-testid="totp-start"
+        [disabled]="busy()"
+        (click)="start()"
+      >
+        <mu-icon name="shield" /> {{ 'totp.setup' | transloco }}
+      </button>
+    </div>
+  }
+} @else {
+  <form class="mu-form" [formGroup]="disableForm" (ngSubmit)="disable()" novalidate>
+    <h3 class="sub">{{ 'totp.disableTitle' | transloco }}</h3>
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'fields.currentPassword' | transloco }}</mat-label>
+      <input matInput type="password" autocomplete="current-password" formControlName="password" />
+      <mat-error>{{ 'forms.required' | transloco }}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'fields.totpCode' | transloco }}</mat-label>
+      <input
+        matInput
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        maxlength="6"
+        formControlName="code"
+      />
+      <mat-error>{{ 'forms.totpCode' | transloco }}</mat-error>
+    </mat-form-field>
+    <div class="mu-actions">
+      <button matButton="outlined" type="submit" class="mu-danger" [disabled]="busy()">
+        {{ 'totp.disable' | transloco }}
+      </button>
+    </div>
+  </form>
+  <form class="mu-form" (submit)="$event.preventDefault(); regenerate()" novalidate>
+    <h3 class="sub">{{ 'totp.regenerateTitle' | transloco }}</h3>
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'fields.totpCode' | transloco }}</mat-label>
+      <input
+        matInput
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        maxlength="6"
+        [formControl]="regenerateCode"
+      />
+      <mat-error>{{ 'forms.totpCode' | transloco }}</mat-error>
+    </mat-form-field>
+    <div class="mu-actions">
+      <button matButton="outlined" type="submit" [disabled]="busy()">
+        {{ 'totp.regenerate' | transloco }}
+      </button>
+    </div>
+  </form>
+}
+<mu-form-error [error]="error()" />

@@ -7,3 +7,7 @@ playwright-report
 test-results
 package-lock.json
 src/styles/_theme-colors.scss
+public/brand
+src/styles/_brand-tokens.scss
+src/app/core/avatars/avatar-manifest.json
+public/manifest.webmanifest

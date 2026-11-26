@@ -1,0 +1,323 @@
+{
+  "viewBox": "0 0 120 120",
+  "animals": [
+    {
+      "id": "marmot",
+      "file": "marmot.svg",
+      "name": {
+        "de-CH": "Murmeli",
+        "en-US": "Marmot"
+      }
+    },
+    {
+      "id": "ibex",
+      "file": "ibex.svg",
+      "name": {
+        "de-CH": "Steinbock",
+        "en-US": "Ibex"
+      }
+    },
+    {
+      "id": "chamois",
+      "file": "chamois.svg",
+      "name": {
+        "de-CH": "Gämse",
+        "en-US": "Chamois"
+      }
+    },
+    {
+      "id": "cow",
+      "file": "cow.svg",
+      "name": {
+        "de-CH": "Kuh",
+        "en-US": "Cow"
+      }
+    },
+    {
+      "id": "stbernard",
+      "file": "stbernard.svg",
+      "name": {
+        "de-CH": "Bernhardiner",
+        "en-US": "St. Bernard"
+      }
+    },
+    {
+      "id": "fox",
+      "file": "fox.svg",
+      "name": {
+        "de-CH": "Fuchs",
+        "en-US": "Fox"
+      }
+    },
+    {
+      "id": "hedgehog",
+      "file": "hedgehog.svg",
+      "name": {
+        "de-CH": "Igel",
+        "en-US": "Hedgehog"
+      }
+    },
+    {
+      "id": "owl",
+      "file": "owl.svg",
+      "name": {
+        "de-CH": "Eule",
+        "en-US": "Owl"
+      }
+    },
+    {
+      "id": "squirrel",
+      "file": "squirrel.svg",
+      "name": {
+        "de-CH": "Eichhörnchen",
+        "en-US": "Squirrel"
+      }
+    },
+    {
+      "id": "rabbit",
+      "file": "rabbit.svg",
+      "name": {
+        "de-CH": "Hase",
+        "en-US": "Rabbit"
+      }
+    },
+    {
+      "id": "bear",
+      "file": "bear.svg",
+      "name": {
+        "de-CH": "Bär",
+        "en-US": "Bear"
+      }
+    },
+    {
+      "id": "frog",
+      "file": "frog.svg",
+      "name": {
+        "de-CH": "Frosch",
+        "en-US": "Frog"
+      }
+    },
+    {
+      "id": "penguin",
+      "file": "penguin.svg",
+      "name": {
+        "de-CH": "Pinguin",
+        "en-US": "Penguin"
+      }
+    },
+    {
+      "id": "cat",
+      "file": "cat.svg",
+      "name": {
+        "de-CH": "Katze",
+        "en-US": "Cat"
+      }
+    },
+    {
+      "id": "mouse",
+      "file": "mouse.svg",
+      "name": {
+        "de-CH": "Maus",
+        "en-US": "Mouse"
+      }
+    },
+    {
+      "id": "badger",
+      "file": "badger.svg",
+      "name": {
+        "de-CH": "Dachs",
+        "en-US": "Badger"
+      }
+    },
+    {
+      "id": "eagle",
+      "file": "eagle.svg",
+      "name": {
+        "de-CH": "Adler",
+        "en-US": "Eagle"
+      }
+    },
+    {
+      "id": "goat",
+      "file": "goat.svg",
+      "name": {
+        "de-CH": "Geiss",
+        "en-US": "Goat"
+      }
+    },
+    {
+      "id": "sheep",
+      "file": "sheep.svg",
+      "name": {
+        "de-CH": "Schaf",
+        "en-US": "Sheep"
+      }
+    },
+    {
+      "id": "pig",
+      "file": "pig.svg",
+      "name": {
+        "de-CH": "Säuli",
+        "en-US": "Pig"
+      }
+    },
+    {
+      "id": "lion",
+      "file": "lion.svg",
+      "name": {
+        "de-CH": "Löwe",
+        "en-US": "Lion"
+      }
+    },
+    {
+      "id": "panda",
+      "file": "panda.svg",
+      "name": {
+        "de-CH": "Panda",
+        "en-US": "Panda"
+      }
+    },
+    {
+      "id": "koala",
+      "file": "koala.svg",
+      "name": {
+        "de-CH": "Koala",
+        "en-US": "Koala"
+      }
+    },
+    {
+      "id": "monkey",
+      "file": "monkey.svg",
+      "name": {
+        "de-CH": "Äffli",
+        "en-US": "Monkey"
+      }
+    },
+    {
+      "id": "elephant",
+      "file": "elephant.svg",
+      "name": {
+        "de-CH": "Elefant",
+        "en-US": "Elephant"
+      }
+    },
+    {
+      "id": "giraffe",
+      "file": "giraffe.svg",
+      "name": {
+        "de-CH": "Giraffe",
+        "en-US": "Giraffe"
+      }
+    },
+    {
+      "id": "unicorn",
+      "file": "unicorn.svg",
+      "name": {
+        "de-CH": "Einhorn",
+        "en-US": "Unicorn"
+      }
+    },
+    {
+      "id": "dragon",
+      "file": "dragon.svg",
+      "name": {
+        "de-CH": "Drache",
+        "en-US": "Dragon"
+      }
+    },
+    {
+      "id": "trex",
+      "file": "trex.svg",
+      "name": {
+        "de-CH": "Dino",
+        "en-US": "T-Rex"
+      }
+    },
+    {
+      "id": "octopus",
+      "file": "octopus.svg",
+      "name": {
+        "de-CH": "Krake",
+        "en-US": "Octopus"
+      }
+    }
+  ],
+  "accessories": [
+    {
+      "id": "party-hat",
+      "file": "accessories/party-hat.svg",
+      "name": {
+        "de-CH": "Partyhut",
+        "en-US": "Party hat"
+      }
+    },
+    {
+      "id": "crown",
+      "file": "accessories/crown.svg",
+      "name": {
+        "de-CH": "Krone",
+        "en-US": "Crown"
+      }
+    },
+    {
+      "id": "sunglasses",
+      "file": "accessories/sunglasses.svg",
+      "name": {
+        "de-CH": "Sonnenbrille",
+        "en-US": "Sunglasses"
+      }
+    },
+    {
+      "id": "beanie",
+      "file": "accessories/beanie.svg",
+      "name": {
+        "de-CH": "Wollmütze",
+        "en-US": "Wool hat"
+      }
+    },
+    {
+      "id": "flower",
+      "file": "accessories/flower.svg",
+      "name": {
+        "de-CH": "Blume",
+        "en-US": "Flower"
+      }
+    },
+    {
+      "id": "headphones",
+      "file": "accessories/headphones.svg",
+      "name": {
+        "de-CH": "Kopfhörer",
+        "en-US": "Headphones"
+      }
+    },
+    {
+      "id": "bow",
+      "file": "accessories/bow.svg",
+      "name": {
+        "de-CH": "Masche",
+        "en-US": "Bow"
+      }
+    },
+    {
+      "id": "wizard-hat",
+      "file": "accessories/wizard-hat.svg",
+      "name": {
+        "de-CH": "Zauberhut",
+        "en-US": "Wizard hat"
+      }
+    }
+  ],
+  "backgrounds": [
+    "#FFD8A8",
+    "#FFF1A0",
+    "#C3F0C8",
+    "#A5E8F0",
+    "#B9D3FF",
+    "#D3C6FF",
+    "#FFC9E6",
+    "#FFC0B5",
+    "#D8EEC0",
+    "#E3E8EF"
+  ]
+}

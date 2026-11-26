@@ -3,8 +3,16 @@ import { readdir, readFile } from 'node:fs/promises';
 import { extname, join, relative } from 'node:path';
 
 // Hosts that appear as plain strings in framework code (XML namespaces, error links,
-// URL parsing bases) and never cause a network request.
-const ALLOWED_HOSTS = new Set(['www.w3.org', 'angular.dev', 'fake', 'localhost']);
+// URL parsing bases) and never cause a network request. The ALTCHA widget (a Svelte build)
+// carries svelte.dev error-doc links and its altcha.org attribution link, which the app hides.
+const ALLOWED_HOSTS = new Set([
+  'www.w3.org',
+  'angular.dev',
+  'fake',
+  'localhost',
+  'svelte.dev',
+  'altcha.org',
+]);
 const SCANNED = new Set(['.html', '.js', '.mjs', '.css', '.json', '.webmanifest', '.svg']);
 const URL_PATTERN = /(?:https?:)?\/\/([a-z0-9.-]+\.[a-z]{2,}|localhost|fake)\b/gi;
 

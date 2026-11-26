@@ -1,0 +1,51 @@
+<h2 mat-dialog-title id="parent-gate-title">{{ 'parentGate.title' | transloco }}</h2>
+<mat-dialog-content>
+  <p class="intro">
+    <mu-icon name="lock" />
+    <span>{{ 'parentGate.intro' | transloco }}</span>
+  </p>
+  <form id="parent-gate-form" (submit)="$event.preventDefault(); submit()" novalidate>
+    <input
+      type="email"
+      class="mu-visually-hidden"
+      autocomplete="username"
+      tabindex="-1"
+      aria-hidden="true"
+      [value]="email"
+      readonly
+    />
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'parentGate.password' | transloco }}</mat-label>
+      <input
+        matInput
+        type="password"
+        autocomplete="current-password"
+        data-testid="parent-gate-password"
+        [formControl]="password"
+      />
+      @if (password.hasError('required')) {
+        <mat-error>{{ 'forms.required' | transloco }}</mat-error>
+      }
+    </mat-form-field>
+    <mu-form-error [error]="error()" />
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button
+    matButton="text"
+    type="button"
+    [mat-dialog-close]="false"
+    data-testid="parent-gate-cancel"
+  >
+    {{ 'common.cancel' | transloco }}
+  </button>
+  <button
+    matButton="filled"
+    type="submit"
+    form="parent-gate-form"
+    data-testid="parent-gate-submit"
+    [disabled]="busy()"
+  >
+    {{ 'parentGate.unlock' | transloco }}
+  </button>
+</mat-dialog-actions>

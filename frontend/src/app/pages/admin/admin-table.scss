@@ -1,0 +1,46 @@
+.table-wrap {
+  position: relative;
+  overflow-x: auto;
+  border-radius: var(--mu-radius-md);
+  border: 2px solid var(--mu-color-border);
+}
+
+table {
+  width: 100%;
+  min-width: 640px;
+}
+
+.search {
+  width: min(100%, 420px);
+}
+
+.badge {
+  display: inline-block;
+  margin-inline-start: var(--mu-space-2);
+  padding: 0 var(--mu-space-2);
+  border-radius: var(--mu-radius-pill);
+  background: var(--mu-color-surface-alt);
+  border: 1px solid var(--mu-color-border);
+  font-size: var(--mu-font-size-sm);
+}
+
+.role-select {
+  min-width: 120px;
+}
+
+.actions {
+  white-space: nowrap;
+  text-align: end;
+}
+
+.danger-icon mu-icon {
+  color: var(--mu-color-error-text);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mu-space-3);
+}

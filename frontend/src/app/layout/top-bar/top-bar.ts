@@ -4,11 +4,12 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { BRAND_NAME } from '../../core/brand';
 import { Logo } from '../../shared/logo/logo';
 import { LanguageSwitch } from '../language-switch/language-switch';
+import { SessionMenu } from '../session-menu/session-menu';
 import { ThemeToggle } from '../theme-toggle/theme-toggle';
 
 @Component({
   selector: 'mu-top-bar',
-  imports: [RouterLink, TranslocoPipe, Logo, ThemeToggle, LanguageSwitch],
+  imports: [RouterLink, TranslocoPipe, Logo, ThemeToggle, LanguageSwitch, SessionMenu],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './top-bar.html',
   styleUrl: './top-bar.scss',

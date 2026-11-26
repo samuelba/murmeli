@@ -1,0 +1,110 @@
+<mu-page-card narrow>
+  <h1 id="page-heading" class="mu-page-title" data-testid="page-title">
+    {{ (step() === 'totp' ? 'login.totpTitle' : 'login.title') | transloco }}
+  </h1>
+
+  @if (step() === 'credentials') {
+    <form class="mu-form" [formGroup]="credentials" (ngSubmit)="signIn()" novalidate>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'fields.email' | transloco }}</mat-label>
+        <input
+          matInput
+          type="email"
+          autocomplete="username"
+          formControlName="email"
+          data-testid="login-email"
+        />
+        <mat-error>{{ fieldError(credentials.controls.email) ?? '' | transloco }}</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'fields.password' | transloco }}</mat-label>
+        <input
+          matInput
+          type="password"
+          autocomplete="current-password"
+          formControlName="password"
+          data-testid="login-password"
+        />
+        <mat-error>{{ fieldError(credentials.controls.password) ?? '' | transloco }}</mat-error>
+      </mat-form-field>
+      <mu-form-error [error]="error()" />
+      @if (unverified()) {
+        <a
+          class="mu-link"
+          routerLink="/verify-email"
+          [queryParams]="{ email: credentials.controls.email.value }"
+        >
+          {{ 'login.resendVerification' | transloco }}
+        </a>
+      }
+      <div class="mu-actions">
+        <button matButton="filled" type="submit" data-testid="login-submit" [disabled]="busy()">
+          {{ 'login.submit' | transloco }}
+        </button>
+        <a class="mu-link" routerLink="/forgot-password">{{ 'login.forgot' | transloco }}</a>
+      </div>
+    </form>
+    @if (config()?.registrationEnabled) {
+      <p class="mu-muted">
+        {{ 'login.noAccount' | transloco }}
+        <a class="mu-link" routerLink="/register" data-testid="register-link">{{
+          'login.register' | transloco
+        }}</a>
+      </p>
+    }
+  } @else {
+    <p class="mu-muted">
+      {{ (useRecoveryCode() ? 'login.recoveryIntro' : 'login.totpIntro') | transloco }}
+    </p>
+    <form class="mu-form" [formGroup]="totp" (ngSubmit)="verify()" novalidate>
+      @if (useRecoveryCode()) {
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'fields.recoveryCode' | transloco }}</mat-label>
+          <input
+            matInput
+            autocomplete="off"
+            formControlName="recoveryCode"
+            data-testid="login-recovery-code"
+          />
+          <mat-error>{{ fieldError(totp.controls.recoveryCode) ?? '' | transloco }}</mat-error>
+        </mat-form-field>
+      } @else {
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'fields.totpCode' | transloco }}</mat-label>
+          <input
+            matInput
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            maxlength="6"
+            formControlName="code"
+            data-testid="login-totp-code"
+          />
+          <mat-hint>{{ 'login.totpHint' | transloco }}</mat-hint>
+          <mat-error>{{ 'forms.totpCode' | transloco }}</mat-error>
+        </mat-form-field>
+      }
+      <mu-form-error [error]="error()" />
+      <div class="mu-actions">
+        <button
+          matButton="filled"
+          type="submit"
+          data-testid="login-totp-submit"
+          [disabled]="busy()"
+        >
+          {{ 'login.verify' | transloco }}
+        </button>
+        <button
+          matButton="text"
+          type="button"
+          data-testid="login-toggle-recovery"
+          (click)="toggleRecovery()"
+        >
+          {{ (useRecoveryCode() ? 'login.useCode' : 'login.useRecovery') | transloco }}
+        </button>
+        <button matButton="text" type="button" (click)="backToCredentials()">
+          {{ 'common.back' | transloco }}
+        </button>
+      </div>
+    </form>
+  }
+</mu-page-card>

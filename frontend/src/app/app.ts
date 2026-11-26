@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { ThemeService } from './core/theme/theme.service';
 import { TopBar } from './layout/top-bar/top-bar';
 
 @Component({
   selector: 'mu-root',
-  imports: [RouterOutlet, TranslocoPipe, TopBar],
+  imports: [RouterOutlet, RouterLink, TranslocoPipe, TopBar],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.html',
   styleUrl: './app.scss',

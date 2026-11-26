@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="mu-avatar mu-avatar--koala" role="img" aria-label="Koala">
+<circle cx="22" cy="44" r="20" fill="#9DA7B3" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="23.5" cy="46" r="12" fill="#E8EBEF"/><g transform="matrix(-1 0 0 1 120 0)"><circle cx="22" cy="44" r="20" fill="#9DA7B3" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="23.5" cy="46" r="12" fill="#E8EBEF"/></g>
+<path d="M60 34C81.08 34 94 46.16 94 66C94 88.32 81.08 102 60 102C38.92 102 26 88.32 26 66C26 46.16 38.92 34 60 34Z" fill="#9DA7B3" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="45" cy="61" rx="5" ry="6" fill="#3B2A20"/><circle cx="43.4" cy="58.84" r="1.9" fill="#fff"/><circle cx="46.7" cy="62.8" r="0.8" fill="#fff"/><ellipse cx="75" cy="61" rx="5" ry="6" fill="#3B2A20"/><circle cx="73.4" cy="58.84" r="1.9" fill="#fff"/><circle cx="76.7" cy="62.8" r="0.8" fill="#fff"/>
+<path d="M38 52Q45 49 51 52M69 52Q75 49 82 52" fill="none" stroke="#3B2A20" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="60" cy="75" rx="9" ry="12.5" fill="#3F3A45" stroke="#3B2A20" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="57" cy="70" rx="2.4" ry="3.6" fill="#fff" opacity=".5"/>
+<path d="M54 91Q60 96.6 66 91" fill="none" stroke="#3B2A20" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="38" cy="81" rx="6" ry="3.6" fill="#FF8FA3" opacity="0.55"/><ellipse cx="82" cy="81" rx="6" ry="3.6" fill="#FF8FA3" opacity="0.55"/>
+</svg>

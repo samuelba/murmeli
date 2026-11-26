@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="mu-accessory mu-accessory--crown" aria-hidden="true">
+<path d="M37 36L35 13L48 25L60 8L72 25L85 13L83 36Z" fill="#F7C600" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M37 30H83" stroke="#E0A800" stroke-width="2.5"/>
+<circle cx="35" cy="12" r="3.6" fill="#F7C600" stroke="#3B2A20" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="60" cy="7" r="3.6" fill="#F7C600" stroke="#3B2A20" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="85" cy="12" r="3.6" fill="#F7C600" stroke="#3B2A20" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="48" cy="31" r="3" fill="#E5484D" stroke="#3B2A20" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><circle cx="60" cy="30" r="3.6" fill="#2B8CD6" stroke="#3B2A20" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><circle cx="72" cy="31" r="3" fill="#E5484D" stroke="#3B2A20" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

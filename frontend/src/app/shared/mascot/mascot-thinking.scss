@@ -1,0 +1,71 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+svg {
+  display: block;
+}
+
+.mu-mascot-body {
+  transform-box: view-box;
+  transform-origin: 100px 190px;
+}
+.mu-mascot-question {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+.mu-mascot-eyes {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+.mu-mascot--animated .mu-mascot-body {
+  animation: mu-mascot-bob 2.4s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+.mu-mascot--animated .mu-mascot-question {
+  animation: mu-mascot-ponder 1.2s ease-in-out infinite;
+}
+.mu-mascot--animated .mu-mascot-eyes {
+  animation: mu-mascot-blink 4.8s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mu-mascot--animated .mu-mascot-body,
+  .mu-mascot--animated .mu-mascot-question,
+  .mu-mascot--animated .mu-mascot-eyes {
+    animation: none;
+  }
+}
+@keyframes mu-mascot-bob {
+  0%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+  50% {
+    transform: translateY(-5px) scale(0.99, 1.02);
+  }
+}
+@keyframes mu-mascot-ponder {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.12) rotate(8deg);
+  }
+}
+@keyframes mu-mascot-blink {
+  0%,
+  44% {
+    transform: scaleY(1);
+  }
+  46% {
+    transform: scaleY(0.1);
+  }
+  48%,
+  100% {
+    transform: scaleY(1);
+  }
+}

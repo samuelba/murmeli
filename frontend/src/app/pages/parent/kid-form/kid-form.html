@@ -1,0 +1,118 @@
+<mu-page-card>
+  <h1 id="page-heading" class="mu-page-title" data-testid="page-title">
+    {{ (isNew ? 'kidForm.createTitle' : 'kidForm.editTitle') | transloco }}
+  </h1>
+  @if (!loading()) {
+    <form class="mu-form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+      <section class="block" aria-labelledby="avatar-heading">
+        <h2 id="avatar-heading" class="mu-section-title">{{ 'kidForm.avatar' | transloco }}</h2>
+        <mu-avatar-builder [(avatar)]="avatar" />
+      </section>
+
+      <section class="block" aria-labelledby="profile-heading">
+        <h2 id="profile-heading" class="mu-section-title">{{ 'kidForm.profile' | transloco }}</h2>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'kidForm.nickname' | transloco }}</mat-label>
+          <input
+            matInput
+            formControlName="nickname"
+            maxlength="20"
+            autocomplete="off"
+            data-testid="kid-nickname"
+          />
+          <mat-hint>{{ 'kidForm.nicknameHint' | transloco }}</mat-hint>
+          <mat-error>{{ fieldError(form.controls.nickname) ?? '' | transloco }}</mat-error>
+        </mat-form-field>
+        <div class="two">
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'kidForm.startClass' | transloco }}</mat-label>
+            <mat-select formControlName="startClass" data-testid="kid-class">
+              @for (option of classes; track option) {
+                <mat-option [value]="option">{{ 'kid.class.' + option | transloco }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'kidForm.language' | transloco }}</mat-label>
+            <mat-select formControlName="language" data-testid="kid-language">
+              @for (language of languages; track language) {
+                <mat-option [value]="language">{{ 'language.' + language | transloco }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="block" aria-labelledby="pin-heading">
+        <h2 id="pin-heading" class="mu-section-title">{{ 'kidForm.pin' | transloco }}</h2>
+        <p class="mu-muted">{{ 'kidForm.pinIntro' | transloco }}</p>
+        <mat-radio-group
+          class="radios"
+          [attr.aria-label]="'kidForm.pin' | transloco"
+          [value]="pinMode()"
+          (change)="setPinMode($event.value)"
+        >
+          @if (existing()?.hasPin) {
+            <mat-radio-button value="keep" data-testid="pin-keep">{{
+              'kidForm.pinKeep' | transloco
+            }}</mat-radio-button>
+          }
+          <mat-radio-button value="none" data-testid="pin-none">{{
+            'kidForm.pinNone' | transloco
+          }}</mat-radio-button>
+          <mat-radio-button value="set" data-testid="pin-set">
+            {{ (existing()?.hasPin ? 'kidForm.pinChange' : 'kidForm.pinSet') | transloco }}
+          </mat-radio-button>
+        </mat-radio-group>
+        @if (pinMode() === 'set') {
+          <mu-pin-setup (pin)="onPin($event)" />
+          @if (pinMissing()) {
+            <p class="field-error" role="alert">{{ 'kidForm.pinMissing' | transloco }}</p>
+          }
+        }
+      </section>
+
+      <section class="block" aria-labelledby="settings-heading">
+        <h2 id="settings-heading" class="mu-section-title">{{ 'kidForm.settings' | transloco }}</h2>
+        <div class="two">
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'kidForm.dailyLimit' | transloco }}</mat-label>
+            <mat-select formControlName="dailyLimitMinutes" data-testid="kid-limit">
+              @for (minutes of limits; track minutes) {
+                <mat-option [value]="minutes">
+                  {{
+                    (minutes === 0 ? 'kidForm.noLimit' : 'kidForm.minutes')
+                      | transloco: { count: minutes }
+                  }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'kidForm.readAloud' | transloco }}</mat-label>
+            <mat-select formControlName="readAloud" data-testid="kid-read-aloud">
+              @for (mode of readAloudModes; track mode) {
+                <mat-option [value]="mode">{{
+                  'kidForm.readAloudMode.' + mode | transloco
+                }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <mat-slide-toggle formControlName="soundEnabled" data-testid="kid-sound">
+          {{ 'kidForm.sound' | transloco }}
+        </mat-slide-toggle>
+      </section>
+
+      <mu-form-error [error]="error()" />
+      <div class="mu-actions">
+        <button matButton="filled" type="submit" data-testid="kid-save" [disabled]="busy()">
+          {{ 'common.save' | transloco }}
+        </button>
+        <a matButton="outlined" routerLink="/parent">{{ 'common.cancel' | transloco }}</a>
+      </div>
+    </form>
+  } @else {
+    <mu-form-error [error]="error()" />
+  }
+</mu-page-card>

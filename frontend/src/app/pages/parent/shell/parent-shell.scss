@@ -1,0 +1,45 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mu-space-4);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mu-space-2);
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mu-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  a,
+  .lock {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mu-space-2);
+    min-height: var(--mu-touch-adult);
+    padding: 0 var(--mu-space-4);
+    border-radius: var(--mu-radius-pill);
+    border: 2px solid var(--mu-color-border);
+    background: var(--mu-color-surface);
+    color: var(--mu-color-text);
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  a.active {
+    border-color: var(--mu-color-secondary);
+    background: var(--mu-color-secondary);
+    color: var(--mu-color-on-secondary);
+  }
+}

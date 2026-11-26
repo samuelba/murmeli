@@ -18,10 +18,21 @@ export class LanguageService {
     this.apply(this.current());
   }
 
+  /** The user's own choice: applied and remembered on this device. */
   setLanguage(language: Language): void {
-    this.current.set(language);
     this.storage.set(LANGUAGE_STORAGE_KEY, language);
+    this.useLanguage(language);
+  }
+
+  /** A session language (account or kid profile): applied but not remembered. */
+  useLanguage(language: Language): void {
+    this.current.set(language);
     this.apply(language);
+  }
+
+  /** Back to the remembered choice, or the browser language. */
+  resetToPreference(): void {
+    this.useLanguage(this.initialLanguage());
   }
 
   private apply(language: Language): void {

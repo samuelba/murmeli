@@ -13,10 +13,6 @@
     "de-CH": "Deutsch",
     "en-US": "English"
   },
-  "common": {
-    "backHome": "Back to the start",
-    "comingSoon": "We are still building this part. It’s coming soon!"
-  },
   "welcome": {
     "pageTitle": "Welcome",
     "title": "Hi! Welcome to {{brand}}",
@@ -25,17 +21,484 @@
     "register": "Create a parent account",
     "subjects": "1 2 3 · A B C · Mom Dad"
   },
-  "login": {
-    "pageTitle": "Sign in",
-    "title": "Sign in"
-  },
-  "register": {
-    "pageTitle": "Create account",
-    "title": "Create account"
-  },
   "notFound": {
     "pageTitle": "Page not found",
     "title": "Oops, there’s no trail here!",
     "message": "The marmot looked everywhere, but this page does not exist. Let’s head back to the start."
+  },
+  "common": {
+    "backHome": "Back to the start",
+    "comingSoon": "We’re still building this. Coming soon!",
+    "cancel": "Cancel",
+    "back": "Back",
+    "save": "Save",
+    "saved": "Saved.",
+    "delete": "Delete",
+    "copy": "Copy",
+    "copied": "Copied.",
+    "done": "Done",
+    "loading": "Loading…",
+    "readAloud": "Read aloud: {{text}}",
+    "readAloudShort": "Read aloud",
+    "close": "Close"
+  },
+  "fields": {
+    "email": "Email address",
+    "password": "Password",
+    "passwordConfirm": "Repeat password",
+    "newPassword": "New password",
+    "currentPassword": "Current password",
+    "newEmail": "New email address",
+    "locale": "Language",
+    "recoveryCode": "Recovery code",
+    "totpCode": "6-digit code"
+  },
+  "forms": {
+    "required": "Please fill this in.",
+    "email": "Please enter a valid email address.",
+    "passwordTooShort": "At least {{min}} characters, please.",
+    "tooLong": "That is too long.",
+    "nickname": "Only letters, digits, spaces and hyphens (at most 20 characters).",
+    "pattern": "The format is not right.",
+    "min": "The value is too small.",
+    "max": "The value is too large.",
+    "confirmText": "The text does not match.",
+    "server": "Please check this field.",
+    "invalid": "Please check your input.",
+    "mismatch": "The passwords do not match.",
+    "totpCode": "Please enter the 6 digits from your app."
+  },
+  "password": {
+    "hint": "At least {{min}} characters. A sentence of several words is easy to remember.",
+    "strength": {
+      "label": "Password strength",
+      "empty": "empty",
+      "weak": "weak",
+      "fair": "fair",
+      "good": "good",
+      "strong": "strong"
+    }
+  },
+  "errors": {
+    "GENERIC": "Something went wrong. Please try again.",
+    "NETWORK": "Cannot reach the server. Please check your connection.",
+    "SERVER": "The server has a problem right now. Please try again later.",
+    "RATE_LIMITED": "Too many attempts. Please wait a moment.",
+    "RATE_LIMITED_SECONDS": "Too many attempts. Please wait {{count}} seconds.",
+    "RATE_LIMITED_MINUTES": "Too many attempts. Please wait {{count}} minutes.",
+    "RATE_LIMIT_UNAVAILABLE": "Signing in is unavailable right now. Please try again in a few minutes.",
+    "PIN_LOCKED": "Time for a short break! Try again soon.",
+    "PIN_LOCKED_SECONDS": "Time for a short break! Try again in {{count}} seconds.",
+    "PIN_LOCKED_MINUTES": "Time for a short break! Try again in {{count}} minutes.",
+    "ACCOUNT_DISABLED": "This account is disabled. Please contact the administrator.",
+    "ALTCHA_INVALID": "The check expired. Please confirm again that you are human.",
+    "AVATAR_INVALID": "This avatar is not available. Please pick another one.",
+    "CANNOT_DELETE_SELF": "You cannot delete your own account here.",
+    "EMAIL_NOT_VERIFIED": "Please confirm your email address first. Check your inbox.",
+    "INVALID_CREDENTIALS": "The email address or password is not correct.",
+    "INVALID_JSON": "The request was malformed. Please reload the page.",
+    "INVITE_INVALID": "This invitation is invalid or has expired.",
+    "KID_LIMIT": "You can have at most 8 kid profiles.",
+    "KID_NOT_FOUND": "This profile no longer exists.",
+    "LAST_ADMIN": "At least one active administrator must remain.",
+    "PARENT_GATE_REQUIRED": "Please unlock the parent area first.",
+    "PASSWORD_TOO_WEAK": "This password is too easy to guess. Please choose another one.",
+    "PAYLOAD_TOO_LARGE": "The data is too large.",
+    "PIN_INVALID": "Those were not the right pictures.",
+    "REGISTRATION_DISABLED": "Registration is closed. You need an invitation.",
+    "SESSION_COMPROMISED": "Your session was ended for security reasons. Please sign in again.",
+    "SESSION_EXPIRED": "Your session has expired. Please sign in again.",
+    "SETUP_COMPLETE": "Setup is already complete.",
+    "TOKEN_INVALID": "This link is invalid or has expired.",
+    "TOTP_INVALID": "The code is not correct. Please try again.",
+    "TOTP_REQUIRED": "The admin area requires two-factor sign-in. Set it up under “Account”.",
+    "VALIDATION_FAILED": "Please check the highlighted fields."
+  },
+  "parentGate": {
+    "title": "Parent area",
+    "intro": "Grown-ups only: please enter your password.",
+    "password": "Password",
+    "unlock": "Unlock"
+  },
+  "confirm": {
+    "typeToConfirm": "Type “{{text}}” to confirm"
+  },
+  "altcha": {
+    "ariaLinkLabel": "More about ALTCHA",
+    "enterCode": "Enter code",
+    "enterCodeAria": "Enter the code you hear. Press Space to play the audio.",
+    "error": "Verification failed. Please try again.",
+    "expired": "Verification expired. Please try again.",
+    "footer": "Protected by ALTCHA",
+    "getAudioChallenge": "Get an audio challenge",
+    "label": "I’m human",
+    "loading": "Loading…",
+    "reload": "Reload",
+    "verify": "Verify",
+    "verificationRequired": "Please confirm that you are human.",
+    "verified": "Verified",
+    "verifying": "Verifying…",
+    "waitAlert": "Verifying… please wait."
+  },
+  "login": {
+    "pageTitle": "Sign in",
+    "title": "Sign in",
+    "totpTitle": "Verification code",
+    "submit": "Sign in",
+    "forgot": "Forgot your password?",
+    "noAccount": "No account yet?",
+    "register": "Create a parent account",
+    "resendVerification": "Send the confirmation email again",
+    "totpIntro": "Open your authenticator app and enter the current code.",
+    "recoveryIntro": "Enter one of your recovery codes. Each code works only once.",
+    "totpHint": "The code changes every 30 seconds.",
+    "verify": "Verify",
+    "useCode": "Use a code from the app",
+    "useRecovery": "Use a recovery code"
+  },
+  "register": {
+    "pageTitle": "Create account",
+    "title": "Create account",
+    "intro": "One parent account for the whole family. Afterwards you add a profile for each kid.",
+    "closed": "New accounts are invitation-only right now. Please ask the person who runs this site.",
+    "toLogin": "Go to sign in",
+    "done": "Almost done! We sent an email to {{email}}. Click the link in it to confirm your account.",
+    "acceptBefore": "I have read the",
+    "acceptAnd": "and the",
+    "acceptAfter": "and agree as a parent or legal guardian.",
+    "termsRequired": "Please accept the privacy policy and the terms of use.",
+    "altchaRequired": "Please confirm first that you are human.",
+    "submit": "Create account",
+    "haveAccount": "I already have an account"
+  },
+  "setup": {
+    "pageTitle": "Setup",
+    "title": "Welcome to {{brand}}!",
+    "intro": "Create the first account. It becomes the administrator of this installation.",
+    "submit": "Create account"
+  },
+  "verifyEmail": {
+    "pageTitle": "Confirm email",
+    "title": "Confirm your email address",
+    "verifying": "Checking your link…",
+    "registrationDone": "Thank you! Your email address is confirmed. You can sign in now.",
+    "emailChangeDone": "Your new email address is confirmed.",
+    "resent": "If an unconfirmed account belongs to this address, we sent a new email.",
+    "resendIntro": "Didn’t get an email? We can send you a new one.",
+    "resend": "Send a new email"
+  },
+  "forgotPassword": {
+    "pageTitle": "Forgot password",
+    "title": "Forgot your password?",
+    "intro": "Enter your email address. We will send you a link to reset it.",
+    "done": "If an account belongs to this address, an email is on its way. The link is valid for one hour.",
+    "submit": "Send link"
+  },
+  "resetPassword": {
+    "pageTitle": "New password",
+    "title": "Choose a new password",
+    "requestNew": "Request a new link",
+    "done": "Your password is changed. For your security, all devices were signed out.",
+    "submit": "Save password"
+  },
+  "invite": {
+    "pageTitle": "Invitation",
+    "title": "You’re invited!",
+    "intro": "Choose a password for {{email}} and you’re ready to go.",
+    "submit": "Accept invitation"
+  },
+  "nav": {
+    "kidHome": "{{name}}, go to the learning page",
+    "accountMenu": "Account menu ({{email}})",
+    "profiles": "Profiles",
+    "parentArea": "Parent area",
+    "admin": "Administration",
+    "logout": "Sign out",
+    "logoutFailed": "Signing out did not work."
+  },
+  "roles": {
+    "parent": "Parent",
+    "admin": "Admin"
+  },
+  "pin": {
+    "progress": "{{count}} of {{total}} pictures chosen",
+    "undo": "Remove the last picture",
+    "title": "Hi {{name}}! Tap your 4 pictures.",
+    "wrong": "Almost! Try again.",
+    "keyboardHint": "Use the keys 1 to 9 to choose a picture and Backspace to remove the last one.",
+    "picture": "{{name}}, picture {{number}} of {{total}}"
+  },
+  "pinSetup": {
+    "first": "Pick 4 pictures in an order your kid can remember.",
+    "confirm": "Tap the same 4 pictures again.",
+    "done": "Picture PIN is set.",
+    "mismatch": "The pictures did not match. Please start again.",
+    "again": "Choose different pictures"
+  },
+  "picker": {
+    "pageTitle": "Profiles",
+    "title": "Who’s learning today?",
+    "empty": "No profiles yet. Add one!",
+    "add": "Add profile",
+    "parents": "Parents",
+    "hasPin": "(with picture PIN)",
+    "back": "Back"
+  },
+  "learn": {
+    "pageTitle": "Learn",
+    "hello": "Hi {{name}}!",
+    "soon": "Coming soon! The mountain trail is being built.",
+    "switchProfile": "Switch profile"
+  },
+  "avatarBuilder": {
+    "animal": "Animal",
+    "accessory": "Accessory",
+    "noAccessory": "No accessory",
+    "background": "Background",
+    "status": "Preview: {{animal}} without accessory, {{color}} background",
+    "statusWith": "Preview: {{animal}} with {{accessory}}, {{color}} background",
+    "colors": {
+      "c1": "apricot",
+      "c2": "lemon yellow",
+      "c3": "mint green",
+      "c4": "turquoise",
+      "c5": "sky blue",
+      "c6": "lavender",
+      "c7": "pink",
+      "c8": "coral",
+      "c9": "light green",
+      "c10": "light gray"
+    }
+  },
+  "kid": {
+    "class": {
+      "KG1": "Kindergarten 1",
+      "KG2": "Kindergarten 2",
+      "1": "1st grade",
+      "2": "2nd grade"
+    }
+  },
+  "kidForm": {
+    "createTitle": "New profile",
+    "editTitle": "Edit profile",
+    "avatar": "Avatar",
+    "profile": "Profile",
+    "nickname": "Nickname",
+    "nicknameHint": "No real name needed. At most 20 characters.",
+    "startClass": "Starting level",
+    "language": "Learning language",
+    "pin": "Picture PIN",
+    "pinIntro": "A picture PIN keeps siblings from opening the wrong profile by accident. It does not protect against adults.",
+    "pinKeep": "Keep PIN",
+    "pinNone": "No PIN",
+    "pinSet": "Set a PIN",
+    "pinChange": "Change PIN",
+    "pinMissing": "Please set the picture PIN or choose “No PIN”.",
+    "settings": "Settings",
+    "dailyLimit": "Daily learning time",
+    "noLimit": "No limit",
+    "minutes": "{{count}} minutes",
+    "readAloud": "Read aloud",
+    "readAloudMode": {
+      "auto": "Automatic by level",
+      "on": "Always read aloud",
+      "off": "Never read aloud"
+    },
+    "sound": "Sounds and music"
+  },
+  "parent": {
+    "pageTitle": "Parent area",
+    "nav": "Parent area",
+    "kids": "Kids",
+    "account": "Account",
+    "admin": "Administration",
+    "lock": "Lock parent area",
+    "kidsTitle": "Kid profiles",
+    "addKid": "Add profile",
+    "noKids": "No kid profiles yet.",
+    "withPin": "with picture PIN",
+    "editKid": "Edit {{name}}",
+    "deleteKid": "Delete {{name}}",
+    "deleteKidTitle": "Delete {{name}}?",
+    "deleteKidMessage": "The profile and all learning progress of {{name}} will be deleted for good."
+  },
+  "account": {
+    "title": "Account",
+    "preferences": "Language and theme",
+    "theme": "Theme",
+    "themes": {
+      "system": "Match device",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "passwordTitle": "Change password",
+    "passwordChanged": "Your password is changed. Other devices were signed out.",
+    "passwordSubmit": "Change password",
+    "emailTitle": "Change email address",
+    "currentEmail": "Current: {{email}}",
+    "emailSent": "We sent a confirmation link to {{email}}. The change applies once you click it.",
+    "emailSubmit": "Change email address",
+    "dataTitle": "Your data",
+    "exportIntro": "Download all data of your account and kid profiles as a JSON file.",
+    "export": "Download data",
+    "deleteTitle": "Delete account",
+    "deleteIntro": "Deletes your account, all kid profiles and all learning progress for good. This cannot be undone.",
+    "delete": "Delete account",
+    "deleteConfirmTitle": "Really delete your account?",
+    "deleteConfirmMessage": "All data is deleted immediately and for good.",
+    "deleteWord": "DELETE"
+  },
+  "totp": {
+    "title": "Two-factor sign-in",
+    "statusOn": "On. When you sign in, we ask for a code from your app.",
+    "statusOff": "Off. An authenticator app makes your account safer.",
+    "setup": "Set up",
+    "scan": "Scan the QR code with your authenticator app.",
+    "manual": "Or enter this key by hand:",
+    "qrAlt": "QR code for the authenticator app",
+    "enable": "Turn on",
+    "disableTitle": "Turn off",
+    "disable": "Turn off two-factor sign-in",
+    "regenerateTitle": "New recovery codes",
+    "regenerate": "Create new codes",
+    "recoveryIntro": "Keep these codes somewhere safe. Each code works once if you lose your phone. They are shown only now.",
+    "download": "Download",
+    "requiredNotice": "Two-factor sign-in is required for the admin area. Set it up here to continue."
+  },
+  "admin": {
+    "title": "Administration",
+    "nav": "Administration",
+    "nav_overview": "Overview",
+    "nav_users": "Users",
+    "nav_invites": "Invitations",
+    "nav_settings": "Settings",
+    "nav_audit": "Audit log",
+    "actions": "Actions",
+    "empty": "No entries.",
+    "stats": {
+      "users": "Accounts",
+      "kids": "Kid profiles",
+      "activeKidsLast7Days": "Active kids (7 days)"
+    },
+    "users": {
+      "search": "Search by email",
+      "table": "Users",
+      "unverified": "unverified",
+      "totp": "2FA",
+      "role": "Role",
+      "roleFor": "Role of {{email}}",
+      "active": "Status",
+      "activeFor": "{{email}} active",
+      "enabled": "active",
+      "disabled": "disabled",
+      "kids": "Kids",
+      "lastLogin": "Last sign-in",
+      "resend": "Resend confirmation to {{email}}",
+      "resent": "Confirmation email was sent again.",
+      "delete": "Delete {{email}}",
+      "deleteTitle": "Delete account {{email}}?",
+      "deleteMessage": "The account, all kid profiles and all progress will be deleted for good."
+    },
+    "invites": {
+      "title": "Invitations",
+      "create": "Invite",
+      "createTitle": "New invitation",
+      "expires": "Expires",
+      "revoke": "Revoke invitation for {{email}}",
+      "revokeTitle": "Revoke invitation?",
+      "revokeMessage": "The link for {{email}} will stop working.",
+      "revokeConfirm": "Revoke",
+      "email_sent": "The invitation was emailed to {{email}}. You can also share the link yourself:",
+      "email_queued": "The email to {{email}} will be sent shortly. You can also share the link yourself:",
+      "email_disabled": "Email is not set up. Please share this link with {{email}} yourself:"
+    },
+    "settings": {
+      "title": "Settings",
+      "registrationEnabled": "Registration open",
+      "registrationEnabledHint": "When off, new families can only join by invitation.",
+      "requireAdminTotp": "Require two-factor sign-in for admins",
+      "requireAdminTotpHint": "Admins without two-factor sign-in can then only set it up.",
+      "emailOn": "Email sending is set up.",
+      "emailOff": "Email sending is not set up. You need to share invitations by hand."
+    },
+    "audit": {
+      "filter": "Action",
+      "all": "All actions",
+      "at": "Time",
+      "action": "Action",
+      "target": "Target",
+      "ip": "IP (truncated)",
+      "meta": "Details"
+    }
+  },
+  "paginator": {
+    "itemsPerPage": "Items per page",
+    "next": "Next page",
+    "previous": "Previous page",
+    "first": "First page",
+    "last": "Last page",
+    "range": "{{start}}–{{end}} of {{length}}",
+    "empty": "0 of 0"
+  },
+  "legal": {
+    "privacyTitle": "Privacy",
+    "termsTitle": "Terms of use",
+    "draft": "Draft: this text will be completed and reviewed by experts before launch.",
+    "privacy": {
+      "stored": {
+        "title": "What we store",
+        "text": "For the parent account: email address, a hashed password, language and theme. To keep you signed in we only set strictly necessary cookies."
+      },
+      "kids": {
+        "title": "Kids’ data",
+        "text": "A kid profile only holds a nickname, a drawn avatar, the starting level or birth year, settings and learning progress. Real names are not needed."
+      },
+      "noPhotos": {
+        "title": "No photos, no recordings",
+        "text": "{{brand}} never asks for photos, the camera or the microphone."
+      },
+      "noTrackers": {
+        "title": "No trackers",
+        "text": "No ads, no analytics, no fonts or scripts from other servers. Everything runs on this server."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "text": "We only use session cookies for signing in, the parent area and the active kid profile. That is why there is no cookie banner."
+      },
+      "rights": {
+        "title": "Download and delete",
+        "text": "In the parent area you can download all data at any time or delete your account with all kid profiles for good (nFADP, GDPR)."
+      },
+      "contact": {
+        "title": "Contact",
+        "text": "The person or organization running this installation is responsible. Contact details will follow."
+      }
+    },
+    "terms": {
+      "purpose": {
+        "title": "What {{brand}} is for",
+        "text": "{{brand}} is a learning app for kids from kindergarten to the end of 2nd grade, aligned with Lehrplan 21."
+      },
+      "accounts": {
+        "title": "Parent account",
+        "text": "An adult parent or legal guardian opens the account and is responsible for the kid profiles."
+      },
+      "kids": {
+        "title": "Kids",
+        "text": "Kids only use {{brand}} through a profile in the parent account. They do not need their own email address."
+      },
+      "content": {
+        "title": "Content",
+        "text": "The exercises may be used for your own learning. Redistribution or resale is not allowed."
+      },
+      "liability": {
+        "title": "Liability",
+        "text": "We do our best to make everything correct and working, but cannot guarantee it."
+      },
+      "changes": {
+        "title": "Changes",
+        "text": "If these terms change, we will let you know by email."
+      }
+    }
   }
 }

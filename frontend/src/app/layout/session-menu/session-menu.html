@@ -1,0 +1,46 @@
+@if (user(); as account) {
+  @if (kid(); as active) {
+    <a
+      class="kid-chip"
+      routerLink="/learn"
+      data-testid="kid-chip"
+      [attr.aria-label]="'nav.kidHome' | transloco: { name: active.nickname }"
+    >
+      <mu-avatar [avatar]="active.avatar" [size]="44" />
+      <span class="kid-chip__name">{{ active.nickname }}</span>
+    </a>
+  } @else {
+    <button
+      matIconButton
+      type="button"
+      data-testid="account-menu"
+      [matMenuTriggerFor]="menu"
+      [attr.aria-label]="'nav.accountMenu' | transloco: { email: account.email }"
+    >
+      <mu-icon name="person" />
+    </button>
+    <mat-menu #menu="matMenu" xPosition="before">
+      <p class="email" aria-hidden="true">{{ account.email }}</p>
+      <a mat-menu-item routerLink="/" data-testid="menu-profiles">
+        <mu-icon name="family" /> <span>{{ 'nav.profiles' | transloco }}</span>
+      </a>
+      <a mat-menu-item routerLink="/parent" data-testid="menu-parent">
+        <mu-icon name="lock" /> <span>{{ 'nav.parentArea' | transloco }}</span>
+      </a>
+      @if (isAdmin()) {
+        <a mat-menu-item routerLink="/admin" data-testid="menu-admin">
+          <mu-icon name="shield" /> <span>{{ 'nav.admin' | transloco }}</span>
+        </a>
+      }
+      <button
+        mat-menu-item
+        type="button"
+        data-testid="menu-logout"
+        [disabled]="busy()"
+        (click)="logout()"
+      >
+        <mu-icon name="logout" /> <span>{{ 'nav.logout' | transloco }}</span>
+      </button>
+    </mat-menu>
+  }
+}

@@ -1,0 +1,110 @@
+<div class="builder">
+  <div class="preview" data-testid="avatar-preview">
+    <mu-avatar [avatar]="avatar()" [size]="128" [label]="previewName()" />
+  </div>
+  <p class="mu-visually-hidden" aria-live="polite" aria-atomic="true" data-testid="avatar-status">
+    @if (accessoryName(); as accessory) {
+      {{
+        'avatarBuilder.statusWith'
+          | transloco: { animal: previewName(), accessory, color: colorKey() | transloco }
+      }}
+    } @else {
+      {{
+        'avatarBuilder.status' | transloco: { animal: previewName(), color: colorKey() | transloco }
+      }}
+    }
+  </p>
+
+  <div class="sections">
+    <fieldset>
+      <legend>{{ 'avatarBuilder.animal' | transloco }}</legend>
+      <div class="options animals">
+        @for (animal of animals(); track animal.id) {
+          <label class="option" [class.selected]="animal.id === avatar().animal">
+            <input
+              type="radio"
+              class="mu-visually-hidden"
+              [name]="uid + '-animal'"
+              [value]="animal.id"
+              [checked]="animal.id === avatar().animal"
+              [attr.aria-label]="animal.name"
+              [attr.data-testid]="'avatar-animal-' + animal.id"
+              (change)="setAnimal(animal.id)"
+            />
+            <img [src]="animal.src" alt="" />
+            @if (animal.id === avatar().animal) {
+              <mu-icon class="tick" name="check" />
+            }
+          </label>
+        }
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>{{ 'avatarBuilder.accessory' | transloco }}</legend>
+      <div class="options">
+        <label class="option" [class.selected]="avatar().accessory === null">
+          <input
+            type="radio"
+            class="mu-visually-hidden"
+            [name]="uid + '-accessory'"
+            value=""
+            [checked]="avatar().accessory === null"
+            [attr.aria-label]="'avatarBuilder.noAccessory' | transloco"
+            data-testid="avatar-accessory-none"
+            (change)="setAccessory(null)"
+          />
+          <mu-icon class="none" name="close" />
+          @if (avatar().accessory === null) {
+            <mu-icon class="tick" name="check" />
+          }
+        </label>
+        @for (accessory of accessories(); track accessory.id) {
+          <label class="option" [class.selected]="accessory.id === avatar().accessory">
+            <input
+              type="radio"
+              class="mu-visually-hidden"
+              [name]="uid + '-accessory'"
+              [value]="accessory.id"
+              [checked]="accessory.id === avatar().accessory"
+              [attr.aria-label]="accessory.name"
+              [attr.data-testid]="'avatar-accessory-' + accessory.id"
+              (change)="setAccessory(accessory.id)"
+            />
+            <img [src]="accessory.src" alt="" />
+            @if (accessory.id === avatar().accessory) {
+              <mu-icon class="tick" name="check" />
+            }
+          </label>
+        }
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>{{ 'avatarBuilder.background' | transloco }}</legend>
+      <div class="options">
+        @for (color of backgrounds; track color; let i = $index) {
+          <label
+            class="option swatch"
+            [class.selected]="color === avatar().background"
+            [style.background-color]="color"
+          >
+            <input
+              type="radio"
+              class="mu-visually-hidden"
+              [name]="uid + '-background'"
+              [value]="color"
+              [checked]="color === avatar().background"
+              [attr.aria-label]="'avatarBuilder.colors.c' + (i + 1) | transloco"
+              [attr.data-testid]="'avatar-background-' + i"
+              (change)="setBackground(color)"
+            />
+            @if (color === avatar().background) {
+              <mu-icon class="tick" name="check" />
+            }
+          </label>
+        }
+      </div>
+    </fieldset>
+  </div>
+</div>

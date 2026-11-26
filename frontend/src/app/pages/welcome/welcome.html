@@ -11,8 +11,10 @@
     <a class="mu-button mu-button--sun hero__start" routerLink="/login" data-testid="start-cta">
       {{ 'welcome.start' | transloco }}
     </a>
-    <a class="mu-button mu-button--ghost" routerLink="/register" data-testid="register-link">
-      {{ 'welcome.register' | transloco }}
-    </a>
+    @if (config()?.registrationEnabled) {
+      <a class="mu-button mu-button--ghost" routerLink="/register" data-testid="register-link">
+        {{ 'welcome.register' | transloco }}
+      </a>
+    }
   </div>
 </section>

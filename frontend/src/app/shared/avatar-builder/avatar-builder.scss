@@ -1,0 +1,114 @@
+.builder {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mu-space-4);
+}
+
+.preview {
+  display: flex;
+  justify-content: center;
+  padding: var(--mu-space-3);
+  border-radius: var(--mu-radius-lg);
+  background: var(--mu-color-surface-alt);
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mu-space-4);
+  min-width: 0;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+legend {
+  margin-bottom: var(--mu-space-2);
+  font-weight: 800;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: var(--mu-space-2);
+}
+
+.option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px;
+  aspect-ratio: 1;
+  border: 3px solid var(--mu-color-border-strong);
+  border-radius: var(--mu-radius-md);
+  background: var(--mu-color-surface-raised);
+  cursor: pointer;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+
+  &.selected {
+    border-color: var(--mu-color-secondary);
+    box-shadow: 0 0 0 2px var(--mu-color-secondary);
+  }
+
+  &:has(input:focus-visible) {
+    outline: 4px solid var(--mu-color-focus);
+    outline-offset: 2px;
+    box-shadow: var(--mu-focus-ring-kid);
+  }
+}
+
+@supports not selector(:has(*)) {
+  .option:focus-within {
+    outline: 4px solid var(--mu-color-focus);
+    outline-offset: 2px;
+    box-shadow: var(--mu-focus-ring-kid);
+  }
+}
+
+.swatch {
+  border-radius: 50%;
+}
+
+.none {
+  width: 32px;
+  height: 32px;
+  color: var(--mu-color-text-muted);
+}
+
+.tick {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  width: 26px;
+  height: 26px;
+  padding: 2px;
+  border-radius: 50%;
+  background: var(--mu-color-secondary);
+  color: var(--mu-color-on-secondary);
+}
+
+@media (min-width: 720px) {
+  .builder {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .preview {
+    position: sticky;
+    top: var(--mu-space-4);
+    padding: var(--mu-space-5);
+  }
+
+  .sections {
+    flex: 1;
+  }
+}

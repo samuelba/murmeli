@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="mu-avatar mu-avatar--eagle" role="img" aria-label="Eagle">
+<path d="M58 26Q53 12 62 7Q60 16 67 13Q65 20 63 26Z" fill="#D9A441" stroke="#3B2A20" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<defs><clipPath id="mu-av-eagle-clip"><path d="M60 24C80 24 96 38 98 58L105 64L97 68L102 76L94 78C88 96 74 104 60 104C46 104 32 96 26 78L18 76L23 68L15 64L22 58C24 38 40 24 60 24Z"/></clipPath></defs>
+<path d="M60 24C80 24 96 38 98 58L105 64L97 68L102 76L94 78C88 96 74 104 60 104C46 104 32 96 26 78L18 76L23 68L15 64L22 58C24 38 40 24 60 24Z" fill="#8C5A2B"/>
+<path clip-path="url(#mu-av-eagle-clip)" d="M18 52C24 36 42 24 60 24C78 24 96 36 102 52C88 44 74 42 60 46C46 42 32 44 18 52Z" fill="#D9A441"/>
+<path d="M60 24C80 24 96 38 98 58L105 64L97 68L102 76L94 78C88 96 74 104 60 104C46 104 32 96 26 78L18 76L23 68L15 64L22 58C24 38 40 24 60 24Z" fill="none" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="46" cy="60" rx="5" ry="6" fill="#3B2A20"/><circle cx="44.4" cy="57.84" r="1.9" fill="#fff"/><circle cx="47.7" cy="61.8" r="0.8" fill="#fff"/><ellipse cx="74" cy="60" rx="5" ry="6" fill="#3B2A20"/><circle cx="72.4" cy="57.84" r="1.9" fill="#fff"/><circle cx="75.7" cy="61.8" r="0.8" fill="#fff"/>
+<path d="M34 49L54 54M66 47Q76 38 87 45" fill="none" stroke="#3B2A20" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M48 68Q60 60 72 68Q74 82 62 93Q64 84 60 80Q52 76 48 68Z" fill="#F5B700" stroke="#3B2A20" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="64.5" cy="69.5" r="1.5" fill="#3B2A20"/>
+<ellipse cx="32" cy="76" rx="6" ry="3.6" fill="#FF8FA3" opacity="0.55"/><ellipse cx="88" cy="76" rx="6" ry="3.6" fill="#FF8FA3" opacity="0.55"/>
+</svg>

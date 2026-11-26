@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="mu-accessory mu-accessory--bow" aria-hidden="true">
+<path d="M86 30L80 44L86 41L89 45Z" fill="#E0457A" stroke="#3B2A20" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M86 28C76 16 68 20 68 28C68 36 76 40 86 28Z" fill="#FF5C8A" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M86 28C96 16 104 20 104 28C104 36 96 40 86 28Z" fill="#FF5C8A" stroke="#3B2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<g fill="#fff" opacity=".85"><circle cx="75" cy="25" r="1.8"/><circle cx="76" cy="32" r="1.4"/><circle cx="97" cy="25" r="1.8"/><circle cx="96" cy="32" r="1.4"/></g>
+<circle cx="86" cy="28" r="5" fill="#E0457A" stroke="#3B2A20" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

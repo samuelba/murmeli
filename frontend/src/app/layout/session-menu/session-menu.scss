@@ -1,0 +1,41 @@
+.kid-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mu-space-2);
+  min-height: var(--mu-touch-adult);
+  padding: 2px var(--mu-space-3) 2px 2px;
+  border-radius: var(--mu-radius-pill);
+  background: var(--mu-color-surface-alt);
+  color: var(--mu-color-text);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.kid-chip__name {
+  max-width: 10ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.email {
+  margin: 0;
+  padding: var(--mu-space-2) var(--mu-space-4);
+  color: var(--mu-color-text-muted);
+  font-size: var(--mu-font-size-sm);
+  overflow-wrap: anywhere;
+}
+
+mu-icon {
+  margin-inline-end: var(--mu-space-2);
+}
+
+@media (max-width: 420px) {
+  .kid-chip__name {
+    display: none;
+  }
+
+  .kid-chip {
+    padding-inline-end: 2px;
+  }
+}
