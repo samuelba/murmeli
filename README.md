@@ -1,5 +1,11 @@
 # Murmeli
 
+[![CI](https://github.com/samuelba/murmeli/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/samuelba/murmeli/actions/workflows/ci.yml)
+
+<p align="center">
+  <img src="brand/logo/murmeli-mark.svg" alt="Murmeli logo" width="160">
+</p>
+
 Murmeli is a self-hosted learning platform for kids from kindergarten to the end of 2nd class. It teaches **math, reading and writing**, follows the Swiss Lehrplan 21 (Zyklus 1), and is available in **German (de-CH)** and **American English**.
 
 > Murmeli is aligned with Lehrplan 21 but not affiliated with it. "Murmeli" is a working name.
