@@ -118,7 +118,7 @@ Copy `.github/workflows/{ci.yml,release.yml}` and `release-please-config.json` f
 - **Pinning:** every action is pinned to a commit SHA, as dmarc does.
 
 **`release.yml`** runs on push to `main`:
-- **Release:** `samuelba/actions/release-please` (pinned SHA) opens and updates the release PR. Its config is `release-type: simple`, `bump-minor-pre-major`, `include-v-in-tag`, and `extra-files` that bump `backend/` and `frontend/` `package.json` and `package-lock.json`. If a `RELEASE_PLEASE_TOKEN` PAT is set, CI also runs on the release PR.
+- **Release:** `samuelba/actions/release-please` (pinned SHA) opens and updates the release PR. Its config is `release-type: simple`, `initial-version: 0.1.0`, `bump-minor-pre-major`, `include-v-in-tag`, and `extra-files` that bump `backend/` and `frontend/` `package.json` and `package-lock.json`. If a `RELEASE_PLEASE_TOKEN` PAT is set, CI also runs on the release PR.
 - **Images:** when a release is created, a `docker` matrix (`backend`, `frontend`) builds and pushes `ghcr.io/samuelba/<repo>/murmeli-{backend,frontend}`.
   - Tags: `vX.Y.Z`, `X.Y.Z` and `latest`. OCI labels are added, and the GHA build cache is used.
   - Platforms: `linux/amd64` and `linux/arm64` (arm64 so it runs on a Raspberry Pi or another home server).
