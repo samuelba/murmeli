@@ -248,7 +248,7 @@ const result = parsed.success ? checkAnswer(item.solution, parsed.answer) : { co
 
 ### API shapes and scoring (`api.ts`)
 
-- **Types:** `StartRunResponse` (`{ runId, items, demoSeen, demo? }`), `PracticeRunResponse` (the same shape), `AnswerRequest` / `AnswerRequestSchema`, `AnswerResponse` (`{ correct, attempt, hint?, solution? }`), `FinishRunResponse`, and `MapResponse` (tracks, then worlds with `state`, `stars` and `maxStars`, then levels with `state` and `stars`, plus the earned `badges` ids).
+- **Types:** `StartRunResponse` (`{ runId, items, demoSeen, demo?, progress? }`, with `progress` as `RunItemProgress[]` only on a resumed run), `PracticeRunResponse` (the same shape), `AnswerRequest` / `AnswerRequestSchema`, `AnswerResponse` (`{ correct, attempt, hint?, solution? }`), `FinishRunResponse`, and `MapResponse` (tracks, then worlds with `state`, `stars` and `maxStars`, then levels with `state` and `stars`, plus the earned `badges` ids).
 - **Shared logic:** `itemScore(correct, attempt)`, `runScore`, `starsFor(score, passRatio)` and `isPassed`, following contract section 3.
 - **Constants:** `MAX_ATTEMPTS` and `DAILY_LIMIT_REACHED`.
 

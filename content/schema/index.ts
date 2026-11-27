@@ -132,6 +132,7 @@ export type {
   ProgressState,
   PublicDemo,
   PublicExercise,
+  RunItemProgress,
   Stars,
   StartRunResponse,
 } from './api.ts';

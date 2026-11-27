@@ -11,11 +11,12 @@ import {
 } from './run-store';
 
 const state = {
-  v: 1,
+  v: 2,
   runId: 'r1',
   kidId: 'k1',
   levelId: 'l1',
   mode: 'level',
+  locale: 'de-CH',
   seed: 1,
   startedAt: 0,
   lastAt: 0,
@@ -73,11 +74,32 @@ describe('RunStore', () => {
       'not json',
       '{"v":2}',
       'null',
-      '{"v":1,"kidId":"k1","runId":"r1"}',
+      '{"v":2,"kidId":"k1","runId":"r1"}',
+      '{"v":1,"kidId":"k1","runId":"r1","items":[]}',
+      '{"v":2,"kidId":"k1","runId":"r1","items":[]}',
+      '{"v":2,"kidId":"k1","runId":"r1","locale":"de-CH","items":[{}]}',
     ]) {
       const { runs } = store({ get: jest.fn().mockResolvedValue(value) });
       await expect(runs.get('r1')).resolves.toBeNull();
     }
+  });
+
+  it('finds the kid’s active run', async () => {
+    const get = jest.fn((key: string) =>
+      Promise.resolve(key === `${ACTIVE_RUN_KEY_PREFIX}k1` ? 'r1' : raw),
+    );
+    const { runs } = store({ get });
+    await expect(runs.activeOf('k1')).resolves.toEqual({ state, raw });
+    expect(get).toHaveBeenCalledWith(`${RUN_KEY_PREFIX}r1`);
+  });
+
+  it('has no active run without a pointer or once it is gone', async () => {
+    const { runs } = store({ get: jest.fn().mockResolvedValue(null) });
+    await expect(runs.activeOf('k1')).resolves.toBeNull();
+    const { runs: dangling } = store({
+      get: jest.fn().mockResolvedValueOnce('r1').mockResolvedValueOnce(null),
+    });
+    await expect(dangling.activeOf('k1')).resolves.toBeNull();
   });
 
   it('updates and takes runs only when they are unchanged', async () => {

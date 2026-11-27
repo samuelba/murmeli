@@ -64,11 +64,12 @@ function setup(levels: LevelProgressRow[][] = [[]]) {
 
 function runState(overrides: Partial<RunState> = {}): RunState {
   return {
-    v: 1,
+    v: 2,
     runId: 'run-1',
     kidId: kid.id,
     levelId: 'math-zahlenwiese-01',
     mode: 'level',
+    locale: 'de-CH',
     seed: 1,
     startedAt: 0,
     lastAt: 0,

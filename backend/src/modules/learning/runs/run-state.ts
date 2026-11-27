@@ -2,12 +2,16 @@ import {
   type AnswerResponse,
   type ExerciseTypeId,
   type GeneratedItem,
+  type Locale,
+  type PublicExercise,
+  type RunItemProgress,
   type Solution,
   MAX_ATTEMPTS,
   checkAnswer,
   itemScore,
   parseAnswer,
   runScore,
+  toPublicExercise,
 } from '@murmeli/content';
 import { MAX_ITEM_DURATION_MS, type RunMode } from '../learning.constants';
 
@@ -16,17 +20,20 @@ export interface RunItemState {
   readonly levelId: string;
   readonly skillId: string;
   readonly solution: Solution<ExerciseTypeId>;
+  /** What the client was sent, so the run can be resumed after a reload */
+  readonly exercise: PublicExercise;
   readonly attempts: number;
   /** The attempt that was correct, or null */
   readonly correctAt: number | null;
 }
 
 export interface RunState {
-  readonly v: 1;
+  readonly v: 2;
   readonly runId: string;
   readonly kidId: string;
   readonly levelId: string | null;
   readonly mode: RunMode;
+  readonly locale: Locale;
   readonly seed: number;
   readonly startedAt: number;
   /** When the current item was served: the start or the last answer */
@@ -67,6 +74,7 @@ export interface NewRun {
   readonly kidId: string;
   readonly levelId: string | null;
   readonly mode: RunMode;
+  readonly locale: Locale;
   readonly seed: number;
   readonly now: number;
   readonly items: readonly (GeneratedItem & {
@@ -77,11 +85,12 @@ export interface NewRun {
 
 export function createRunState(run: NewRun): RunState {
   return {
-    v: 1,
+    v: 2,
     runId: run.runId,
     kidId: run.kidId,
     levelId: run.levelId,
     mode: run.mode,
+    locale: run.locale,
     seed: run.seed,
     startedAt: run.now,
     lastAt: run.now,
@@ -91,6 +100,7 @@ export function createRunState(run: NewRun): RunState {
       levelId: item.levelId,
       skillId: item.skillId,
       solution: item.solution,
+      exercise: toPublicExercise(item),
       attempts: 0,
       correctAt: null,
     })),
@@ -99,6 +109,13 @@ export function createRunState(run: NewRun): RunState {
 
 export function isItemDone(item: RunItemState): boolean {
   return item.correctAt !== null || item.attempts >= MAX_ATTEMPTS;
+}
+
+export function runProgress(state: RunState): RunItemProgress[] {
+  return state.items.map((item) => ({
+    attempts: item.attempts,
+    correct: item.correctAt !== null,
+  }));
 }
 
 function elapsed(from: number, now: number): number {

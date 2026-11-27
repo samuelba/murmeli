@@ -8,6 +8,7 @@ import {
   applyAnswer,
   createRunState,
   isItemDone,
+  runProgress,
   summarizeRun,
 } from './run-state';
 
@@ -25,6 +26,7 @@ function newRun(): RunState {
     kidId: 'kid-1',
     levelId: level.id,
     mode: 'level',
+    locale: 'de-CH',
     seed: 1234,
     now: T0,
     items,
@@ -47,6 +49,22 @@ function answer(state: RunState, index: number, value: unknown, at: number) {
   return outcome;
 }
 
+describe('runProgress', () => {
+  it('reports the attempts and the result of every item', () => {
+    let state = newRun();
+    state = answer(state, 0, solution(state, 0), T0).state;
+    state = answer(state, 1, wrong(state, 1), T0).state;
+    state = answer(state, 2, wrong(state, 2), T0).state;
+    state = answer(state, 2, wrong(state, 2), T0).state;
+    expect(runProgress(state).slice(0, 4)).toEqual([
+      { attempts: 1, correct: true },
+      { attempts: 1, correct: false },
+      { attempts: 2, correct: false },
+      { attempts: 0, correct: false },
+    ]);
+  });
+});
+
 describe('createRunState', () => {
   it('keeps solutions server-side with no attempts yet', () => {
     const state = newRun();
@@ -58,7 +76,18 @@ describe('createRunState', () => {
       attempts: 0,
       correctAt: null,
     });
-    expect(state).toMatchObject({ startedAt: T0, lastAt: T0, activeMs: 0 });
+    expect(state).toMatchObject({
+      v: 2,
+      locale: 'de-CH',
+      startedAt: T0,
+      lastAt: T0,
+      activeMs: 0,
+    });
+    expect(state.items[0].exercise).toMatchObject({
+      index: 0,
+      type: 'count-objects',
+    });
+    expect(JSON.stringify(state.items[0].exercise)).not.toContain('solution');
   });
 });
 
@@ -239,6 +268,7 @@ describe('trace-letter answers', () => {
       kidId: 'kid-1',
       levelId: traceLevel.id,
       mode: 'level',
+      locale: 'de-CH',
       seed: 99,
       now: T0,
       items,

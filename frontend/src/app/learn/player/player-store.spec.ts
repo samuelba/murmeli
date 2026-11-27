@@ -207,6 +207,41 @@ describe('PlayerStore', () => {
     expect(effects.play).toHaveBeenCalledWith('complete');
   });
 
+  it('resumes a reloaded run at the first unfinished item, on its second try', async () => {
+    api.startLevel.mockResolvedValue(
+      run({
+        demoSeen: true,
+        progress: [
+          { attempts: 1, correct: true },
+          { attempts: 1, correct: false },
+        ],
+      }),
+    );
+    await store.start('level', 'l1');
+    expect(store.phase()).toBe('playing');
+    expect(store.index()).toBe(1);
+    expect(store.attempt()).toBe(2);
+    expect(store.itemKey()).toBe('1:2');
+    expect(store.outcomes()).toEqual(['first', null]);
+    expect(audio.narrate).toHaveBeenLastCalledWith(['Aufgabe 2']);
+  });
+
+  it('shows the results of a resumed run whose items are all done', async () => {
+    api.startLevel.mockResolvedValue(
+      run({
+        demoSeen: true,
+        progress: [
+          { attempts: 2, correct: false },
+          { attempts: 2, correct: true },
+        ],
+      }),
+    );
+    await store.start('level', 'l1');
+    expect(api.finish).toHaveBeenCalledWith('r1');
+    expect(store.phase()).toBe('results');
+    expect(store.outcomes()).toEqual(['missed', 'second']);
+  });
+
   it('shows the solution after the second wrong answer', async () => {
     api.startLevel.mockResolvedValue(run({ demoSeen: true }));
     await store.start('level', 'l1');

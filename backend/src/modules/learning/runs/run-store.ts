@@ -75,10 +75,15 @@ function parse(raw: string | null): StoredRun | null {
   try {
     const state = JSON.parse(raw) as RunState | null;
     const valid =
-      state?.v === 1 &&
+      state?.v === 2 &&
       typeof state.kidId === 'string' &&
       typeof state.runId === 'string' &&
-      Array.isArray(state.items);
+      typeof state.locale === 'string' &&
+      Array.isArray(state.items) &&
+      state.items.every(
+        (item: { exercise?: unknown } | null) =>
+          typeof item?.exercise === 'object',
+      );
     return valid ? { state, raw } : null;
   } catch {
     return null;
@@ -112,6 +117,13 @@ export class RunStore {
       ),
     );
     return parse(typeof previous === 'string' ? previous : null)?.state ?? null;
+  }
+
+  async activeOf(kidId: string): Promise<StoredRun | null> {
+    const runId = await this.guarded(() =>
+      this.redis.get(ACTIVE_RUN_KEY_PREFIX + kidId),
+    );
+    return runId === null ? null : this.get(runId);
   }
 
   async get(runId: string): Promise<StoredRun | null> {

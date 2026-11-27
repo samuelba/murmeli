@@ -43,7 +43,7 @@ Select **Save**. The profile appears in the picker.
 The picture PIN keeps siblings from opening each other's profile by accident. It doesn't protect against adults. After 5 wrong tries within 15 minutes the profile takes a short break; repeated breaks on the same day get longer.
 
 ### The daily learning time
-Murmeli adds up the time a kid spends answering exercises each day (the day ends at midnight in the server's `APP_TIMEZONE`, default Europe/Zurich). The limit is checked when a round starts, so a round that is already running can be finished. Once the limit is reached, a new round shows a sleeping Murmeli ("That's enough learning for today. See you tomorrow!") with a button back to the profiles. The next day the time starts again.
+Murmeli adds up the time a kid spends answering exercises each day (the day ends at midnight in the server's `APP_TIMEZONE`, default Europe/Zurich). The limit is checked when a round starts or continues after a reload, so a round that is already running can be finished as long as the page stays open. Once the limit is reached, a new round shows a sleeping Murmeli ("That's enough learning for today. See you tomorrow!") with a button back to the profiles. The next day the time starts again.
 
 ## Edit or delete a profile
 In **Parent area → Kids**, select the pencil icon to change any setting, including the PIN (**Keep PIN**, **Change PIN** or **No PIN**). Changing the starting level or the language keeps the progress.

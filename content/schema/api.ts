@@ -34,11 +34,19 @@ export interface PublicDemo {
   }[];
 }
 
+/** How far one item of a resumed run got: the attempts used and whether one was correct. */
+export interface RunItemProgress {
+  readonly attempts: number;
+  readonly correct: boolean;
+}
+
 export interface StartRunResponse {
   readonly runId: string;
   readonly items: readonly PublicExercise[];
   readonly demoSeen: boolean;
   readonly demo?: PublicDemo;
+  /** Only when an unfinished run of the same level (or practice) is resumed, one per item. */
+  readonly progress?: readonly RunItemProgress[];
 }
 
 export type PracticeRunResponse = StartRunResponse;

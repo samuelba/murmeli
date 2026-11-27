@@ -16,6 +16,7 @@ import {
   FinishRunResponse,
   HintKey,
   MapResponse,
+  RunItemProgress,
   RunMode,
   StartRunResponse,
   isExerciseType,
@@ -60,6 +61,13 @@ const REVEALING: readonly (keyof DemoAction)[] = [
   'trace',
   'placeCoins',
 ];
+
+function outcomeOf(progress: RunItemProgress | undefined): Outcome | null {
+  if (progress?.correct) {
+    return progress.attempts <= 1 ? 'first' : 'second';
+  }
+  return progress && progress.attempts >= MAX_ATTEMPTS ? 'missed' : null;
+}
 
 function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -176,9 +184,11 @@ export class PlayerStore {
       }
       const run = started;
       this.run.set(run);
-      this.outcomes.set(run.items.map(() => null));
+      this.outcomes.set(run.items.map((_, i) => outcomeOf(run.progress?.[i])));
       this.prefetchAudio(run);
-      if (run.demo && !run.demoSeen) {
+      if (run.progress) {
+        await this.resume(run.progress);
+      } else if (run.demo && !run.demoSeen) {
         this.openDemo();
       } else {
         this.enterItem();
@@ -264,6 +274,18 @@ export class PlayerStore {
     } else {
       void this.finish();
     }
+  }
+
+  /** A reloaded run continues at its first open item, or shows its results if none is left. */
+  private async resume(progress: readonly RunItemProgress[]): Promise<void> {
+    const open = this.outcomes().indexOf(null);
+    if (open < 0) {
+      await this.finish();
+      return;
+    }
+    this.index.set(open);
+    this.attempt.set((progress[open]?.attempts ?? 0) + 1);
+    this.enterItem();
   }
 
   /** "Weiter spielen" after the break reminder. */

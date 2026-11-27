@@ -117,7 +117,8 @@ interface Prompt {
 
 ## 3. Runs, scoring, unlocking
 1. **Start a run:** `POST /api/learn/levels/:levelId/runs` (KidGuard) returns `{ runId, items: [{ index, type, prompt, payload }], demoSeen }`.
-   - The run state (seed, solutions, attempts) lives in Redis under `run:<runId>` with a 2h TTL. Only one run per kid is active at a time; starting a new one replaces it.
+   - The run state (seed, locale, solutions, the public items, attempts) lives in Redis under `run:<runId>` with a 2h TTL from the start. Only one run per kid is active at a time; starting a run of another level (or practice) replaces it.
+   - **Resume:** if the kid's active run is for the same level (or practice) and the kid's current language, starting it again returns that run instead: the same `runId` and items, `demoSeen: true`, and `progress: [{ attempts, correct }]` per item. The daily limit is checked first, as for a new run. A stored run with an exercise type the server no longer knows is replaced by a new one. Run states before `v: 2` are no longer read, so a run that is in progress during the upgrade is lost once. The frontend continues at the first open item (on its second try if one was used), or finishes the run when every item is done. So a reload, a closed app or **Stop** followed by the same level does not start over.
 2. **Answer:** `POST /api/learn/runs/:runId/answers` with `{ index, answer }` returns `{ correct, attempt, hint?, solution? }`.
    - A kid gets 2 attempts per item.
    - After a wrong first attempt the response carries a `hint`, a key that the frontend shows as a step-by-step hint.
@@ -177,7 +178,7 @@ Every kid foreign key has `ON DELETE CASCADE`. Content ids are stored as text an
 - **Time:**
   - Answer durations are measured on the server, capped at 5 minutes per answer and 86,400 seconds per day.
   - The day boundary uses `APP_TIMEZONE`, default Europe/Zurich.
-  - The daily limit is only checked when a run starts.
+  - The daily limit is only checked when a run starts or is resumed, not on answers.
 - **Badges:** `first-level`, `first-world`, `star-collector` (5 levels with 3 stars) and `first-practice`.
 - **Parent progress:** `GET /api/parent/kids/:id/progress` returns `ParentProgressResponse`, defined in `backend/src/modules/learning/parent/parent-progress.types.ts`. It should move into `content/schema/api.ts` once the parent dashboard uses it.
 - **Database:**

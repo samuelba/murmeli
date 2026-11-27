@@ -9,6 +9,7 @@ import {
   generateDemo,
   generateItem,
   generateRun,
+  isExerciseTypeId,
   randomSeed,
   toPublicDemo,
   toPublicExercise,
@@ -41,6 +42,7 @@ import {
   type RunState,
   applyAnswer,
   createRunState,
+  runProgress,
   summarizeRun,
 } from './run-state';
 import { RunStore, type StoredRun } from './run-store';
@@ -75,8 +77,15 @@ export class RunService {
   ): Promise<StartRunResponse> {
     await this.limit(this.settings.runs, kid.id);
     const access = await this.progress.levelAccess(kid, levelId);
-    await this.progress.assertWithinDailyLimit(kid, now);
     const level = access.ref.level;
+    const demo = toPublicDemo(
+      generateDemo(level, kid.language, this.curriculum.content),
+    );
+    await this.progress.assertWithinDailyLimit(kid, now);
+    const unfinished = await this.unfinished(kid, 'level', level.id);
+    if (unfinished) {
+      return { ...this.resumed(unfinished), demo };
+    }
     const seed = randomSeed();
     const items = generateRun(level, seed, this.options(kid)).map((item) =>
       this.runItem(item, level),
@@ -95,9 +104,7 @@ export class RunService {
       runId,
       items: items.map((item) => toPublicExercise(item)),
       demoSeen: access.demoSeen,
-      demo: toPublicDemo(
-        generateDemo(level, kid.language, this.curriculum.content),
-      ),
+      demo,
     };
   }
 
@@ -107,6 +114,10 @@ export class RunService {
   ): Promise<StartRunResponse> {
     await this.limit(this.settings.runs, kid.id);
     await this.progress.assertWithinDailyLimit(kid, now);
+    const unfinished = await this.unfinished(kid, 'practice', null);
+    if (unfinished) {
+      return this.resumed(unfinished);
+    }
     const { states } = await this.progress.progressOf(kid);
     const openLevels = this.curriculum
       .levelsFor(kid.language)
@@ -207,6 +218,35 @@ export class RunService {
     return { ...item, levelId: level.id, skillId: level.skill };
   }
 
+  /**
+   * The kid's active run of this level (or practice) in the kid's language,
+   * so a reload continues it instead of starting over. A run with an
+   * exercise type this version no longer knows is started over.
+   */
+  private async unfinished(
+    kid: LearningKid,
+    mode: RunState['mode'],
+    levelId: string | null,
+  ): Promise<RunState | null> {
+    const state = (await this.runs.activeOf(kid.id))?.state;
+    const matches =
+      state?.kidId === kid.id &&
+      state.mode === mode &&
+      state.levelId === levelId &&
+      state.locale === kid.language &&
+      state.items.every((item) => isExerciseTypeId(item.exercise.type));
+    return matches ? state : null;
+  }
+
+  private resumed(state: RunState): StartRunResponse {
+    return {
+      runId: state.runId,
+      items: state.items.map((item) => item.exercise),
+      demoSeen: true,
+      progress: runProgress(state),
+    };
+  }
+
   private async begin(
     kid: LearningKid,
     mode: RunState['mode'],
@@ -222,6 +262,7 @@ export class RunService {
         kidId: kid.id,
         levelId,
         mode,
+        locale: kid.language,
         seed,
         now: now.getTime(),
         items,

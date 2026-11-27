@@ -14,6 +14,7 @@ import type {
   ProgressState,
   PublicDemo,
   PublicExercise,
+  RunItemProgress,
   Stars,
   StartRunResponse,
 } from '@murmeli/content';
@@ -33,6 +34,7 @@ export type {
   ProgressState,
   PublicDemo,
   PublicExercise,
+  RunItemProgress,
   Stars,
   StartRunResponse,
 };

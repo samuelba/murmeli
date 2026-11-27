@@ -14,6 +14,7 @@ import { RunService } from './run.service';
 
 const curriculum = loadCurriculum(undefined);
 const LEVEL = 'math-zahlenwiese-01';
+const OTHER_LEVEL = 'math-formenwald-01';
 const kid: LearningKid = {
   id: 'kid-1',
   language: 'de-CH',
@@ -38,6 +39,11 @@ class FakeRunStore {
     return Promise.resolve(
       previous ? (JSON.parse(previous) as RunState) : null,
     );
+  }
+
+  activeOf(kidId: string): Promise<StoredRun | null> {
+    const runId = this.active.get(kidId);
+    return runId ? this.get(runId) : Promise.resolve(null);
   }
 
   get(runId: string): Promise<StoredRun | null> {
@@ -174,10 +180,10 @@ describe('RunService.startLevel', () => {
     expect(progress.markDemoSeen).not.toHaveBeenCalled();
   });
 
-  it('replaces the previous run and counts its time', async () => {
+  it('replaces the previous run of another level and counts its time', async () => {
     const { service, runs, progress } = setup();
     const first = await service.startLevel(kid, LEVEL);
-    const second = await service.startLevel(kid, LEVEL);
+    const second = await service.startLevel(kid, OTHER_LEVEL);
     expect(await runs.get(first.runId)).toBeNull();
     expect(await runs.get(second.runId)).not.toBeNull();
     expect(progress.recordAbandoned).toHaveBeenCalledWith(
@@ -191,7 +197,7 @@ describe('RunService.startLevel', () => {
     const { service, progress } = setup();
     progress.recordAbandoned.mockRejectedValue(new Error('db down'));
     await service.startLevel(kid, LEVEL);
-    await expect(service.startLevel(kid, LEVEL)).resolves.toBeDefined();
+    await expect(service.startLevel(kid, OTHER_LEVEL)).resolves.toBeDefined();
     expect(Logger.prototype.warn).toHaveBeenCalled();
     jest.restoreAllMocks();
   });
@@ -209,6 +215,75 @@ describe('RunService.startLevel', () => {
     const { service, progress } = setup();
     progress.assertWithinDailyLimit.mockRejectedValue(new Error('limit'));
     await expect(service.startLevel(kid, LEVEL)).rejects.toThrow('limit');
+  });
+
+  it('resumes the unfinished run of the same level with its progress', async () => {
+    const { service, runs, progress } = setup();
+    const first = await service.startLevel(kid, LEVEL);
+    await service.answer(
+      kid,
+      first.runId,
+      0,
+      await solutionOf(runs, first.runId, 0),
+    );
+    const right = (await solutionOf(runs, first.runId, 1)) as {
+      value: number;
+    };
+    await service.answer(kid, first.runId, 1, { value: right.value + 1 });
+
+    const resumed = await service.startLevel(kid, LEVEL);
+
+    expect(resumed.runId).toBe(first.runId);
+    expect(resumed.items).toEqual(first.items);
+    expect(resumed.demoSeen).toBe(true);
+    expect(resumed.demo).toEqual(first.demo);
+    expect(resumed.progress).toEqual([
+      { attempts: 1, correct: true },
+      { attempts: 1, correct: false },
+      ...first.items.slice(2).map(() => ({ attempts: 0, correct: false })),
+    ]);
+    expect(runs.runs.size).toBe(1);
+    expect(progress.recordAbandoned).not.toHaveBeenCalled();
+    expect(progress.markDemoSeen).toHaveBeenCalledTimes(1);
+  });
+
+  it('checks the daily limit before resuming', async () => {
+    const { service, progress } = setup();
+    await service.startLevel(kid, LEVEL);
+    progress.assertWithinDailyLimit.mockRejectedValue(new Error('limit'));
+    await expect(service.startLevel(kid, LEVEL)).rejects.toThrow('limit');
+  });
+
+  it('starts over instead of resuming an exercise type that no longer exists', async () => {
+    const { service, runs } = setup();
+    const first = await service.startLevel(kid, LEVEL);
+    const stored = (await runs.get(first.runId))!.state;
+    const gone = {
+      ...stored,
+      items: stored.items.map((item) => ({
+        ...item,
+        exercise: { ...item.exercise, type: 'retired-type' },
+      })),
+    };
+    runs.runs.set(first.runId, JSON.stringify(gone));
+    const second = await service.startLevel(kid, LEVEL);
+    expect(second.runId).not.toBe(first.runId);
+    expect(second).not.toHaveProperty('progress');
+  });
+
+  it('still checks access before resuming', async () => {
+    const { service, progress } = setup();
+    await service.startLevel(kid, LEVEL);
+    progress.levelAccess.mockRejectedValue(new Error('locked'));
+    await expect(service.startLevel(kid, LEVEL)).rejects.toThrow('locked');
+  });
+
+  it('does not resume a practice run as a level run', async () => {
+    const { service } = setup();
+    const practice = await service.startPractice(kid);
+    const level = await service.startLevel(kid, LEVEL);
+    expect(level.runId).not.toBe(practice.runId);
+    expect(level).not.toHaveProperty('progress');
   });
 });
 
@@ -435,6 +510,27 @@ describe('RunService.startPractice', () => {
     const state = (await runs.get(response.runId))!.state;
     expect(state.items[0].skillId).toBe('math.shapes.basic');
     expect(new Set(state.items.map((item) => item.skillId)).size).toBe(3);
+  });
+
+  it('resumes the unfinished practice run', async () => {
+    const { service, store } = setup();
+    const first = await service.startPractice(kid);
+    const resumed = await service.startPractice(kid);
+    expect(resumed.runId).toBe(first.runId);
+    expect(resumed.items).toEqual(first.items);
+    expect(resumed.demoSeen).toBe(true);
+    expect(resumed).not.toHaveProperty('demo');
+    expect(resumed.progress).toHaveLength(first.items.length);
+    expect(store.mastery).toHaveBeenCalledTimes(1);
+  });
+
+  it('starts a new practice run after a language switch', async () => {
+    const { service } = setup();
+    const first = await service.startPractice(kid);
+    const english = { ...kid, language: 'en-US' } as LearningKid;
+    await expect(service.startPractice(english)).resolves.not.toMatchObject({
+      runId: first.runId,
+    });
   });
 
   it('answers 409 when nothing is open', async () => {

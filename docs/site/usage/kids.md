@@ -29,7 +29,9 @@ A level is a short round, usually 6 exercises. The dots at the top show how many
 1. **Show me:** the first time your kid opens a level, Murmeli shows how the exercise works, step by step, and says what to do. **Show again** repeats it, **Let's go!** starts the round. In every later round, the **Show me** button brings the demo back.
 2. **Answer:** tap the answer, or for some exercises (number pad, number house, number wall, number line, word building) put it together and tap **Check**.
 3. **Feedback:** a right answer gets a cheer. After the first wrong answer, a **Tip** explains how to think about it, and your kid tries the same exercise again. After a second wrong answer, Murmeli marks the right answer and the round goes on with **Next**.
-4. **Stop:** the stop button at the top asks **Do you want to stop?** **Keep playing** goes back, **Yes, back to the map** ends the round. A round that was stopped doesn't count against your kid.
+4. **Stop:** the stop button at the top asks **Do you want to stop?** **Keep playing** goes back, **Yes, back to the map** leaves the round. A round that was stopped doesn't count against your kid.
+
+If the page reloads, the app closes or your kid stops, opening the same level (or practice) again within 2 hours of starting the round continues it where it was left. Opening a different level starts a new round instead.
 
 ### Special exercises
 - **Tracing letters:** trace the letter with a finger, a stylus or the mouse, starting at the numbered dot and following the arrow. **Again** clears the drawing, **Done** checks it, and **Show me how** lets Murmeli draw it first. Without a pointer, the arrow keys move a pen, the space bar puts it down and lifts it, and Enter checks.
