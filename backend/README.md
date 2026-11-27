@@ -59,7 +59,7 @@ Both are audited (`admin.password_reset_link_created`, `admin.email_verified` on
 
 ## Docker image
 
-The image is built from the repository root, because it includes the curriculum: `docker build -f backend/Dockerfile --target production .` (`backend/Dockerfile.dockerignore` limits the context to `backend/` and `content/`). The production stage holds the backend in `/app/backend` and the built content package (`dist`, `tracks`, `lexicon`, `pictures.yaml`, `pictures/`, which the validator checks) in `/app/content`.
+The image is built from the repository root, because it includes the curriculum: `docker build -f backend/Dockerfile --target production .` (`backend/Dockerfile.dockerignore` limits the context to `backend/` and `content/`). The production stage holds the backend in `/app/backend` and the built content package (`dist`, `tracks`, `lexicon`, `pictures.yaml`, `pictures/`, which the validator checks) in `/app/content`. The production stage removes npm, npx and corepack, because the container only runs `node` and the bundled npm brings its own vulnerable dependencies into the image scan.
 
 ## Scripts
 
