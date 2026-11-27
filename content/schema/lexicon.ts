@@ -3,7 +3,10 @@ import { GraphemeSchema } from './ids.ts';
 
 const text = z.string().trim().min(1);
 const labelled = z.strictObject({ text, speak: text });
+const phrase = z.union([text, labelled]);
 const wordMap = z.record(z.string().regex(/^[a-z_]+$/), text);
+
+export type LexiconPhrase = z.infer<typeof phrase>;
 
 export const FEEDBACK_KINDS = [
   'correct',
@@ -21,8 +24,8 @@ export const LexiconSchema = z.strictObject({
   operators: wordMap,
   frames: wordMap,
   letters: z.record(GraphemeSchema, labelled),
-  carriers: z.record(GraphemeSchema, text),
-  digraphs: z.record(GraphemeSchema, text).default({}),
+  carriers: z.record(GraphemeSchema, phrase),
+  digraphs: z.record(GraphemeSchema, phrase).default({}),
   comparison: wordMap,
   ordinals: z.record(z.string().regex(/^\d+$/), text),
   positions: wordMap,
@@ -62,9 +65,18 @@ export function lexiconIssues(
   return issues;
 }
 
+export function phraseText(entry: LexiconPhrase): string {
+  return typeof entry === 'string' ? entry : entry.text;
+}
+
+export function phraseSpeak(entry: LexiconPhrase): string | undefined {
+  return typeof entry === 'string' ? undefined : entry.speak;
+}
+
 export function carrierFor(
   lexicon: Lexicon,
   grapheme: string,
 ): string | undefined {
-  return lexicon.carriers[grapheme] ?? lexicon.digraphs[grapheme];
+  const entry = lexicon.carriers[grapheme] ?? lexicon.digraphs[grapheme];
+  return entry === undefined ? undefined : phraseText(entry);
 }

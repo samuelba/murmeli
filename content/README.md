@@ -149,7 +149,10 @@ A placeholder is `{kind:name}`. The kind decides where the words come from, so e
 | `number` | 0-100 | `"7"` (spoken "sieben") | `lexicon.numbers` |
 | `word` / `plural` | picture id | `Maus` / `Äpfel` | `pictures.yaml` |
 | `the-word` | picture id | `der Kreis` / `the circle` | article + word |
-| `carrier` | grapheme | `M wie Maus` | `lexicon.carriers` / `digraphs` |
+| `carrier` | grapheme | `M wie Maus` (spoken "Em wie Maus") | `lexicon.carriers` / `digraphs` |
+
+A carrier or digraph is a string, or `{text, speak}` when the TTS needs a spelling for the letter name
+(`{text: "M wie Maus", speak: "Em wie Maus"}`). The screen shows `text`; the audio pipeline reads `speak`.
 | `letter` | grapheme | `M` (spoken "Em") | `lexicon.letters` |
 
 `speakSegments()` splits a template at its placeholders. Text pieces are trimmed, leading punctuation is dropped, and pieces

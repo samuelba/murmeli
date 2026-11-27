@@ -60,7 +60,8 @@ Global options: `--engine qwen3|piper|orpheus`, `--seed`, `--device`, `--content
 | `review` | Writes `out/review.html`, a static offline page with flagged clips first, players, ASR transcripts, WER and copyable commands. |
 | `reroll KEY...` | Re-renders clips with a new seed, then verifies and rebuilds the outputs. |
 | `approve KEY...` | Marks clips as `ok` after listening (for example a flagged clip that is fine). |
-| `all` | extract → render → verify → postprocess → manifest → review. |
+| `check` | Lists every clip that is missing, failed or flagged and exits with code 2 while any remain. The app never plays flagged clips, so each one would leave a gap in a prompt (for example the letter in "Hör gut zu: M wie Maus."). |
+| `all` | extract → render → verify → postprocess → manifest → review → check. `all`, `reroll` and `approve` exit with code 2 while `check` finds gaps, so a partial run with `--only` or `--limit` always does. |
 
 Everything is incremental. The job key is the first 16 hex characters of
 `sha256({locale, text, voice_id, engine, engine_version})` (plus `speak` when the spoken form

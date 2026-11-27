@@ -43,7 +43,7 @@ cd tools/audio
 The pipeline collects every text a kid can hear from `content/` and the app's translation files. It is incremental: a clip's key is a hash of its text, language, voice and model, so after a content change only new or changed texts are rendered. Then:
 
 1. Open `tools/audio/out/review.html` and listen to the flagged and new clips.
-2. Keep a clip with `./run.sh approve <key>`, or render it again with `./run.sh reroll <key>`.
+2. Keep a clip with `./run.sh approve <key>`, or render it again with `./run.sh reroll <key>`. The app never plays a flagged clip, so a prompt that uses one has a gap. `./run.sh check` lists what is still missing or flagged and fails until nothing is left; `all`, `reroll` and `approve` run it at the end.
 3. Copy the result into your installation as shown above.
 
 To change the narrator, generate candidates with `./run.sh design-voice --count 3`, pick one in `tools/audio/voices/selected.json`, and run `./run.sh all` again. A new voice renders every clip again. If a voice sounds right but speaks too choppily, a copy of it in timbre-only mode keeps the voice and drops the rhythm of its reference clip (see the tool README).

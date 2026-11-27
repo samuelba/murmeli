@@ -149,7 +149,7 @@ letters:
   "S": {text: "S", speak: "Es"}
   "T": {text: "T", speak: "Teh"}
   "U": {text: "U", speak: "Uh"}
-  "V": {text: "V", speak: "Vau"}
+  "V": {text: "V", speak: "Fau"}
   "W": {text: "W", speak: "Weh"}
   "X": {text: "X", speak: "Ix"}
   "Y": {text: "Y", speak: "Ypsilon"}
@@ -161,31 +161,31 @@ letters:
 # Carrier phrases: sounds are rendered inside a word, never in isolation.
 carriers:
   "A": "A wie Affe"
-  "B": "B wie Ball"
-  "C": "C wie Clown"
-  "D": "D wie Dach"
-  "E": "E wie Esel"
-  "F": "F wie Fisch"
-  "G": "G wie Gabel"
-  "H": "H wie Haus"
+  "B": {text: "B wie Ball", speak: "Beh wie Ball"}
+  "C": {text: "C wie Clown", speak: "Zeh wie Clown"}
+  "D": {text: "D wie Dach", speak: "Deh wie Dach"}
+  "E": {text: "E wie Esel", speak: "Eh wie Esel"}
+  "F": {text: "F wie Fisch", speak: "Ef wie Fisch"}
+  "G": {text: "G wie Gabel", speak: "Geh wie Gabel"}
+  "H": {text: "H wie Haus", speak: "Hah wie Haus"}
   "I": "I wie Igel"
-  "J": "J wie Jacke"
-  "K": "K wie Katze"
-  "L": "L wie Löwe"
-  "M": "M wie Maus"
-  "N": "N wie Nase"
+  "J": {text: "J wie Jacke", speak: "Jott wie Jacke"}
+  "K": {text: "K wie Katze", speak: "Kah wie Katze"}
+  "L": {text: "L wie Löwe", speak: "El wie Löwe"}
+  "M": {text: "M wie Maus", speak: "Em wie Maus"}
+  "N": {text: "N wie Nase", speak: "En wie Nase"}
   "O": "O wie Ofen"
-  "P": "P wie Papagei"
-  "Q": "Q wie Qualle"
-  "R": "R wie Rabe"
-  "S": "S wie Sonne"
-  "T": "T wie Tiger"
-  "U": "U wie Uhu"
-  "V": "V wie Vogel"
-  "W": "W wie Wolke"
-  "X": "X wie Xylofon"
-  "Y": "Y wie Yoga"
-  "Z": "Z wie Zebra"
+  "P": {text: "P wie Papagei", speak: "Peh wie Papagei"}
+  "Q": {text: "Q wie Qualle", speak: "Kuh wie Qualle"}
+  "R": {text: "R wie Rabe", speak: "Er wie Rabe"}
+  "S": {text: "S wie Sonne", speak: "Es wie Sonne"}
+  "T": {text: "T wie Tiger", speak: "Teh wie Tiger"}
+  "U": {text: "U wie Uhu", speak: "Uh wie Uhu"}
+  "V": {text: "V wie Vogel", speak: "Fau wie Vogel"}
+  "W": {text: "W wie Wolke", speak: "Weh wie Wolke"}
+  "X": {text: "X wie Xylofon", speak: "Ix wie Xylofon"}
+  "Y": {text: "Y wie Yoga", speak: "Ypsilon wie Yoga"}
+  "Z": {text: "Z wie Zebra", speak: "Zett wie Zebra"}
   "Ä": "Ä wie Ärmel"
   "Ö": "Ö wie Öl"
   "Ü": "Ü wie Übung"
@@ -197,7 +197,7 @@ digraphs:
   "Au": "Au wie Auto"
   "Eu": "Eu wie Eule"
   "Ie": "ie wie Biene"
-  "Qu": "Qu wie Qualle"
+  "Qu": {text: "Qu wie Qualle", speak: "Kuh-Uh wie Qualle"}
 
 comparison:
   greater: "grösser als"

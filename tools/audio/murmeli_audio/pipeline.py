@@ -153,6 +153,28 @@ def run_approve(ctx: Context, keys: Sequence[str]) -> None:
     finish(ctx)
 
 
+GAP_STATUS = {"rendered": "unverified", "failed": "failed", "flagged": "flagged"}
+
+
+@dataclass(frozen=True)
+class Gap:
+    job: Job
+    status: str
+
+
+def find_gaps(ctx: Context) -> list[Gap]:
+    """Jobs the app would not play: not rendered yet, failed, or flagged and not approved."""
+    jobs = read_jobs(ctx.paths.jobs_file)
+    state = StateStore.load(ctx.paths.state_file)
+    human_keys = {h.key for h in load_overrides(ctx.paths, jobs)}
+    gaps = []
+    for job in jobs:
+        status = (state.get(job.key) or {}).get("status", "missing")
+        if job.key not in human_keys and status != "ok":
+            gaps.append(Gap(job, GAP_STATUS.get(status, "missing")))
+    return gaps
+
+
 def finish(ctx: Context) -> None:
     run_postprocess(ctx)
     run_manifest(ctx)

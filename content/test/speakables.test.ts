@@ -94,6 +94,19 @@ describe('speakables', () => {
     assert.equal(german.find((s) => s.text === '7')?.speak, 'sieben');
     assert.equal(german.find((s) => s.text === 'M')?.speak, 'Em');
   });
+
+  it('carries the spoken form of carrier phrases', () => {
+    const german = collectSpeakables(content, 'de-CH');
+    assert.equal(
+      german.find((s) => s.text === 'M wie Maus')?.speak,
+      'Em wie Maus',
+    );
+    assert.equal(german.find((s) => s.text === 'A wie Affe')?.speak, undefined);
+    assert.deepEqual(
+      german.filter((s) => s.text === 'M wie Maus').map((s) => s.speak),
+      ['Em wie Maus'],
+    );
+  });
 });
 
 describe('stats', () => {

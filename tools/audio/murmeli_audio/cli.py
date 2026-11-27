@@ -10,6 +10,8 @@ from . import engines, pipeline
 from .config import LOCALES, Paths
 from .pipeline import Context
 
+log = logging.getLogger("murmeli_audio.cli")
+
 
 def _paths(args: argparse.Namespace) -> Paths:
     return Paths(content_override=args.content_dir, i18n_override=args.i18n_dir)
@@ -74,7 +76,28 @@ def build_parser() -> argparse.ArgumentParser:
     _verify_args(reroll)
     approve = sub.add_parser("approve", help="mark clips as ok after listening")
     approve.add_argument("keys", nargs="+")
+    sub.add_parser("check", help="fail while any clip is missing or flagged (the app skips those)")
     return parser
+
+
+GAPS_SHOWN = 50
+
+
+def _report_gaps(ctx: Context) -> int:
+    gaps = pipeline.find_gaps(ctx)
+    if not gaps:
+        log.info("check: every clip is playable")
+        return 0
+    for gap in gaps[:GAPS_SHOWN]:
+        log.error("not playable: %s %s [%s] %r", gap.job.locale, gap.job.key, gap.status, gap.job.text)
+    if len(gaps) > GAPS_SHOWN:
+        log.error("... and %d more", len(gaps) - GAPS_SHOWN)
+    log.error(
+        "%d clips are not playable, so the app would leave gaps. Render missing ones with `all`, "
+        "listen to flagged ones in out/review.html, then `approve KEY...` or `reroll KEY...`.",
+        len(gaps),
+    )
+    return 2
 
 
 def _only(args: argparse.Namespace) -> list[str]:
@@ -112,10 +135,15 @@ def run(args: argparse.Namespace) -> int:
         pipeline.run_render(ctx, _only(args), args.limit, args.batch_size)
         pipeline.run_verify(ctx, _transcriber(args, ctx), args.threshold, args.retries)
         pipeline.finish(ctx)
+        return _report_gaps(ctx)
     elif command == "reroll":
         pipeline.run_reroll(ctx, args.keys, _transcriber(args, ctx), args.threshold)
+        return _report_gaps(ctx)
     elif command == "approve":
         pipeline.run_approve(ctx, args.keys)
+        return _report_gaps(ctx)
+    elif command == "check":
+        return _report_gaps(ctx)
     return 0
 
 

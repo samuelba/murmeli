@@ -3,6 +3,7 @@ import { frameOf, resolveSlot, speakSegments } from './exercises/frames.ts';
 import { exerciseTypeDef } from './exercises/registry.ts';
 import type { ExerciseSpec } from './exercises/registry.ts';
 import type { SlotKind, SlotValue } from './exercises/types.ts';
+import { phraseSpeak, phraseText } from './lexicon.ts';
 import type { Lexicon } from './lexicon.ts';
 import { HINT_KEYS, HINTS } from './runtime/hints.ts';
 import type { Locale, LocalizedText } from './locale.ts';
@@ -52,6 +53,11 @@ function spokenForm(
   }
   if (kind === 'letter') {
     return lexicon.letters[String(value)]?.speak;
+  }
+  if (kind === 'carrier') {
+    const entry =
+      lexicon.carriers[String(value)] ?? lexicon.digraphs[String(value)];
+    return entry === undefined ? undefined : phraseSpeak(entry);
   }
   return undefined;
 }
@@ -106,12 +112,19 @@ function addLexicon(set: SpeakableSet, lexicon: Lexicon): void {
     'ordinals',
     'positions',
     'frames',
-    'carriers',
-    'digraphs',
   ] as const;
   for (const section of sections) {
     for (const [key, text] of Object.entries(lexicon[section])) {
       set.add(text, `lexicon:${section}.${key}`);
+    }
+  }
+  for (const section of ['carriers', 'digraphs'] as const) {
+    for (const [key, entry] of Object.entries(lexicon[section])) {
+      set.add(
+        phraseText(entry),
+        `lexicon:${section}.${key}`,
+        phraseSpeak(entry),
+      );
     }
   }
   for (const [kind, phrases] of Object.entries(lexicon.feedback)) {

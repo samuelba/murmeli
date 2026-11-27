@@ -152,6 +152,7 @@ describe('renderPrompt', () => {
       resolveSlot(content, 'carrier', 'Sch', 'de-CH'),
       'Sch wie Schule',
     );
+    assert.equal(resolveSlot(content, 'carrier', 'M', 'de-CH'), 'M wie Maus');
     assert.equal(resolveSlot(content, 'number', '7', 'de-CH'), undefined);
     assert.equal(resolveSlot(content, 'the-word', 'nope', 'de-CH'), undefined);
   });
