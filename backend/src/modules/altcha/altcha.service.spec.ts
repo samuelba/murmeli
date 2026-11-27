@@ -3,6 +3,7 @@ import type { ConfigService } from '@nestjs/config';
 import { type Challenge, solveChallenge } from 'altcha-lib';
 import { deriveKey } from 'altcha-lib/algorithms/sha';
 import type { Env } from '../../config/env.schema';
+import { STRONG_ALTCHA_KEY } from '../../../test/fixtures/env';
 import { AltchaController } from './altcha.controller';
 import {
   ALTCHA_ALGORITHM,
@@ -11,7 +12,7 @@ import {
   AltchaService,
 } from './altcha.service';
 
-const HMAC_KEY = 'altcha-Key-0123456789-abcdefghijklmnopqrstu';
+const HMAC_KEY = STRONG_ALTCHA_KEY;
 
 function service(setResult: string | null = 'OK') {
   const redis = { set: jest.fn().mockResolvedValue(setResult) };

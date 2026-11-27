@@ -36,6 +36,7 @@ npm start               # http://localhost:4200, proxies /api to localhost:3000
 | Env vars documented | `npm run docs:check` |
 | Backend | `npm run lint && npm run test:cov && npm run test:e2e` (in `backend/`) |
 | Frontend | `npm run lint && npm run test:coverage && npm run e2e` (in `frontend/`) |
+| Secret scan | gitleaks in CI. `.gitleaks.toml` skips `*.spec.ts` and `backend/test/`, so fake test keys belong there. |
 
 ## Releases
 1. Every push to `main` updates the release pull request opened by release-please.
