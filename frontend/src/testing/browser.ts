@@ -39,6 +39,41 @@ export function stubNavigatorLanguages(languages: readonly string[]): void {
   vi.spyOn(navigator, 'language', 'get').mockReturnValue(languages[0] ?? '');
 }
 
+const OBJECT_URL_METHODS = ['createObjectURL', 'revokeObjectURL'] as const;
+let originalObjectUrlMethods: Map<string, PropertyDescriptor | undefined> | null = null;
+
+/** Replaces the runtime's blob URLs, which reject jsdom Blobs on some Node versions. */
+export function stubObjectUrls(url = 'blob:test') {
+  restoreObjectUrls();
+  originalObjectUrlMethods = new Map(
+    OBJECT_URL_METHODS.map((name) => [name, Object.getOwnPropertyDescriptor(URL, name)]),
+  );
+  const create = vi.fn<typeof URL.createObjectURL>(() => url);
+  const revoke = vi.fn<typeof URL.revokeObjectURL>();
+  Object.defineProperty(URL, 'createObjectURL', {
+    configurable: true,
+    writable: true,
+    value: create,
+  });
+  Object.defineProperty(URL, 'revokeObjectURL', {
+    configurable: true,
+    writable: true,
+    value: revoke,
+  });
+  return { create, revoke };
+}
+
+export function restoreObjectUrls(): void {
+  originalObjectUrlMethods?.forEach((descriptor, name) => {
+    if (descriptor) {
+      Object.defineProperty(URL, name, descriptor);
+    } else {
+      Reflect.deleteProperty(URL, name);
+    }
+  });
+  originalObjectUrlMethods = null;
+}
+
 export function resetDocumentState(): void {
   localStorage.clear();
   document.documentElement.removeAttribute('data-theme');
