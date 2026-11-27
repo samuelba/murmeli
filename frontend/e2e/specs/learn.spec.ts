@@ -24,6 +24,16 @@ async function openLevel(page: Page, options: FamilyOptions = {}, levelId = FIRS
 }
 
 test.describe('trail map', () => {
+  test('hides the language switch while a kid plays', async ({ page }) => {
+    await mockFamily(page, { kids: [MIA] });
+    await page.goto('/');
+    await expect(page.getByTestId('language-switch')).toBeVisible();
+
+    await page.getByTestId(`kid-tile-${MIA.id}`).click();
+    await expect(page.getByTestId('trail')).toBeVisible();
+    await expect(page.getByTestId('language-switch')).toHaveCount(0);
+  });
+
   test('shows stars, the next level, locked levels and the summit of a finished world', async ({
     page,
   }) => {

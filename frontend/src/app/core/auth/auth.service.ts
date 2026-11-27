@@ -165,7 +165,6 @@ export class AuthService {
     if (kid) {
       this.setParentGate(null);
     }
-    this.applyLanguage();
   }
 
   markParentGateExpired(): void {
@@ -184,7 +183,6 @@ export class AuthService {
 
   private async completeSignIn(user: User): Promise<void> {
     this.userState.set(user);
-    this.applyLanguage();
     await this.refreshSession();
   }
 
@@ -192,14 +190,6 @@ export class AuthService {
     this.userState.set(me.user);
     this.kidState.set(me.activeKid);
     this.setParentGate(me.parentGateExpiresAt);
-    this.applyLanguage();
-  }
-
-  private applyLanguage(): void {
-    const language = this.kidState()?.language ?? this.userState()?.locale;
-    if (language) {
-      this.language.useLanguage(language);
-    }
   }
 
   private setParentGate(expiresAt: string | null): void {

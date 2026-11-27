@@ -11,7 +11,8 @@
   "language": {
     "label": "Sprache",
     "de-CH": "Deutsch",
-    "en-US": "English"
+    "en-US": "English",
+    "saveFailed": "Die Sprache konnte nicht gespeichert werden."
   },
   "welcome": {
     "pageTitle": "Willkommen",

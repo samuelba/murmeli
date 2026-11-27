@@ -3,6 +3,7 @@
   data-testid="language-switch"
   [attr.aria-label]="'language.label' | transloco"
   [value]="language()"
+  [disabled]="saving()"
   (change)="select($event.value)"
 >
   @for (lang of languages; track lang) {

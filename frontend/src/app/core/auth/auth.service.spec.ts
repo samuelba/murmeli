@@ -75,8 +75,7 @@ describe('AuthService', () => {
     await expect(forced).resolves.toEqual({ registrationEnabled: true });
   });
 
-  it('signs in, applies the user language and loads the session', async () => {
-    const language = TestBed.inject(LanguageService);
+  it('signs in and loads the session', async () => {
     const login = auth.login('parent@example.com', 'secret-password');
     const req = http.expectOne('/api/auth/login');
     expect(req.request.body).toEqual({ email: 'parent@example.com', password: 'secret-password' });
@@ -90,7 +89,7 @@ describe('AuthService', () => {
     );
 
     await expect(login).resolves.toBe('signed-in');
-    expect(language.language()).toBe('en-US');
+    expect(auth.user()?.locale).toBe('en-US');
     expect(auth.hasParentGate()).toBe(true);
   });
 
@@ -168,8 +167,7 @@ describe('AuthService', () => {
     expect(auth.hasParentGate()).toBe(false);
   });
 
-  it('switches language with the active kid and drops the gate', async () => {
-    const language = TestBed.inject(LanguageService);
+  it('drops the gate when a kid profile becomes active', async () => {
     const refresh = auth.refreshSession();
     flushMe({
       user: { ...USER, locale: 'de-CH' },
@@ -179,11 +177,11 @@ describe('AuthService', () => {
     await refresh;
 
     auth.setActiveKid({ ...KID, language: 'en-US' });
-    expect(language.language()).toBe('en-US');
+    expect(auth.activeKid()?.language).toBe('en-US');
     expect(auth.hasParentGate()).toBe(false);
 
     auth.setActiveKid(null);
-    expect(language.language()).toBe('de-CH');
+    expect(auth.activeKid()).toBeNull();
   });
 
   it('retries a failed logout once and keeps the session when both attempts fail', async () => {
@@ -215,13 +213,13 @@ describe('AuthService', () => {
     expect(auth.user()).toBeNull();
   });
 
-  it('restores the session language and resets it on clear', async () => {
+  it('resets to the remembered language on clear', async () => {
     const language = TestBed.inject(LanguageService);
     language.setLanguage('de-CH');
     const refresh = auth.refreshSession();
     flushMe({ user: USER, parentGateExpiresAt: null, activeKid: { ...KID, language: 'en-US' } });
     await refresh;
-    expect(language.language()).toBe('en-US');
+    language.useLanguage('en-US');
 
     auth.clear();
     expect(language.language()).toBe('de-CH');

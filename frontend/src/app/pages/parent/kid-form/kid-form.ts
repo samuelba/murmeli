@@ -16,12 +16,13 @@ import {
   START_CLASSES,
   StartClass,
 } from '../../../core/api/models';
+import { AuthService } from '../../../core/auth/auth.service';
 import { Avatar, randomAvatar } from '../../../core/avatars/avatar-catalog';
 import { ErrorMessage, errorMessage } from '../../../core/errors/error-message';
 import { applyServerFieldErrors } from '../../../core/forms/server-errors';
 import { fieldErrorKey, nicknameValidator } from '../../../core/forms/validators';
 import { LanguageService } from '../../../core/i18n/language.service';
-import { LANGUAGES, Language } from '../../../core/i18n/languages';
+import { LANGUAGES } from '../../../core/i18n/languages';
 import { KidsService } from '../../../core/kids/kids.service';
 import { AvatarBuilder } from '../../../shared/avatar-builder/avatar-builder';
 import { FormError } from '../../../shared/form-error/form-error';
@@ -79,7 +80,10 @@ export class KidForm implements OnInit {
   protected readonly form = inject(FormBuilder).nonNullable.group({
     nickname: ['', [Validators.required, Validators.maxLength(20), nicknameValidator]],
     startClass: ['KG1' as StartClass, Validators.required],
-    language: [inject(LanguageService).language() as Language, Validators.required],
+    language: [
+      inject(AuthService).user()?.locale ?? inject(LanguageService).language(),
+      Validators.required,
+    ],
     dailyLimitMinutes: [0],
     soundEnabled: [true],
     readAloud: ['auto' as ReadAloud],

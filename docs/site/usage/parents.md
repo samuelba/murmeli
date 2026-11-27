@@ -14,6 +14,7 @@ After you sign in, the device shows **Who's learning today?** with a tile for ea
 - **Add profile** creates a new kid profile (up to 8).
 - **Parents** opens the parent area. It asks for your password unless you unlocked it a moment ago.
 - The menu at the top right (person icon) has **Profiles**, **Parent area**, **Administration** (admins only) and **Sign out**.
+- **DE / EN** at the top right switches the language of the parent screens. While you are signed in, the choice is saved to your account, the same as **Language** in **Parent area → Account**, and the device keeps it for the sign-in page. It does not change a kid's learning language.
 
 A device stays signed in for up to 30 days of inactivity, so you can leave a tablet signed in for your kids.
 
@@ -62,7 +63,7 @@ There are no streaks, and nothing is lost when your kid skips a day. The data do
 ## Your account
 **Parent area → Account** has these sections:
 
-- **Language and theme:** the language of the parent screens and of the emails Murmeli sends you, and a light, dark or automatic theme. Each kid profile has its own learning language.
+- **Language and theme:** the language of the parent screens and of the emails Murmeli sends you, and a light, dark or automatic theme. Each kid profile has its own learning language, which the learning area always uses.
 - **Change password:** enter your current and a new password. All other devices are signed out, and you get an email saying the password was changed.
 - **Change email address:** enter the new address and your password. Murmeli sends a confirmation link to the new address, and the change only applies once you click it. Your old address is told about the change. This needs email to be set up on the server.
 - **Two-factor sign-in:** select **Set up**, scan the QR code with an authenticator app (or type the key), enter the 6-digit code and select **Turn on**. Murmeli shows 10 recovery codes once: download them and keep them safe. Each works once if you lose your phone. **Create new codes** replaces them. To turn two-factor sign-in off, you need your password and a current code or a recovery code.

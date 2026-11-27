@@ -10,7 +10,9 @@
   </a>
   <div class="actions">
     <mu-theme-toggle />
-    <mu-language-switch />
+    @if (!kidMode()) {
+      <mu-language-switch />
+    }
     <mu-session-menu />
   </div>
 </header>

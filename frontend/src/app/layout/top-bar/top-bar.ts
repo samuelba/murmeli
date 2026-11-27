@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { BRAND_NAME } from '../../core/brand';
+import { KidMode } from '../../core/kids/kid-mode';
 import { Logo } from '../../shared/logo/logo';
 import { LanguageSwitch } from '../language-switch/language-switch';
 import { SessionMenu } from '../session-menu/session-menu';
@@ -16,4 +17,5 @@ import { ThemeToggle } from '../theme-toggle/theme-toggle';
 })
 export class TopBar {
   protected readonly brandName = BRAND_NAME;
+  protected readonly kidMode = inject(KidMode).active;
 }

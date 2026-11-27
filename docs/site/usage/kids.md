@@ -4,6 +4,8 @@ This page is for parents. It explains what your kid sees, so you can show them a
 
 The buttons in the learning area are big, so small fingers can hit them on a tablet. Everything also works with a keyboard.
 
+The learning area speaks the language set in the kid's profile. There is no language switch while a kid is playing, so exercises, buttons and audio always match. To change it, edit the profile in the parent area (see [For parents](parents.md#edit-or-delete-a-profile)).
+
 ## Pick your profile
 The start screen asks **Who's learning today?** Tap your own animal.
 

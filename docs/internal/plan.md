@@ -244,6 +244,7 @@ Copy `.github/workflows/{ci.yml,release.yml}` and `release-please-config.json` f
 - **Library:** Transloco for runtime switching, since each kid profile can have a different language than the parent.
   - Locales are `de-CH` and `en-US`.
   - Content YAML has a `de-CH` field and an `en-US` field per string.
+  - Kid mode (an active kid outside `/parent` and `/admin`) uses the kid profile's language and hides the top-bar switch; grown-up pages use the account locale. `SessionLanguage` applies this, and `KidMode` decides who is in front of the screen.
 - **ß-check:** a CI script that fails if `ß` appears in any de-CH file (i18n JSON, content YAML or email templates).
 - **Formatting:** dates, numbers and currency use Angular locale data for de-CH and en-US.
 

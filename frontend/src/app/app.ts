@@ -3,6 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { filter, map } from 'rxjs';
+import { SessionLanguage } from './core/i18n/session-language';
 import { AppUpdates, isParentUrl } from './core/pwa/app-updates';
 import { NetworkStatus } from './core/pwa/network-status';
 import { ThemeService } from './core/theme/theme.service';
@@ -33,6 +34,7 @@ export class App {
 
   constructor() {
     inject(ThemeService);
+    inject(SessionLanguage);
     inject(AppUpdates).start();
   }
 
