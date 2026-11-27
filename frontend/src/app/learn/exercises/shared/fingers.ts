@@ -20,7 +20,7 @@ const FOLDED_TOP = 50;
   host: { 'aria-hidden': 'true' },
   template: `
     @for (hand of hands(); track $index) {
-      <svg viewBox="0 0 100 120" focusable="false" [class.mirror]="$index === 1">
+      <svg viewBox="-16 0 116 120" focusable="false" [class.mirror]="$index === 1">
         <g class="hand">
           <rect
             class="thumb"
@@ -52,7 +52,7 @@ const FOLDED_TOP = 50;
     }
 
     svg {
-      width: 72px;
+      width: 84px;
       height: 86px;
     }
 

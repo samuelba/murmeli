@@ -117,6 +117,13 @@ the frontend can look clips up by id as well as by text.
    locale. Set it to the voice you like (`{"de-CH": "<voice_id>", "en-US": "<voice_id>"}`).
 3. Run `./run.sh all`. A new voice changes every key, so everything is rendered again on purpose.
 
+By default the Base model clones the reference clip fully, which copies its rhythm and pauses as well as
+the voice. To keep only the voice colour, add `"clone_mode": "timbre"` to the voice's `meta.json`
+(Qwen x-vector-only cloning; `ref_text` is then ignored). Put it in a new voice folder rather than
+editing a selected one: the job key depends on the voice id, so only a new id renders the clips again.
+`de-CH-c1-5f3596-timbre` is `de-CH-c1-5f3596` in timbre mode, chosen because the original reference
+sentence is choppy.
+
 Commit `voices/` (the reference clips are small) so every later render uses the same narrator.
 
 ## Human recordings
@@ -141,7 +148,8 @@ Opus steps. Only record adults who have agreed in writing to the use of their vo
 `synthesize(items, voice_id, seed)`. Engines are registered by name in `murmeli_audio/engines/__init__.py`.
 
 - `qwen3` (primary): Qwen3-TTS 12Hz 1.7B Base clones the selected VoiceDesign reference clip
-  (`create_voice_clone_prompt` + batched `generate_voice_clone`, bf16, SDPA attention).
+  (`create_voice_clone_prompt` + batched `generate_voice_clone`, bf16, SDPA attention). Voices with
+  `"clone_mode": "timbre"` use x-vector-only cloning (see [Picking a voice](#picking-a-voice)).
 - `piper` (CPU placeholder for development and CI): `de_DE-thorsten-medium` and
   `en_US-ljspeech-medium`. It ignores `voices/selected.json` and gives different keys than `qwen3`.
 - `orpheus`: a stub for the planned fallback. It raises `NotImplementedError`.

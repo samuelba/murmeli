@@ -30,7 +30,14 @@ import { LearnApi } from '../learn-api.service';
 import { MapResponse, MapTrack } from '../learn.models';
 import { SceneView } from './scene';
 import { Signpost } from './signpost';
-import { currentLevelId, placeLevels, trailHeight, trailPath, worldComplete } from './trail-layout';
+import {
+  currentLevelId,
+  placeLevels,
+  trailEnds,
+  trailHeight,
+  trailPath,
+  worldComplete,
+} from './trail-layout';
 
 export const TRACK_STORAGE_KEY = 'mu-learn-track';
 
@@ -86,19 +93,23 @@ export class TrailMap {
     return map && kid ? this.kidBadges.earned(kid.id, map) : [];
   });
   protected readonly current = computed(() => currentLevelId(this.track()));
-  protected readonly worlds = computed(() =>
-    (this.track()?.worlds ?? []).map((world, index) => {
-      const levels = placeLevels(world.levels, index);
+  protected readonly worlds = computed(() => {
+    const worlds = this.track()?.worlds ?? [];
+    const placed = worlds.map((world, index) => placeLevels(world.levels, index));
+    const ends = trailEnds(placed);
+    return worlds.map((world, index) => {
+      const levels = placed[index]!;
       const height = trailHeight(world.levels.length);
       return {
         world,
         levels,
         height,
-        path: trailPath(levels, height),
+        path: trailPath(levels, height, ends[index]),
+        link: `M ${ends[index]!.bottom} 0 V 10`,
         complete: worldComplete(world),
       };
-    }),
-  );
+    });
+  });
 
   constructor() {
     void this.load();

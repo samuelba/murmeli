@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import pytest
@@ -31,6 +32,35 @@ def test_qwen3_is_lazy(paths: Paths) -> None:
     with pytest.raises(KeyError, match="design-voice"):
         engine.voice_id("en-US", {})
     engine.synthesize([], "v", 1)
+
+
+class _PromptRecorder:
+    def __init__(self) -> None:
+        self.calls: list[dict[str, object]] = []
+
+    def create_voice_clone_prompt(self, **kwargs: object) -> str:
+        self.calls.append(kwargs)
+        return f"prompt-{len(self.calls)}"
+
+
+@pytest.mark.parametrize(
+    ("meta", "expected"),
+    [
+        ({"ref_text": "Hallo"}, {"ref_text": "Hallo", "x_vector_only_mode": False}),
+        ({"ref_text": "Hallo", "clone_mode": "timbre"}, {"ref_text": None, "x_vector_only_mode": True}),
+    ],
+)
+def test_qwen3_prompt_follows_clone_mode(
+    paths: Paths, meta: dict[str, str], expected: dict[str, object]
+) -> None:
+    folder = paths.voices / "de-CH" / "v1"
+    folder.mkdir(parents=True)
+    (folder / "meta.json").write_text(json.dumps(meta))
+    engine = engines.create("qwen3", paths=paths, device="cpu")
+    recorder = _PromptRecorder()
+    engine._model = recorder
+    assert engine._prompt("de-CH", "v1") == engine._prompt("de-CH", "v1") == "prompt-1"
+    assert recorder.calls == [{"ref_audio": str(folder / "ref.wav"), **expected}]
 
 
 def test_piper_has_fixed_voices(paths: Paths) -> None:

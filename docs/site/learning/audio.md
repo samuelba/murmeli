@@ -46,7 +46,7 @@ The pipeline collects every text a kid can hear from `content/` and the app's tr
 2. Keep a clip with `./run.sh approve <key>`, or render it again with `./run.sh reroll <key>`.
 3. Copy the result into your installation as shown above.
 
-To change the narrator, generate candidates with `./run.sh design-voice --count 3`, pick one in `tools/audio/voices/selected.json`, and run `./run.sh all` again. A new voice renders every clip again.
+To change the narrator, generate candidates with `./run.sh design-voice --count 3`, pick one in `tools/audio/voices/selected.json`, and run `./run.sh all` again. A new voice renders every clip again. If a voice sounds right but speaks too choppily, a copy of it in timbre-only mode keeps the voice and drops the rhythm of its reference clip (see the tool README).
 
 All details, including the licenses of the models, are in [tools/audio/README.md](../../../tools/audio/README.md).
 

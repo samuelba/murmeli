@@ -7,6 +7,8 @@ from typing import Any
 
 from .config import Paths
 
+CLONE_MODES = ("full", "timbre")
+
 
 @dataclass(frozen=True)
 class VoiceRef:
@@ -15,6 +17,7 @@ class VoiceRef:
     ref_wav: Path
     ref_text: str
     meta: dict[str, Any]
+    clone_mode: str = "full"
 
 
 def voice_dir(paths: Paths, locale: str, voice_id: str) -> Path:
@@ -27,7 +30,10 @@ def load_voice(paths: Paths, locale: str, voice_id: str) -> VoiceRef:
     if not meta_file.exists():
         raise FileNotFoundError(f"voice {voice_id} not found in {folder}; run `design-voice`")
     meta = json.loads(meta_file.read_text(encoding="utf-8"))
-    return VoiceRef(voice_id, locale, folder / "ref.wav", meta["ref_text"], meta)
+    clone_mode = meta.get("clone_mode", "full")
+    if clone_mode not in CLONE_MODES:
+        raise ValueError(f"voice {voice_id}: clone_mode must be one of {CLONE_MODES}, got {clone_mode!r}")
+    return VoiceRef(voice_id, locale, folder / "ref.wav", meta["ref_text"], meta, clone_mode)
 
 
 def load_selected(paths: Paths) -> dict[str, str]:

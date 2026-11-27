@@ -80,7 +80,7 @@ import { ValueAnswer } from '../shared/value-answer';
       border-radius: 50%;
       background: transparent;
       cursor: pointer;
-      transform: translate(-50%, -50%);
+      translate: -50% -50%;
       touch-action: manipulation;
 
       mu-picture {

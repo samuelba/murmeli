@@ -22,6 +22,7 @@ import {
   TRAIL_PADDING,
   currentLevelId,
   placeLevels,
+  trailEnds,
   trailHeight,
   trailPath,
 } from './trail-layout';
@@ -85,6 +86,21 @@ describe('trail layout', () => {
     expect(trailPath(placed, trailHeight(2))).toMatch(/^M [\d.]+ 328 C/);
   });
 
+  it('joins the trails of neighbouring worlds into one path', () => {
+    const first = placeLevels(meadow.levels, 0);
+    const second = placeLevels(meadow.levels, 1);
+    const [lower, upper, empty] = trailEnds([first, second, []]);
+    const joint = Math.round(((first.at(-1)!.x + second[0]!.x) / 2) * 10) / 10;
+
+    expect(lower).toEqual({ bottom: first[0]!.x, top: joint });
+    expect(upper).toEqual({ bottom: joint, top: second.at(-1)!.x });
+    expect(empty).toEqual({ bottom: second.at(-1)!.x, top: second.at(-1)!.x });
+    expect(trailPath(first, 200, lower)).toMatch(new RegExp(`^M ${first[0]!.x} 200 C`));
+    expect(trailPath(first, 200, lower)).toMatch(new RegExp(` ${joint} 0$`));
+    expect(trailPath(second, 200, upper)).toMatch(new RegExp(`^M ${joint} 200 C`));
+    expect(trailPath([], 200, empty)).toMatch(/^M [\d.]+ 200 C .* 0$/);
+  });
+
   it('finds the level to play next', () => {
     expect(currentLevelId(MAP.tracks[0]!)).toBe('l3');
     expect(currentLevelId(null)).toBeNull();
@@ -135,6 +151,18 @@ describe('TrailMap', () => {
     expect(byTestId(element, 'world-w3').textContent).toContain('Noch gesperrt');
     expect(element.querySelectorAll('[data-testid="map-mascot"]').length).toBe(1);
     expect(Element.prototype.scrollIntoView).toHaveBeenCalled();
+  });
+
+  it('carries each world trail on through the sign to the world below', async () => {
+    const { element } = await open();
+    const lowerTrail = byTestId(element, 'world-w1').querySelector('.world__trail .path__bed')!;
+    const upperLink = byTestId(element, 'world-w2').querySelector('.world__link .path__bed')!;
+    const exit = /([\d.]+) 0$/.exec(lowerTrail.getAttribute('d')!)![1];
+
+    expect(upperLink.getAttribute('d')).toBe(`M ${exit} 0 V 10`);
+    expect(
+      byTestId(element, 'world-w2').querySelector('.world__trail .path__bed')!.getAttribute('d'),
+    ).toMatch(new RegExp(`^M ${exit} \\d+ C`));
   });
 
   it('opens the badge shelf with the badges the map proves', async () => {

@@ -117,6 +117,12 @@
             [attr.aria-labelledby]="'world-title-' + entry.world.id"
           >
             <mu-scene [scene]="entry.world.scene" />
+            <div class="world__link" [style.top.px]="entry.height">
+              <svg class="path" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 100 10">
+                <path class="path__bed" [attr.d]="entry.link" />
+                <path class="path__dash" [attr.d]="entry.link" />
+              </svg>
+            </div>
             <div class="world__sign">
               <h2 class="world__title" [id]="'world-title-' + entry.world.id">
                 @if (entry.world.state === 'locked') {

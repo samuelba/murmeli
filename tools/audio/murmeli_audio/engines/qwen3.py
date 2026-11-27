@@ -58,8 +58,11 @@ class Qwen3Engine(TtsEngine):
     def _prompt(self, locale: str, voice_id: str) -> Any:
         if voice_id not in self._prompts:
             voice = load_voice(self.paths, locale, voice_id)
+            timbre_only = voice.clone_mode == "timbre"
             self._prompts[voice_id] = self._ensure_model().create_voice_clone_prompt(
-                ref_audio=str(voice.ref_wav), ref_text=voice.ref_text, x_vector_only_mode=False
+                ref_audio=str(voice.ref_wav),
+                ref_text=None if timbre_only else voice.ref_text,
+                x_vector_only_mode=timbre_only,
             )
         return self._prompts[voice_id]
 
