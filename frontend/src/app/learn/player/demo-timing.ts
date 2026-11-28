@@ -1,4 +1,6 @@
 import type { AnyAnswer, DemoAction } from '../learn.models';
+import type { CalendarCard } from '@murmeli/content';
+import { ringSteps } from '../exercises/calendar/calendar-math';
 import { fiveMinuteSteps } from '../exercises/clock/clock-math';
 import { modelDuration } from '../exercises/trace-letter/trace-geometry';
 import type { TraceStroke } from '../exercises/trace-letter/trace-geometry';
@@ -21,11 +23,17 @@ interface LoosePayload {
   a?: number | null;
   strokes?: TraceStroke[];
   minute?: number;
+  ring?: readonly CalendarCard[];
+  focus?: number | null;
+  gap?: number | null;
 }
 
 function countOf(type: string, payload: LoosePayload): number {
   if (type === 'clock') {
     return Math.max(1, fiveMinuteSteps(payload.minute ?? 0));
+  }
+  if (type === 'calendar') {
+    return Math.max(1, ringSteps(payload.ring ?? [], payload.focus ?? payload.gap ?? null));
   }
   if (type === 'money-chf') {
     return (

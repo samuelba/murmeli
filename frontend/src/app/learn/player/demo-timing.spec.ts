@@ -35,6 +35,12 @@ describe('cueDuration', () => {
     expect(cueDuration('clock', { countAlong: true }, { hour: 3, minute: 0 }, null)).toBe(
       DEMO_COUNT_MS,
     );
+    expect(cueDuration('calendar', { countAlong: true }, PAYLOADS.calendar, null)).toBe(
+      3 * DEMO_COUNT_MS,
+    );
+    expect(cueDuration('calendar', { countAlong: true }, { ring: [], focus: null }, null)).toBe(
+      DEMO_COUNT_MS,
+    );
     expect(cueDuration('times-table', { hop: true }, PAYLOADS['times-table'], null)).toBe(
       3 * HOP_STEP_MS,
     );
