@@ -1,4 +1,5 @@
 import type { AnyAnswer, DemoAction } from '../learn.models';
+import { fiveMinuteSteps } from '../exercises/clock/clock-math';
 import { modelDuration } from '../exercises/trace-letter/trace-geometry';
 import type { TraceStroke } from '../exercises/trace-letter/trace-geometry';
 
@@ -19,9 +20,13 @@ interface LoosePayload {
   total?: number;
   a?: number | null;
   strokes?: TraceStroke[];
+  minute?: number;
 }
 
 function countOf(type: string, payload: LoosePayload): number {
+  if (type === 'clock') {
+    return Math.max(1, fiveMinuteSteps(payload.minute ?? 0));
+  }
   if (type === 'money-chf') {
     return (
       (payload.items?.length ?? 0) + (payload.left?.length ?? 0) + (payload.right?.length ?? 0) || 5

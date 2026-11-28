@@ -3,7 +3,7 @@ import { byTestId, provideAppTesting } from '../../../../testing/app-testing';
 import { renderExercise } from '../../../../testing/exercise-testing';
 import { PAYLOADS } from '../../../../testing/learn-testing';
 import { Clock } from './clock';
-import { handAngles } from './clock-face';
+import { fiveMinuteSteps, handAngles } from './clock-math';
 
 describe('clock hands', () => {
   it('moves the hour hand on with the minutes', () => {
@@ -11,6 +11,14 @@ describe('clock hands', () => {
     expect(handAngles(2, 30)).toEqual({ hour: 75, minute: 180 });
     expect(handAngles(12, 45)).toEqual({ hour: 22.5, minute: 270 });
     expect(handAngles(9, 15).hour).toBeCloseTo(277.5);
+  });
+
+  it('counts the five-minute steps the minute hand has passed', () => {
+    expect(fiveMinuteSteps(0)).toBe(0);
+    expect(fiveMinuteSteps(10)).toBe(2);
+    expect(fiveMinuteSteps(14)).toBe(2);
+    expect(fiveMinuteSteps(25)).toBe(5);
+    expect(fiveMinuteSteps(59)).toBe(11);
   });
 });
 
@@ -73,5 +81,23 @@ describe('Clock', () => {
     expect(revealed.classList).toContain('mu-choice--revealed');
     expect(revealed.getAttribute('aria-label')).toBe('4:10, Richtig');
     expect(byTestId(element, 'demo-pointer')).toBeTruthy();
+  });
+
+  it('counts along the numbers up to the minute hand', async () => {
+    const { element, update } = await renderExercise(Clock, {
+      payload: { ...PAYLOADS.clock, hour: 4, minute: 10 },
+      locked: true,
+      cue: { countAlong: true },
+    });
+    const counted = [...element.querySelectorAll('.number--count')].map((n) =>
+      n.textContent?.trim(),
+    );
+    expect(counted).toEqual(['1', '2']);
+    const delays = [...element.querySelectorAll<SVGElement>('.number--count')].map((n) =>
+      n.style.getPropertyValue('--i'),
+    );
+    expect(delays).toEqual(['0', '1']);
+    await update({ cue: { highlight: 'clock' } });
+    expect(element.querySelectorAll('.number--count').length).toBe(0);
   });
 });

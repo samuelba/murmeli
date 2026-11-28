@@ -1,13 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
+import { fiveMinuteSteps, handAngles } from './clock-math';
 
 const CENTER = 100;
 const NUMBER_RADIUS = 59;
-
-/** Hand angles in degrees, clockwise from 12. The hour hand moves on with the minutes. */
-export function handAngles(hour: number, minute: number): { hour: number; minute: number } {
-  return { hour: ((hour % 12) + minute / 60) * 30, minute: (minute % 60) * 6 };
-}
 
 function polar(angle: number, radius: number): { x: number; y: number } {
   const radians = (angle * Math.PI) / 180;
@@ -36,7 +32,15 @@ function polar(angle: number, radius: number): { x: number; y: number } {
         />
       }
       @for (number of numbers; track number.value) {
-        <text class="number" [attr.x]="number.x" [attr.y]="number.y">{{ number.value }}</text>
+        <text
+          class="number"
+          [class.number--count]="number.value <= countTo()"
+          [style.--i]="number.value - 1"
+          [attr.x]="number.x"
+          [attr.y]="number.y"
+        >
+          {{ number.value }}
+        </text>
       }
       <g class="hand hand--hour" data-testid="hour-hand" [attr.transform]="rotate(angles().hour)">
         <line x1="100" y1="112" x2="100" y2="56" />
@@ -90,6 +94,20 @@ function polar(angle: number, radius: number): { x: number; y: number } {
       dominant-baseline: central;
     }
 
+    .number--count {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: mu-count-pop 0.5s var(--mu-ease-bounce) both;
+      animation-delay: calc(var(--i) * 0.7s);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .number--count {
+        animation: none;
+        fill: var(--mu-color-sky-strong);
+      }
+    }
+
     .hand line {
       stroke-linecap: round;
     }
@@ -116,6 +134,8 @@ export class ClockFace {
 
   readonly hour = input.required<number>();
   readonly minute = input.required<number>();
+  /** Count the five-minute steps along the numbers up to the minute hand (demo "count along"). */
+  readonly counting = input(false);
 
   protected readonly ticks = Array.from({ length: 60 }, (_, index) => {
     const hour = index % 5 === 0;
@@ -127,6 +147,9 @@ export class ClockFace {
     value: index + 1,
     ...polar((index + 1) * 30, NUMBER_RADIUS),
   }));
+  protected readonly countTo = computed(() =>
+    this.counting() ? fiveMinuteSteps(this.minute()) : 0,
+  );
   protected readonly angles = computed(() => handAngles(this.hour(), this.minute()));
 
   /** Where the hands point, in words, without saying the time (that is the question). */

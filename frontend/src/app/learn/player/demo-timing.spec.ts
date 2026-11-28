@@ -29,6 +29,12 @@ describe('cueDuration', () => {
       ),
     ).toBe(3 * DEMO_COUNT_MS);
     expect(cueDuration('money-chf', { countAlong: true }, {}, null)).toBe(5 * DEMO_COUNT_MS);
+    expect(cueDuration('clock', { countAlong: true }, { hour: 4, minute: 10 }, null)).toBe(
+      2 * DEMO_COUNT_MS,
+    );
+    expect(cueDuration('clock', { countAlong: true }, { hour: 3, minute: 0 }, null)).toBe(
+      DEMO_COUNT_MS,
+    );
     expect(cueDuration('times-table', { hop: true }, PAYLOADS['times-table'], null)).toBe(
       3 * HOP_STEP_MS,
     );
