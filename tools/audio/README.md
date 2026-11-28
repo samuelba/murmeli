@@ -110,6 +110,13 @@ Extra extractors can be added with `murmeli_audio.extract.register_extractor(nam
 `sources` lists the ids the clip was extracted from (for example `i18n:kid.feedback.great`), so
 the frontend can look clips up by id as well as by text.
 
+## Publishing
+
+`out/` is gitignored, and so are the clips in the app. To ship a set in the frontend image, run
+`npm run audio:publish` from the repository root. It uploads the manifest and every clip that
+isn't flagged as the GitHub release asset `audio-<version>` and updates `content/audio.lock.json`.
+Commit the lock file. The image build fetches the locked set with `npm run audio:fetch`.
+
 ## Picking a voice
 
 1. `./run.sh design-voice --count 3` (or `--locale de-CH`). Edit `voices/design.yaml` to change the
