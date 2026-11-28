@@ -1,8 +1,13 @@
-import { DialogRef } from '@angular/cdk/dialog';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Mascot } from '../../shared/mascot/mascot';
 import { Speak } from '../../shared/speak/speak';
+
+export interface ExitDialogData {
+  /** The label of the "leave" answer, e.g. back to the map or to the practice ground. */
+  readonly confirmKey?: string;
+}
 
 /** Kid-sized "do you want to stop?" with two big answers. Closes with true to leave. */
 @Component({
@@ -33,7 +38,7 @@ import { Speak } from '../../shared/speak/speak';
           data-testid="exit-confirm"
           (click)="ref.close(true)"
         >
-          {{ 'learn.player.exitConfirm' | transloco }}
+          {{ confirmKey | transloco }}
         </button>
       </div>
     </div>
@@ -74,4 +79,7 @@ import { Speak } from '../../shared/speak/speak';
 })
 export class ExitDialog {
   protected readonly ref = inject<DialogRef<boolean>>(DialogRef);
+  protected readonly confirmKey =
+    inject<ExitDialogData | null>(DIALOG_DATA, { optional: true })?.confirmKey ??
+    'learn.player.exitConfirm';
 }

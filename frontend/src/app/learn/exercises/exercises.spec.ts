@@ -256,27 +256,68 @@ describe('exercise components', () => {
   });
 
   describe('Compare', () => {
-    it('describes both sides and answers with a relation', async () => {
-      const { element, answers, click, update } = await render(Compare, {
-        payload: PAYLOADS.compare,
-      });
-      expect(byTestId(element, 'compare-left').getAttribute('aria-label')).toBe('Links: 3 × Ente');
+    it('lets the kid tap the side with more when comparing amounts, without signs', async () => {
+      const { element, answers, click } = await render(Compare, { payload: PAYLOADS.compare });
+      const left = byTestId(element, 'compare-left');
+      expect(left.tagName).toBe('BUTTON');
+      expect(left.getAttribute('aria-label')).toBe('Links: 3 × Ente');
       expect(byTestId(element, 'compare-right').getAttribute('aria-label')).toBe(
         'Rechts: 5 Punkte',
       );
-      expect(byTestId(element, 'relation-lt').getAttribute('aria-label')).toBe('kleiner als');
-      await click('relation-lt');
-      expect(answers).toEqual([{ relation: 'lt' }]);
-      expect(byTestId(element, 'compare-slot').textContent?.trim()).toBe('<');
+      expect(element.querySelector('[data-testid="relation-lt"]')).toBeNull();
+      expect(element.querySelector('[data-testid="relation-gt"]')).toBeNull();
+      expect(element.querySelector('[data-testid="compare-slot"]')).toBeNull();
+      expect(element.querySelector('mu-relation-sign')).toBeNull();
+      expect(byTestId(element, 'relation-eq').textContent?.trim()).toBe('Gleich viele');
+      expect(element.querySelector('.mu-ex')?.getAttribute('role')).toBe('group');
 
-      await update({
-        payload: { mode: 'numbers', left: { value: 12 }, right: { value: 9 } },
+      await click('compare-right');
+      expect(answers).toEqual([{ relation: 'lt' }]);
+      expect(byTestId(element, 'compare-right').classList).toContain('mu-choice--selected');
+      expect(byTestId(element, 'compare-right').getAttribute('aria-pressed')).toBe('true');
+      await click('compare-left');
+      await click('relation-eq');
+      expect(answers).toEqual([{ relation: 'lt' }, { relation: 'gt' }, { relation: 'eq' }]);
+    });
+
+    it('reveals the side with more, or the same button, with the pointer', async () => {
+      const { element, answers, click, update } = await render(Compare, {
+        payload: PAYLOADS.compare,
         reveal: { relation: 'gt' },
         locked: true,
         cue: { tapAnswer: true },
       });
+      const left = byTestId(element, 'compare-left');
+      expect(left.classList).toContain('mu-choice--revealed');
+      expect(left.querySelector('mu-pointer')).not.toBeNull();
+      expect(left.getAttribute('aria-disabled')).toBe('true');
+      await click('compare-right');
+      expect(answers).toEqual([]);
+
+      await update({ reveal: { relation: 'eq' } });
+      expect(byTestId(element, 'relation-eq').classList).toContain('mu-choice--revealed');
+      expect(byTestId(element, 'compare-left').classList).not.toContain('mu-choice--revealed');
+    });
+
+    it('compares numbers with crocodile signs', async () => {
+      const { element, answers, click, update } = await render(Compare, {
+        payload: { mode: 'numbers', left: { value: 12 }, right: { value: 9 } },
+      });
+      const slotSign = () =>
+        byTestId(element, 'compare-slot')
+          .querySelector('mu-relation-sign')
+          ?.getAttribute('data-relation');
+      expect(byTestId(element, 'compare-left').tagName).not.toBe('BUTTON');
       expect(byTestId(element, 'compare-left').textContent?.trim()).toBe('12');
-      expect(byTestId(element, 'compare-slot').textContent?.trim()).toBe('>');
+      expect(byTestId(element, 'compare-slot').textContent?.trim()).toBe('?');
+      expect(byTestId(element, 'relation-lt').getAttribute('aria-label')).toBe('kleiner als');
+      expect(byTestId(element, 'relation-gt').querySelector('mu-relation-sign')).not.toBeNull();
+      await click('relation-lt');
+      expect(answers).toEqual([{ relation: 'lt' }]);
+      expect(slotSign()).toBe('lt');
+
+      await update({ reveal: { relation: 'gt' }, locked: true, cue: { tapAnswer: true } });
+      expect(slotSign()).toBe('gt');
       expect(byTestId(element, 'relation-gt').querySelector('mu-pointer')).not.toBeNull();
       await click('relation-eq');
       expect(answers).toHaveLength(1);

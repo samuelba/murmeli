@@ -34,12 +34,15 @@ export function findInsecureOrigins(
 }
 
 export function findProductionProblems(
-  env: Pick<Env, 'REDIS_PASSWORD' | 'COOKIE_SECURE'>,
+  env: Pick<Env, 'REDIS_PASSWORD' | 'COOKIE_SECURE' | 'LEARNING_UNLOCK_ALL'>,
 ): string[] {
   return [
     ...(env.REDIS_PASSWORD === undefined
       ? ['REDIS_PASSWORD is required in production.']
       : []),
     ...(env.COOKIE_SECURE ? [] : ['COOKIE_SECURE must be true in production.']),
+    ...(env.LEARNING_UNLOCK_ALL
+      ? ['LEARNING_UNLOCK_ALL must not be enabled in production.']
+      : []),
   ];
 }

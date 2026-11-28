@@ -5,6 +5,8 @@ import type { ExerciseSpec } from './exercises/registry.ts';
 import type { SlotKind, SlotValue } from './exercises/types.ts';
 import { phraseSpeak, phraseText } from './lexicon.ts';
 import type { Lexicon } from './lexicon.ts';
+import { practiceLadders } from './practice/ladder.ts';
+import { PRACTICE_TOPIC_TITLES } from './practice/topics.ts';
 import { HINT_KEYS, HINTS } from './runtime/hints.ts';
 import type { Locale, LocalizedText } from './locale.ts';
 
@@ -158,6 +160,11 @@ export function collectSpeakables(
         }
       }
     }
+  }
+  for (const ladder of practiceLadders(
+    content.tracks.filter((t) => t.locales.includes(locale)),
+  )) {
+    say(PRACTICE_TOPIC_TITLES[ladder.topic], `practice:${ladder.topic}.title`);
   }
   for (const key of HINT_KEYS) {
     set.add(HINTS[key][locale], `hint:${key}`);

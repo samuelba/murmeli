@@ -77,6 +77,30 @@ test.describe('parent progress', () => {
     await expect(page.getByTestId('skill-math.count.3').getByTestId('skill-weak')).toHaveCount(0);
   });
 
+  test('shows the practice ground: steps, first tries and the mistakes asked again', async ({
+    page,
+  }) => {
+    await openProgress(page);
+    const practice = page.getByTestId('progress-practice');
+
+    await expect(practice.getByTestId('practice-items')).toHaveText('39');
+    await expect(practice.getByTestId('practice-first-try')).toHaveText(/^\s*79\s%\s*$/);
+    await expect(practice.getByTestId('practice-days')).toHaveText('4');
+    const plus = page.getByTestId('practice-topic-plus');
+    await expect(plus.getByTestId('practice-level')).toContainText('Übungsstufe 3 von 4');
+    await expect(plus.getByTestId('practice-recent')).toContainText('39 Aufgaben');
+    const mistakes = plus.getByTestId('practice-mistakes');
+    await expect(mistakes.getByTestId('practice-mistake').first()).toBeHidden();
+    await mistakes.locator('summary').click();
+    await expect(mistakes.getByTestId('practice-mistake')).toHaveText([
+      /Wie viel ist 8 plus 7\? →\s*Richtige Antwort: 15\s+2× falsch\s*2 Mal falsch/,
+      /Wie viel fehlt von 7 bis 9 →\s*Richtige Antwort: 2\s+1× falsch\s*1 Mal falsch/,
+    ]);
+    await expect(
+      page.getByTestId('practice-topic-compare').getByTestId('practice-state'),
+    ).toHaveText('Vor dem Bergpfad');
+  });
+
   test('shows tracks, collapsible worlds, stars and level states', async ({ page }) => {
     await openProgress(page);
     const meadow = page.getByTestId('progress-world-math-zahlenwiese');
@@ -101,6 +125,7 @@ test.describe('parent progress', () => {
     await expect(page.getByTestId('activity-empty')).toBeVisible();
     await expect(page.getByTestId('skills-empty')).toBeVisible();
     await expect(page.getByTestId('progress-no-badges')).toBeVisible();
+    await expect(page.getByTestId('practice-empty')).toBeVisible();
     await expect(page.getByTestId('activity-minutes').locator('.mark')).toHaveCount(0);
   });
 

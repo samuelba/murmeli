@@ -11,11 +11,13 @@ import {
 } from './run-store';
 
 const state = {
-  v: 2,
+  v: 3,
   runId: 'r1',
   kidId: 'k1',
   levelId: 'l1',
   mode: 'level',
+  topicId: null,
+  practice: null,
   locale: 'de-CH',
   seed: 1,
   startedAt: 0,
@@ -72,12 +74,12 @@ describe('RunStore', () => {
     for (const value of [
       null,
       'not json',
-      '{"v":2}',
+      '{"v":3}',
       'null',
-      '{"v":2,"kidId":"k1","runId":"r1"}',
-      '{"v":1,"kidId":"k1","runId":"r1","items":[]}',
-      '{"v":2,"kidId":"k1","runId":"r1","items":[]}',
-      '{"v":2,"kidId":"k1","runId":"r1","locale":"de-CH","items":[{}]}',
+      '{"v":3,"kidId":"k1","runId":"r1"}',
+      '{"v":2,"kidId":"k1","runId":"r1","locale":"de-CH","items":[]}',
+      '{"v":3,"kidId":"k1","runId":"r1","items":[]}',
+      '{"v":3,"kidId":"k1","runId":"r1","locale":"de-CH","items":[{}]}',
     ]) {
       const { runs } = store({ get: jest.fn().mockResolvedValue(value) });
       await expect(runs.get('r1')).resolves.toBeNull();

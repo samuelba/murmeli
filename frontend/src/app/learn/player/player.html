@@ -88,6 +88,7 @@
           [mode]="store.mode()"
           (next)="playLevel($event)"
           (again)="again()"
+          (otherTopic)="toPractice()"
           (map)="toMap()"
         />
       }
@@ -134,10 +135,21 @@
     }
     @default {
       @if (store.item(); as item) {
+        @if (store.againText(); as again) {
+          <p id="again-banner" class="mu-again" data-testid="again" [attr.data-again]="item.again">
+            <mu-icon name="refresh" />
+            <span>{{ again }}</span>
+          </p>
+        }
         <div class="prompt" data-testid="prompt">
           <mu-mascot class="prompt__mascot" [pose]="store.hint() ? 'encouraging' : 'happy'" />
           <div class="bubble">
-            <h1 class="bubble__text mu-learning-text" tabindex="-1" data-testid="prompt-text">
+            <h1
+              class="bubble__text mu-learning-text"
+              tabindex="-1"
+              data-testid="prompt-text"
+              [attr.aria-describedby]="store.againText() ? 'again-banner' : null"
+            >
               {{ item.prompt.text }}
             </h1>
             <mu-speak [text]="item.prompt.text" [segments]="item.prompt.speak" />

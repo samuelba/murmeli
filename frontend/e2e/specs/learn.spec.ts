@@ -208,16 +208,54 @@ test.describe('"Zeig mir" demo', () => {
 });
 
 test.describe('practice and limits', () => {
-  test('practice mixes known skills and ends with stars', async ({ page }) => {
+  test('"Murmeli wählt" mixes known skills and ends with stars', async ({ page }) => {
     const backend = await openMap(page, { learn: { progress: { [FIRST]: 3 }, items: 4 } });
     await page.getByTestId('practice').click();
     await expect(page).toHaveURL(/\/learn\/practice$/);
+    await expect(page.getByTestId('page-title')).toHaveText('Was möchtest du üben?');
+    await page.getByTestId('practice-mix').click();
+    await expect(page).toHaveURL(/\/learn\/practice\/mix$/);
     const player = new PlayerPage(page, backend.learn);
 
     await player.playThrough();
     await expect(page.getByTestId('page-title')).toHaveText('Schön, dass du geübt hast!');
     await expect(page.getByTestId('results-next')).toHaveCount(0);
-    expect(backend.callsTo('POST', '/api/learn/practice/runs')).toHaveLength(1);
+    expect(backend.callsTo('POST', '/api/learn/practice/runs')).toEqual([
+      expect.objectContaining({ body: {} }),
+    ]);
+    await page.getByTestId('results-practice').click();
+    await expect(page).toHaveURL(/\/learn\/practice$/);
+  });
+
+  test('a practice topic shows its demo first, then steps up after a perfect run', async ({
+    page,
+  }) => {
+    const backend = await openMap(page, { learn: { progress: { [FIRST]: 3 }, items: 3 } });
+    await page.getByTestId('practice').click();
+    await expect(page.getByTestId('topic-times')).toHaveAttribute('aria-disabled', 'true');
+    // aria-disabled is not disabled: a kid's tap still arrives and hears why it is locked.
+    await page.getByTestId('topic-times').click({ force: true });
+    await expect(page).toHaveURL(/\/learn\/practice$/);
+    await expect(page.getByTestId('topic-compare').getByTestId('topic-ahead')).toBeVisible();
+
+    const count = page.getByTestId('topic-count');
+    await expect(count.getByTestId('topic-level')).toContainText('Stufe 2 von 4');
+    await count.click();
+    await expect(page).toHaveURL(/\/learn\/practice\/count$/);
+    await expect(page.getByTestId('demo')).toBeVisible();
+    await page.getByTestId('demo-go').click();
+    const player = new PlayerPage(page, backend.learn);
+    await player.playThrough();
+    expect(backend.callsTo('POST', '/api/learn/practice/runs')[0]?.body).toEqual({
+      topic: 'count',
+    });
+    await expect(page.getByTestId('practice-step-count')).toContainText('Eine Stufe höher');
+    await expect(page.getByTestId('practice-step-count')).toContainText('Stufe 3 von 4');
+
+    await page.getByTestId('results-practice').click();
+    await expect(page.getByTestId('topic-count').getByTestId('topic-level')).toContainText(
+      'Stufe 3 von 4',
+    );
   });
 
   test('the daily limit puts Murmeli to sleep and leads back to the profiles', async ({ page }) => {
@@ -230,6 +268,54 @@ test.describe('practice and limits', () => {
     await page.getByTestId('rest-back').click();
     await expect(page.getByTestId('page-title')).toHaveText('Wer lernt heute?');
     expect(backend.callsTo('POST', '/api/kids/deactivate')).toHaveLength(1);
+  });
+});
+
+test.describe('practice ground on a 320px phone', () => {
+  test.use({ viewport: { width: 320, height: 640 } });
+
+  test('keeps titles and glyphs clear of the read-aloud buttons and track names whole', async ({
+    page,
+  }) => {
+    const spoken = ['Murmeli wählt', 'Murmeli sucht dir etwas Passendes aus.', 'Zählen'];
+    await page.route('**/audio/manifest.json', (route) =>
+      route.fulfill({
+        json: {
+          version: 'e2e-practice',
+          locales: {
+            'de-CH': Object.fromEntries(
+              spoken.map((text, i) => [
+                `k${i}`,
+                { text, file: `de-CH/${i}0000000000000000.opus`, durationMs: 500, status: 'ok' },
+              ]),
+            ),
+          },
+        },
+      }),
+    );
+    await openMap(page, { audio: false, learn: { progress: { [FIRST]: 3 } } });
+    await page.getByTestId('practice').click();
+    await expect(page.getByTestId('page-title')).toBeFocused();
+    await expect(page.locator('.mix__speak [data-testid="speak"]')).toBeVisible();
+    await expect(page.locator('.topic__speak [data-testid="speak"]').first()).toBeVisible();
+
+    const title = page.locator('.mix__title');
+    const fits = (selector: string) =>
+      page
+        .locator(selector)
+        .evaluateAll((nodes) => nodes.every((node) => node.scrollWidth <= node.clientWidth + 1));
+    expect(await fits('.mix__title')).toBe(true);
+    const titleBox = (await title.boundingBox())!;
+    const speakBox = (await page.locator('.mix__speak').boundingBox())!;
+    expect(titleBox.x + titleBox.width).toBeLessThanOrEqual(speakBox.x);
+    expect(await fits('.tab__title')).toBe(true);
+    await expect(page.getByTestId('practice-track-math')).toHaveText(/Mathematik/);
+    const tabTitle = (await page.locator('.tab__title').first().boundingBox())!;
+    expect(tabTitle.height).toBeLessThan(40);
+    const tile = page.locator('.topic').filter({ has: page.getByTestId('topic-count') });
+    const glyph = (await tile.locator('.topic__glyph').boundingBox())!;
+    const tileSpeak = (await tile.locator('.topic__speak').boundingBox())!;
+    expect(glyph.x + glyph.width).toBeLessThanOrEqual(tileSpeak.x);
   });
 });
 
@@ -368,6 +454,7 @@ test.describe('wellbeing', () => {
     const backend = await openMap(page);
     backend.on('POST /api/learn/practice/runs', apiError(409, 'NOTHING_TO_PRACTICE'));
     await page.getByTestId('practice').click();
+    await page.getByTestId('practice-mix').click();
     await expect(page.getByTestId('form-error')).toContainText(
       'Gerade gibt es nichts zu üben. Spiel doch eine neue Stufe!',
     );

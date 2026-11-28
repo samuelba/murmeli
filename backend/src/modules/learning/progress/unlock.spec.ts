@@ -6,6 +6,7 @@ import {
   computeStates,
   isOpen,
   isPlaced,
+  unlockAll,
   unlockedBetween,
 } from './unlock';
 
@@ -167,6 +168,22 @@ describe('unlockedBetween', () => {
       levels: [],
       worlds: [],
     });
+  });
+});
+
+describe('unlockAll', () => {
+  it('opens every locked level and world and keeps passed and skipped ones', () => {
+    const { levels, worlds } = unlockAll(
+      computeStates(WORLDS, '1', passed('hut-01')),
+    );
+
+    expect(levels.get('hut-01')).toBe('passed');
+    expect(levels.get('meadow-02')).toBe('skipped');
+    expect(levels.get('hut-03')).toBe('unlocked');
+    expect(levels.get('summit-03')).toBe('unlocked');
+    expect(worlds.get('meadow')).toBe('skipped');
+    expect(worlds.get('summit')).toBe('unlocked');
+    expect([...levels.values()]).not.toContain('locked');
   });
 });
 

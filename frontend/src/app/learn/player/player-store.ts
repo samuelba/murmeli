@@ -1,4 +1,5 @@
 import { DOCUMENT, DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { AudioService } from '../../core/audio/audio.service';
 import { SoundEffects } from '../../core/audio/sound-effects';
 import { AuthService } from '../../core/auth/auth.service';
@@ -10,12 +11,14 @@ import { LearnApi } from '../learn-api.service';
 import { BreakTimer } from './break-timer';
 import { cueDuration } from './demo-timing';
 import {
+  AgainReason,
   AnyAnswer,
   DAILY_LIMIT_REACHED,
   DemoAction,
   FinishRunResponse,
   HintKey,
   MapResponse,
+  PublicExercise,
   RunItemProgress,
   RunMode,
   StartRunResponse,
@@ -69,6 +72,14 @@ function outcomeOf(progress: RunItemProgress | undefined): Outcome | null {
   return progress && progress.attempts >= MAX_ATTEMPTS ? 'missed' : null;
 }
 
+/** The spoken line for an item that comes again (`kid.practice.*`). */
+export function againKey(again: AgainReason | undefined): string | null {
+  if (again === 'review') {
+    return 'kid.practice.againReview';
+  }
+  return again === 'repeat' ? 'kid.practice.againRepeat' : null;
+}
+
 function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -112,6 +123,7 @@ export class PlayerStore {
   private readonly breakTimer = inject(BreakTimer);
   private readonly activeKid = inject(AuthService).activeKid;
   private readonly document = inject(DOCUMENT);
+  private readonly transloco = inject(TranslocoService);
 
   private demoGeneration = 0;
   private runGeneration = 0;
@@ -119,6 +131,8 @@ export class PlayerStore {
 
   readonly mode = signal<RunMode>('level');
   readonly levelId = signal<string | null>(null);
+  /** The practice topic, or null for a level run or "Murmeli wählt". */
+  readonly topic = signal<string | null>(null);
   readonly run = signal<StartRunResponse | null>(null);
   readonly phase = signal<Phase>('loading');
   readonly index = signal(0);
@@ -138,6 +152,12 @@ export class PlayerStore {
   readonly total = computed(() => this.run()?.items.length ?? 0);
   readonly item = computed(() => this.run()?.items[this.index()] ?? null);
   readonly demo = computed(() => this.run()?.demo ?? null);
+  readonly practice = computed(() => this.run()?.practice ?? null);
+  /** Why the current item comes again, as the line Murmeli says before it. */
+  readonly againText = computed(() => {
+    const key = againKey(this.item()?.again);
+    return key ? this.transloco.translate(key) : '';
+  });
   /** Changes for every new item and every retry, so the exercise starts fresh. */
   readonly itemKey = computed(() => `${this.index()}:${this.attempt()}`);
   readonly hintText = computed(() => this.content.hint(this.hint()));
@@ -164,17 +184,17 @@ export class PlayerStore {
     });
   }
 
-  async start(mode: RunMode, levelId: string | null = null): Promise<void> {
+  /** `id` is the level of a level run, or the topic of a practice run (null: Murmeli wählt). */
+  async start(mode: RunMode, id: string | null = null): Promise<void> {
     this.reset();
     const generation = this.runGeneration;
-    this.mode.set(mode);
-    this.levelId.set(levelId);
+    const practice = mode === 'practice' || id === null;
+    this.mode.set(practice ? 'practice' : 'level');
+    this.levelId.set(practice ? null : id);
+    this.topic.set(practice ? id : null);
     this.phase.set('loading');
     await this.attempt$(generation, async () => {
-      const started =
-        mode === 'practice' || levelId === null
-          ? await this.api.startPractice()
-          : await this.api.startLevel(levelId);
+      const started = practice ? await this.api.startPractice(id) : await this.api.startLevel(id);
       if (generation !== this.runGeneration) {
         return;
       }
@@ -235,6 +255,9 @@ export class PlayerStore {
         const response = await this.api.answer(run.runId, item.index, answer);
         if (generation !== this.runGeneration) {
           return;
+        }
+        if (response.repeat) {
+          this.appendRepeat(response.repeat);
         }
         if (response.correct) {
           this.settleItem(this.attempt() === 1 ? 'first' : 'second');
@@ -375,6 +398,9 @@ export class PlayerStore {
       ...run.items.flatMap((item) => item.prompt.speak),
       ...(run.demo?.steps.map((step) => step.say) ?? []),
       ...this.content.phrases(),
+      ...(run.practice
+        ? [againKey('review'), againKey('repeat')].map((key) => this.transloco.translate(key!))
+        : []),
     ];
     void this.audio.prefetch(texts);
   }
@@ -385,8 +411,23 @@ export class PlayerStore {
     this.phase.set('playing');
     const item = this.item();
     if (item) {
-      void this.audio.narrate(item.prompt.speak);
+      const again = this.againText();
+      void this.audio.narrate(again ? [again, ...item.prompt.speak] : item.prompt.speak);
     }
+  }
+
+  /** Practice: a missed item comes once more at the end of the run. */
+  private appendRepeat(repeat: PublicExercise): void {
+    const run = this.run();
+    if (!run || !isExerciseType(repeat.type)) {
+      return;
+    }
+    this.run.set({ ...run, items: [...run.items, repeat] });
+    this.outcomes.update((outcomes) => [...outcomes, null]);
+  }
+
+  private runTarget(): string | null {
+    return this.mode() === 'practice' ? this.topic() : this.levelId();
   }
 
   private settleItem(outcome: Outcome): void {
@@ -463,7 +504,7 @@ export class PlayerStore {
       }
       this.error.set(errorMessage(error));
       if (errorCodeOf(error) === 'RUN_NOT_FOUND') {
-        this.retryAction = () => this.start(this.mode(), this.levelId());
+        this.retryAction = () => this.start(this.mode(), this.runTarget());
         this.phase.set('error');
       } else if (recover) {
         this.retryAction = null;

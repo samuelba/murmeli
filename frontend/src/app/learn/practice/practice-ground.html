@@ -1,0 +1,186 @@
+<section class="ground mu-kid-mode" aria-labelledby="page-heading" data-testid="practice-ground">
+  <header class="head">
+    <button
+      type="button"
+      class="round"
+      data-testid="practice-back"
+      [attr.aria-label]="'learn.results.map' | transloco"
+      (click)="toMap()"
+    >
+      <mu-icon name="back" />
+    </button>
+    <h1 id="page-heading" class="title" tabindex="-1" data-testid="page-title">
+      {{ 'kid.practice.title' | transloco }}
+    </h1>
+    <mu-speak [text]="'kid.practice.title' | transloco" />
+  </header>
+
+  @if (loading()) {
+    <div class="mu-learn-state" role="status" data-testid="practice-loading">
+      <mu-mascot pose="thinking" animated />
+      <p>{{ 'learn.practice.loading' | transloco }}</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="mu-learn-state" data-testid="practice-error">
+      <mu-mascot pose="encouraging" />
+      <p>{{ 'learn.practice.error' | transloco }}</p>
+      <mu-form-error [error]="loadError()" />
+      <button type="button" class="mu-button mu-button--sun" (click)="load()">
+        <mu-icon name="refresh" />
+        {{ 'learn.map.retry' | transloco }}
+      </button>
+    </div>
+  } @else if (track(); as track) {
+    @if (mix(); as mix) {
+      <div class="mix-row">
+        <button
+          type="button"
+          class="mix"
+          data-testid="practice-mix"
+          [attr.aria-disabled]="mix.available ? null : 'true'"
+          (click)="startMix()"
+        >
+          <mu-mascot class="mix__mascot" pose="happy" />
+          <span class="mix__text">
+            <span class="mix__title">{{ 'kid.practice.mix' | transloco }}</span>
+            <span class="mix__hint">{{ 'kid.practice.mixHint' | transloco }}</span>
+            @if (mix.dueReviews > 0) {
+              <span class="pill pill--reviews" data-testid="mix-reviews">
+                <mu-icon name="refresh" />
+                {{ 'learn.practice.reviews' | transloco: { count: mix.dueReviews } }}
+              </span>
+            }
+          </span>
+        </button>
+        <mu-speak
+          class="mix__speak"
+          [text]="('kid.practice.mix' | transloco) + '. ' + ('kid.practice.mixHint' | transloco)"
+          [segments]="['kid.practice.mix' | transloco, 'kid.practice.mixHint' | transloco]"
+        />
+      </div>
+    }
+
+    @if (tracks().length > 1) {
+      <div
+        class="tracks"
+        role="tablist"
+        [attr.aria-label]="'kid.practice.title' | transloco"
+        data-testid="practice-tracks"
+      >
+        @for (item of tracks(); track item.id; let i = $index) {
+          <button
+            type="button"
+            role="tab"
+            class="tab"
+            [id]="'practice-tab-' + item.id"
+            [attr.aria-selected]="item.id === track.id"
+            [attr.aria-controls]="item.id === track.id ? 'practice-panel' : null"
+            [attr.tabindex]="item.id === track.id ? 0 : -1"
+            [attr.data-icon]="item.icon"
+            [attr.data-testid]="'practice-track-' + item.id"
+            (click)="chooseTrack(item.id)"
+            (keydown)="onTabKey($event, i)"
+          >
+            <span class="tab__icon">
+              <mu-topic-glyph [topic]="item.icon === 'math' ? 'count' : 'letters'" />
+            </span>
+            <span class="tab__title">{{ item.title }}</span>
+          </button>
+        }
+      </div>
+    }
+
+    <p class="blocked" role="status" data-testid="practice-blocked">
+      @if (blocked(); as key) {
+        <mu-icon name="lock" />
+        <span>{{ key | transloco }}</span>
+      }
+    </p>
+
+    <div
+      id="practice-panel"
+      [attr.role]="tracks().length > 1 ? 'tabpanel' : null"
+      [attr.aria-labelledby]="tracks().length > 1 ? 'practice-tab-' + track.id : null"
+    >
+      <ul
+        class="topics"
+        role="list"
+        [attr.data-icon]="track.icon"
+        [attr.aria-labelledby]="tracks().length > 1 ? null : 'page-heading'"
+        data-testid="practice-topics"
+      >
+        @for (topic of track.topics; track topic.id) {
+          <li class="topic" [attr.data-state]="topic.state">
+            <button
+              type="button"
+              class="topic__open"
+              [attr.data-testid]="'topic-' + topic.id"
+              [attr.aria-disabled]="topic.state === 'locked' ? 'true' : null"
+              (click)="open(topic)"
+            >
+              <span class="topic__glyph">
+                <mu-topic-glyph [topic]="topic.id" />
+                @if (topic.state === 'locked') {
+                  <span class="topic__lock"><mu-icon name="lock" /></span>
+                }
+              </span>
+              <span class="topic__title">{{ topic.title }}</span>
+              <span class="topic__meta">
+                @switch (topic.state) {
+                  @case ('locked') {
+                    <span class="pill">{{ 'learn.practice.locked' | transloco }}</span>
+                  }
+                  @case ('ahead') {
+                    <span class="pill pill--new" data-testid="topic-ahead">
+                      {{ 'learn.practice.ahead' | transloco }}
+                    </span>
+                  }
+                  @default {
+                    <span class="topic__level" data-testid="topic-level">
+                      <span class="mu-visually-hidden">{{
+                        'learn.practice.levelOf'
+                          | transloco: { level: topic.level, max: topic.maxLevel }
+                      }}</span>
+                      <span aria-hidden="true">{{
+                        'learn.practice.level' | transloco: { level: topic.level }
+                      }}</span>
+                    </span>
+                    @if (segments(topic); as segments) {
+                      @if (segments.length > 0) {
+                        <span class="steps" aria-hidden="true">
+                          @for (on of segments; track $index) {
+                            <span class="steps__dot" [class.steps__dot--on]="on"></span>
+                          }
+                        </span>
+                      } @else {
+                        <span class="meter" aria-hidden="true">
+                          <span class="meter__fill" [style.width.%]="share(topic)"></span>
+                        </span>
+                      }
+                    }
+                  }
+                }
+                @if (topic.dueReviews > 0 && topic.state !== 'locked') {
+                  <span class="pill pill--reviews" [attr.data-testid]="'topic-reviews-' + topic.id">
+                    <mu-icon name="refresh" />
+                    {{ 'learn.practice.reviews' | transloco: { count: topic.dueReviews } }}
+                  </span>
+                }
+              </span>
+            </button>
+            <mu-speak class="topic__speak" [text]="topic.title" />
+          </li>
+        }
+      </ul>
+    </div>
+  } @else {
+    <div class="mu-learn-state" data-testid="practice-empty">
+      <mu-mascot pose="happy" />
+      <p>{{ 'learn.practice.empty' | transloco }}</p>
+      <button type="button" class="mu-button mu-button--sun" (click)="toMap()">
+        <mu-icon name="map" />
+        {{ 'learn.results.map' | transloco }}
+      </button>
+    </div>
+  }
+</section>

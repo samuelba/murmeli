@@ -256,6 +256,27 @@ button.mu-blank {
   font-size: var(--mu-font-size-lg);
 }
 
+// An item that comes again in practice (a review or a repeat).
+.mu-again {
+  display: flex;
+  align-items: center;
+  gap: var(--mu-space-2);
+  align-self: center;
+  margin: 0;
+  padding: var(--mu-space-2) var(--mu-space-4);
+  border: 3px dashed var(--mu-color-sky-strong);
+  border-radius: var(--mu-radius-pill);
+  background: color-mix(in srgb, var(--mu-color-sky) 18%, var(--mu-color-surface));
+  font-weight: 800;
+  text-align: center;
+
+  mu-icon {
+    flex: none;
+    width: 28px;
+    height: 28px;
+  }
+}
+
 .mu-learn-actions {
   display: flex;
   flex-wrap: wrap;

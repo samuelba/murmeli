@@ -1,14 +1,17 @@
-import { generateRun } from '@murmeli/content';
+import { type GeneratedItem, type Level, generateRun } from '@murmeli/content';
 import { BODY_LIMIT } from '../../../bootstrap/configure-app';
 import { loadCurriculum } from '../content/curriculum';
 import { MAX_ITEM_DURATION_MS } from '../learning.constants';
 import {
+  type RunItem,
   type RunState,
   activeSeconds,
   applyAnswer,
   createRunState,
   isItemDone,
+  publicItem,
   runProgress,
+  scoredItems,
   summarizeRun,
 } from './run-state';
 
@@ -16,20 +19,29 @@ const curriculum = loadCurriculum(undefined);
 const level = curriculum.content.index.levels['math-zahlenwiese-01'].level;
 const T0 = 1_800_000_000_000;
 
-function newRun(): RunState {
-  const items = generateRun(level, 1234, {
+function runItems(from: Level, seed: number): RunItem[] {
+  return generateRun(from, seed, {
     locale: 'de-CH',
     content: curriculum.content,
-  }).map((item) => ({ ...item, levelId: level.id, skillId: level.skill }));
+  }).map((item: GeneratedItem) => ({
+    ...item,
+    levelId: from.id,
+    skillId: from.skill,
+    topic: 'count' as const,
+    tier: 0,
+  }));
+}
+
+function newRun(mode: RunState['mode'] = 'level'): RunState {
   return createRunState({
     runId: 'run-1',
     kidId: 'kid-1',
-    levelId: level.id,
-    mode: 'level',
+    levelId: mode === 'level' ? level.id : null,
+    mode,
     locale: 'de-CH',
     seed: 1234,
     now: T0,
-    items,
+    items: runItems(level, 1234),
   });
 }
 
@@ -77,7 +89,9 @@ describe('createRunState', () => {
       correctAt: null,
     });
     expect(state).toMatchObject({
-      v: 2,
+      v: 3,
+      topicId: null,
+      practice: null,
       locale: 'de-CH',
       startedAt: T0,
       lastAt: T0,
@@ -88,6 +102,92 @@ describe('createRunState', () => {
       type: 'count-objects',
     });
     expect(JSON.stringify(state.items[0].exercise)).not.toContain('solution');
+    expect(state.items[0]).toMatchObject({
+      key: expect.any(String),
+      source: { levelId: level.id, generator: 0 },
+      topic: 'count',
+      tier: 0,
+    });
+    expect(state.items[0]).not.toHaveProperty('again');
+  });
+
+  it('marks reviews for the client and hides the source', () => {
+    const [item] = runItems(level, 7);
+    const review = { ...item, again: 'review' as const };
+    const exercise = publicItem(review);
+    expect(exercise.again).toBe('review');
+    expect(exercise).not.toHaveProperty('source');
+    expect(exercise).not.toHaveProperty('key');
+    expect(publicItem(item)).not.toHaveProperty('again');
+    const state = createRunState({
+      runId: 'run-2',
+      kidId: 'kid-1',
+      levelId: null,
+      mode: 'practice',
+      topicId: 'count',
+      practice: [
+        { topic: 'count', rating: 0.5, maxStep: 2, pathStep: -1, runs: 0 },
+      ],
+      locale: 'de-CH',
+      seed: 7,
+      now: T0,
+      items: [review],
+    });
+    expect(state.items[0]).toMatchObject({ again: 'review' });
+    expect(state.items[0].exercise.again).toBe('review');
+    expect(state).toMatchObject({ topicId: 'count', mode: 'practice' });
+  });
+});
+
+describe('repeats in practice runs', () => {
+  function miss(state: RunState, index: number) {
+    const first = answer(state, index, wrong(state, index), T0).state;
+    return answer(first, index, wrong(first, index), T0);
+  }
+
+  it('appends a missed item once more at the end of the run', () => {
+    const state = newRun('practice');
+    const outcome = miss(state, 1);
+    const total = state.items.length;
+    expect(outcome.state.items).toHaveLength(total + 1);
+    expect(outcome.response.repeat).toEqual({
+      ...state.items[1].exercise,
+      index: total,
+      again: 'repeat',
+    });
+    expect(outcome.state.items[total]).toMatchObject({
+      attempts: 0,
+      correctAt: null,
+      again: 'repeat',
+      key: state.items[1].key,
+    });
+  });
+
+  it('repeats at most twice, never a repeat, and never in level runs', () => {
+    let state = newRun('practice');
+    state = miss(state, 0).state;
+    state = miss(state, 1).state;
+    const third = miss(state, 2);
+    expect(third.response.repeat).toBeUndefined();
+    const repeatIndex = state.items.findIndex((it) => it.again === 'repeat');
+    expect(miss(state, repeatIndex).response.repeat).toBeUndefined();
+    expect(miss(newRun(), 0).response.repeat).toBeUndefined();
+  });
+
+  it('does not repeat an item answered right on the second try', () => {
+    const state = newRun('practice');
+    const first = answer(state, 0, wrong(state, 0), T0).state;
+    const second = answer(first, 0, solution(first, 0), T0);
+    expect(second.response).toEqual({ correct: true, attempt: 2 });
+    expect(second.state.items).toHaveLength(state.items.length);
+  });
+
+  it('leaves repeats out of the score', () => {
+    let state = miss(newRun('practice'), 0).state;
+    const repeat = state.items.length - 1;
+    state = answer(state, repeat, solution(state, repeat), T0).state;
+    expect(scoredItems(state)).toHaveLength(level.items);
+    expect(summarizeRun(state, T0).score).toBe(0);
   });
 });
 
@@ -255,14 +355,7 @@ describe('trace-letter answers', () => {
     curriculum.content.index.levels['reading-de-schreibwiese-01'].level;
 
   function traceRun(): RunState {
-    const items = generateRun(traceLevel, 99, {
-      locale: 'de-CH',
-      content: curriculum.content,
-    }).map((item) => ({
-      ...item,
-      levelId: traceLevel.id,
-      skillId: traceLevel.skill,
-    }));
+    const items = runItems(traceLevel, 99);
     return createRunState({
       runId: 'run-t',
       kidId: 'kid-1',

@@ -116,7 +116,8 @@
       <ul class="explain__list">
         <li>{{ 'parent.progress.explain.stars' | transloco }}</li>
         <li>{{ 'parent.progress.explain.mastery' | transloco }}</li>
-        <li>{{ 'parent.progress.explain.review' | transloco }}</li>
+        <li>{{ 'parent.progress.explain.review' | transloco: brand }}</li>
+        <li>{{ 'parent.progress.explain.practice' | transloco: brand }}</li>
         <li>{{ 'parent.progress.explain.noStreaks' | transloco }}</li>
       </ul>
     </section>
@@ -178,6 +179,10 @@
         </div>
       </details>
     </section>
+
+    @if (progress.practice; as practice) {
+      <mu-progress-practice [rows]="practiceTopics()" [days]="practice.days" />
+    }
 
     <mu-progress-skills [rows]="skills()" />
 

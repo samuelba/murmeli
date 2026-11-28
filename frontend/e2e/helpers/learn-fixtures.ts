@@ -6,17 +6,25 @@ import {
   type Level,
   type Locale,
   type MapResponse,
+  type PracticeCatalogResponse,
+  type PracticeLadder,
+  type PracticeTopicId,
+  type PracticeTopicView,
   type ProgressState,
   type Stars,
   type World,
   checkAnswer,
   generateDemo,
+  generatePracticeItem,
   generateRun,
   gradeRank,
   isPassed,
   itemScore,
   loadContent,
   parseAnswer,
+  PRACTICE_TOPIC_TITLES,
+  practiceDemoLevel,
+  practiceLadders,
   runScore,
   starsFor,
   toPublicDemo,
@@ -56,9 +64,16 @@ export interface LearnOptions {
   seed?: number;
 }
 
+export interface RunPractice {
+  readonly topic: PracticeTopicId;
+  readonly level: number;
+  readonly maxLevel: number;
+}
+
 export interface Run {
   readonly id: string;
   readonly level: Level | null;
+  readonly practice?: RunPractice;
   readonly items: GeneratedItem[];
   readonly attempts: number[];
   readonly scores: number[];
@@ -105,6 +120,8 @@ export class LearnBackend {
   /** Badge ids the kid holds (docs/internal/learning-engine.md §7). */
   readonly badges = new Set<string>();
   private practiced = false;
+  /** Practice step per topic (1-based), as the server keeps it between runs. */
+  readonly topicLevels = new Map<string, number>();
   private badgesSeeded = false;
   private nextRun = 1;
   private seed: number;
@@ -125,7 +142,9 @@ export class LearnBackend {
       'GET /api/learn/map': () => ({ body: this.map() }),
       'POST /api/learn/levels/:levelId/runs': (request) =>
         this.startLevel(request.params['levelId']),
-      'POST /api/learn/practice/runs': () => this.startPractice(),
+      'GET /api/learn/practice': () => ({ body: this.practiceCatalog() }),
+      'POST /api/learn/practice/runs': (request) =>
+        this.startPractice((request.body as { topic?: string } | null)?.topic),
       'POST /api/learn/runs/:runId/answers': (request) =>
         this.answer(request.params['runId'], request.body as { index: number; answer: unknown }),
       'POST /api/learn/runs/:runId/finish': (request) => this.finish(request.params['runId']),
@@ -240,10 +259,11 @@ export class LearnBackend {
     return content().index.levels[id]?.level ?? null;
   }
 
-  private createRun(level: Level | null, items: GeneratedItem[]): Run {
+  private createRun(level: Level | null, items: GeneratedItem[], practice?: RunPractice): Run {
     const run: Run = {
       id: `run-${this.nextRun++}`,
       level,
+      ...(practice ? { practice } : {}),
       items,
       attempts: items.map(() => 0),
       scores: items.map(() => 0),
@@ -283,9 +303,92 @@ export class LearnBackend {
     };
   }
 
-  private startPractice() {
+  /** A small version of the server's practice reach: open with the trail, plus a peek ahead. */
+  private topicView(ladder: PracticeLadder): PracticeTopicView {
+    const states = this.levelStates();
+    const open = ladder.steps.filter((step) => states.get(step.level.id)?.state !== 'locked');
+    const worlds = new Map(this.tracks().flatMap((t) => t.worlds.map((w) => [w.id, w])));
+    const worldOpen = (id: string) =>
+      worlds.get(id)?.levels.some((level) => states.get(level.id)?.state !== 'locked') ?? false;
+    const first = worlds.get(ladder.steps[0]!.worldId)!;
+    const ahead = open.length === 0 && first.requires.every(worldOpen);
+    const reach = open.length > 0 ? open.at(-1)!.index + 1 : ahead ? 0 : -1;
+    const maxLevel = reach < 0 ? 0 : Math.min(ladder.steps.length, reach + 2);
+    const level =
+      reach < 0 ? 0 : Math.min(maxLevel, this.topicLevels.get(ladder.topic) ?? Math.max(1, reach));
+    return {
+      id: ladder.topic,
+      title: PRACTICE_TOPIC_TITLES[ladder.topic][this.locale] ?? ladder.topic,
+      state: open.length > 0 ? 'open' : ahead ? 'ahead' : 'locked',
+      level,
+      maxLevel,
+      levels: ladder.steps.length,
+      dueReviews: 0,
+      practiced: this.topicLevels.has(ladder.topic),
+    };
+  }
+
+  practiceCatalog(): PracticeCatalogResponse {
+    const ladders = practiceLadders(this.tracks());
+    const tracks = this.tracks()
+      .map((track) => ({
+        id: track.id,
+        title: track.title[this.locale] ?? track.id,
+        icon: track.icon,
+        topics: ladders
+          .filter((ladder) => ladder.trackId === track.id)
+          .map((ladder) => this.topicView(ladder)),
+      }))
+      .filter((track) => track.topics.length > 0);
+    const available = tracks.some((track) => track.topics.some((t) => t.state === 'open'));
+    return { tracks, mix: { available, dueReviews: 0 } };
+  }
+
+  private startTopic(topic: string) {
+    const ladder = practiceLadders(this.tracks()).find((l) => l.topic === topic);
+    if (!ladder) {
+      return apiError(404, 'TOPIC_NOT_FOUND');
+    }
+    const view = this.topicView(ladder);
+    if (view.state === 'locked') {
+      return apiError(403, 'TOPIC_LOCKED');
+    }
+    const step = ladder.steps[view.level - 1]!;
+    const options = { locale: this.locale, content: content() };
+    this.seed += 1;
+    const items: GeneratedItem[] = [];
+    for (let index = 0; index < (this.options.items ?? 8); index += 1) {
+      items.push(generatePracticeItem(ladder, step, this.seed, index, options, items));
+    }
+    const run = this.createRun(null, items, {
+      topic: ladder.topic,
+      level: view.level,
+      maxLevel: view.maxLevel,
+    });
+    const demoLevel = practiceDemoLevel(ladder, step.index);
+    const key = `topic:${topic}`;
+    const demoSeen = this.demoSeen.has(key);
+    this.demoSeen.add(key);
+    return {
+      status: 201,
+      body: {
+        runId: run.id,
+        items: run.items.map(toPublicExercise),
+        demoSeen,
+        ...(demoLevel
+          ? { demo: toPublicDemo(generateDemo(demoLevel, this.locale, content())) }
+          : {}),
+        practice: run.practice,
+      },
+    };
+  }
+
+  private startPractice(topic?: string) {
     if (this.options.dailyLimitReached) {
       return apiError(403, 'DAILY_LIMIT_REACHED');
+    }
+    if (topic !== undefined) {
+      return this.startTopic(topic);
     }
     const states = this.levelStates();
     const levels = this.tracks()
@@ -296,7 +399,12 @@ export class LearnBackend {
     const run = this.createRun(null, this.generate(mixed, this.options.items ?? 8));
     return {
       status: 201,
-      body: { runId: run.id, items: run.items.map(toPublicExercise), demoSeen: true },
+      body: {
+        runId: run.id,
+        items: run.items.map(toPublicExercise),
+        demoSeen: true,
+        practice: { topic: null, level: 0, maxLevel: 0 },
+      },
     };
   }
 
@@ -364,10 +472,35 @@ export class LearnBackend {
       body: {
         score,
         stars,
-        passed: isPassed(stars),
+        passed: run.level !== null && isPassed(stars),
         unlocked: { levels, worlds },
         newBadges: this.awardBadges(),
+        ...(run.level ? {} : { practice: this.practiceResult(run, score) }),
       },
+    };
+  }
+
+  /** All right on the first try: one step up, like the server's rating. */
+  private practiceResult(run: Run, score: number) {
+    const missed = run.scores.filter((value) => value < 1).length;
+    const practice = run.practice;
+    if (!practice) {
+      return { topics: [], reviewsSolved: 0, reviewsSaved: missed };
+    }
+    const level = score >= 1 ? Math.min(practice.maxLevel, practice.level + 1) : practice.level;
+    this.topicLevels.set(practice.topic, level);
+    return {
+      topics: [
+        {
+          id: practice.topic,
+          title: PRACTICE_TOPIC_TITLES[practice.topic][this.locale] ?? practice.topic,
+          levelBefore: practice.level,
+          level,
+          maxLevel: practice.maxLevel,
+        },
+      ],
+      reviewsSolved: 0,
+      reviewsSaved: missed,
     };
   }
 

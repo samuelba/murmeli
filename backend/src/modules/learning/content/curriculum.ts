@@ -4,11 +4,14 @@ import {
   type LevelRef,
   type Locale,
   type LocalizedText,
+  type PracticeLadder,
+  type PracticeTopicId,
   type SkillRef,
   type Track,
   type World,
   CONTENT_ROOT,
   loadContent,
+  practiceLadders,
 } from '@murmeli/content';
 
 export const LEVEL_ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -23,9 +26,35 @@ export function localize(text: LocalizedText, locale: Locale): string {
  */
 export class Curriculum {
   readonly worlds: readonly World[];
+  private readonly ladderCache = new Map<Locale, readonly PracticeLadder[]>();
 
   constructor(readonly content: Content) {
     this.worlds = content.tracks.flatMap((track) => track.worlds);
+  }
+
+  /** The practice topics of the kid's tracks, each with its difficulty ladder */
+  practiceLadders(locale: Locale): readonly PracticeLadder[] {
+    let ladders = this.ladderCache.get(locale);
+    if (!ladders) {
+      ladders = practiceLadders(this.tracksFor(locale));
+      this.ladderCache.set(locale, ladders);
+    }
+    return ladders;
+  }
+
+  ladder(topic: PracticeTopicId, locale: Locale): PracticeLadder | undefined {
+    return this.practiceLadders(locale).find((l) => l.topic === topic);
+  }
+
+  /** The step of a level on a topic's ladder, if the level trains the topic */
+  stepIndex(
+    topic: PracticeTopicId,
+    levelId: string,
+    locale: Locale,
+  ): number | undefined {
+    return this.ladder(topic, locale)?.steps.find(
+      (step) => step.level.id === levelId,
+    )?.index;
   }
 
   tracksFor(locale: Locale): readonly Track[] {

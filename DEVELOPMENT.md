@@ -21,6 +21,8 @@ npm ci
 npm run start:dev       # http://localhost:3000/api
 ```
 
+To try every level without playing through the trail, set `LEARNING_UNLOCK_ALL=true` in `backend/.env`. Every world and level is then open for every kid. The backend refuses to start with it when `NODE_ENV=production`.
+
 ## Frontend
 ```bash
 cd frontend

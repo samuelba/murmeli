@@ -118,7 +118,9 @@
     "LEVEL_LOCKED": "Diese Stufe ist noch gesperrt. Spiel zuerst die Stufe davor.",
     "LEVEL_NOT_FOUND": "Diese Stufe gibt es nicht. Zurück zur Karte!",
     "NOTHING_TO_PRACTICE": "Gerade gibt es nichts zu üben. Spiel doch eine neue Stufe!",
-    "RUN_NOT_FOUND": "Diese Runde ist vorbei. Starte sie einfach nochmal."
+    "RUN_NOT_FOUND": "Diese Runde ist vorbei. Starte sie einfach nochmal.",
+    "TOPIC_NOT_FOUND": "Dieses Übungsthema gibt es nicht.",
+    "TOPIC_LOCKED": "Dieses Übungsthema ist noch gesperrt. Spiel zuerst weiter auf dem Bergpfad."
   },
   "parentGate": {
     "title": "Elternbereich",
@@ -308,13 +310,21 @@
       "hintLabel": "Tipp",
       "breakContinue": "Weiter spielen",
       "breakPause": "Pause machen",
-      "outdated": "Diese Stufe braucht eine neuere Version der App. Tippe auf «Nochmal versuchen», dann lädt sie neu."
+      "outdated": "Diese Stufe braucht eine neuere Version der App. Tippe auf «Nochmal versuchen», dann lädt sie neu.",
+      "exitPractice": "Ja, zum Übungsplatz"
     },
     "results": {
       "stars": "{{stars}} von 3 Sternen",
       "newWorld": "Neue Welt: {{title}}",
       "again": "Nochmal",
-      "map": "Zur Karte"
+      "map": "Zur Karte",
+      "otherPractice": "Anderes üben",
+      "practice": {
+        "level": "Stufe {{level}} von {{max}}",
+        "up": "Eine Stufe höher",
+        "down": "Etwas leichter",
+        "same": "Gleiche Stufe"
+      }
     },
     "rest": {
       "back": "Zu den Profilen"
@@ -347,6 +357,7 @@
       },
       "compareLeft": "Links",
       "compareRight": "Rechts",
+      "compareSame": "Gleich viele",
       "line": {
         "label": "Zahlenstrahl von {{start}} bis {{end}}",
         "tick": "Strich {{number}} von {{total}}",
@@ -440,6 +451,16 @@
         "under": "unter",
         "next-to": "neben"
       }
+    },
+    "practice": {
+      "loading": "Der Übungsplatz wird geladen …",
+      "error": "Der Übungsplatz konnte nicht geladen werden.",
+      "empty": "Hier gibt es noch nichts zu üben. Spiel zuerst auf dem Bergpfad.",
+      "level": "Stufe {{level}}",
+      "levelOf": "Stufe {{level}} von {{max}}",
+      "ahead": "Neu zum Ausprobieren",
+      "locked": "Noch gesperrt",
+      "reviews": "{{count}} zum Wiederholen"
     }
   },
   "avatarBuilder": {
@@ -500,6 +521,20 @@
       "starCollectorHint": "Hol fünfmal alle drei Sterne.",
       "firstPractice": "Erste Übung",
       "firstPracticeHint": "Übe zum ersten Mal."
+    },
+    "practice": {
+      "title": "Was möchtest du üben?",
+      "mix": "Murmeli wählt",
+      "mixHint": "Murmeli sucht dir etwas Passendes aus.",
+      "locked": "Das kommt später auf deinem Bergpfad.",
+      "mixLocked": "Spiel zuerst eine Stufe auf dem Bergpfad.",
+      "againReview": "Diese Aufgabe kennst du schon. Probier es nochmal!",
+      "againRepeat": "Gleich nochmal. Jetzt weisst du, wie es geht!",
+      "levelUp": "Super! Beim nächsten Mal wird es ein bisschen kniffliger.",
+      "levelDown": "Wir üben das noch etwas leichter. So wirst du ganz sicher.",
+      "levelSame": "Weiter so! Du wirst immer sicherer.",
+      "reviewsSolved": "Toll! Du hast knifflige Aufgaben von früher geschafft.",
+      "reviewsSaved": "Murmeli merkt sich die kniffligen Aufgaben für später."
     }
   },
   "kidForm": {
@@ -569,8 +604,9 @@
         "title": "Gut zu wissen",
         "stars": "Sterne: Jede Stufe gibt bis zu 3 Sterne. Ab 2 Sternen (meist 80 % richtig) ist sie geschafft und die nächste Stufe geht auf. 3 Sterne gibt es, wenn alles beim ersten Versuch stimmt.",
         "mastery": "Sicherheit: So sicher sitzt eine Fertigkeit, berechnet aus den gespielten Runden. Neuere Runden zählen mehr. Unter 60 % braucht sie noch Übung.",
-        "review": "Wiederholung: Gelerntes kommt in immer grösseren Abständen wieder dran, damit es sitzen bleibt. Im Modus «Üben» kommt zuerst, was fällig ist.",
-        "noStreaks": "Es gibt keine Serien und nichts geht verloren, wenn ein Tag ausfällt."
+        "review": "Wiederholung: Gelerntes kommt in immer grösseren Abständen wieder dran, damit es sitzen bleibt. Bei «{{brand}} wählt» im Übungsplatz kommen fällige Fehler zuerst.",
+        "noStreaks": "Es gibt keine Serien und nichts geht verloren, wenn ein Tag ausfällt.",
+        "practice": "Üben: Im Übungsplatz wählt das Kind ein Thema wie Plus, Minus oder Silben, oder lässt {{brand}} wählen. Jedes Thema hat Übungsstufen aus dem Bergpfad. Alles beim ersten Versuch richtig heisst nächste Übungsstufe, viele Fehler eine Übungsstufe leichter. Fehler kommen später nochmal dran."
       },
       "activity": {
         "title": "Die letzten 14 Tage",
@@ -601,7 +637,7 @@
         "nextReview": "Nächste Wiederholung: {{date}}",
         "due": "Jetzt zum Wiederholen fällig",
         "weakTitle": "Braucht gerade Übung",
-        "weakHint": "Diese Fertigkeiten wurden in den letzten 14 Tagen geübt und sitzen noch nicht ganz. Im Modus «Üben» kommen sie öfter dran."
+        "weakHint": "Diese Fertigkeiten wurden in den letzten 14 Tagen geübt und sitzen noch nicht ganz. Auf dem Bergpfad und im Übungsplatz lohnt es sich, sie zu üben."
       },
       "tracks": {
         "title": "Lernpfade",
@@ -615,6 +651,37 @@
         "unlocked": "Offen",
         "passed": "Geschafft",
         "skipped": "Übersprungen"
+      },
+      "practice": {
+        "title": "Übungsplatz",
+        "empty": "Noch nichts geübt. Im Übungsplatz kann dein Kind Themen wie Plus, Minus oder Silben selbst wählen.",
+        "recentTitle": "Letzte 14 Tage",
+        "recentItems": "Aufgaben",
+        "recentFirstTry": "Beim ersten Versuch richtig",
+        "recentDays": "Tage mit Üben",
+        "percent": "{{percent}} %",
+        "noPercent": "–",
+        "level": "Übungsstufe {{level}} von {{max}}",
+        "levels": "{{levels}} Übungsstufen insgesamt",
+        "recent": "14 Tage: {{items}} Aufgaben, {{percent}} % beim ersten Versuch",
+        "recentNone": "In den letzten 14 Tagen nicht geübt",
+        "total": "Insgesamt: {{items}} Aufgaben in {{runs}} Runden",
+        "lastPracticed": "Zuletzt geübt: {{date}}",
+        "never": "Noch nicht im Übungsplatz geübt",
+        "state": {
+          "open": "Offen",
+          "ahead": "Vor dem Bergpfad",
+          "locked": "Noch gesperrt"
+        },
+        "mistakes": "Offene Fehler: {{count}}",
+        "mistakesHint": "{{brand}} fragt diese Aufgaben später nochmal.",
+        "misses": "{{count}}× falsch",
+        "recentOne": "14 Tage: 1 Aufgabe, {{percent}} % beim ersten Versuch",
+        "totalOneRound": "Insgesamt: {{items}} Aufgaben in 1 Runde",
+        "totalOne": "Insgesamt: 1 Aufgabe in 1 Runde",
+        "answerLabel": "Richtige Antwort:",
+        "missesLabel": "{{count}} Mal falsch",
+        "missesLabelOne": "1 Mal falsch"
       }
     }
   },

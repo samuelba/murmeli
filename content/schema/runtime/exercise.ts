@@ -37,7 +37,10 @@ import {
   sentencePictureRuntime,
   traceLetterRuntime,
 } from './writing.ts';
+import { narrowSpec } from '../practice/topics.ts';
+import type { PracticeTopicId } from '../practice/topics.ts';
 import { scoreTrace } from './trace.ts';
+import { exerciseKey } from './variety.ts';
 import { CoinsAnswerSchema, StrokesAnswerSchema } from './answers.ts';
 import { createRng, hashString, itemSeed, mixSeed } from './rng.ts';
 import type { Rng } from './rng.ts';
@@ -99,7 +102,23 @@ export type GeneratedExercise<T extends ExerciseTypeId = ExerciseTypeId> = {
   };
 }[T];
 
-export type GeneratedItem = GeneratedExercise & { readonly index: number };
+/** How an item was made, so the very same exercise can be shown again later. */
+export interface ItemSource {
+  readonly levelId: string;
+  /** Index into the level's generators */
+  readonly generator: number;
+  /** Seed of the exercise's own random numbers */
+  readonly seed: number;
+  /** Set when the generator was narrowed to one practice topic */
+  readonly topic?: PracticeTopicId;
+}
+
+export type GeneratedItem = GeneratedExercise & {
+  readonly index: number;
+  /** See exerciseKey: equal keys ask the same question */
+  readonly key: string;
+  readonly source: ItemSource;
+};
 
 export interface GenerateOptions {
   readonly locale: Locale;
@@ -167,30 +186,113 @@ export function checkAnswer(
   return outcome ? { correct: true } : { correct: false, hint: solution.hint };
 }
 
-const RETRIES = 6;
+const VARIETY_TRIES = 12;
+const EXERCISE_SALT = 0x5eed;
+const BEST = 7;
+
+/** A generator of a level, possibly narrowed to one practice topic. */
+export interface SourceSpec {
+  readonly spec: ExerciseSpec;
+  readonly weight: number;
+  /** Index into the level's generators */
+  readonly generator: number;
+}
+
+export type ItemHistory = readonly Pick<
+  GeneratedItem,
+  'key' | 'type' | 'focus'
+>[];
+
+/** New to the run beats not seen in the last two items beats a new focus. */
+function varietyScore(
+  candidate: Pick<GeneratedItem, 'key' | 'type' | 'focus'>,
+  history: ItemHistory,
+  used: ReadonlySet<string>,
+): number {
+  const previous = history[history.length - 1];
+  const recent = history.slice(-2).some((item) => item.key === candidate.key);
+  const sameFocus =
+    previous !== undefined &&
+    previous.type === candidate.type &&
+    previous.focus === candidate.focus;
+  return (
+    (used.has(candidate.key) ? 0 : 4) + (recent ? 0 : 2) + (sameFocus ? 0 : 1)
+  );
+}
+
+/**
+ * Generates one item from weighted generators, retrying with derived seeds
+ * until the exercise is new to the run (`history`). With a small pool it
+ * settles for one that was not among the last two items. Deterministic for
+ * the same arguments.
+ */
+export function generateVaried(
+  levelId: string,
+  specs: readonly SourceSpec[],
+  baseSeed: number,
+  index: number,
+  options: GenerateOptions,
+  history: ItemHistory = [],
+  topic?: PracticeTopicId,
+): GeneratedItem {
+  const used = new Set(history.map((item) => item.key));
+  let best: GeneratedItem | undefined;
+  let bestScore = -1;
+  for (let attempt = 0; attempt < VARIETY_TRIES; attempt += 1) {
+    const seed = attempt === 0 ? baseSeed : mixSeed(baseSeed, attempt);
+    const chosen = createRng(seed).weighted(specs, (s) => s.weight);
+    const exerciseSeed = mixSeed(seed, EXERCISE_SALT);
+    const exercise = generateExercise(
+      chosen.spec,
+      createRng(exerciseSeed),
+      options,
+    );
+    const item: GeneratedItem = {
+      ...exercise,
+      index,
+      key: exerciseKey(exercise),
+      source: {
+        levelId,
+        generator: chosen.generator,
+        seed: exerciseSeed,
+        ...(topic !== undefined ? { topic } : {}),
+      },
+    };
+    const score = varietyScore(item, history, used);
+    if (score > bestScore) {
+      best = item;
+      bestScore = score;
+    }
+    if (score === BEST) {
+      break;
+    }
+  }
+  return best!;
+}
+
+export function levelSpecs(level: Level): SourceSpec[] {
+  return level.generators.map((spec, generator) => ({
+    spec,
+    weight: spec.weight,
+    generator,
+  }));
+}
 
 export function generateItem(
   level: Level,
   runSeed: number,
   index: number,
   options: GenerateOptions,
-  avoid?: GeneratedExercise,
+  history: ItemHistory = [],
 ): GeneratedItem {
-  const base = itemSeed(runSeed, level.id, index);
-  let item: GeneratedExercise | undefined;
-  for (let attempt = 0; attempt < RETRIES; attempt += 1) {
-    const rng = createRng(attempt === 0 ? base : mixSeed(base, attempt));
-    const generator = rng.weighted(level.generators, (g) => g.weight);
-    item = generateExercise(generator, rng, options);
-    if (
-      avoid === undefined ||
-      avoid.type !== item.type ||
-      avoid.focus !== item.focus
-    ) {
-      break;
-    }
-  }
-  return { ...item!, index };
+  return generateVaried(
+    level.id,
+    levelSpecs(level),
+    itemSeed(runSeed, level.id, index),
+    index,
+    options,
+    history,
+  );
 }
 
 export function generateRun(
@@ -201,9 +303,32 @@ export function generateRun(
 ): GeneratedItem[] {
   const items: GeneratedItem[] = [];
   for (let index = 0; index < count; index += 1) {
-    items.push(generateItem(level, runSeed, index, options, items[index - 1]));
+    items.push(generateItem(level, runSeed, index, options, items));
   }
   return items;
+}
+
+/**
+ * The exercise an item source made, again: the same question with the same
+ * answer. Undefined when the level or generator no longer exists or no
+ * longer fits the topic; a generator error is thrown.
+ */
+export function regenerateExercise(
+  levels: Readonly<Record<string, { readonly level: Level } | undefined>>,
+  source: ItemSource,
+  options: GenerateOptions,
+): GeneratedExercise | undefined {
+  const generator = levels[source.levelId]?.level.generators[source.generator];
+  if (generator === undefined) {
+    return undefined;
+  }
+  const spec =
+    source.topic === undefined
+      ? generator
+      : narrowSpec(generator, source.topic);
+  return spec === null
+    ? undefined
+    : generateExercise(spec, createRng(source.seed), options);
 }
 
 export interface DemoInstance {

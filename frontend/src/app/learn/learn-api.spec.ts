@@ -35,9 +35,23 @@ describe('LearnApi', () => {
       .flush(run());
     expect((await level).runId).toBe('r1');
 
-    const practice = api.startPractice();
-    http.expectOne({ method: 'POST', url: '/api/learn/practice/runs' }).flush(run());
-    await practice;
+    const catalog = api.practiceCatalog();
+    http
+      .expectOne({ method: 'GET', url: '/api/learn/practice' })
+      .flush({ tracks: [], mix: { available: false, dueReviews: 0 } });
+    expect((await catalog).mix.available).toBe(false);
+
+    const mix = api.startPractice();
+    const mixRequest = http.expectOne({ method: 'POST', url: '/api/learn/practice/runs' });
+    expect(mixRequest.request.body).toEqual({});
+    mixRequest.flush(run());
+    await mix;
+
+    const topic = api.startPractice('plus');
+    const topicRequest = http.expectOne({ method: 'POST', url: '/api/learn/practice/runs' });
+    expect(topicRequest.request.body).toEqual({ topic: 'plus' });
+    topicRequest.flush(run());
+    await topic;
 
     const answer = api.answer('r1', 2, { value: 3 });
     const request = http.expectOne({ method: 'POST', url: '/api/learn/runs/r1/answers' });

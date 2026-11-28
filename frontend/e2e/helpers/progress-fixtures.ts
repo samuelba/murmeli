@@ -1,5 +1,6 @@
 import type {
   ParentActivityDay,
+  ParentPractice,
   ParentProgressResponse,
 } from '../../src/app/pages/parent/progress/parent-progress.types';
 
@@ -15,6 +16,73 @@ export function activityDays(minutes: readonly number[] = MINUTES): ParentActivi
       runs: value === 0 ? 0 : Math.max(1, Math.round(value / 6)),
     };
   });
+}
+
+const PRACTICE_ITEMS = [0, 0, 8, 0, 0, 10, 0, 0, 0, 0, 12, 0, 0, 9];
+
+/** Practice per day for the same 14 days. */
+export function practiceDays(items: readonly number[] = PRACTICE_ITEMS) {
+  return activityDays().map(({ day }, index) => ({
+    day,
+    items: items[index] ?? 0,
+    firstTry: Math.round((items[index] ?? 0) * 0.8),
+  }));
+}
+
+/** Plus is a favorite: practiced often, with two mistakes Murmeli asks again. */
+export function practiceFixture(): ParentPractice {
+  return {
+    topics: [
+      {
+        id: 'plus',
+        title: 'Plus rechnen',
+        trackId: 'math',
+        state: 'open',
+        level: 3,
+        maxLevel: 4,
+        levels: 12,
+        runs: 6,
+        items: 58,
+        firstTry: 47,
+        recentItems: 39,
+        recentFirstTry: 31,
+        lastPracticedAt: '2026-11-26T16:00:00.000Z',
+        openMistakes: 2,
+        mistakes: [
+          {
+            question: 'Wie viel ist 8 plus 7?',
+            answer: '15',
+            misses: 2,
+            dueAt: '2026-11-26T16:00:00.000Z',
+          },
+          {
+            question: 'Wie viel fehlt von 7 bis 9',
+            answer: '2',
+            misses: 1,
+            dueAt: '2026-11-27T16:00:00.000Z',
+          },
+        ],
+      },
+      {
+        id: 'compare',
+        title: 'Vergleichen',
+        trackId: 'math',
+        state: 'ahead',
+        level: 1,
+        maxLevel: 2,
+        levels: 5,
+        runs: 0,
+        items: 0,
+        firstTry: 0,
+        recentItems: 0,
+        recentFirstTry: 0,
+        lastPracticedAt: null,
+        openMistakes: 0,
+        mistakes: [],
+      },
+    ],
+    days: practiceDays(),
+  };
 }
 
 /** A kid one world into the math trail and just starting to read, with one weak skill. */
@@ -103,6 +171,7 @@ export function progressFixture(kidId: string): ParentProgressResponse {
       skill('math.sub.5', 'Minus bis 5', 0.42, '2026-11-20T08:00:00.000Z'),
       skill('reading.initial', 'Anlaute', 0.55, '2026-11-27T08:00:00.000Z'),
     ],
+    practice: practiceFixture(),
   };
 }
 
@@ -116,6 +185,7 @@ export function emptyProgressFixture(kidId: string): ParentProgressResponse {
     tracks: [],
     skills: [],
     weakSkills: [],
+    practice: { topics: [], days: practiceDays(PRACTICE_ITEMS.map(() => 0)) },
   };
 }
 

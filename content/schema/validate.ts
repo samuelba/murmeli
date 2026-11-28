@@ -7,6 +7,8 @@ import { exerciseTypeDef, parseExerciseParams } from './exercises/registry.ts';
 import type { ExerciseSpec } from './exercises/registry.ts';
 import type { PictureRequirement, Requirement } from './exercises/types.ts';
 import { formatPath } from './issues.ts';
+import { practiceDemoLevel, practiceLadders } from './practice/ladder.ts';
+import { narrowSpec, topicsOfSpec } from './practice/topics.ts';
 import type { ContentIssue, PathSegment } from './issues.ts';
 import { carrierFor } from './lexicon.ts';
 import type { Lexicon } from './lexicon.ts';
@@ -270,6 +272,12 @@ function smokeGenerate(
       generators.forEach((generator, index) => {
         try {
           generateExercise(generator, createRng(index + 1), ctx);
+          for (const topic of topicsOfSpec(generator)) {
+            const narrowed = narrowSpec(generator, topic);
+            if (narrowed !== null && narrowed !== generator) {
+              generateExercise(narrowed, createRng(index + 1), ctx);
+            }
+          }
         } catch (error) {
           report(
             ['generators', index],
@@ -545,5 +553,26 @@ export function crossValidate(input: CrossInput): {
       .sort((a, b) => a.order - b.order);
     return { ...track.data, worlds };
   });
-  return { issues, tracks: tracks.sort((a, b) => a.order - b.order) };
+  const sorted = tracks.sort((a, b) => a.order - b.order);
+  checkPracticeDemos(sorted, issues);
+  return { issues, tracks: sorted };
+}
+
+/** Every practice topic a track trains needs a level demo for "Zeig mir". */
+function checkPracticeDemos(
+  tracks: readonly Track[],
+  issues: ContentIssue[],
+): void {
+  for (const track of tracks) {
+    for (const ladder of practiceLadders([track])) {
+      if (practiceDemoLevel(ladder, 0) === undefined) {
+        const first = ladder.steps[0]!;
+        issues.push({
+          file: track.worlds.find((w) => w.id === first.worldId)!.file,
+          path: `levels.${first.level.id}`,
+          message: `practice topic "${ladder.topic}" has no level whose demo shows only this topic`,
+        });
+      }
+    }
+  }
 }

@@ -87,6 +87,15 @@ export const SCENARIOS: readonly Scenario[] = [
     },
   },
   {
+    name: 'practice ground',
+    options: { ...family, learn: { progress: { 'math-zahlenwiese-01': 3 } } },
+    open: async (page) => {
+      await openLearn(page);
+      await page.getByTestId('practice').click();
+      await page.getByTestId('practice-topics').waitFor();
+    },
+  },
+  {
     name: 'player',
     options: { ...family, learn: { demoSeen: ['math-zahlenwiese-01'] } },
     open: async (page) => {
@@ -138,9 +147,10 @@ export const SCENARIOS: readonly Scenario[] = [
   {
     name: 'parent progress',
     options: parent,
-    open: visit(`/parent/kids/${PIN_KID.id}/progress`, (page) =>
-      page.getByTestId('progress-tracks').waitFor(),
-    ),
+    open: visit(`/parent/kids/${PIN_KID.id}/progress`, async (page) => {
+      await page.getByTestId('progress-tracks').waitFor();
+      await page.getByTestId('practice-mistakes').locator('summary').click();
+    }),
   },
   {
     name: 'badge shelf',

@@ -248,7 +248,8 @@ const result = parsed.success ? checkAnswer(item.solution, parsed.answer) : { co
 
 ### API shapes and scoring (`api.ts`)
 
-- **Types:** `StartRunResponse` (`{ runId, items, demoSeen, demo?, progress? }`, with `progress` as `RunItemProgress[]` only on a resumed run), `PracticeRunResponse` (the same shape), `AnswerRequest` / `AnswerRequestSchema`, `AnswerResponse` (`{ correct, attempt, hint?, solution? }`), `FinishRunResponse`, and `MapResponse` (tracks, then worlds with `state`, `stars` and `maxStars`, then levels with `state` and `stars`, plus the earned `badges` ids).
+- **Types:** `StartRunResponse` (`{ runId, items, demoSeen, demo?, progress?, practice? }`, with `progress` as `RunItemProgress[]` only on a resumed run and `practice` only for practice runs), `PracticeRunResponse` (the same shape), `StartPracticeRequest`, `PracticeCatalogResponse`, `AnswerRequest` / `AnswerRequestSchema`, `AnswerResponse` (`{ correct, attempt, hint?, solution?, repeat? }`), `FinishRunResponse` (with `practice?: PracticeResult`), and `MapResponse` (tracks, then worlds with `state`, `stars` and `maxStars`, then levels with `state` and `stars`, plus the earned `badges` ids). Items may carry `again: 'review' | 'repeat'`.
+- **Practice:** `PRACTICE_TOPIC_IDS`, `narrowSpec`, `topicOfExercise`, `practiceLadders`, `practiceDemoLevel`, `generatePracticeItem`, `regenerateExercise` and `exerciseKey` (see [learning-engine.md §9](../docs/internal/learning-engine.md#9-practice-ground)). Topics are derived from the generators, so a new level extends the ladders of the topics it trains; the validator only asks that every topic keeps one level whose demo shows just that topic.
 - **Shared logic:** `itemScore(correct, attempt)`, `runScore`, `starsFor(score, passRatio)` and `isPassed`, following contract section 3.
 - **Constants:** `MAX_ATTEMPTS` and `DAILY_LIMIT_REACHED`.
 

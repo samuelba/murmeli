@@ -24,6 +24,9 @@ type RawEnv = Record<string, unknown>;
 export const NODE_ENV_UNSET_WARNING =
   'NODE_ENV is not set, so the backend runs in DEVELOPMENT mode: weak secrets are accepted and error details are exposed. Set NODE_ENV=production for any deployment.';
 
+export const UNLOCK_ALL_WARNING =
+  'LEARNING_UNLOCK_ALL is on: every world and level is open for every kid. Use it for testing only.';
+
 export function withoutEmptyValues(raw: RawEnv): RawEnv {
   return Object.fromEntries(
     Object.entries(raw).filter(([, value]) => value !== ''),
@@ -62,6 +65,9 @@ export function validateEnv(
 
   if (raw.NODE_ENV === undefined || raw.NODE_ENV === '') {
     logger.warn(NODE_ENV_UNSET_WARNING);
+  }
+  if (!isProduction && env.LEARNING_UNLOCK_ALL) {
+    logger.warn(UNLOCK_ALL_WARNING);
   }
 
   const problems = [

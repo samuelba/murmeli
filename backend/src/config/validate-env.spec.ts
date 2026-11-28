@@ -4,6 +4,7 @@ import { productionRawEnv, validRawEnv } from '../../test/fixtures/env';
 import {
   EnvValidationError,
   NODE_ENV_UNSET_WARNING,
+  UNLOCK_ALL_WARNING,
   validateEnv,
 } from './validate-env';
 
@@ -178,10 +179,22 @@ describe('validateEnv', () => {
     expect(silent.warn).toHaveBeenCalledWith(NODE_ENV_UNSET_WARNING);
   });
 
+  it('warns when LEARNING_UNLOCK_ALL is on outside production', () => {
+    validateEnv(validRawEnv({ LEARNING_UNLOCK_ALL: 'true' }), silent);
+
+    expect(silent.warn).toHaveBeenCalledWith(UNLOCK_ALL_WARNING);
+  });
+
   describe('production', () => {
     it('accepts a hardened configuration without warnings', () => {
       expect(() => validateEnv(productionRawEnv(), silent)).not.toThrow();
       expect(silent.warn).not.toHaveBeenCalled();
+    });
+
+    it('refuses to start with LEARNING_UNLOCK_ALL on', () => {
+      expect(() =>
+        validateEnv(productionRawEnv({ LEARNING_UNLOCK_ALL: 'true' }), silent),
+      ).toThrow(/LEARNING_UNLOCK_ALL must not be enabled in production/);
     });
 
     it.each(['JWT_SECRET', 'ENCRYPTION_KEY', 'ALTCHA_HMAC_KEY'])(

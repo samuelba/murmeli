@@ -4,3 +4,4 @@
 kid.feedback.*
 kid.navigation.*
 kid.badges.*
+kid.practice.*

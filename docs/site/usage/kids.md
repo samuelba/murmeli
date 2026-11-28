@@ -24,7 +24,7 @@ Every subject is a mountain trail of worlds. The map shows one world at a time a
 - **Murmeli the marmot** stands at the next level to play ("You are here").
 - A **locked** level shakes when tapped and says to play the others first. A level opens when the one before it has at least 2 stars. A new world opens when the worlds before it are done.
 - A finished world gets a **summit flag**.
-- **Practice** (the yellow button) mixes exercises from levels your kid has already opened.
+- **Practice** (the yellow button) opens the practice ground, where your kid picks what to practice (see [Practice](#practice)).
 - **Switch profile** goes back to the profile picker.
 
 ## Playing a level
@@ -35,7 +35,7 @@ A level is a short round, usually 6 exercises. The dots at the top show how many
 3. **Feedback:** a right answer gets a cheer. After the first wrong answer, a **Tip** explains how to think about it, and your kid tries the same exercise again. After a second wrong answer, Murmeli marks the right answer and the round goes on with **Next**.
 4. **Stop:** the stop button at the top asks **Do you want to stop?** **Keep playing** goes back, **Yes, back to the map** leaves the round. A round that was stopped doesn't count against your kid.
 
-If the page reloads, the app closes or your kid stops, opening the same level (or practice) again within 2 hours of starting the round continues it where it was left. Opening a different level starts a new round instead.
+If the page reloads, the app closes or your kid stops, opening the same level (or the same practice topic) again within 2 hours of starting the round continues it where it was left. Opening a different level or topic starts a new round instead.
 
 ### Special exercises
 - **Tracing letters:** trace the letter with a finger, a stylus or the mouse, starting at the numbered dot and following the arrow. **Again** clears the drawing, **Done** checks it, and **Show me how** lets Murmeli draw it first. Without a pointer, the arrow keys move a pen, the space bar puts it down and lifts it, and Enter checks.
@@ -58,7 +58,24 @@ A right answer on the second try counts half. Only the best result of a level is
 There are no streaks and nothing is ever taken away.
 
 ## Practice
-**Practice** builds a mixed round of 8 to 10 exercises from up to 3 skills: first the ones that are due for repetition, then ones not played yet, then the weakest. It never changes the stars on the map. Skills that went well come back after longer and longer breaks (1, 2, 4, 8, then 16 days), so practice stays short and useful.
+**Practice** on the trail map opens the practice ground. It asks **What do you want to practice?** and offers two ways:
+
+- **Murmeli picks** builds a mixed round from topics your kid already knows from the trail. It prefers topics that haven't been practiced for a while, topics that went less well, and tricky exercises from earlier rounds. The card shows how many of those are waiting.
+- **Topics** are tiles such as **Adding**, **Subtracting**, **Counting**, **Number line**, **Shapes** or **Clock** in math, and **Syllables**, **Reading words** or **Writing** in reading. Each tile has a colorful picture of its topic, for example a crocodile for comparing, a frog hopping along the number line or a piggy bank for money. The tabs switch between the subjects. Each tile has a speaker button that reads its name.
+
+Each tile shows the topic's current **step**. A topic's steps follow the trail: adding, for example, starts with sums up to 5 with pictures and climbs to sums up to 100. A tile can be in one of three states:
+
+- **Open:** the trail has reached the topic. Your kid can practice up to 2 steps beyond the levels opened on the trail.
+- **New to try** (dashed border): the topic belongs to the next world on the trail. Your kid can already try its first steps.
+- **Still locked** (grey, with a lock): the topic is further up the trail. Tapping it says that it comes later.
+
+A practice round works like a level: the **Show me** button lets Murmeli explain the topic, and the first time your kid picks a topic, the demo plays by itself. A round has about 10 exercises, mostly from the current step, with one easier warm-up and a few from the next step.
+
+**The difficulty adapts.** All right on the first try moves the topic up a step, and many mistakes move it a step easier. The results screen says so in a friendly way: "Next time it gets a little trickier" or "We will practice this a bit easier." Practice never changes the stars on the map.
+
+**Mistakes come back.** A missed exercise comes once more at the end of the same round ("One more time. Now you know how it goes!"). Murmeli also keeps it for later rounds ("You have seen this one before. Try it again!"). It comes back in the next round, then after a day, then after 3 days. Once it is right on the first try three times in a row, it is done.
+
+From the results screen, **Play again** repeats the same topic (or another mix), **Practice something else** goes back to the practice ground, and **Back to the map** leaves. The stop button in a practice round goes back to the practice ground.
 
 ## Badges
 The trophy button on the trail map opens the badge shelf. Earned badges shine; the others say how to get them: the first passed level, the first completed world, 5 levels with 3 stars, and the first practice round. New badges are celebrated at the end of a round.

@@ -1,4 +1,5 @@
 import type {
+  AgainReason,
   Answer,
   AnswerResponse,
   AnyAnswer,
@@ -11,6 +12,14 @@ import type {
   MapTrack,
   MapWorld,
   Payload,
+  PracticeCatalogResponse,
+  PracticeResult,
+  PracticeRunInfo,
+  PracticeTopicId,
+  PracticeTopicResult,
+  PracticeTopicState,
+  PracticeTopicView,
+  PracticeTrackView,
   ProgressState,
   PublicDemo,
   PublicExercise,
@@ -20,6 +29,7 @@ import type {
 } from '@murmeli/content';
 
 export type {
+  AgainReason,
   Answer,
   AnswerResponse,
   AnyAnswer,
@@ -31,6 +41,14 @@ export type {
   MapTrack,
   MapWorld,
   Payload,
+  PracticeCatalogResponse,
+  PracticeResult,
+  PracticeRunInfo,
+  PracticeTopicId,
+  PracticeTopicResult,
+  PracticeTopicState,
+  PracticeTopicView,
+  PracticeTrackView,
   ProgressState,
   PublicDemo,
   PublicExercise,

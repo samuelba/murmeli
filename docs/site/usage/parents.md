@@ -55,7 +55,13 @@ The bin icon deletes the profile with all its learning progress, for good.
 In **Parent area → Kids**, select **Progress** on a kid's card. The page shows:
 - **Overview:** stars, levels passed, learning time and rounds in the last 14 days, and earned badges.
 - **Last 14 days:** minutes and rounds per day as charts. **Show values as a table** lists the same numbers.
-- **Skills:** each skill with its confidence as a bar, a percentage and a word ("needs practice", "getting there", "solid"), plus when it comes up for review. Skills that need practice are listed first. In **Practice** mode they come up more often.
+- **Practice ground:** what your kid practiced by choice (see [Practice](kids.md#practice)). At the top are the last 14 days: exercises, the share right on the first try, and days with practice. Below it, each topic your kid practiced shows:
+  - its current **step** out of the steps reachable now (the trail plus up to 2 steps ahead), with the total number of steps;
+  - the exercises and the share right on the first try in the last 14 days, the totals, and when it was last practiced;
+  - its **open mistakes**: up to 5 exercises Murmeli will ask again, as question and right answer ("Wie viel ist 8 plus 7? → 15"), with how often each was missed. Mistakes from trail levels are listed here too.
+
+  Topics marked **Ahead of the trail** are ones your kid tried before the trail reached them. Exercises shown again at the end of a round are not counted.
+- **Skills:** each skill with its confidence as a bar, a percentage and a word ("needs practice", "getting there", "solid"), plus when it comes up for review. Skills that need practice are listed first.
 - **Learning paths:** every world and level with its stars, state and number of rounds.
 
 There are no streaks, and nothing is lost when your kid skips a day. The data download (below) contains the same progress.
@@ -67,7 +73,7 @@ There are no streaks, and nothing is lost when your kid skips a day. The data do
 - **Change password:** enter your current and a new password. All other devices are signed out, and you get an email saying the password was changed.
 - **Change email address:** enter the new address and your password. Murmeli sends a confirmation link to the new address, and the change only applies once you click it. Your old address is told about the change. This needs email to be set up on the server.
 - **Two-factor sign-in:** select **Set up**, scan the QR code with an authenticator app (or type the key), enter the 6-digit code and select **Turn on**. Murmeli shows 10 recovery codes once: download them and keep them safe. Each works once if you lose your phone. **Create new codes** replaces them. To turn two-factor sign-in off, you need your password and a current code or a recovery code.
-- **Your data:** **Download data** saves everything Murmeli stores about your account and your kid profiles as a JSON file: the account, the profiles, and per kid the level progress, the skill mastery, the daily learning time, the badges and a summary of the answers per skill.
+- **Your data:** **Download data** saves everything Murmeli stores about your account and your kid profiles as a JSON file: the account, the profiles, and per kid the level progress, the skill mastery, the daily learning time, the badges, the practice steps and practice days, the mistakes Murmeli will ask again, and a summary of the answers per skill.
 - **Delete account:** enter your password, select **Delete account** and type `DELETE` to confirm. Your account, all kid profiles and all progress are deleted immediately and for good. The audit log keeps an entry that an account was deleted, without any reference to you. The last remaining administrator can't delete their account.
 
 ## Forgot your password?

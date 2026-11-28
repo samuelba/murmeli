@@ -1,7 +1,14 @@
 import { Logger } from '@nestjs/common';
+import {
+  type PracticeTopicId,
+  exerciseKey,
+  generateRun,
+} from '@murmeli/content';
 import type { AttemptLimiter } from '../../auth/limits/attempt-limiter.service';
 import { loadCurriculum } from '../content/curriculum';
 import type { LearningSettings } from '../learning.settings';
+import { PracticeService } from '../practice/practice.service';
+import type { PracticeStore, ReviewRow } from '../practice/practice.store';
 import type {
   LearningKid,
   ProgressService,
@@ -126,6 +133,18 @@ function setup(options: { demoSeen?: boolean; allowed?: boolean } = {}) {
     answers: { name: 'learn-answer' },
     runs: { name: 'learn-run' },
   } as unknown as LearningSettings;
+  const practiceStore = {
+    topics: jest.fn().mockResolvedValue([]),
+    reviewCounts: jest.fn().mockResolvedValue([]),
+    dueReviews: jest.fn().mockResolvedValue([]),
+    markDemoSeen: jest.fn().mockResolvedValue(undefined),
+    deleteReviews: jest.fn().mockResolvedValue(undefined),
+  };
+  const practice = new PracticeService(
+    curriculum,
+    progress as unknown as ProgressService,
+    practiceStore as unknown as PracticeStore,
+  );
   const service = new RunService(
     curriculum,
     progress as unknown as ProgressService,
@@ -133,8 +152,9 @@ function setup(options: { demoSeen?: boolean; allowed?: boolean } = {}) {
     runs as unknown as RunStore,
     limiter as unknown as AttemptLimiter,
     settings,
+    practice,
   );
-  return { service, runs, progress, store, limiter };
+  return { service, runs, progress, store, limiter, practiceStore };
 }
 
 async function solutionOf(runs: FakeRunStore, runId: string, index: number) {
@@ -280,7 +300,7 @@ describe('RunService.startLevel', () => {
 
   it('does not resume a practice run as a level run', async () => {
     const { service } = setup();
-    const practice = await service.startPractice(kid);
+    const practice = await service.startPractice(kid, null);
     const level = await service.startLevel(kid, LEVEL);
     expect(level.runId).not.toBe(practice.runId);
     expect(level).not.toHaveProperty('progress');
@@ -472,65 +492,251 @@ describe('RunService.finish', () => {
   });
 });
 
+function review(levelId: string, overrides: Partial<ReviewRow> = {}) {
+  const level = curriculum.content.index.levels[levelId].level;
+  const [item] = generateRun(level, 3, {
+    locale: 'de-CH',
+    content: curriculum.content,
+  });
+  return {
+    id: `review-${levelId}`,
+    topicId: 'count' as PracticeTopicId,
+    itemKey: exerciseKey(item),
+    source: item.source,
+    tier: 0,
+    box: 0,
+    misses: 1,
+    dueAt: new Date(0),
+    ...overrides,
+  };
+}
+
 describe('RunService.startPractice', () => {
-  it('builds 8 to 10 items from open levels, without a demo', async () => {
+  const firstLevels = new Set([
+    'math-zahlenwiese-01',
+    'math-formenwald-01',
+    'reading-de-lautwiese-01',
+  ]);
+
+  it('mixes the open topics for "Murmeli wählt", without a demo', async () => {
     const { service, runs } = setup();
-    const response = await service.startPractice(kid);
-    expect(response.items.length).toBeGreaterThanOrEqual(8);
-    expect(response.items.length).toBeLessThanOrEqual(10);
+    const response = await service.startPractice(kid, null);
+    expect(response.items).toHaveLength(9);
     expect(response.demoSeen).toBe(true);
     expect(response).not.toHaveProperty('demo');
+    expect(response.practice).toEqual({ topic: null, level: 0, maxLevel: 0 });
     const state = (await runs.get(response.runId))!.state;
-    expect(state).toMatchObject({ mode: 'practice', levelId: null });
-    const open = new Set([
-      'math-zahlenwiese-01',
-      'math-formenwald-01',
-      'reading-de-lautwiese-01',
+    expect(state).toMatchObject({
+      mode: 'practice',
+      levelId: null,
+      topicId: null,
+    });
+    expect(new Set(state.items.map((item) => item.topic))).toEqual(
+      new Set(['count', 'shapes', 'letters']),
+    );
+    expect(state.practice?.map((start) => start.topic).sort()).toEqual([
+      'count',
+      'letters',
+      'shapes',
     ]);
     for (const item of state.items) {
-      expect(open.has(item.levelId)).toBe(true);
+      expect(firstLevels.has(item.levelId)).toBe(true);
     }
     expect(response.items.map((item) => item.index)).toEqual(
       response.items.map((_, i) => i),
     );
   });
 
-  it('prefers due skills', async () => {
-    const { service, runs, store } = setup();
-    store.mastery.mockResolvedValue([
-      {
-        skillId: 'math.shapes.basic',
-        mastery: 0.2,
-        box: 1,
-        nextReviewAt: new Date(0),
-        updatedAt: new Date(0),
+  it('tops a mix up to 9 new items when fewer topics are open', async () => {
+    const { service, runs, progress } = setup();
+    const states = computeStates(curriculum.worlds, kid.startClass, new Map());
+    const onlyCounting = new Map(
+      [...states.levels].map(([id, state]) => [
+        id,
+        id === 'math-zahlenwiese-01' ? state : ('locked' as const),
+      ]),
+    );
+    progress.progressOf.mockResolvedValue({
+      rows: [],
+      lookup: new Map(),
+      states: {
+        levels: onlyCounting,
+        worlds: new Map(
+          [...states.worlds].map(([id]) => [
+            id,
+            id === 'math-zahlenwiese'
+              ? ('unlocked' as const)
+              : ('locked' as const),
+          ]),
+        ),
       },
-    ]);
-    const response = await service.startPractice(kid);
+    });
+    const response = await service.startPractice(kid, null);
+    expect(response.items).toHaveLength(9);
     const state = (await runs.get(response.runId))!.state;
-    expect(state.items[0].skillId).toBe('math.shapes.basic');
-    expect(new Set(state.items.map((item) => item.skillId)).size).toBe(3);
+    expect(new Set(state.items.map((item) => item.topic))).toEqual(
+      new Set(['count']),
+    );
   });
 
-  it('resumes the unfinished practice run', async () => {
-    const { service, store } = setup();
-    const first = await service.startPractice(kid);
-    const resumed = await service.startPractice(kid);
+  it('asks due mistakes again, and drops those that changed', async () => {
+    const { service, runs, practiceStore } = setup();
+    const due = review('math-zahlenwiese-01');
+    const changed = review('math-zahlenwiese-01', {
+      id: 'changed',
+      itemKey: 'other',
+    });
+    const otherLanguage = review('reading-en-sound-garden-01', {
+      id: 'english',
+      topicId: 'letters',
+    });
+    practiceStore.dueReviews.mockResolvedValue([due, changed, otherLanguage]);
+    const response = await service.startPractice(kid, null);
+    expect(response.items).toHaveLength(10);
+    const reviews = response.items.filter((item) => item.again === 'review');
+    expect(reviews).toHaveLength(1);
+    expect(response.items[0]?.again).toBeUndefined();
+    const state = (await runs.get(response.runId))!.state;
+    expect(state.items.find((item) => item.again === 'review')).toMatchObject({
+      key: due.itemKey,
+      source: due.source,
+      topic: 'count',
+    });
+    expect(practiceStore.deleteReviews).toHaveBeenCalledWith(kid.id, [
+      'changed',
+      'english',
+    ]);
+  });
+
+  it('practices one topic at the kid’s step with its demo', async () => {
+    const { service, runs, practiceStore } = setup();
+    const response = await service.startPractice(kid, 'count');
+    expect(response.items).toHaveLength(10);
+    expect(response.practice).toEqual({
+      topic: 'count',
+      level: 1,
+      maxLevel: 3,
+    });
+    expect(response.demo?.type).toBe('count-objects');
+    expect(response.demoSeen).toBe(false);
+    expect(practiceStore.markDemoSeen).toHaveBeenCalledWith(
+      kid.id,
+      'count',
+      0.5,
+      -1,
+    );
+    const state = (await runs.get(response.runId))!.state;
+    expect(state.topicId).toBe('count');
+    expect(state.items.every((item) => item.topic === 'count')).toBe(true);
+    expect(new Set(state.items.map((item) => item.tier))).toEqual(
+      new Set([0, 1]),
+    );
+    expect(new Set(state.items.map((item) => item.key)).size).toBeGreaterThan(
+      2,
+    );
+  });
+
+  it('plays the demo by itself only the first time', async () => {
+    const { service, practiceStore } = setup();
+    practiceStore.topics.mockResolvedValue([
+      {
+        topicId: 'count',
+        rating: 1.2,
+        pathStep: -1,
+        runs: 4,
+        items: 40,
+        firstTry: 30,
+        accuracy: 0.75,
+        demoSeen: true,
+        lastPracticedAt: new Date(0),
+      },
+    ]);
+    const response = await service.startPractice(kid, 'count');
+    expect(response.demoSeen).toBe(true);
+    expect(response.demo).toBeDefined();
+    expect(response.practice).toMatchObject({ level: 2 });
+    expect(practiceStore.markDemoSeen).not.toHaveBeenCalled();
+  });
+
+  it('lets a kid try a topic of the world just ahead', async () => {
+    const { service, runs } = setup();
+    const response = await service.startPractice(kid, 'compare');
+    expect(response.practice).toEqual({
+      topic: 'compare',
+      level: 1,
+      maxLevel: 2,
+    });
+    const state = (await runs.get(response.runId))!.state;
+    expect(new Set(state.items.map((item) => item.levelId))).toEqual(
+      new Set(['math-zahlenbach-01', 'math-zahlenbach-02']),
+    );
+  });
+
+  it('refuses locked and unknown topics', async () => {
+    const { service } = setup();
+    await expect(service.startPractice(kid, 'plus')).rejects.toMatchObject({
+      status: 403,
+      response: { errorCode: 'TOPIC_LOCKED' },
+    });
+    await expect(
+      service.startPractice(kid, 'flying' as PracticeTopicId),
+    ).rejects.toMatchObject({
+      status: 404,
+      response: { errorCode: 'TOPIC_NOT_FOUND' },
+    });
+  });
+
+  it('resumes the unfinished run of the same topic only', async () => {
+    const { service } = setup();
+    const first = await service.startPractice(kid, 'count');
+    const resumed = await service.startPractice(kid, 'count');
     expect(resumed.runId).toBe(first.runId);
     expect(resumed.items).toEqual(first.items);
     expect(resumed.demoSeen).toBe(true);
-    expect(resumed).not.toHaveProperty('demo');
+    expect(resumed.demo).toEqual(first.demo);
+    expect(resumed.practice).toEqual(first.practice);
     expect(resumed.progress).toHaveLength(first.items.length);
-    expect(store.mastery).toHaveBeenCalledTimes(1);
+    const other = await service.startPractice(kid, 'shapes');
+    expect(other.runId).not.toBe(first.runId);
+    const mix = await service.startPractice(kid, null);
+    expect(mix.runId).not.toBe(other.runId);
+    expect(mix).not.toHaveProperty('progress');
+  });
+
+  it('resumes a mix from its stored start without planning again', async () => {
+    const { service, practiceStore } = setup();
+    const first = await service.startPractice(kid, null);
+    const resumed = await service.startPractice(kid, null);
+    expect(resumed.runId).toBe(first.runId);
+    expect(resumed.practice).toEqual({ topic: null, level: 0, maxLevel: 0 });
+    expect(resumed).not.toHaveProperty('demo');
+    expect(practiceStore.dueReviews).toHaveBeenCalledTimes(1);
   });
 
   it('starts a new practice run after a language switch', async () => {
     const { service } = setup();
-    const first = await service.startPractice(kid);
+    const first = await service.startPractice(kid, null);
     const english = { ...kid, language: 'en-US' } as LearningKid;
-    await expect(service.startPractice(english)).resolves.not.toMatchObject({
+    await expect(
+      service.startPractice(english, null),
+    ).resolves.not.toMatchObject({
       runId: first.runId,
     });
+  });
+
+  it('asks a missed item once more at the end of the run', async () => {
+    const { service, runs } = setup();
+    const started = await service.startPractice(kid, 'count');
+    const wrong = { value: 99 };
+    await service.answer(kid, started.runId, 0, wrong);
+    const missed = await service.answer(kid, started.runId, 0, wrong);
+    expect(missed.repeat).toMatchObject({
+      index: started.items.length,
+      again: 'repeat',
+      type: started.items[0].type,
+    });
+    const state = (await runs.get(started.runId))!.state;
+    expect(state.items).toHaveLength(started.items.length + 1);
   });
 
   it('answers 409 when nothing is open', async () => {
@@ -540,7 +746,7 @@ describe('RunService.startPractice', () => {
       lookup: new Map(),
       states: { levels: new Map(), worlds: new Map() },
     });
-    await expect(service.startPractice(kid)).rejects.toMatchObject({
+    await expect(service.startPractice(kid, null)).rejects.toMatchObject({
       status: 409,
       response: { errorCode: 'NOTHING_TO_PRACTICE' },
     });

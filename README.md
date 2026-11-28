@@ -11,7 +11,7 @@ Murmeli is a self-hosted learning platform for kids from kindergarten to the end
 > Murmeli is aligned with Lehrplan 21 but not affiliated with it. "Murmeli" is a working name.
 
 ## Features
-- **Levels:** kids climb an Alpine trail from the valley to the summit. Each level unlocks once the one before it is mastered, and an optional practice mode repeats the skills that need more work.
+- **Levels:** kids climb an Alpine trail from the valley to the summit. Each level unlocks once the one before it is mastered. On the practice ground kids pick a topic (plus, minus, the clock, syllables …) or let Murmeli choose; the difficulty adapts and mistakes come back later.
 - **Read-aloud:** every instruction can be read aloud, for kids who can't read yet. The audio is generated offline with open-weights TTS.
 - **Family accounts:** a parent signs up and creates kid profiles with funny avatars. There are no photos, and kids don't need an email address or a password.
 - **Admin:** user management, invites, and a switch to turn registration on or off.

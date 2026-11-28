@@ -4,16 +4,13 @@ import type { MoneyItem } from '@murmeli/content';
 import { Icon } from '../../../shared/icon/icon';
 import { ExerciseBase } from '../shared/exercise-base';
 import { Pointer } from '../shared/pointer';
+import { type Relation, RelationSign } from '../shared/relation-sign';
 import { MoneyPiece } from './money-piece';
-
-type Relation = 'lt' | 'eq' | 'gt';
-
-const SIGNS: Readonly<Record<Relation, string>> = { lt: '<', eq: '=', gt: '>' };
 
 /** "Wo ist mehr Geld?": two purses and <, = or >. */
 @Component({
   selector: 'mu-money-compare',
-  imports: [TranslocoPipe, Icon, MoneyPiece, Pointer],
+  imports: [TranslocoPipe, Icon, MoneyPiece, Pointer, RelationSign],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mu-ex__stage scene" [class.mu-cue]="highlighted('money', 'objects')">
@@ -35,7 +32,11 @@ const SIGNS: Readonly<Record<Relation, string>> = { lt: '<', eq: '=', gt: '>' };
             [class.mu-blank--filled]="relation() !== null"
             [class.mu-blank--revealed]="reveal() !== null"
           >
-            {{ relation() ? signs[relation()!] : '?' }}
+            @if (relation(); as shown) {
+              <mu-relation-sign [relation]="shown" />
+            } @else {
+              ?
+            }
           </span>
         }
       }
@@ -57,7 +58,7 @@ const SIGNS: Readonly<Record<Relation, string>> = { lt: '<', eq: '=', gt: '>' };
           [attr.data-testid]="'relation-' + option"
           (click)="choose(option)"
         >
-          <span aria-hidden="true">{{ signs[option] }}</span>
+          <mu-relation-sign [relation]="option" />
           @if (revealed() === option) {
             <span class="mu-choice__badge"><mu-icon name="check" /></span>
             @if (pointing()) {
@@ -87,7 +88,7 @@ const SIGNS: Readonly<Record<Relation, string>> = { lt: '<', eq: '=', gt: '>' };
 
     .slot {
       flex: none;
-      min-width: 56px;
+      min-width: 72px;
       padding: 0;
       font-size: 2.5rem;
     }
@@ -108,7 +109,6 @@ export class MoneyCompare extends ExerciseBase<'money-chf'> {
   private readonly transloco = inject(TranslocoService);
 
   protected readonly relations: readonly Relation[] = ['lt', 'eq', 'gt'];
-  protected readonly signs = SIGNS;
   protected readonly picked = signal<Relation | null>(null);
   protected readonly revealed = computed(() => {
     const reveal = this.reveal();

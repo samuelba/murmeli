@@ -11,6 +11,7 @@ With `NODE_ENV=production` the backend refuses to start unless:
 - `JWT_SECRET`, `ENCRYPTION_KEY` and `ALTCHA_HMAC_KEY` are each at least 32 random characters, contain none of `change-me`, `changeme`, `dev-only`, `ci-only`, `example`, `sample` or `placeholder` (any case), and are all different. Generate them with `openssl rand -base64 48`.
 - `REDIS_PASSWORD` is set.
 - `COOKIE_SECURE` is `true`.
+- `LEARNING_UNLOCK_ALL` is not enabled.
 - `APP_URL` and every `CORS_ORIGINS` entry use https.
 
 Outside production these problems are logged as warnings. When `NODE_ENV` is unset the backend runs in development mode and logs a warning.
@@ -91,6 +92,7 @@ Required: `yes` always, `production` only with `NODE_ENV=production`.
 | `RATE_LIMIT_LEARN_RUN_LIMIT`              | no         | `20`            | Level and practice runs a kid may start in the learning window.                                                                                                                                                      |
 | `CONTENT_DIR`                             | no         |                 | Curriculum directory (`tracks/`, `lexicon/`, `pictures.yaml`, `pictures/`). Defaults to the bundled `@murmeli/content` package. The backend refuses to start when the content does not validate.                     |
 | `APP_TIMEZONE`                            | no         | `Europe/Zurich` | IANA time zone that defines the day boundary of the daily time limit and the activity statistics.                                                                                                                    |
+| `LEARNING_UNLOCK_ALL`                     | no         | `false`         | Testing aid: opens every world and level for every kid, so content can be checked without playing through the trail. Also applies to the parent view and practice. Refused in production.                            |
 | `ATTEMPTS_RETENTION_DAYS`                 | no         | `365`           | Delete answer attempts older than this many days (at least 30) in the daily cleanup. Progress, stars, mastery and activity are kept; only the per-answer log and the per-skill attempt summary in the export shrink. |
 | `OPERATOR_NAME`                           | no         |                 | Name of the person or organisation running this instance, shown on the legal and privacy pages (plain text, at most 200 characters).                                                                                 |
 | `OPERATOR_CONTACT_EMAIL`                  | no         |                 | Contact address for privacy and legal questions, shown on the legal pages. Must be an email address.                                                                                                                 |

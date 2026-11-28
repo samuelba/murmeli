@@ -1,5 +1,6 @@
 import { loadCurriculum } from '../content/curriculum';
 import type { LearningSettings } from '../learning.settings';
+import type { PracticeRecorder } from '../practice/practice-recorder';
 import type { RunState, RunSummary } from '../runs/run-state';
 import { type LearningKid, ProgressService } from './progress.service';
 import type { LevelProgressRow, ProgressStore } from './progress.store';
@@ -30,7 +31,7 @@ function row(
   };
 }
 
-function setup(levels: LevelProgressRow[][] = [[]]) {
+function setup(levels: LevelProgressRow[][] = [[]], unlockAll = false) {
   const db = { query: jest.fn() };
   let call = 0;
   const store = {
@@ -50,25 +51,38 @@ function setup(levels: LevelProgressRow[][] = [[]]) {
     lockKid: jest.fn().mockResolvedValue(undefined),
     transaction: jest.fn((work: (d: typeof db) => unknown) => work(db)),
   };
-  const settings = { timeZone: 'Europe/Zurich' } as LearningSettings;
+  const settings = { timeZone: 'Europe/Zurich', unlockAll } as LearningSettings;
+  const practice = {
+    record: jest.fn((_kid: unknown, state: RunState) =>
+      Promise.resolve(
+        state.mode === 'practice'
+          ? { topics: [], reviewsSolved: 0, reviewsSaved: 0 }
+          : undefined,
+      ),
+    ),
+  };
   return {
     store,
     db,
+    practice,
     service: new ProgressService(
       curriculum,
       store as unknown as ProgressStore,
       settings,
+      practice as unknown as PracticeRecorder,
     ),
   };
 }
 
 function runState(overrides: Partial<RunState> = {}): RunState {
   return {
-    v: 2,
+    v: 3,
     runId: 'run-1',
     kidId: kid.id,
     levelId: 'math-zahlenwiese-01',
     mode: 'level',
+    topicId: null,
+    practice: null,
     locale: 'de-CH',
     seed: 1,
     startedAt: 0,
@@ -131,6 +145,21 @@ describe('ProgressService.levelAccess', () => {
     ).resolves.toMatchObject({ demoSeen: false });
   });
 
+  it('opens every level when unlockAll is set', async () => {
+    await expect(
+      setup().service.levelAccess(kid, 'math-hundertergipfel-03'),
+    ).rejects.toMatchObject({ status: 403 });
+    const { service } = setup([[]], true);
+    await expect(
+      service.levelAccess(kid, 'math-hundertergipfel-03'),
+    ).resolves.toMatchObject({ ref: { worldId: 'math-hundertergipfel' } });
+    const map = await service.map(kid);
+    const states = map.tracks.flatMap((t) =>
+      t.worlds.flatMap((w) => w.levels.map((l) => l.state)),
+    );
+    expect(states).not.toContain('locked');
+  });
+
   it('allows skipped levels of placed worlds', async () => {
     const { service } = setup();
     await expect(
@@ -188,8 +217,12 @@ describe('ProgressService daily limit', () => {
 
 describe('ProgressService.finish', () => {
   it('records a passed level, mastery, activity, unlocks and badges in one transaction', async () => {
-    const { service, store, db } = setup([[], [row('math-zahlenwiese-01', 3)]]);
-    const result = await service.finish(kid, runState(), summary(1), NOW);
+    const { service, store, db, practice } = setup([
+      [],
+      [row('math-zahlenwiese-01', 3)],
+    ]);
+    const state = runState();
+    const result = await service.finish(kid, state, summary(1), NOW);
 
     expect(result).toEqual({
       score: 1,
@@ -215,6 +248,13 @@ describe('ProgressService.finish', () => {
       '2026-01-15',
       95,
       1,
+      db,
+    );
+    expect(practice.record).toHaveBeenCalledWith(
+      kid,
+      state,
+      '2026-01-15',
+      NOW,
       db,
     );
   });
@@ -275,6 +315,7 @@ describe('ProgressService.finish', () => {
       stars: 2,
       passed: false,
       newBadges: ['first-practice'],
+      practice: { topics: [], reviewsSolved: 0, reviewsSaved: 0 },
     });
     expect(store.recordLevel).not.toHaveBeenCalled();
     expect(store.saveMastery).toHaveBeenCalled();

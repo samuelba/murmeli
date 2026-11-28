@@ -59,6 +59,7 @@ test.describe('badges', () => {
   test('first practice comes back from the server after a reload', async ({ page }) => {
     const backend = await openMap(page, { learn: { progress: { [FIRST]: 3 }, items: 3 } });
     await page.getByTestId('practice').click();
+    await page.getByTestId('practice-mix').click();
     await expect(page.getByTestId('prompt-text')).toBeVisible();
     const player = new PlayerPage(page, backend.learn);
     await player.playThrough();
@@ -85,6 +86,7 @@ test.describe('badges', () => {
     });
     await expect(page.getByTestId('badges')).toHaveAccessibleName('Abzeichen: 1');
     await page.getByTestId('practice').click();
+    await page.getByTestId('practice-mix').click();
     await expect(page.getByTestId('prompt-text')).toBeVisible();
     await new PlayerPage(page, backend.learn).playThrough();
     await page.getByTestId('results-map').click();

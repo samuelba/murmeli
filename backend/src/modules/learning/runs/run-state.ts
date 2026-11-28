@@ -1,8 +1,11 @@
 import {
+  type AgainReason,
   type AnswerResponse,
   type ExerciseTypeId,
   type GeneratedItem,
+  type ItemSource,
   type Locale,
+  type PracticeTopicId,
   type PublicExercise,
   type RunItemProgress,
   type Solution,
@@ -13,7 +16,11 @@ import {
   runScore,
   toPublicExercise,
 } from '@murmeli/content';
-import { MAX_ITEM_DURATION_MS, type RunMode } from '../learning.constants';
+import {
+  MAX_ITEM_DURATION_MS,
+  PRACTICE_MAX_REPEATS,
+  type RunMode,
+} from '../learning.constants';
 
 export interface RunItemState {
   readonly type: ExerciseTypeId;
@@ -25,14 +32,35 @@ export interface RunItemState {
   readonly attempts: number;
   /** The attempt that was correct, or null */
   readonly correctAt: number | null;
+  /** See exerciseKey: the same question has the same key */
+  readonly key: string;
+  readonly source: ItemSource;
+  readonly topic: PracticeTopicId;
+  /** The item's step on its topic's ladder */
+  readonly tier: number;
+  readonly again?: AgainReason;
+}
+
+/** Where a practice run started on one of its topics, for the update at the finish. */
+export interface PracticeTopicStart {
+  readonly topic: PracticeTopicId;
+  readonly rating: number;
+  readonly maxStep: number;
+  readonly pathStep: number;
+  readonly runs: number;
+  readonly accuracy?: number;
 }
 
 export interface RunState {
-  readonly v: 2;
+  readonly v: 3;
   readonly runId: string;
   readonly kidId: string;
   readonly levelId: string | null;
   readonly mode: RunMode;
+  /** The practice topic, null for a level run and "Murmeli wählt" */
+  readonly topicId: PracticeTopicId | null;
+  /** Practice runs only: one entry per topic of the run */
+  readonly practice: readonly PracticeTopicStart[] | null;
   readonly locale: Locale;
   readonly seed: number;
   readonly startedAt: number;
@@ -69,27 +97,44 @@ export interface RunSummary {
   readonly activeSeconds: number;
 }
 
+export type RunItem = GeneratedItem & {
+  readonly levelId: string;
+  readonly skillId: string;
+  readonly topic: PracticeTopicId;
+  readonly tier: number;
+  readonly again?: AgainReason;
+};
+
 export interface NewRun {
   readonly runId: string;
   readonly kidId: string;
   readonly levelId: string | null;
   readonly mode: RunMode;
+  readonly topicId?: PracticeTopicId | null;
+  readonly practice?: readonly PracticeTopicStart[] | null;
   readonly locale: Locale;
   readonly seed: number;
   readonly now: number;
-  readonly items: readonly (GeneratedItem & {
-    readonly levelId: string;
-    readonly skillId: string;
-  })[];
+  readonly items: readonly RunItem[];
+}
+
+/** What the client sees of an item: no solution, no source. */
+export function publicItem(item: RunItem): PublicExercise {
+  const exercise = toPublicExercise(item);
+  return item.again === undefined
+    ? exercise
+    : { ...exercise, again: item.again };
 }
 
 export function createRunState(run: NewRun): RunState {
   return {
-    v: 2,
+    v: 3,
     runId: run.runId,
     kidId: run.kidId,
     levelId: run.levelId,
     mode: run.mode,
+    topicId: run.topicId ?? null,
+    practice: run.practice ?? null,
     locale: run.locale,
     seed: run.seed,
     startedAt: run.now,
@@ -100,10 +145,43 @@ export function createRunState(run: NewRun): RunState {
       levelId: item.levelId,
       skillId: item.skillId,
       solution: item.solution,
-      exercise: toPublicExercise(item),
+      exercise: publicItem(item),
       attempts: 0,
       correctAt: null,
+      key: item.key,
+      source: item.source,
+      topic: item.topic,
+      tier: item.tier,
+      ...(item.again !== undefined ? { again: item.again } : {}),
     })),
+  };
+}
+
+/** Items counted for scores, mastery and the practice rating: not the in-run repeats. */
+export function scoredItems(state: RunState): RunItemState[] {
+  return state.items.filter((item) => item.again !== 'repeat');
+}
+
+/** A missed practice item comes once more at the end of the run. */
+function repeatOf(
+  state: RunState,
+  item: RunItemState,
+): RunItemState | undefined {
+  const repeats = state.items.filter((it) => it.again === 'repeat').length;
+  if (
+    state.mode !== 'practice' ||
+    item.again === 'repeat' ||
+    repeats >= PRACTICE_MAX_REPEATS
+  ) {
+    return undefined;
+  }
+  const index = state.items.length;
+  return {
+    ...item,
+    attempts: 0,
+    correctAt: null,
+    again: 'repeat',
+    exercise: { ...item.exercise, index, again: 'repeat' },
   };
 }
 
@@ -166,15 +244,21 @@ export function applyAnswer(
     attempts: attempt,
     correctAt: result.correct ? attempt : null,
   };
+  const missed = !result.correct && attempt >= MAX_ATTEMPTS;
+  const repeat = missed ? repeatOf(state, item) : undefined;
+  const response = responseFor(item, attempt, result.correct, result.hint);
   return {
     ok: true,
     state: {
       ...state,
       lastAt: now,
       activeMs: state.activeMs + durationMs,
-      items: state.items.map((it, i) => (i === index ? updated : it)),
+      items: [
+        ...state.items.map((it, i) => (i === index ? updated : it)),
+        ...(repeat ? [repeat] : []),
+      ],
     },
-    response: responseFor(item, attempt, result.correct, result.hint),
+    response: repeat ? { ...response, repeat: repeat.exercise } : response,
     record: {
       itemIndex: index,
       levelId: item.levelId,
@@ -187,7 +271,7 @@ export function applyAnswer(
   };
 }
 
-function itemResult(item: RunItemState): number {
+export function itemResult(item: RunItemState): number {
   return item.correctAt === null ? 0 : itemScore(true, item.correctAt);
 }
 
@@ -195,20 +279,22 @@ function itemResult(item: RunItemState): number {
  * Score of a finished run (unanswered items count as 0), the score per skill
  * for mastery, and the learning time. Skills the kid did not answer at all
  * are left out of mastery, so leaving a run early does not count as failing.
+ * Repeats of missed items within the run count only as learning time.
  */
 export function summarizeRun(state: RunState, now: number): RunSummary {
+  const items = scoredItems(state);
   const bySkill = new Map<string, number[]>();
   const answered = new Set(
-    state.items.filter((item) => item.attempts > 0).map((item) => item.skillId),
+    items.filter((item) => item.attempts > 0).map((item) => item.skillId),
   );
-  for (const item of state.items.filter((it) => answered.has(it.skillId))) {
+  for (const item of items.filter((it) => answered.has(it.skillId))) {
     bySkill.set(item.skillId, [
       ...(bySkill.get(item.skillId) ?? []),
       itemResult(item),
     ]);
   }
   return {
-    score: runScore(state.items.map(itemResult)),
+    score: runScore(items.map(itemResult)),
     skillScores: new Map(
       [...bySkill].map(([skill, scores]) => [skill, runScore(scores)]),
     ),

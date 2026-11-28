@@ -6,6 +6,7 @@ import {
   AnyAnswer,
   FinishRunResponse,
   MapResponse,
+  PracticeCatalogResponse,
   StartRunResponse,
 } from './learn.models';
 
@@ -24,8 +25,15 @@ export class LearnApi {
     );
   }
 
-  startPractice(): Promise<StartRunResponse> {
-    return firstValueFrom(this.api.post<StartRunResponse>('learn/practice/runs'));
+  practiceCatalog(): Promise<PracticeCatalogResponse> {
+    return firstValueFrom(this.api.get<PracticeCatalogResponse>('learn/practice'));
+  }
+
+  /** A topic run, or `null` for "Murmeli wählt", a mix picked by the server. */
+  startPractice(topic: string | null = null): Promise<StartRunResponse> {
+    return firstValueFrom(
+      this.api.post<StartRunResponse>('learn/practice/runs', topic === null ? {} : { topic }),
+    );
   }
 
   answer(runId: string, index: number, answer: AnyAnswer): Promise<AnswerResponse> {

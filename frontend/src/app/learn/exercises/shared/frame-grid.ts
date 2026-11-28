@@ -39,7 +39,8 @@ export type FrameCell = 'empty' | 'filled' | 'added' | 'removed';
     .frame {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      width: min(100%, 300px);
+      width: 300px;
+      max-width: 100%;
       border: 4px solid var(--mu-color-ink);
       border-radius: var(--mu-radius-sm);
       background: var(--mu-color-ink);
