@@ -99,6 +99,8 @@ Each kid profile has a starting level: Kindergarten 1, Kindergarten 2, 1st class
 
 For example, a kid starting in the 1st class finds the Zahlenwiese, the Formenwald and the Zahlenbach skipped, and the Zehnerhütte open. In German reading, the Lautwiese and the Silbenwald are skipped and the Buchstabenbach is open.
 
+To check content without playing through the trail, a test instance can set `LEARNING_UNLOCK_ALL=true`, which opens every world and level for every kid (see [Configuration](../reference/configuration.md)). The parent view and practice then treat every level as open too, and no "new world" celebration appears, because nothing is locked. It is refused in production.
+
 ## Mastery and practice
 Murmeli tracks a **mastery** value per skill, from 0 to 1. The first round of a skill sets it to that round's score; after that, each round moves it 30% of the way towards the new score. Only skills with at least one answer in the round are updated, so stopping early doesn't hurt.
 

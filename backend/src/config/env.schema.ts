@@ -175,6 +175,7 @@ export const baseEnvSchema = z.object({
 
   CONTENT_DIR: optionalText,
   APP_TIMEZONE: timeZone,
+  LEARNING_UNLOCK_ALL: envBoolean(false),
   ATTEMPTS_RETENTION_DAYS: envInt(365, 30, 3650),
 
   ...operatorEnvShape,

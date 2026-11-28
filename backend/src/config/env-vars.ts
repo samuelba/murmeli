@@ -319,6 +319,12 @@ export const ENV_VARS: readonly EnvVarDoc[] = [
     'IANA time zone that defines the day boundary of the daily time limit and the activity statistics.',
   ),
   doc(
+    'LEARNING_UNLOCK_ALL',
+    'no',
+    'false',
+    'Testing aid: opens every world and level for every kid, so content can be checked without playing through the trail. Also applies to the parent view and practice. Refused in production.',
+  ),
+  doc(
     'ATTEMPTS_RETENTION_DAYS',
     'no',
     '365',

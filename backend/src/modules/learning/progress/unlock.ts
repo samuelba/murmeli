@@ -119,6 +119,22 @@ export function computeStates(
   return { levels, worlds: worldStates };
 }
 
+function openAll(
+  states: ReadonlyMap<string, ProgressState>,
+): Map<string, ProgressState> {
+  return new Map(
+    [...states].map(([id, state]) => [
+      id,
+      state === 'locked' ? 'unlocked' : state,
+    ]),
+  );
+}
+
+/** Testing aid behind `LEARNING_UNLOCK_ALL`: nothing stays locked. */
+export function unlockAll(states: ProgressStates): ProgressStates {
+  return { levels: openAll(states.levels), worlds: openAll(states.worlds) };
+}
+
 function opened(
   before: ReadonlyMap<string, ProgressState>,
   after: ReadonlyMap<string, ProgressState>,

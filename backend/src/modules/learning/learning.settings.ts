@@ -9,6 +9,7 @@ export const LEARNING_ENV_KEYS = [
   'RATE_LIMIT_LEARN_WINDOW_SECONDS',
   'RATE_LIMIT_LEARN_ANSWER_LIMIT',
   'RATE_LIMIT_LEARN_RUN_LIMIT',
+  'LEARNING_UNLOCK_ALL',
 ] as const;
 
 /**
@@ -20,6 +21,7 @@ export class LearningSettings {
   readonly timeZone: string;
   readonly answers: LimitPolicy;
   readonly runs: LimitPolicy;
+  readonly unlockAll: boolean;
 
   constructor(config: ConfigService<Env, true>) {
     const env = pickEnv(config, LEARNING_ENV_KEYS);
@@ -37,5 +39,6 @@ export class LearningSettings {
       windowSeconds: window,
       lockSeconds: window,
     };
+    this.unlockAll = env.LEARNING_UNLOCK_ALL;
   }
 }

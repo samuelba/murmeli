@@ -7,6 +7,7 @@ describe('LearningSettings', () => {
       RATE_LIMIT_LEARN_WINDOW_SECONDS: 60,
       RATE_LIMIT_LEARN_ANSWER_LIMIT: 60,
       RATE_LIMIT_LEARN_RUN_LIMIT: 20,
+      LEARNING_UNLOCK_ALL: false,
     };
     const settings = new LearningSettings({
       get: (key: string) => env[key],
@@ -20,5 +21,14 @@ describe('LearningSettings', () => {
       lockSeconds: 60,
     });
     expect(settings.runs).toMatchObject({ name: 'learn-run', limit: 20 });
+    expect(settings.unlockAll).toBe(false);
+  });
+
+  it('reads the unlock-all flag', () => {
+    const settings = new LearningSettings({
+      get: (key: string) => (key === 'LEARNING_UNLOCK_ALL' ? true : 60),
+    } as never);
+
+    expect(settings.unlockAll).toBe(true);
   });
 });

@@ -31,6 +31,7 @@ import {
   type ProgressStates,
   computeStates,
   isOpen,
+  unlockAll,
   unlockedBetween,
 } from './unlock';
 
@@ -74,10 +75,15 @@ export class ProgressService {
 
   statesOf(kid: LearningKid, rows: readonly LevelProgressRow[]): KidProgress {
     const lookup = lookupOf(rows);
+    const states = computeStates(
+      this.curriculum.worlds,
+      kid.startClass,
+      lookup,
+    );
     return {
       rows,
       lookup,
-      states: computeStates(this.curriculum.worlds, kid.startClass, lookup),
+      states: this.settings.unlockAll ? unlockAll(states) : states,
     };
   }
 

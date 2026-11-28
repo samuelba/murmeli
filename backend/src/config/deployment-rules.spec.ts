@@ -46,6 +46,7 @@ describe('findProductionProblems', () => {
       findProductionProblems({
         REDIS_PASSWORD: undefined,
         COOKIE_SECURE: false,
+        LEARNING_UNLOCK_ALL: false,
       }),
     ).toEqual([
       'REDIS_PASSWORD is required in production.',
@@ -53,9 +54,23 @@ describe('findProductionProblems', () => {
     ]);
   });
 
+  it('refuses the unlock-all test flag', () => {
+    expect(
+      findProductionProblems({
+        REDIS_PASSWORD: 'pw',
+        COOKIE_SECURE: true,
+        LEARNING_UNLOCK_ALL: true,
+      }),
+    ).toEqual(['LEARNING_UNLOCK_ALL must not be enabled in production.']);
+  });
+
   it('passes a hardened configuration', () => {
     expect(
-      findProductionProblems({ REDIS_PASSWORD: 'pw', COOKIE_SECURE: true }),
+      findProductionProblems({
+        REDIS_PASSWORD: 'pw',
+        COOKIE_SECURE: true,
+        LEARNING_UNLOCK_ALL: false,
+      }),
     ).toEqual([]);
   });
 });

@@ -131,6 +131,7 @@ interface Prompt {
 4. **Unlocking:**
    - The first level of a world unlocks when every world in its `requires` list is completed (all levels passed). The levels after it unlock in order, each once the one before it is passed.
    - **Start-class placement:** worlds whose `grade` is below the kid's `startClass` count as completed for `requires`, and all their levels are unlocked. They are still playable but don't need to be played.
+   - **Testing flag:** with `LEARNING_UNLOCK_ALL=true`, `ProgressService.statesOf` turns every `locked` state into `unlocked`. This affects the map, `levelAccess`, practice and the parent view. `unlocked` in the finish response stays empty, and `passed`, stars and badges work as usual. `validateEnv` refuses the flag in production.
 5. **Practice:** `POST /api/learn/practice/runs` takes the 3 skills that are due or weakest among the unlocked levels (by `next_review_at`, then lowest mastery). It builds 8 to 10 items from those levels' generators and returns the same shape as a level run. Practice runs update mastery but not stars.
 6. **Mastery:** after each run, mastery = 0.7·previous + 0.3·run score. Spacing uses Leitner boxes with intervals of 1, 2, 4, 8 and 16 days. A skill moves up a box if the score is at least 0.8 and back to box 1 if it is below 0.5.
 7. **Read endpoints:**

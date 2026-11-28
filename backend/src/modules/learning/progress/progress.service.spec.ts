@@ -30,7 +30,7 @@ function row(
   };
 }
 
-function setup(levels: LevelProgressRow[][] = [[]]) {
+function setup(levels: LevelProgressRow[][] = [[]], unlockAll = false) {
   const db = { query: jest.fn() };
   let call = 0;
   const store = {
@@ -50,7 +50,7 @@ function setup(levels: LevelProgressRow[][] = [[]]) {
     lockKid: jest.fn().mockResolvedValue(undefined),
     transaction: jest.fn((work: (d: typeof db) => unknown) => work(db)),
   };
-  const settings = { timeZone: 'Europe/Zurich' } as LearningSettings;
+  const settings = { timeZone: 'Europe/Zurich', unlockAll } as LearningSettings;
   return {
     store,
     db,
@@ -129,6 +129,21 @@ describe('ProgressService.levelAccess', () => {
     await expect(
       setup().service.levelAccess(kid, 'math-formenwald-01'),
     ).resolves.toMatchObject({ demoSeen: false });
+  });
+
+  it('opens every level when unlockAll is set', async () => {
+    await expect(
+      setup().service.levelAccess(kid, 'math-hundertergipfel-03'),
+    ).rejects.toMatchObject({ status: 403 });
+    const { service } = setup([[]], true);
+    await expect(
+      service.levelAccess(kid, 'math-hundertergipfel-03'),
+    ).resolves.toMatchObject({ ref: { worldId: 'math-hundertergipfel' } });
+    const map = await service.map(kid);
+    const states = map.tracks.flatMap((t) =>
+      t.worlds.flatMap((w) => w.levels.map((l) => l.state)),
+    );
+    expect(states).not.toContain('locked');
   });
 
   it('allows skipped levels of placed worlds', async () => {
