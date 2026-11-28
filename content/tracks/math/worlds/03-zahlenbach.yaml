@@ -30,6 +30,8 @@ levels:
           action: { countAlong: true }
         - say: { de-CH: "Auf dieser Seite sind mehr. Ich tippe drauf!", en-US: "This side has more. I tap it!" }
           action: { tapAnswer: true }
+        - say: { de-CH: "Und wenn beide Seiten gleich viele haben? Dann tippst du hier auf Gleich viele.", en-US: "And if both sides have the same amount? Then you tap here on The same." }
+          action: { highlight: signs }
     generators:
       - { type: compare, weight: 1, params: { mode: quantities, min: 1, max: 5, allowEqual: false, objects: [duck, fish, apple] } }
 
