@@ -10,13 +10,20 @@ import type {
   AnswerResponse,
   FinishRunResponse,
   MapResponse,
+  PracticeCatalogResponse,
   PracticeRunResponse,
   StartRunResponse,
 } from '@murmeli/content';
 import { UuidParam } from '../../common/http/uuid-param';
 import type { KidEntity } from '../kids/kid.entity';
 import { KidGuard } from '../kids/kid.guard';
-import { AnswerDto, CurrentKid, LevelIdParam } from './learning.http';
+import {
+  AnswerDto,
+  CurrentKid,
+  LevelIdParam,
+  StartPracticeDto,
+} from './learning.http';
+import { PracticeService } from './practice/practice.service';
 import { ProgressService } from './progress/progress.service';
 import { RunService } from './runs/run.service';
 
@@ -30,6 +37,7 @@ export class LearningController {
   constructor(
     private readonly progress: ProgressService,
     private readonly runs: RunService,
+    private readonly practice: PracticeService,
   ) {}
 
   @Get('map')
@@ -46,10 +54,20 @@ export class LearningController {
     return this.runs.startLevel(kid, levelId);
   }
 
+  @Get('practice')
+  practiceCatalog(
+    @CurrentKid() kid: KidEntity,
+  ): Promise<PracticeCatalogResponse> {
+    return this.practice.catalog(kid);
+  }
+
   @Post('practice/runs')
   @HttpCode(201)
-  startPractice(@CurrentKid() kid: KidEntity): Promise<PracticeRunResponse> {
-    return this.runs.startPractice(kid);
+  startPractice(
+    @CurrentKid() kid: KidEntity,
+    @Body() dto: StartPracticeDto,
+  ): Promise<PracticeRunResponse> {
+    return this.runs.startPractice(kid, dto.topic ?? null);
   }
 
   @Post('runs/:runId/answers')

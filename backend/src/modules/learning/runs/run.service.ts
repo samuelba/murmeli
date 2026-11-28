@@ -5,14 +5,14 @@ import {
   type FinishRunResponse,
   type GeneratedItem,
   type Level,
+  type PracticeTopicId,
   type StartRunResponse,
   generateDemo,
-  generateItem,
   generateRun,
   isExerciseTypeId,
   randomSeed,
   toPublicDemo,
-  toPublicExercise,
+  topicOfExercise,
 } from '@murmeli/content';
 import { RetryAfterException } from '../../../common/errors/api-exception';
 import { errorMessage } from '../../../common/errors/error-message';
@@ -22,26 +22,23 @@ import { Curriculum } from '../content/curriculum';
 import {
   invalidField,
   itemDone,
-  nothingToPractice,
   runBusy,
   runNotFound,
 } from '../learning.errors';
 import { LearningSettings } from '../learning.settings';
-import {
-  planPractice,
-  selectPracticeSkills,
-} from '../practice/practice-selection';
+import { PracticeService } from '../practice/practice.service';
 import { type AttemptInsert, ProgressStore } from '../progress/progress.store';
 import {
   type LearningKid,
   ProgressService,
 } from '../progress/progress.service';
-import { isOpen } from '../progress/unlock';
 import {
   type NewRun,
+  type RunItem,
   type RunState,
   applyAnswer,
   createRunState,
+  publicItem,
   runProgress,
   summarizeRun,
 } from './run-state';
@@ -49,8 +46,6 @@ import { RunStore, type StoredRun } from './run-store';
 
 export const LEARN_RATE_LIMITED = 'LEARN_RATE_LIMITED';
 const UPDATE_RETRIES = 3;
-
-type RunItem = NewRun['items'][number];
 
 /**
  * Level and practice runs: generation, answers and finishing (contract §3).
@@ -68,6 +63,7 @@ export class RunService {
     private readonly runs: RunStore,
     private readonly limiter: AttemptLimiter,
     private readonly settings: LearningSettings,
+    private readonly practice: PracticeService,
   ) {}
 
   async startLevel(
@@ -82,15 +78,19 @@ export class RunService {
       generateDemo(level, kid.language, this.curriculum.content),
     );
     await this.progress.assertWithinDailyLimit(kid, now);
-    const unfinished = await this.unfinished(kid, 'level', level.id);
+    const unfinished = await this.unfinished(kid, 'level', level.id, null);
     if (unfinished) {
       return { ...this.resumed(unfinished), demo };
     }
     const seed = randomSeed();
     const items = generateRun(level, seed, this.options(kid)).map((item) =>
-      this.runItem(item, level),
+      this.runItem(item, level, kid),
     );
-    const runId = await this.begin(kid, 'level', level.id, seed, items, now);
+    const runId = await this.begin(
+      kid,
+      { mode: 'level', levelId: level.id, seed, items },
+      now,
+    );
     if (!access.demoSeen) {
       await this.progress
         .markDemoSeen(kid, level.id)
@@ -102,58 +102,52 @@ export class RunService {
     }
     return {
       runId,
-      items: items.map((item) => toPublicExercise(item)),
+      items: items.map(publicItem),
       demoSeen: access.demoSeen,
       demo,
     };
   }
 
+  /** A run on one practice topic, or "Murmeli wählt" when `topic` is null. */
   async startPractice(
     kid: LearningKid,
+    topic: PracticeTopicId | null,
     now = new Date(),
   ): Promise<StartRunResponse> {
     await this.limit(this.settings.runs, kid.id);
     await this.progress.assertWithinDailyLimit(kid, now);
-    const unfinished = await this.unfinished(kid, 'practice', null);
+    const unfinished = await this.unfinished(kid, 'practice', null, topic);
     if (unfinished) {
-      return this.resumed(unfinished);
+      const { info, demo } = this.practice.resumeInfo(kid, unfinished);
+      return {
+        ...this.resumed(unfinished),
+        ...(demo ? { demo } : {}),
+        practice: info,
+      };
     }
-    const { states } = await this.progress.progressOf(kid);
-    const openLevels = this.curriculum
-      .levelsFor(kid.language)
-      .filter((level) => isOpen(states.levels.get(level.id)));
-    const levelsBySkill = new Map<string, Level[]>();
-    for (const level of openLevels) {
-      levelsBySkill.set(level.skill, [
-        ...(levelsBySkill.get(level.skill) ?? []),
-        level,
-      ]);
-    }
-    const skills = selectPracticeSkills(
-      [...levelsBySkill.keys()],
-      await this.store.mastery(kid.id),
+    const seed = randomSeed();
+    const plan = await this.practice.plan(kid, topic, seed, now);
+    const runId = await this.begin(
+      kid,
+      {
+        mode: 'practice',
+        levelId: null,
+        topicId: topic,
+        practice: plan.starts,
+        seed,
+        items: plan.items,
+      },
       now,
     );
-    const seed = randomSeed();
-    const items: RunItem[] = [];
-    for (const slot of planPractice(skills, levelsBySkill, seed)) {
-      const item = generateItem(
-        slot.level,
-        seed,
-        slot.index,
-        this.options(kid),
-        items[slot.index - 1],
-      );
-      items.push(this.runItem(item, slot.level));
+    if (!plan.demoSeen && plan.starts[0]) {
+      await this.practice.markDemoSeen(kid, plan.starts[0]);
     }
-    if (items.length === 0) {
-      throw nothingToPractice();
-    }
-    const runId = await this.begin(kid, 'practice', null, seed, items, now);
     return {
       runId,
-      items: items.map((item) => toPublicExercise(item)),
-      demoSeen: true,
+      items: plan.items.map(publicItem),
+      demoSeen: plan.demoSeen,
+      ...(plan.demo ? { demo: plan.demo } : {}),
+      practice: plan.info,
     };
   }
 
@@ -214,25 +208,38 @@ export class RunService {
     return { locale: kid.language, content: this.curriculum.content };
   }
 
-  private runItem(item: GeneratedItem, level: Level): RunItem {
-    return { ...item, levelId: level.id, skillId: level.skill };
+  private runItem(
+    item: GeneratedItem,
+    level: Level,
+    kid: LearningKid,
+  ): RunItem {
+    const topic = topicOfExercise(item);
+    return {
+      ...item,
+      levelId: level.id,
+      skillId: level.skill,
+      topic,
+      tier: this.curriculum.stepIndex(topic, level.id, kid.language) ?? 0,
+    };
   }
 
   /**
-   * The kid's active run of this level (or practice) in the kid's language,
-   * so a reload continues it instead of starting over. A run with an
-   * exercise type this version no longer knows is started over.
+   * The kid's active run of this level (or practice topic) in the kid's
+   * language, so a reload continues it instead of starting over. A run with
+   * an exercise type this version no longer knows is started over.
    */
   private async unfinished(
     kid: LearningKid,
     mode: RunState['mode'],
     levelId: string | null,
+    topicId: PracticeTopicId | null,
   ): Promise<RunState | null> {
     const state = (await this.runs.activeOf(kid.id))?.state;
     const matches =
       state?.kidId === kid.id &&
       state.mode === mode &&
       state.levelId === levelId &&
+      state.topicId === topicId &&
       state.locale === kid.language &&
       state.items.every((item) => isExerciseTypeId(item.exercise.type));
     return matches ? state : null;
@@ -249,23 +256,20 @@ export class RunService {
 
   private async begin(
     kid: LearningKid,
-    mode: RunState['mode'],
-    levelId: string | null,
-    seed: number,
-    items: readonly RunItem[],
+    run: Pick<
+      NewRun,
+      'mode' | 'levelId' | 'topicId' | 'practice' | 'seed' | 'items'
+    >,
     now: Date,
   ): Promise<string> {
     const runId = randomUUID();
     const previous = await this.runs.start(
       createRunState({
+        ...run,
         runId,
         kidId: kid.id,
-        levelId,
-        mode,
         locale: kid.language,
-        seed,
         now: now.getTime(),
-        items,
       }),
     );
     if (previous) {

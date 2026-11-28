@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import type { Stars } from '@murmeli/content';
 import { DataSource, type EntityManager } from 'typeorm';
 import { type RunMode, SECONDS_PER_DAY } from '../learning.constants';
-import type { SkillRecord } from '../practice/practice-selection';
 import type { AttemptRecord } from '../runs/run-state';
 import type { MasteryUpdate, MasteryValue } from './mastery';
 import type { LevelSnapshot } from './unlock';
@@ -13,6 +12,13 @@ export interface LevelProgressRow extends LevelSnapshot {
   readonly runs: number;
   readonly firstPassedAt: Date | null;
   readonly demoSeen: boolean;
+}
+
+export interface SkillRecord {
+  readonly skillId: string;
+  readonly mastery: number;
+  readonly nextReviewAt: Date;
+  readonly updatedAt: Date;
 }
 
 export interface MasteryRow extends SkillRecord, MasteryValue {}

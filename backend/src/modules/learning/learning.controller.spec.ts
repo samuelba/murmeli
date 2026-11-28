@@ -2,6 +2,7 @@ import type { KidEntity } from '../kids/kid.entity';
 import { LearningController } from './learning.controller';
 import { ParentProgressController } from './parent/parent-progress.controller';
 import type { ParentProgressService } from './parent/parent-progress.service';
+import type { PracticeService } from './practice/practice.service';
 import type { ProgressService } from './progress/progress.service';
 import type { RunService } from './runs/run.service';
 
@@ -14,16 +15,25 @@ describe('LearningController', () => {
     answer: jest.fn().mockResolvedValue('answer'),
     finish: jest.fn().mockResolvedValue('finish'),
   };
+  const practice = { catalog: jest.fn().mockResolvedValue('catalog') };
   const controller = new LearningController(
     progress as unknown as ProgressService,
     runs as unknown as RunService,
+    practice as unknown as PracticeService,
   );
 
   it('delegates to the services with the current kid', async () => {
     await expect(controller.map(kid)).resolves.toEqual({ tracks: [] });
     await expect(controller.startLevel(kid, 'l1')).resolves.toBe('level');
     expect(runs.startLevel).toHaveBeenCalledWith(kid, 'l1');
-    await expect(controller.startPractice(kid)).resolves.toBe('practice');
+    await expect(controller.practiceCatalog(kid)).resolves.toBe('catalog');
+    expect(practice.catalog).toHaveBeenCalledWith(kid);
+    await expect(controller.startPractice(kid, {})).resolves.toBe('practice');
+    expect(runs.startPractice).toHaveBeenLastCalledWith(kid, null);
+    await expect(
+      controller.startPractice(kid, { topic: 'plus' }),
+    ).resolves.toBe('practice');
+    expect(runs.startPractice).toHaveBeenLastCalledWith(kid, 'plus');
     await expect(
       controller.answer(kid, 'r1', { index: 2, answer: { value: 1 } }),
     ).resolves.toBe('answer');

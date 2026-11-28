@@ -28,6 +28,39 @@ export interface KidProgressExport {
     readonly badgeId: string;
     readonly earnedAt: string;
   }[];
+  readonly practiceTopics: readonly {
+    readonly topicId: string;
+    readonly rating: number;
+    readonly pathStep: number;
+    readonly runs: number;
+    readonly items: number;
+    readonly firstTry: number;
+    readonly accuracy: number | null;
+    readonly demoSeenAt: string | null;
+    readonly lastPracticedAt: string | null;
+    readonly updatedAt: string;
+  }[];
+  readonly practiceDays: readonly {
+    readonly day: string;
+    readonly topicId: string;
+    readonly items: number;
+    readonly firstTry: number;
+  }[];
+  /** Mistakes asked again later, with the level, generator and seed that make the exercise again */
+  readonly practiceReviews: readonly {
+    readonly topicId: string;
+    readonly locale: string;
+    readonly itemKey: string;
+    readonly levelId: string;
+    readonly generator: number;
+    readonly seed: number;
+    readonly sourceTopic: string | null;
+    readonly tier: number;
+    readonly box: number;
+    readonly misses: number;
+    readonly dueAt: string;
+    readonly createdAt: string;
+  }[];
   /** Attempts summarized per skill and mode */
   readonly attempts: readonly {
     readonly skillId: string;
@@ -54,6 +87,14 @@ const QUERIES = {
     FROM "daily_activity" WHERE "kid_id" = ANY($1::uuid[]) ORDER BY "kid_id", "day"`,
   badges: `SELECT "kid_id", "badge_id", "earned_at"
     FROM "kid_badges" WHERE "kid_id" = ANY($1::uuid[]) ORDER BY "kid_id", "earned_at", "badge_id"`,
+  practiceTopics: `SELECT "kid_id", "topic_id", "rating", "path_step", "runs", "items", "first_try", "accuracy",
+      "demo_seen_at", "last_practiced_at", "updated_at"
+    FROM "practice_topic_progress" WHERE "kid_id" = ANY($1::uuid[]) ORDER BY "kid_id", "topic_id"`,
+  practiceDays: `SELECT "kid_id", "day"::text AS "day", "topic_id", "items", "first_try"
+    FROM "practice_daily" WHERE "kid_id" = ANY($1::uuid[]) ORDER BY "kid_id", "day", "topic_id"`,
+  practiceReviews: `SELECT "kid_id", "topic_id", "locale", "item_key", "level_id", "generator", "seed",
+      "source_topic", "tier", "box", "misses", "due_at", "created_at"
+    FROM "practice_reviews" WHERE "kid_id" = ANY($1::uuid[]) ORDER BY "kid_id", "created_at", "id"`,
   attempts: `SELECT "kid_id", "skill_id", "mode", count(*)::int AS "attempts",
       count(*) FILTER (WHERE "correct")::int AS "correct",
       min("created_at") AS "first_at", max("created_at") AS "last_at"
@@ -72,7 +113,16 @@ export class ProgressExportService {
     if (kidIds.length === 0) {
       return [];
     }
-    const [levels, skills, activity, badges, attempts] = await Promise.all(
+    const [
+      levels,
+      skills,
+      activity,
+      badges,
+      practiceTopics,
+      practiceDays,
+      practiceReviews,
+      attempts,
+    ] = await Promise.all(
       Object.values(QUERIES).map((sql) =>
         this.dataSource.query<Row[]>(sql, [kidIds]),
       ),
@@ -105,6 +155,38 @@ export class ProgressExportService {
       badges: of(badges, kidId).map((row) => ({
         badgeId: row.badge_id as string,
         earnedAt: iso(row.earned_at),
+      })),
+      practiceTopics: of(practiceTopics, kidId).map((row) => ({
+        topicId: row.topic_id as string,
+        rating: Number(row.rating),
+        pathStep: row.path_step as number,
+        runs: row.runs as number,
+        items: row.items as number,
+        firstTry: row.first_try as number,
+        accuracy: row.accuracy === null ? null : Number(row.accuracy),
+        demoSeenAt: isoOrNull(row.demo_seen_at),
+        lastPracticedAt: isoOrNull(row.last_practiced_at),
+        updatedAt: iso(row.updated_at),
+      })),
+      practiceDays: of(practiceDays, kidId).map((row) => ({
+        day: row.day as string,
+        topicId: row.topic_id as string,
+        items: row.items as number,
+        firstTry: row.first_try as number,
+      })),
+      practiceReviews: of(practiceReviews, kidId).map((row) => ({
+        topicId: row.topic_id as string,
+        locale: row.locale as string,
+        itemKey: row.item_key as string,
+        levelId: row.level_id as string,
+        generator: row.generator as number,
+        seed: Number(row.seed),
+        sourceTopic: (row.source_topic as string | null) ?? null,
+        tier: row.tier as number,
+        box: row.box as number,
+        misses: row.misses as number,
+        dueAt: iso(row.due_at),
+        createdAt: iso(row.created_at),
       })),
       attempts: of(attempts, kidId).map((row) => ({
         skillId: row.skill_id as string,

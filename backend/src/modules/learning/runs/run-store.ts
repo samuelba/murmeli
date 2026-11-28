@@ -75,7 +75,7 @@ function parse(raw: string | null): StoredRun | null {
   try {
     const state = JSON.parse(raw) as RunState | null;
     const valid =
-      state?.v === 2 &&
+      state?.v === 3 &&
       typeof state.kidId === 'string' &&
       typeof state.runId === 'string' &&
       typeof state.locale === 'string' &&

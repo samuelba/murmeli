@@ -121,6 +121,7 @@ export {
   toPublicExercise,
 } from './api.ts';
 export type {
+  AgainReason,
   AnswerRequest,
   AnswerResponse,
   FinishRunResponse,
@@ -128,12 +129,20 @@ export type {
   MapResponse,
   MapTrack,
   MapWorld,
+  PracticeCatalogResponse,
+  PracticeResult,
+  PracticeRunInfo,
   PracticeRunResponse,
+  PracticeTopicResult,
+  PracticeTopicState,
+  PracticeTopicView,
+  PracticeTrackView,
   ProgressState,
   PublicDemo,
   PublicExercise,
   RunItemProgress,
   Stars,
+  StartPracticeRequest,
   StartRunResponse,
 } from './api.ts';
 export * from './runtime/answers.ts';
@@ -144,8 +153,29 @@ export {
   generateExercise,
   generateItem,
   generateRun,
+  generateVaried,
+  levelSpecs,
   parseAnswer,
+  regenerateExercise,
 } from './runtime/exercise.ts';
+export { exerciseKey } from './runtime/variety.ts';
+export {
+  isPracticeTopicId,
+  narrowSpec,
+  PRACTICE_TOPIC_IDS,
+  PRACTICE_TOPIC_TITLES,
+  topicOfExercise,
+  topicsOfSpec,
+} from './practice/topics.ts';
+export type { PracticeTopicId } from './practice/topics.ts';
+export {
+  demoFits,
+  generatePracticeItem,
+  practiceDemoLevel,
+  practiceLadders,
+} from './practice/ladder.ts';
+export type { PracticeLadder, PracticeStep } from './practice/ladder.ts';
+export { answerText, spokenQuestion } from './practice/describe.ts';
 export type {
   Answer,
   AnyAnswer,
@@ -154,6 +184,9 @@ export type {
   GeneratedExercise,
   GeneratedItem,
   GenerateOptions,
+  ItemHistory,
+  ItemSource,
+  SourceSpec,
   ParseAnswerResult,
   Payload,
   Solution,

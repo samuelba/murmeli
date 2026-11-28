@@ -106,12 +106,35 @@ Murmeli tracks a **mastery** value per skill, from 0 to 1. The first round of a 
 
 Repetition follows a Leitner box system with intervals of 1, 2, 4, 8 and 16 days. A round with a score of at least 80% moves the skill one box up, so it comes back later; a score below 50% moves it back to the first box.
 
-**Practice** ("Üben") builds a round of 8 to 10 exercises from up to 3 skills of the open levels, in this order:
-1. skills that are due for repetition, the most overdue first,
-2. skills not played yet,
-3. the weakest skills.
+The same exercise is never asked twice in one round, as long as the level has enough different exercises. A level with only a few (two shapes, three words) repeats them, but never back to back.
 
-The exercises of the chosen skills are interleaved. Practice updates mastery and learning time, but never the stars on the map.
+## The practice ground
+"Üben" opens the **practice ground**. Kids pick a topic, or tap "Murmeli wählt" and let Murmeli choose.
+
+**Topics.** Every exercise belongs to one of 24 topics: counting, numbers, ten frames, comparing, the number line, number sequences, number bonds, plus, minus, number walls, times tables, sharing, shapes, patterns, the clock and money in math, and letters, first sounds, syllables, reading words, building words, writing, listen and write, and reading sentences in reading. A kid sees the topics of their own tracks. Mixed plus-and-minus levels feed both the plus and the minus topic.
+
+**Steps.** Each topic has a ladder of steps, made from the trail's levels that train it, in trail order: the further along the trail, the harder. Plus has 12 steps (from "plus up to 5 with pictures" to "plus up to 100"), minus 11, the clock 10. New levels in the content extend the ladders automatically.
+
+**What a kid can reach.** A topic is *open* once the trail opened one of its levels, and reaches 2 steps beyond the trail. Topics of the next world on the trail are already *ahead*: their first 2 steps can be tried before the trail gets there. Everything further away is *locked* and shown dimmed.
+
+**Adaptive difficulty.** Each kid has a rating per topic. A new topic starts at the step of the highest level the trail passed, and passing more of the trail later lifts it. A round on one topic has 10 exercises: one warm-up from the step below, mostly the kid's own step, and 1 to 3 from the next step, more the closer the kid is to it. After the round, each answer moves the rating by how much better or worse it went than expected: a kid in the middle of a step is expected to get 8 of 10 right on the first try, harder exercises less, easier ones more. From the middle of a step, roughly:
+- 10 of 10 right on the first try: the next step.
+- 7 to 9 of 10: the same step (9 gets close to the next one, which brings more exercises from it).
+- 6 or fewer: one step back.
+
+The first two rounds of a topic move faster, so a kid who already knows a topic quickly reaches the right step.
+
+**Mistakes come back.** An exercise not answered right on the first try (in a trail level or in practice) is kept and asked again:
+- once more at the end of the same practice round, after the solution was shown (at most 2 per round),
+- in the next practice round of its topic or in "Murmeli wählt", then 1 day and 3 days after each right answer. After three right answers in a row it is done; a wrong answer starts over. A right answer before the mistake is due again doesn't count towards the three.
+
+Up to 3 such exercises are mixed into a round, and up to 20 per topic and language are kept.
+
+**"Murmeli wählt"** mixes 9 new exercises from up to 3 open topics (3 each, more each when fewer topics are open), at each topic's own step, plus due mistakes. A topic that only comes up with a due mistake counts for the day, but its step only moves when the kid practiced new exercises of it. It prefers topics with due mistakes, then topics not practiced for a while, weak ones, and ones the kid knows from the trail but never practiced.
+
+**"Zeig mir".** Every topic has a demo: Murmeli shows a level demo that is only about that topic, from the kid's step or the nearest one below. It plays by itself the first time a kid practices the topic, and can be replayed any time.
+
+Practice updates the topic steps, mastery and learning time, but never the stars on the map. Parents see the steps, the accuracy and the open mistakes on the [progress page](../usage/parents.md).
 
 ## Badges and time
 - Murmeli records four badges: the first passed level, the first completed world, 5 levels with 3 stars, and the first practice round. Badges are never taken away, and nothing depends on streaks. Kids see them on the badge shelf of the trail map, and parents on the progress page.

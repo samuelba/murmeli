@@ -6,7 +6,7 @@ You run it yourself with Docker Compose. Nothing is sent to third parties: no an
 
 ## Features
 - **Trail map:** each subject is a trail of worlds and levels. A level opens when the one before it is passed, and a world opens when the worlds it builds on are done.
-- **Stars and practice:** a run of exercises earns 0 to 3 stars. Practice mode mixes the skills that are due for repetition or still weak.
+- **Stars and practice:** a run of exercises earns 0 to 3 stars. On the practice ground kids pick what they like to practice (plus, minus, counting, the clock, syllables …) or let Murmeli choose. The difficulty adapts to how well they do, and mistakes come back later.
 - **Show me:** the first time a kid opens a level, Murmeli the marmot shows step by step how the exercise works.
 - **Read-aloud:** prompts, hints and feedback can be read aloud for kids who can't read yet. The narration is pre-rendered offline with an open-weights AI voice.
 - **Family accounts:** one parent account, up to 8 kid profiles with drawn animal avatars. Kids need no email address and no password, only an optional picture PIN.

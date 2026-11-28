@@ -4,7 +4,8 @@ import {
   Param,
   createParamDecorator,
 } from '@nestjs/common';
-import { IsDefined, IsInt, Max, Min } from 'class-validator';
+import { PRACTICE_TOPIC_IDS, type PracticeTopicId } from '@murmeli/content';
+import { IsDefined, IsIn, IsInt, IsOptional, Max, Min } from 'class-validator';
 import type { KidEntity } from '../kids/kid.entity';
 import type { KidRequest } from '../kids/kid.guard';
 import { LEVEL_ID_PATTERN } from './content/curriculum';
@@ -46,4 +47,10 @@ export class AnswerDto {
 
   @IsDefined()
   answer: unknown;
+}
+
+export class StartPracticeDto {
+  @IsOptional()
+  @IsIn(PRACTICE_TOPIC_IDS)
+  topic?: PracticeTopicId;
 }

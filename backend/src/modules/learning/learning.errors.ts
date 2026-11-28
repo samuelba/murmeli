@@ -8,6 +8,8 @@ import {
   NOTHING_TO_PRACTICE,
   RUN_BUSY,
   RUN_NOT_FOUND,
+  TOPIC_LOCKED,
+  TOPIC_NOT_FOUND,
 } from './learning.constants';
 
 export const levelNotFound = () =>
@@ -30,6 +32,16 @@ export const nothingToPractice = () =>
     HttpStatus.CONFLICT,
     NOTHING_TO_PRACTICE,
     'There is nothing to practice yet',
+  );
+
+export const topicNotFound = () =>
+  apiError(HttpStatus.NOT_FOUND, TOPIC_NOT_FOUND, 'Practice topic not found');
+
+export const topicLocked = () =>
+  apiError(
+    HttpStatus.FORBIDDEN,
+    TOPIC_LOCKED,
+    'This practice topic is still locked',
   );
 
 export const dailyLimitReached = () =>

@@ -16,6 +16,7 @@ import {
   levelNotFound,
 } from '../learning.errors';
 import { LearningSettings } from '../learning.settings';
+import { PracticeRecorder } from '../practice/practice-recorder';
 import type { RunState, RunSummary } from '../runs/run-state';
 import { activeSeconds } from '../runs/run-state';
 import { localDay } from '../time/local-day';
@@ -67,6 +68,7 @@ export class ProgressService {
     private readonly curriculum: Curriculum,
     private readonly store: ProgressStore,
     private readonly settings: LearningSettings,
+    private readonly practice: PracticeRecorder,
   ) {}
 
   today(now: Date): string {
@@ -165,6 +167,13 @@ export class ProgressService {
         );
       }
       await this.updateMastery(kid.id, summary, now, db);
+      const practice = await this.practice.record(
+        kid,
+        state,
+        this.today(now),
+        now,
+        db,
+      );
       await this.store.addActivity(
         kid.id,
         this.today(now),
@@ -189,6 +198,7 @@ export class ProgressService {
         passed,
         unlocked: this.visibleUnlocks(kid, before.states, after.states),
         newBadges,
+        ...(practice ? { practice } : {}),
       };
     });
   }

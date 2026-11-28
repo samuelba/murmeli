@@ -1,5 +1,6 @@
 import { loadCurriculum } from '../content/curriculum';
 import type { LearningSettings } from '../learning.settings';
+import type { PracticeRecorder } from '../practice/practice-recorder';
 import type { RunState, RunSummary } from '../runs/run-state';
 import { type LearningKid, ProgressService } from './progress.service';
 import type { LevelProgressRow, ProgressStore } from './progress.store';
@@ -51,24 +52,37 @@ function setup(levels: LevelProgressRow[][] = [[]], unlockAll = false) {
     transaction: jest.fn((work: (d: typeof db) => unknown) => work(db)),
   };
   const settings = { timeZone: 'Europe/Zurich', unlockAll } as LearningSettings;
+  const practice = {
+    record: jest.fn((_kid: unknown, state: RunState) =>
+      Promise.resolve(
+        state.mode === 'practice'
+          ? { topics: [], reviewsSolved: 0, reviewsSaved: 0 }
+          : undefined,
+      ),
+    ),
+  };
   return {
     store,
     db,
+    practice,
     service: new ProgressService(
       curriculum,
       store as unknown as ProgressStore,
       settings,
+      practice as unknown as PracticeRecorder,
     ),
   };
 }
 
 function runState(overrides: Partial<RunState> = {}): RunState {
   return {
-    v: 2,
+    v: 3,
     runId: 'run-1',
     kidId: kid.id,
     levelId: 'math-zahlenwiese-01',
     mode: 'level',
+    topicId: null,
+    practice: null,
     locale: 'de-CH',
     seed: 1,
     startedAt: 0,
@@ -203,8 +217,12 @@ describe('ProgressService daily limit', () => {
 
 describe('ProgressService.finish', () => {
   it('records a passed level, mastery, activity, unlocks and badges in one transaction', async () => {
-    const { service, store, db } = setup([[], [row('math-zahlenwiese-01', 3)]]);
-    const result = await service.finish(kid, runState(), summary(1), NOW);
+    const { service, store, db, practice } = setup([
+      [],
+      [row('math-zahlenwiese-01', 3)],
+    ]);
+    const state = runState();
+    const result = await service.finish(kid, state, summary(1), NOW);
 
     expect(result).toEqual({
       score: 1,
@@ -230,6 +248,13 @@ describe('ProgressService.finish', () => {
       '2026-01-15',
       95,
       1,
+      db,
+    );
+    expect(practice.record).toHaveBeenCalledWith(
+      kid,
+      state,
+      '2026-01-15',
+      NOW,
       db,
     );
   });
@@ -290,6 +315,7 @@ describe('ProgressService.finish', () => {
       stars: 2,
       passed: false,
       newBadges: ['first-practice'],
+      practice: { topics: [], reviewsSolved: 0, reviewsSaved: 0 },
     });
     expect(store.recordLevel).not.toHaveBeenCalled();
     expect(store.saveMastery).toHaveBeenCalled();

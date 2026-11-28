@@ -10,6 +10,7 @@ import {
   generateExercise,
   generateItem,
   generateRun,
+  exerciseKey,
   hashString,
   HINT_KEYS,
   HINTS,
@@ -20,6 +21,7 @@ import {
   mixSeed,
   parseAnswer,
   randomSeed,
+  regenerateExercise,
   runScore,
   starsFor,
   toPublicDemo,
@@ -100,7 +102,10 @@ describe('runs', () => {
     );
     assert.deepEqual(generateRun(level, 1234, options), run);
     assert.notDeepEqual(generateRun(level, 1235, options), run);
-    assert.deepEqual(generateItem(level, 1234, 3, options, run[2]), run[3]);
+    assert.deepEqual(
+      generateItem(level, 1234, 3, options, run.slice(0, 3)),
+      run[3],
+    );
   });
 
   it('avoids repeating the same item back to back', () => {
@@ -108,8 +113,35 @@ describe('runs', () => {
     const run = generateRun(tiny, 9, options, 20);
     const repeats = run
       .slice(1)
-      .filter((item, i) => item.focus === run[i]!.focus).length;
-    assert.ok(repeats < 10);
+      .filter((item, i) => item.key === run[i]!.key).length;
+    assert.equal(repeats, 0);
+  });
+
+  it('never repeats an exercise within a run while the pool has new ones', () => {
+    for (const id of [
+      'math-plusbruecke-01',
+      'math-zahlenwiese-02',
+      'math-rechenberg-01',
+      'math-uhrenturm-03',
+    ]) {
+      const pooled = content.index.levels[id]!.level;
+      for (let seed = 0; seed < 50; seed += 1) {
+        const keys = generateRun(pooled, seed, options).map((item) => item.key);
+        assert.equal(new Set(keys).size, keys.length, `${id} seed ${seed}`);
+      }
+    }
+  });
+
+  it('records the source so an item can be made again', () => {
+    for (const item of generateRun(level, 77, options)) {
+      const again = regenerateExercise(
+        content.index.levels,
+        item.source,
+        options,
+      );
+      assert.deepEqual(again?.solution, item.solution);
+      assert.equal(again && exerciseKey(again), item.key);
+    }
   });
 
   it('strips solutions from public exercises', () => {

@@ -1,8 +1,10 @@
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import {
+  type AnswerResponse,
   type FinishRunResponse,
   type GeneratedItem,
   type MapResponse,
+  type PracticeCatalogResponse,
   type StartRunResponse,
   generateRun,
   toPublicExercise,
@@ -352,28 +354,41 @@ describeWithDb('Learning engine (e2e)', () => {
     expect(await redis.exists(RUN_KEY_PREFIX + run.runId)).toBe(1);
   });
 
-  it('practices open skills, updating mastery but not stars', async () => {
+  async function runState(runId: string): Promise<RunState> {
+    return JSON.parse((await redis.get(RUN_KEY_PREFIX + runId))!) as RunState;
+  }
+
+  function practice(kid: Kid, body: object = {}) {
+    return kid.parent.post('/api/learn/practice/runs').send(body);
+  }
+
+  it('mixes open topics for "Murmeli wählt", updating mastery but not stars', async () => {
     const kid = await newKid();
     await playPerfect(kid, FIRST);
-    const practice = (
-      await kid.parent.post('/api/learn/practice/runs').expect(201)
-    ).body as StartRunResponse;
-    expect(practice.items.length).toBeGreaterThanOrEqual(8);
-    expect(practice.items.length).toBeLessThanOrEqual(10);
-    expect(practice.demoSeen).toBe(true);
-    expect(practice).not.toHaveProperty('demo');
+    const mix = (await practice(kid).expect(201)).body as StartRunResponse;
+    expect(mix.items).toHaveLength(9);
+    expect(mix.demoSeen).toBe(true);
+    expect(mix).not.toHaveProperty('demo');
+    expect(mix.practice).toEqual({ topic: null, level: 0, maxLevel: 0 });
 
-    const state = JSON.parse(
-      (await redis.get(RUN_KEY_PREFIX + practice.runId))!,
-    ) as RunState;
-    expect(state).toMatchObject({ mode: 'practice', levelId: null });
+    const state = await runState(mix.runId);
+    expect(state).toMatchObject({
+      mode: 'practice',
+      levelId: null,
+      topicId: null,
+    });
     const answered = state.items[0];
-    await answer(kid, practice.runId, 0, answered.solution.answer).expect(200);
+    await answer(kid, mix.runId, 0, answered.solution.answer).expect(200);
 
-    const result = await finish(kid, practice.runId);
+    const result = await finish(kid, mix.runId);
     expect(result.newBadges).toEqual(['first-practice']);
     expect(result.passed).toBe(false);
     expect(result.unlocked).toEqual({ levels: [], worlds: [] });
+    expect(result.practice).toEqual({
+      topics: [expect.objectContaining({ id: answered.topic })],
+      reviewsSolved: 0,
+      reviewsSaved: 0,
+    });
 
     const levels = await db.query<
       { level_id: string; stars: number; runs: number }[]
@@ -385,7 +400,7 @@ describeWithDb('Learning engine (e2e)', () => {
     const attempts = await db.query<
       { level_id: string | null; mode: string }[]
     >(`SELECT "level_id", "mode" FROM "attempts" WHERE "run_id" = $1`, [
-      practice.runId,
+      mix.runId,
     ]);
     expect(attempts).toEqual([{ level_id: null, mode: 'practice' }]);
     const skills = await db.query<{ skill_id: string }[]>(
@@ -393,6 +408,98 @@ describeWithDb('Learning engine (e2e)', () => {
       [kid.id],
     );
     expect(skills.map((s) => s.skill_id)).toContain(answered.skillId);
+    const topics = await db.query<
+      { topic_id: string; runs: number; items: number; first_try: number }[]
+    >(
+      `SELECT "topic_id", "runs", "items", "first_try" FROM "practice_topic_progress" WHERE "kid_id" = $1`,
+      [kid.id],
+    );
+    expect(topics).toEqual([
+      { topic_id: answered.topic, runs: 1, items: 1, first_try: 1 },
+    ]);
+  });
+
+  it('lists the practice ground and validates the chosen topic', async () => {
+    const kid = await newKid();
+    const { body } = await kid.parent.get('/api/learn/practice').expect(200);
+    const catalog = body as PracticeCatalogResponse;
+    expect(catalog.tracks.map((track) => track.id)).toEqual([
+      'math',
+      'reading-de',
+    ]);
+    const topics = catalog.tracks.flatMap((track) => track.topics);
+    expect(topics.find((topic) => topic.id === 'count')).toMatchObject({
+      state: 'open',
+      level: 1,
+      practiced: false,
+    });
+    expect(topics.find((topic) => topic.id === 'plus')?.state).toBe('locked');
+    expect(catalog.mix.available).toBe(true);
+
+    await practice(kid, { topic: 'flying' }).expect(400);
+    await practice(kid, { topic: 'count', extra: 1 }).expect(400);
+    await practice(kid, { topic: 'plus' })
+      .expect(403)
+      .expect(({ body: error }) =>
+        expect(error.errorCode).toBe('TOPIC_LOCKED'),
+      );
+  });
+
+  it('practices one topic, repeats a miss and asks it again in the next run', async () => {
+    const kid = await newKid();
+    const first = (await practice(kid, { topic: 'count' }).expect(201))
+      .body as StartRunResponse;
+    expect(first.items).toHaveLength(10);
+    expect(first.demoSeen).toBe(false);
+    expect(first.demo?.type).toBe('count-objects');
+    expect(first.practice).toEqual({ topic: 'count', level: 1, maxLevel: 3 });
+
+    const state = await runState(first.runId);
+    const wrong = { value: 99 };
+    await answer(kid, first.runId, 0, wrong).expect(200);
+    const missed = (await answer(kid, first.runId, 0, wrong).expect(200))
+      .body as AnswerResponse;
+    expect(missed.repeat).toMatchObject({ index: 10, again: 'repeat' });
+    for (const [index, item] of state.items.entries()) {
+      if (index > 0) {
+        await answer(kid, first.runId, index, item.solution.answer).expect(200);
+      }
+    }
+    await answer(kid, first.runId, 10, state.items[0].solution.answer)
+      .expect(200)
+      .expect(({ body: response }) =>
+        expect(response).toEqual({ correct: true, attempt: 1 }),
+      );
+    const result = await finish(kid, first.runId);
+    expect(result.practice).toMatchObject({
+      topics: [{ id: 'count', levelBefore: 1 }],
+      reviewsSaved: 1,
+    });
+    const [saved] = await db.query<{ item_key: string; box: number }[]>(
+      `SELECT "item_key", "box" FROM "practice_reviews" WHERE "kid_id" = $1`,
+      [kid.id],
+    );
+    expect(saved).toEqual({ item_key: state.items[0].key, box: 0 });
+
+    const second = (await practice(kid, { topic: 'count' }).expect(201))
+      .body as StartRunResponse;
+    expect(second.demoSeen).toBe(true);
+    const again = await runState(second.runId);
+    const review = again.items.findIndex((item) => item.again === 'review');
+    expect(review).toBeGreaterThan(0);
+    expect(second.items[review]?.again).toBe('review');
+    await answer(
+      kid,
+      second.runId,
+      review,
+      again.items[review].solution.answer,
+    ).expect(200);
+    expect((await finish(kid, second.runId)).practice?.reviewsSolved).toBe(1);
+    const [moved] = await db.query<{ box: number }[]>(
+      `SELECT "box" FROM "practice_reviews" WHERE "kid_id" = $1`,
+      [kid.id],
+    );
+    expect(moved).toEqual({ box: 1 });
   });
 
   it('refuses new runs once the daily limit is reached', async () => {
@@ -453,6 +560,8 @@ describeWithDb('Learning engine (e2e)', () => {
     expect(body.badges).toEqual([
       expect.objectContaining({ id: 'first-level' }),
     ]);
+    expect(body.practice.topics).toEqual([]);
+    expect(body.practice.days).toHaveLength(14);
 
     const other = await newKid();
     await other.parent
@@ -498,6 +607,9 @@ describeWithDb('Learning engine (e2e)', () => {
         skills: [expect.objectContaining({ skillId: 'math.count.to5' })],
         activity: [expect.objectContaining({ runs: 1 })],
         badges: [expect.objectContaining({ badgeId: 'first-level' })],
+        practiceTopics: [],
+        practiceDays: [],
+        practiceReviews: [],
         attempts: [
           expect.objectContaining({
             skillId: 'math.count.to5',
@@ -516,6 +628,9 @@ describeWithDb('Learning engine (e2e)', () => {
       'attempts',
       'daily_activity',
       'kid_badges',
+      'practice_topic_progress',
+      'practice_daily',
+      'practice_reviews',
     ]) {
       const [row] = await db.query<{ n: number }[]>(
         `SELECT count(*)::int AS "n" FROM "${table}" WHERE "kid_id" = $1`,

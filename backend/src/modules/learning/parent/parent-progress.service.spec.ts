@@ -1,6 +1,9 @@
 import type { KidsService } from '../../kids/kids.service';
 import { loadCurriculum } from '../content/curriculum';
 import type { LearningSettings } from '../learning.settings';
+import type { PracticeRecorder } from '../practice/practice-recorder';
+import { PracticeService } from '../practice/practice.service';
+import type { PracticeStore, ReviewRow } from '../practice/practice.store';
 import { ProgressService } from '../progress/progress.service';
 import type { ProgressStore } from '../progress/progress.store';
 import { ParentProgressService } from './parent-progress.service';
@@ -74,16 +77,30 @@ function setup() {
     curriculum,
     store as unknown as ProgressStore,
     settings,
+    {} as PracticeRecorder,
+  );
+  const practiceStore = {
+    topics: jest.fn().mockResolvedValue([]),
+    reviews: jest.fn().mockResolvedValue([]),
+    daily: jest.fn().mockResolvedValue([]),
+  };
+  const practice = new PracticeService(
+    curriculum,
+    progress,
+    practiceStore as unknown as PracticeStore,
   );
   return {
     store,
     kids,
+    practiceStore,
     service: new ParentProgressService(
       kids as unknown as KidsService,
       curriculum,
       progress,
       store as unknown as ProgressStore,
       settings,
+      practice,
+      practiceStore as unknown as PracticeStore,
     ),
   };
 }
@@ -158,5 +175,99 @@ describe('ParentProgressService', () => {
         earnedAt: '2026-03-09T08:00:00.000Z',
       },
     ]);
+  });
+
+  it('reports the practice ground: steps, recent accuracy and open mistakes', async () => {
+    const { service, practiceStore } = setup();
+    const practicedAt = new Date('2026-03-09T09:00:00Z');
+    practiceStore.topics.mockResolvedValue([
+      {
+        topicId: 'count',
+        rating: 1.6,
+        pathStep: 0,
+        runs: 3,
+        items: 30,
+        firstTry: 24,
+        accuracy: 0.8,
+        demoSeen: true,
+        lastPracticedAt: practicedAt,
+      },
+      {
+        topicId: 'shapes',
+        rating: 0.5,
+        pathStep: -1,
+        runs: 0,
+        items: 0,
+        firstTry: 0,
+        accuracy: undefined,
+        demoSeen: true,
+        lastPracticedAt: null,
+      },
+    ]);
+    const review = (
+      topicId: ReviewRow['topicId'],
+      levelId: string,
+      misses: number,
+    ): ReviewRow => ({
+      id: `r-${levelId}`,
+      topicId,
+      itemKey: `key-${levelId}`,
+      source: { levelId, generator: 0, seed: 7 },
+      tier: 0,
+      box: 0,
+      misses,
+      dueAt: NOW,
+    });
+    practiceStore.reviews.mockResolvedValue([
+      review('count', 'math-zahlenwiese-01', 2),
+      review('count', 'gone-level', 1),
+      review('patterns', 'math-formenwald-05', 1),
+    ]);
+    practiceStore.daily.mockResolvedValue([
+      { day: '2026-03-09', topicId: 'count', items: 10, firstTry: 8 },
+      { day: '2026-03-09', topicId: 'shapes', items: 2, firstTry: 1 },
+    ]);
+
+    const { practice } = await service.forKid('u1', 'kid-1', NOW);
+
+    expect(practiceStore.daily).toHaveBeenCalledWith('kid-1', '2026-02-25');
+    expect(practice.topics.map((topic) => topic.id)).toEqual([
+      'count',
+      'patterns',
+    ]);
+    expect(practice.topics[0]).toMatchObject({
+      title: 'Counting',
+      trackId: 'math',
+      state: 'open',
+      level: 2,
+      runs: 3,
+      items: 30,
+      firstTry: 24,
+      recentItems: 10,
+      recentFirstTry: 8,
+      lastPracticedAt: '2026-03-09T09:00:00.000Z',
+      openMistakes: 2,
+    });
+    expect(practice.topics[0].mistakes).toEqual([
+      {
+        question: expect.stringMatching(/^How many/),
+        answer: expect.stringMatching(/^[1-3]$/),
+        misses: 2,
+        dueAt: NOW.toISOString(),
+      },
+    ]);
+    expect(practice.topics[1]).toMatchObject({
+      id: 'patterns',
+      runs: 0,
+      openMistakes: 1,
+      lastPracticedAt: null,
+    });
+    expect(practice.topics[1].mistakes[0].answer).toEqual(expect.any(String));
+    expect(practice.days).toHaveLength(14);
+    expect(practice.days.at(-2)).toEqual({
+      day: '2026-03-09',
+      items: 12,
+      firstTry: 9,
+    });
   });
 });

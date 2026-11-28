@@ -20,6 +20,8 @@ Everything is stored in the Postgres database of your installation.
 - Per skill: mastery value, repetition box and next review date.
 - Each answer: level or practice, skill, exercise type, which try, right or wrong, and how long it took. The answer itself is not stored.
 - Per day: learning time and number of rounds.
+- Per practice topic: the adaptive step (a number), the number of rounds and exercises, how many were right on the first try, when it was last practiced and whether its demo was seen. Per day and topic: the number of exercises and first-try answers. Like the daily learning time, these are kept until the kid profile is deleted.
+- Mistakes to ask again: which exercise (the level, the generator and a random seed it was made from, never the kid's answer), how often it was missed, and when it is due again. At most 20 per topic and language; a mistake is deleted after three right answers.
 - Badges and when they were earned.
 
 **Audit log**
