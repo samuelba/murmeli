@@ -138,7 +138,10 @@ describe('Money', () => {
     );
     await click('relation-gt');
     expect(answers).toEqual([{ relation: 'gt' }]);
-    expect(element.querySelector('.slot')?.textContent?.trim()).toBe('>');
+    expect(element.querySelector('.slot mu-relation-sign')?.getAttribute('data-relation')).toBe(
+      'gt',
+    );
+    expect(byTestId(element, 'relation-gt').querySelector('mu-relation-sign')).not.toBeNull();
     await update({ locked: true, reveal: { relation: 'gt' }, cue: { tapAnswer: true } });
     expect(byTestId(element, 'relation-gt').classList).toContain('mu-choice--revealed');
     await click('relation-lt');

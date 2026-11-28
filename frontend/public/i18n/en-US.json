@@ -347,6 +347,7 @@
       },
       "compareLeft": "Left",
       "compareRight": "Right",
+      "compareSame": "The same",
       "line": {
         "label": "Number line from {{start}} to {{end}}",
         "tick": "Mark {{number}} of {{total}}",

@@ -98,7 +98,7 @@ interface Prompt {
 | `count-objects` | math | Counts pictures and taps the matching number | `{ value: number }` |
 | `number-recognition` | math | Hears or sees a number and taps it among choices | `{ value }` |
 | `ten-frame` | math | Reads a quantity from a Zehnerfeld or Zwanzigerfeld and taps it | `{ value }` |
-| `compare` | math | Taps <, > or = between two numbers or quantities | `{ relation: "lt"\|"gt"\|"eq" }` |
+| `compare` | math | Two quantities: taps the side with more, or "the same". Two numbers: taps <, > or =, drawn as a crocodile | `{ relation: "lt"\|"gt"\|"eq" }`, left to right (tapping the left side sends `gt`) |
 | `number-line` | math | Finds or places a number on a number line | `{ value }` |
 | `add-sub` | math | Solves a + b or a − b, with optional objects or a ten-frame | `{ value }` |
 | `number-bond` | math | Fills the missing part in a Zahlenhaus | `{ values: number[] }` |

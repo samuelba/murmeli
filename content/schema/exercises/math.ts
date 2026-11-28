@@ -171,7 +171,8 @@ export const CompareParamsSchema = z.strictObject({
 export const compare = defineExerciseType({
   id: 'compare',
   domain: 'math',
-  description: 'Tap <, > or = between two quantities or numbers.',
+  description:
+    'Two quantities: tap the side with more, or "the same". Two numbers: tap <, > or =.',
   paramsSchema: CompareParamsSchema,
   frames: {
     quantities: {

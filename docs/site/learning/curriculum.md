@@ -59,7 +59,7 @@ The Zehnerhütte (structured quantities and splitting numbers) comes before the 
 | `count-objects` | counts pictures and taps the matching number |
 | `number-recognition` | hears a number, or sees dots, fingers or a ten-frame, and taps the number |
 | `ten-frame` | reads a quantity from a Zehnerfeld or Zwanzigerfeld |
-| `compare` | taps <, > or = between two numbers or quantities |
+| `compare` | taps the side with more (or "the same") between two quantities, or the crocodile signs <, > or = between two numbers |
 | `number-line` | finds or places a number on a Zahlenstrahl |
 | `add-sub` | solves an addition or subtraction, sometimes with pictures or a ten-frame |
 | `number-bond` | fills in the missing part of a Zahlenhaus |

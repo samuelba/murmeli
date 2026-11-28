@@ -56,13 +56,13 @@ levels:
     items: 8
     passRatio: 0.8
     demo:
-      exercise: { type: compare, params: { mode: numbers, min: 2, max: 9 } }
+      exercise: { type: compare, params: { mode: numbers, min: 2, max: 9, allowEqual: false } }
       steps:
         - say: { de-CH: "Hier sind zwei Zahlen. Welche ist grösser?", en-US: "Here are two numbers. Which one is greater?" }
           action: { highlight: numbers }
-        - say: { de-CH: "Das Krokodil hat Hunger. Es will immer die grössere Zahl fressen.", en-US: "The crocodile is hungry. It always wants to eat the greater number." }
+        - say: { de-CH: "Schau, diese Zeichen sind hungrige Krokodile. Sie fressen immer die grössere Zahl.", en-US: "Look, these signs are hungry crocodiles. They always eat the greater number." }
           action: { highlight: signs }
-        - say: { de-CH: "Das Maul geht zur grösseren Zahl auf.", en-US: "Its mouth opens toward the greater number." }
+        - say: { de-CH: "Das Maul geht zur grösseren Zahl auf. Ich tippe auf dieses Krokodil!", en-US: "The mouth opens toward the greater number. I tap this crocodile!" }
           action: { tapAnswer: true }
     generators:
       - { type: compare, weight: 1, params: { mode: numbers, min: 0, max: 10 } }

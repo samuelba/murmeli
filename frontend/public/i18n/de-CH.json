@@ -347,6 +347,7 @@
       },
       "compareLeft": "Links",
       "compareRight": "Rechts",
+      "compareSame": "Gleich viele",
       "line": {
         "label": "Zahlenstrahl von {{start}} bis {{end}}",
         "tick": "Strich {{number}} von {{total}}",

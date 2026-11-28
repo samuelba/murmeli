@@ -130,7 +130,11 @@ export class PlayerPage {
     } else if ('choiceId' in answer) {
       await this.clickChoiceWith(undefined, answer.choiceId);
     } else if ('relation' in answer) {
-      await page.getByTestId(`relation-${answer.relation}`).click();
+      const bySide = item.type === 'compare' && payload['mode'] === 'quantities';
+      const sides = { gt: 'compare-left', lt: 'compare-right', eq: 'relation-eq' } as const;
+      await page
+        .getByTestId(bySide ? sides[answer.relation] : `relation-${answer.relation}`)
+        .click();
     } else if ('count' in answer) {
       for (let tap = 0; tap < answer.count; tap += 1) {
         await page.getByTestId('drum').click();
