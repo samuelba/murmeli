@@ -14,11 +14,13 @@ If your profile has a lock, Murmeli asks for your 4 pictures. Tap them in the ri
 The **Parents** button is for grown-ups.
 
 ## The trail map
-Every subject is a mountain trail. Your kid climbs from the valley at the bottom up to the summit.
+Every subject is a mountain trail of worlds. The map shows one world at a time and opens on the world with the next level to play.
 
 - **Tabs** at the top switch between the subjects, for example math and reading.
-- **Worlds** are the stretches of the trail, like the Zahlenwiese (number meadow) or the Lautwiese (sound meadow). Each world has its own landscape.
-- **Levels** are the yellow hiking signposts. Each shows up to 3 stars.
+- **Worlds** are the stretches of the trail, like the Zahlenwiese (number meadow) or the Lautwiese (sound meadow). Each world has its own landscape: a meadow, a forest, a brook, a clock tower, an alp with cows, a market and more.
+- **The world strip** below the tabs shows every world of the subject as a round picture of its landscape. A flag marks a finished world, a lock a closed one, and Murmeli sits on the world with the next level. Tap a picture to go there.
+- **The arrows** next to the world's name, or a swipe to the left or right on a touch screen, go to the next or the previous world. With a keyboard, the arrow keys, Home and End move along the world strip. Closed worlds can be looked at too.
+- **Levels** are the yellow hiking signposts. They climb in switchbacks from the bottom of the world to the top. Each shows up to 3 stars.
 - **Murmeli the marmot** stands at the next level to play ("You are here").
 - A **locked** level shakes when tapped and says to play the others first. A level opens when the one before it has at least 2 stars. A new world opens when the worlds before it are done.
 - A finished world gets a **summit flag**.

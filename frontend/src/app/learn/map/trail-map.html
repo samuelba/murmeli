@@ -108,33 +108,49 @@
       "
       data-testid="trail"
     >
-      <ol class="worlds">
-        @for (entry of worlds(); track entry.world.id) {
-          <li
-            class="world"
-            [attr.data-state]="entry.world.state"
-            [attr.data-testid]="'world-' + entry.world.id"
-            [attr.aria-labelledby]="'world-title-' + entry.world.id"
-          >
-            <mu-scene [scene]="entry.world.scene" />
-            <div class="world__link" [style.top.px]="entry.height">
-              <svg class="path" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 100 10">
-                <path class="path__bed" [attr.d]="entry.link" />
-                <path class="path__dash" [attr.d]="entry.link" />
-              </svg>
-            </div>
+      <p class="mu-visually-hidden" role="status" data-testid="world-status">
+        {{ announcement() }}
+      </p>
+      @if (view(); as view) {
+        <mu-world-strip
+          [worlds]="track.worlds"
+          [selected]="view.index"
+          [here]="currentWorld()"
+          [panelId]="'world-panel-' + track.id"
+          (chosen)="goTo($event)"
+        />
+
+        <div
+          class="world"
+          role="tabpanel"
+          [id]="'world-panel-' + track.id"
+          [attr.aria-labelledby]="'world-tab-' + view.world.id"
+          [attr.data-state]="view.world.state"
+          [attr.data-testid]="'world-' + view.world.id"
+        >
+          <div class="world__head">
+            <button
+              type="button"
+              class="mu-button mu-button--ghost world__nav"
+              data-testid="world-previous"
+              [attr.aria-disabled]="view.index === 0 ? 'true' : null"
+              [attr.aria-label]="'learn.map.previousWorld' | transloco"
+              (click)="goTo(view.index - 1)"
+            >
+              <mu-icon name="previous" />
+            </button>
             <div class="world__sign">
-              <h2 class="world__title" [id]="'world-title-' + entry.world.id">
-                @if (entry.world.state === 'locked') {
+              <h2 class="world__title">
+                @if (view.world.state === 'locked') {
                   <mu-icon name="lock" />
                 }
-                {{ entry.world.title }}
+                {{ view.world.title }}
               </h2>
-              <mu-speak class="world__speak" [text]="entry.world.title" />
-              @if (entry.world.state === 'locked') {
+              <mu-speak class="world__speak" [text]="view.world.title" />
+              @if (view.world.state === 'locked') {
                 <p class="world__meta">{{ 'learn.map.worldLocked' | transloco }}</p>
               } @else {
-                <p class="world__meta" [attr.data-testid]="'world-stars-' + entry.world.id">
+                <p class="world__meta" [attr.data-testid]="'world-stars-' + view.world.id">
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path
                       d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6-4.5-4.2 6.1-.7z"
@@ -142,67 +158,47 @@
                   </svg>
                   {{
                     'learn.map.worldStars'
-                      | transloco: { stars: entry.world.stars, max: entry.world.maxStars }
+                      | transloco: { stars: view.world.stars, max: view.world.maxStars }
                   }}
                 </p>
               }
             </div>
-            <div class="world__trail" [style.height.px]="entry.height">
-              <svg
-                class="path"
-                aria-hidden="true"
-                preserveAspectRatio="none"
-                [attr.viewBox]="'0 0 100 ' + entry.height"
-              >
-                <path class="path__bed" [attr.d]="entry.path" />
-                <path class="path__dash" [attr.d]="entry.path" />
-              </svg>
-              @if (entry.complete) {
-                <span
-                  class="summit"
-                  role="img"
-                  [attr.aria-label]="'learn.map.summit' | transloco"
-                  [attr.data-testid]="'summit-' + entry.world.id"
-                >
-                  <svg viewBox="0 0 48 64" aria-hidden="true">
-                    <rect x="6" y="4" width="5" height="58" rx="2" fill="#6b4a2b" />
-                    <path d="M11 6 H44 L36 18 L44 30 H11Z" fill="#e5322d" />
-                    <path
-                      d="M24 12 L26 16.5 L31 17 L27.2 20.2 L28.4 25 L24 22.4 L19.6 25 L20.8 20.2 L17 17 L22 16.5Z"
-                      fill="#fff"
-                    />
-                  </svg>
-                </span>
-              }
-              <ol class="levels">
-                @for (placed of entry.levels; track placed.level.id) {
-                  <li>
-                    <mu-signpost
-                      [style.left.%]="placed.x"
-                      [style.top.px]="placed.y"
-                      [level]="placed.level"
-                      [number]="placed.number"
-                      [pointsLeft]="placed.pointsLeft"
-                      (opened)="play($event)"
-                      (blocked)="locked()"
-                    />
-                    @if (placed.level.id === current()) {
-                      <mu-mascot
-                        class="here"
-                        pose="happy"
-                        data-testid="map-mascot"
-                        [class.here--left]="placed.x > 50"
-                        [style.left.%]="placed.x"
-                        [style.top.px]="placed.y"
-                      />
-                    }
-                  </li>
-                }
-              </ol>
-            </div>
-          </li>
-        }
-      </ol>
+            <button
+              type="button"
+              class="mu-button mu-button--ghost world__nav"
+              data-testid="world-next"
+              [attr.aria-disabled]="view.index === view.last ? 'true' : null"
+              [attr.aria-label]="'learn.map.nextWorld' | transloco"
+              (click)="goTo(view.index + 1)"
+            >
+              <mu-icon name="next" />
+            </button>
+          </div>
+
+          <div
+            class="stage"
+            data-testid="world-stage"
+            [style.height.px]="view.layout.height"
+            (pointerdown)="onPointerDown($event)"
+            (pointerup)="onPointerUp($event)"
+            (pointercancel)="onPointerCancel()"
+          >
+            <mu-world-trail
+              [world]="view.world"
+              [layout]="view.layout"
+              [current]="current()"
+              [from]="direction()"
+              (opened)="play($event)"
+              (blocked)="locked()"
+            />
+          </div>
+        </div>
+      } @else {
+        <div class="mu-learn-state" data-testid="map-empty">
+          <mu-mascot pose="happy" />
+          <p>{{ 'learn.map.empty' | transloco }}</p>
+        </div>
+      }
     </div>
   } @else {
     <div class="mu-learn-state" data-testid="map-empty">

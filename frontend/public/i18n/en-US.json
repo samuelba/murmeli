@@ -270,6 +270,16 @@
       },
       "worldStars": "{{stars}} of {{max}} stars",
       "worldLocked": "Still locked",
+      "worlds": "Worlds",
+      "world": "{{title}}, {{state}}",
+      "worldState": {
+        "locked": "still locked",
+        "unlocked": "open",
+        "passed": "done",
+        "skipped": "skipped"
+      },
+      "previousWorld": "Previous world",
+      "nextWorld": "Next world",
       "summit": "Summit reached!",
       "youAreHere": "You are here",
       "practice": "Practice",

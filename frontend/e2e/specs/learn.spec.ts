@@ -70,8 +70,31 @@ test.describe('trail map', () => {
 
   test('start-class placement marks earlier worlds as skipped', async ({ page }) => {
     await openMap(page, { learn: { startClass: '1' } });
+    await expect(page.getByTestId('world-math-zahlenwiese')).toHaveCount(0);
+    await expect(page.getByTestId('world-done-math-zahlenwiese')).toBeVisible();
+
+    await page.getByTestId('world-tab-math-zahlenwiese').click();
     await expect(page.getByTestId(`level-${FIRST}`)).toHaveAttribute('data-state', 'skipped');
     await expect(page.getByTestId('summit-math-zahlenwiese')).toBeVisible();
+  });
+
+  test('shows one world at a time and remembers it in the address', async ({ page }) => {
+    await openMap(page);
+    await expect(page.getByTestId('world-math-zahlenwiese')).toBeVisible();
+    await expect(page.getByTestId('world-tab-math-zahlenwiese')).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+
+    await page.getByTestId('world-next').click();
+    await expect(page.getByTestId('world-math-formenwald')).toBeVisible();
+    await expect(page).toHaveURL(/\/learn\?world=math-formenwald$/);
+
+    await page.reload();
+    await expect(page.getByTestId('world-math-formenwald')).toBeVisible();
+    await page.getByTestId('world-tab-math-formenwald').press('ArrowLeft');
+    await expect(page.getByTestId('world-math-zahlenwiese')).toBeVisible();
+    await expect(page.getByTestId('world-tab-math-zahlenwiese')).toBeFocused();
   });
 });
 
