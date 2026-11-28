@@ -7,28 +7,42 @@
 
   --sc-sky-top: #8fd3f7;
   --sc-sky-bottom: #e9f7ff;
+  --sc-sun: #ffe066;
   --sc-far: #9fc3dd;
   --sc-snow: #ffffff;
   --sc-hill: #7cc96a;
   --sc-hill2: #5fb453;
+  --sc-pasture: #a6dc7e;
   --sc-rock: #8c9aa8;
   --sc-water: #5bb8e8;
   --sc-wave: #e9f7ff;
+  --sc-sand: #f2dca4;
   --sc-fir: #2e7d4f;
-  --sc-tree: #4fa84a;
+  --sc-leaf: #4fa84a;
   --sc-trunk: #8a5a30;
   --sc-cloud: #ffffff;
   --sc-star: transparent;
   --sc-wood: #c98a4b;
   --sc-roof: #b23a2b;
   --sc-window: #fff1a0;
+  --sc-stone-wall: #e8dcc6;
+  --sc-cow: #ffffff;
+  --sc-cow-spot: #4a3a2e;
+  --sc-awning: #e5322d;
+  --sc-smoke: rgb(255 255 255 / 0.8);
 
   background: linear-gradient(180deg, var(--sc-sky-top), var(--sc-sky-bottom) 60%);
 }
 
 :host([data-scene='forest']) {
+  --sc-sky-bottom: #d6f0e0;
   --sc-hill: #5fae58;
   --sc-hill2: #3f8f45;
+}
+
+:host([data-scene='garden']) {
+  --sc-hill: #86d070;
+  --sc-hill2: #6cc05a;
 }
 
 :host([data-scene='mountain']),
@@ -39,48 +53,60 @@
 }
 
 :host([data-scene='bay']) {
-  --sc-hill: #f2dca4;
+  --sc-sky-bottom: #fff4dc;
+  --sc-hill2: #6fbf8a;
 }
 
-:host-context([data-theme='dark']) {
+:host([data-scene='alp']) {
+  --sc-hill: #93d273;
+  --sc-hill2: #79c25d;
+}
+
+:host([data-scene='market']) {
+  --sc-sky-bottom: #fff0d6;
+  --sc-hill2: #d9c7a3;
+}
+
+:host([data-scene='workshop']),
+:host([data-scene='hut']) {
+  --sc-sky-bottom: #fde9d6;
+}
+
+@mixin night {
   --sc-sky-top: #0e1a33;
   --sc-sky-bottom: #233a63;
+  --sc-sun: #f4f1d0;
   --sc-far: #2f4670;
   --sc-snow: #c9d6ea;
   --sc-hill: #2f5e46;
   --sc-hill2: #244c38;
+  --sc-pasture: #35664a;
   --sc-rock: #4a5a70;
   --sc-water: #2c5f8a;
   --sc-wave: #8ec5ff;
+  --sc-sand: #8a7a55;
   --sc-fir: #1d4a33;
-  --sc-tree: #2f6b45;
+  --sc-leaf: #2f6b45;
   --sc-trunk: #5a3c22;
   --sc-cloud: rgb(255 255 255 / 0.12);
   --sc-star: #fff1a0;
   --sc-wood: #7a5434;
   --sc-roof: #7a2a22;
   --sc-window: #ffd52e;
+  --sc-stone-wall: #8d8574;
+  --sc-cow: #d9d9d9;
+  --sc-cow-spot: #3a2d24;
+  --sc-awning: #9c2a26;
+  --sc-smoke: rgb(255 255 255 / 0.25);
+}
+
+:host-context([data-theme='dark']) {
+  @include night;
 }
 
 @media (prefers-color-scheme: dark) {
   :host-context(html:not([data-theme='light'])) {
-    --sc-sky-top: #0e1a33;
-    --sc-sky-bottom: #233a63;
-    --sc-far: #2f4670;
-    --sc-snow: #c9d6ea;
-    --sc-hill: #2f5e46;
-    --sc-hill2: #244c38;
-    --sc-rock: #4a5a70;
-    --sc-water: #2c5f8a;
-    --sc-wave: #8ec5ff;
-    --sc-fir: #1d4a33;
-    --sc-tree: #2f6b45;
-    --sc-trunk: #5a3c22;
-    --sc-cloud: rgb(255 255 255 / 0.12);
-    --sc-star: #fff1a0;
-    --sc-wood: #7a5434;
-    --sc-roof: #7a2a22;
-    --sc-window: #ffd52e;
+    @include night;
   }
 }
 
@@ -93,6 +119,10 @@ svg {
 
 .stars {
   fill: var(--sc-star);
+}
+
+.sun {
+  fill: var(--sc-sun);
 }
 
 .clouds {
@@ -119,8 +149,23 @@ svg {
   fill: var(--sc-hill2);
 }
 
+.pasture {
+  fill: var(--sc-pasture);
+}
+
 .water {
   fill: var(--sc-water);
+}
+
+.sand {
+  fill: var(--sc-sand);
+}
+
+.stream {
+  fill: none;
+  stroke: var(--sc-water);
+  stroke-width: 34;
+  stroke-linecap: round;
 }
 
 .wave {
@@ -130,19 +175,23 @@ svg {
   stroke-linecap: round;
 }
 
-.fir path {
+.fir {
   fill: var(--sc-fir);
 }
 
-.tree circle {
-  fill: var(--sc-tree);
+.leaf {
+  fill: var(--sc-leaf);
 }
 
-.trunk {
+.trunk,
+.door,
+.logs {
   fill: var(--sc-trunk);
 }
 
-.cross {
+.cross,
+.flagpole,
+.cow__horn {
   stroke: var(--sc-trunk);
   stroke-width: 4;
 }
@@ -150,7 +199,7 @@ svg {
 .bridge {
   fill: none;
   stroke: var(--sc-wood);
-  stroke-width: 12;
+  stroke-width: 14;
 }
 
 .bridge-rail {
@@ -159,32 +208,50 @@ svg {
   stroke-width: 4;
 }
 
-.sail {
-  fill: #fff;
+.sail--red,
+.pennant {
+  fill: #e5322d;
 }
 
-.boat,
-.chalet .wall {
+.hull,
+.wall,
+.wood {
   fill: var(--sc-wood);
 }
 
-.chalet .roof {
+.roof {
   fill: var(--sc-roof);
 }
 
-.chalet .door {
-  fill: var(--sc-trunk);
+.window {
+  fill: var(--sc-window);
 }
 
-.chalet .window {
-  fill: var(--sc-window);
+.tower__wall {
+  fill: var(--sc-stone-wall);
+}
+
+.clock {
+  fill: #fff;
+  stroke: var(--sc-trunk);
+  stroke-width: 4;
+}
+
+.clock__hands {
+  stroke: #1d1d1b;
+  stroke-width: 3;
+  stroke-linecap: round;
 }
 
 .gear {
   fill: none;
   stroke: var(--sc-snow);
-  stroke-width: 6;
-  stroke-dasharray: 5 4;
+  stroke-width: 8;
+  stroke-dasharray: 6 5;
+}
+
+.smoke {
+  fill: var(--sc-smoke);
 }
 
 .stem {
@@ -192,6 +259,49 @@ svg {
   stroke-width: 2;
 }
 
-.flower__center {
+.flower__center,
+.bell {
+  fill: #f7c600;
+}
+
+.cow {
+  fill: var(--sc-cow);
+}
+
+.cow__spot,
+.cow__leg {
+  fill: var(--sc-cow-spot);
+}
+
+.cow__muzzle {
+  fill: #f4a6a6;
+}
+
+.sail,
+.awning {
+  fill: #fff;
+}
+
+.awning__stripe,
+.bunting__flag {
+  fill: var(--sc-awning);
+}
+
+.bunting {
+  fill: none;
+  stroke: var(--sc-trunk);
+  stroke-width: 2;
+}
+
+.fruit {
+  fill: #e5322d;
+}
+
+.fruit--green {
+  fill: #7cc96a;
+}
+
+.fruit--yellow,
+.bunting__flag--alt {
   fill: #f7c600;
 }

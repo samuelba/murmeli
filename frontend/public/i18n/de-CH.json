@@ -270,6 +270,16 @@
       },
       "worldStars": "{{stars}} von {{max}} Sternen",
       "worldLocked": "Noch gesperrt",
+      "worlds": "Welten",
+      "world": "{{title}}, {{state}}",
+      "worldState": {
+        "locked": "noch gesperrt",
+        "unlocked": "offen",
+        "passed": "geschafft",
+        "skipped": "übersprungen"
+      },
+      "previousWorld": "Vorherige Welt",
+      "nextWorld": "Nächste Welt",
       "summit": "Gipfel erreicht!",
       "youAreHere": "Hier bist du",
       "practice": "Üben",

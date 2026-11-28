@@ -3,14 +3,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   DOCUMENT,
+  DestroyRef,
   ElementRef,
+  afterNextRender,
   afterRenderEffect,
   computed,
   inject,
   signal,
   untracked,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { AudioService } from '../../core/audio/audio.service';
 import { SoundEffects } from '../../core/audio/sound-effects';
@@ -27,21 +29,22 @@ import { BadgeIcon } from '../badges/badge-icon';
 import { BadgeShelf, BadgeShelfData } from '../badges/badge-shelf';
 import { KidBadges } from '../badges/kid-badges.service';
 import { LearnApi } from '../learn-api.service';
+import { prefersReducedMotion } from '../exercises/shared/motion';
 import { MapResponse, MapTrack } from '../learn.models';
-import { SceneView } from './scene';
-import { Signpost } from './signpost';
-import {
-  currentLevelId,
-  placeLevels,
-  trailEnds,
-  trailHeight,
-  trailPath,
-  worldComplete,
-} from './trail-layout';
+import { currentLevelId, currentWorldIndex, layoutWorld } from './trail-layout';
+import { hasModifier } from './keys';
+import { WorldStrip } from './world-strip';
+import { SlideDirection, WorldTrail } from './world-trail';
 
 export const TRACK_STORAGE_KEY = 'mu-learn-track';
+export const WORLD_QUERY_PARAM = 'world';
+/** The width a trail is laid out for until the page has been measured. */
+const DEFAULT_WIDTH = 720;
+const SWIPE_DISTANCE = 80;
+/** A tap that ends a swipe must not also open the signpost under the finger. */
+const SWIPE_CLICK_GUARD_MS = 500;
 
-/** `/learn`: the Alpine trail per track, from the valley (first world) up to the summit. */
+/** `/learn`: one world of a track at a time, with a strip of all its worlds to move between. */
 @Component({
   selector: 'mu-trail-map',
   imports: [
@@ -51,9 +54,9 @@ export const TRACK_STORAGE_KEY = 'mu-learn-track';
     FormError,
     Icon,
     Mascot,
-    SceneView,
-    Signpost,
     Speak,
+    WorldStrip,
+    WorldTrail,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './trail-map.html',
@@ -63,10 +66,19 @@ export class TrailMap {
   private readonly api = inject(LearnApi);
   private readonly kids = inject(KidsService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly storage = inject(SafeStorage);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly document = inject(DOCUMENT);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly audio = inject(AudioService);
+  private readonly effects = inject(SoundEffects);
+  private readonly transloco = inject(TranslocoService);
+  private readonly dialog = inject(Dialog);
+  private readonly kidBadges = inject(KidBadges);
   private scrolledTo: string | null = null;
+  private swipeStart: { x: number; y: number; pointer: number } | null = null;
+  private swipedAt = Number.NEGATIVE_INFINITY;
 
   protected readonly kid = inject(AuthService).activeKid;
   protected readonly map = signal<MapResponse | null>(null);
@@ -74,13 +86,15 @@ export class TrailMap {
   protected readonly loadError = signal<ErrorMessage | null>(null);
   protected readonly busy = signal(false);
   protected readonly error = signal<ErrorMessage | null>(null);
-  private readonly audio = inject(AudioService);
-  private readonly effects = inject(SoundEffects);
-  private readonly transloco = inject(TranslocoService);
-  private readonly dialog = inject(Dialog);
-  private readonly kidBadges = inject(KidBadges);
+  protected readonly direction = signal<SlideDirection | null>(null);
+  /** Read out by screen readers when the kid moves to another world. */
+  protected readonly announcement = signal('');
+  private readonly width = signal(DEFAULT_WIDTH);
   private readonly trackKey = `${TRACK_STORAGE_KEY}:${this.kid()?.id ?? ''}`;
   private readonly chosenTrack = signal<string | null>(this.storage.get(this.trackKey));
+  private readonly chosenWorld = signal<string | null>(
+    this.route.snapshot.queryParamMap.get(WORLD_QUERY_PARAM),
+  );
 
   protected readonly tracks = computed(() => this.map()?.tracks ?? []);
   protected readonly track = computed<MapTrack | null>(() => {
@@ -93,29 +107,36 @@ export class TrailMap {
     return map && kid ? this.kidBadges.earned(kid.id, map) : [];
   });
   protected readonly current = computed(() => currentLevelId(this.track()));
-  protected readonly worlds = computed(() => {
-    const worlds = this.track()?.worlds ?? [];
-    const placed = worlds.map((world, index) => placeLevels(world.levels, index));
-    const ends = trailEnds(placed);
-    return worlds.map((world, index) => {
-      const levels = placed[index]!;
-      const height = trailHeight(world.levels.length);
-      return {
-        world,
-        levels,
-        height,
-        path: trailPath(levels, height, ends[index]),
-        link: `M ${ends[index]!.bottom} 0 V 10`,
-        complete: worldComplete(world),
-      };
-    });
+  protected readonly currentWorld = computed(() => currentWorldIndex(this.track()));
+  protected readonly view = computed(() => {
+    const track = this.track();
+    const worlds = track?.worlds ?? [];
+    const chosen = worlds.findIndex((world) => world.id === this.chosenWorld());
+    const index = chosen >= 0 ? chosen : this.currentWorld();
+    const world = worlds[index];
+    if (!track || !world) {
+      return null;
+    }
+    return {
+      track,
+      world,
+      index,
+      last: worlds.length - 1,
+      layout: layoutWorld(world, this.width()),
+    };
   });
 
   constructor() {
     void this.load();
+    afterNextRender(() => this.observeWidth());
     afterRenderEffect(() => {
+      const view = this.view();
+      if (!view) {
+        return;
+      }
       const current = this.current();
-      if (current && current !== untracked(() => this.scrolledTo)) {
+      const here = view.world.levels.some((level) => level.id === current);
+      if (current && here && current !== untracked(() => this.scrolledTo)) {
         untracked(() => this.scrollTo(current));
       }
     });
@@ -125,7 +146,14 @@ export class TrailMap {
     this.loading.set(true);
     this.loadError.set(null);
     try {
-      this.map.set(await this.api.map());
+      const map = await this.api.map();
+      const owner = map.tracks.find((track) =>
+        track.worlds.some((world) => world.id === this.chosenWorld()),
+      );
+      if (owner) {
+        this.chosenTrack.set(owner.id);
+      }
+      this.map.set(map);
     } catch (error) {
       this.loadError.set(errorMessage(error));
     } finally {
@@ -134,8 +162,16 @@ export class TrailMap {
   }
 
   protected chooseTrack(id: string): void {
+    if (id === this.track()?.id) {
+      return;
+    }
     this.chosenTrack.set(id);
     this.storage.set(this.trackKey, id);
+    this.direction.set(null);
+    if (this.chosenWorld() !== null) {
+      this.chosenWorld.set(null);
+      this.syncUrl(null);
+    }
   }
 
   protected onTabKey(event: KeyboardEvent, index: number): void {
@@ -147,7 +183,7 @@ export class TrailMap {
       End: tracks.length - 1,
     };
     const target = targets[event.key];
-    if (target === undefined || tracks.length < 2) {
+    if (target === undefined || tracks.length < 2 || hasModifier(event)) {
       return;
     }
     event.preventDefault();
@@ -156,12 +192,62 @@ export class TrailMap {
     this.host.nativeElement.querySelector<HTMLElement>(`#${CSS.escape(`tab-${next.id}`)}`)?.focus();
   }
 
+  protected goTo(index: number): void {
+    const view = this.view();
+    const world = view?.track.worlds[index];
+    if (!view || !world || index === view.index) {
+      return;
+    }
+    this.direction.set(index > view.index ? 'next' : 'previous');
+    this.chosenWorld.set(world.id);
+    this.syncUrl(world.id);
+    this.announcement.set(
+      this.transloco.translate('learn.map.world', {
+        title: world.title,
+        state: this.transloco.translate(`learn.map.worldState.${world.state}`),
+      }),
+    );
+  }
+
+  protected onPointerDown(event: PointerEvent): void {
+    if (event.isPrimary === false || event.pointerType === 'mouse') {
+      return;
+    }
+    this.swipeStart = { x: event.clientX, y: event.clientY, pointer: event.pointerId };
+  }
+
+  protected onPointerUp(event: PointerEvent): void {
+    const start = this.swipeStart;
+    this.swipeStart = null;
+    const view = this.view();
+    if (!start || !view || start.pointer !== event.pointerId) {
+      return;
+    }
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    if (Math.abs(dx) < SWIPE_DISTANCE || Math.abs(dx) < 1.5 * Math.abs(dy)) {
+      return;
+    }
+    this.swipedAt = performance.now();
+    this.goTo(view.index + (dx < 0 ? 1 : -1));
+  }
+
+  protected onPointerCancel(): void {
+    this.swipeStart = null;
+  }
+
   protected locked(): void {
+    if (this.justSwiped()) {
+      return;
+    }
     this.effects.play('locked');
     this.audio.speak(this.transloco.translate('kid.navigation.locked'));
   }
 
   protected play(levelId: string): void {
+    if (this.justSwiped()) {
+      return;
+    }
     void this.router.navigate(['/learn/level', levelId]);
   }
 
@@ -191,6 +277,36 @@ export class TrailMap {
     }
   }
 
+  private justSwiped(): boolean {
+    return performance.now() - this.swipedAt < SWIPE_CLICK_GUARD_MS;
+  }
+
+  private syncUrl(worldId: string | null): void {
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { [WORLD_QUERY_PARAM]: worldId },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  }
+
+  private observeWidth(): void {
+    const host = this.host.nativeElement;
+    if (host.clientWidth > 0) {
+      this.width.set(host.clientWidth);
+    }
+    if (typeof ResizeObserver === 'undefined') {
+      return;
+    }
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry && entry.contentRect.width > 0) {
+        this.width.set(entry.contentRect.width);
+      }
+    });
+    observer.observe(host);
+    this.destroyRef.onDestroy(() => observer.disconnect());
+  }
+
   private scrollTo(levelId: string): void {
     const target = this.host.nativeElement.querySelector<HTMLElement>(
       `[data-testid="level-${CSS.escape(levelId)}"]`,
@@ -199,9 +315,9 @@ export class TrailMap {
       return;
     }
     this.scrolledTo = levelId;
-    const reduce = this.document.defaultView?.matchMedia?.(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
-    target.scrollIntoView?.({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+    target.scrollIntoView?.({
+      block: 'nearest',
+      behavior: prefersReducedMotion(this.document) ? 'auto' : 'smooth',
+    });
   }
 }

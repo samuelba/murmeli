@@ -34,7 +34,7 @@ order: 1
 grade: KG1                       # KG1 | KG2 | 1 | 2 – used for start-class placement
 requires: []                     # world ids that must be completed first
 title: { de-CH: Zahlenwiese, en-US: Number Meadow }
-scene: meadow                    # background theme on the trail map
+scene: meadow                    # landscape on the trail map, see SCENES in frontend/src/app/learn/map/scene.ts
 skills:
   - id: math.count.to5           # stable; mastery is tracked per skill
     lp21: MA.1.A.1               # Lehrplan 21 competency reference (informational)
