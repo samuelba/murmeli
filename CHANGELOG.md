@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/samuelba/murmeli/compare/v0.1.0...v0.2.0) (2026-11-28)
+
+
+### Features
+
+* **frontend:** draw practice topics as colorful illustrations ([3ce437d](https://github.com/samuelba/murmeli/commit/3ce437de5a4ed24474f9ae17734380684385825d))
+
 ## 0.1.0 (2026-11-28)
 
 
