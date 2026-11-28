@@ -16,7 +16,7 @@ levels:
     items: 6
     passRatio: 0.8
     demo:
-      exercise: { type: clock, params: { steps: hour, labels: digital, choices: 2 } }
+      exercise: { type: clock, params: { steps: hour, labels: both, choices: 2 } }
       target: '3:00'
       steps:
         - say: { de-CH: "Die Uhr hat einen kurzen und einen langen Zeiger.", en-US: "The clock has a short hand and a long hand." }
@@ -26,7 +26,7 @@ levels:
         - say: { de-CH: "Es ist drei Uhr!", en-US: "It is three o'clock!" }
           action: { tapAnswer: true }
     generators:
-      - { type: clock, weight: 1, params: { steps: hour, labels: digital, choices: 2 } }
+      - { type: clock, weight: 1, params: { steps: hour, labels: both, choices: 2 } }
 
   - id: math-uhrenturm-02
     title: { de-CH: Welche Stunde ist es?, en-US: Which Hour Is It? }
