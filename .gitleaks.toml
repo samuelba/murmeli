@@ -1,0 +1,11 @@
+title = "Murmeli gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Tests use fake, high-entropy keys on purpose"
+paths = [
+  '''\.spec\.ts$''',
+  '''^backend/test/''',
+]

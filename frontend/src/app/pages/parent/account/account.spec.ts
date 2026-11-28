@@ -16,7 +16,7 @@ import {
   submit,
   type,
 } from '../../../../testing/app-testing';
-import { resetDocumentState } from '../../../../testing/browser';
+import { resetDocumentState, stubObjectUrls } from '../../../../testing/browser';
 import { AccountPage } from './account-page';
 import { DataSection } from './data-section';
 import { EmailSection } from './email-section';
@@ -28,12 +28,11 @@ describe('account settings', () => {
   let http: HttpTestingController;
   let auth: AuthService;
   let confirmResult: boolean;
-  let createObjectURL: ReturnType<typeof vi.fn>;
+  let createObjectURL: ReturnType<typeof stubObjectUrls>['create'];
 
   beforeEach(() => {
     confirmResult = true;
-    createObjectURL = vi.fn(() => 'blob:x');
-    Object.assign(URL, { createObjectURL, revokeObjectURL: vi.fn() });
+    createObjectURL = stubObjectUrls('blob:x').create;
     TestBed.configureTestingModule({
       providers: [
         ...provideAppTesting(),

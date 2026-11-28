@@ -23,6 +23,8 @@ WORKDIR /app/frontend
 RUN npm run content:sync && npm run build && npm run check:external
 
 FROM nginxinc/nginx-unprivileged:alpine@sha256:b5047b9b76845eac124358373c6852377c52e4b05834a47647e955dd91cb8f1e AS production
+USER root
+RUN apk upgrade --no-cache
 COPY --chown=root:root frontend/nginx.conf.template frontend/security-headers.conf.template /etc/murmeli/
 COPY --chown=root:root --chmod=0755 frontend/docker-entrypoint.sh /usr/local/bin/murmeli-entrypoint.sh
 COPY --from=build --chown=root:root /app/frontend/dist/murmeli-frontend/browser /usr/share/nginx/html

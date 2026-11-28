@@ -37,7 +37,9 @@ WORKDIR /app/backend
 RUN apk add --no-cache postgresql18-client \
     && mkdir -p /app/backups \
     && chown node:node /app/backups \
-    && chmod 700 /app/backups
+    && chmod 700 /app/backups \
+    && rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack \
+       /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack
 COPY --from=content /app/content/package.json /app/content/
 COPY --from=content /app/content/node_modules /app/content/node_modules
 COPY --from=content /app/content/dist /app/content/dist

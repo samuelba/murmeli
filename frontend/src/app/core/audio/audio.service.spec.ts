@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { NavigationStart, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { KID, provideAppTesting } from '../../../testing/app-testing';
-import { resetDocumentState } from '../../../testing/browser';
+import { resetDocumentState, stubObjectUrls } from '../../../testing/browser';
 import { AuthService } from '../auth/auth.service';
 import { LanguageService } from '../i18n/language.service';
 import { indexManifest, manifestVersion } from './audio-manifest';
@@ -248,11 +248,7 @@ describe('AudioService', () => {
   });
 
   it('unlocks the audio element with a silent clip on the first tap', async () => {
-    const create = vi.fn(() => 'blob:silent');
-    const revoke = vi.fn();
-    const original = Object.getOwnPropertyDescriptor(URL, 'revokeObjectURL');
-    Object.defineProperty(URL, 'createObjectURL', { configurable: true, value: create });
-    Object.defineProperty(URL, 'revokeObjectURL', { configurable: true, value: revoke });
+    const { create, revoke } = stubObjectUrls('blob:silent');
     document.dispatchEvent(new Event('pointerdown'));
     document.dispatchEvent(new Event('pointerdown'));
     service.unlock();
@@ -261,11 +257,6 @@ describe('AudioService', () => {
     await flushMicrotasks();
     await flushMicrotasks();
     expect(revoke).toHaveBeenCalledWith('blob:silent');
-    Reflect.deleteProperty(URL, 'createObjectURL');
-    Reflect.deleteProperty(URL, 'revokeObjectURL');
-    if (original) {
-      Object.defineProperty(URL, 'revokeObjectURL', original);
-    }
   });
 
   it('narrates only when the kid setting reads aloud', async () => {

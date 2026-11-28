@@ -326,9 +326,13 @@ describeWithDb('Learning engine (e2e)', () => {
   it('keeps one active run per kid', async () => {
     const kid = await newKid();
     const first = await start(kid);
-    const second = await start(kid);
+    expect((await start(kid)).runId).toBe(first.runId);
+
+    const second = await start(kid, 'math-formenwald-01');
+    expect(second.runId).not.toBe(first.runId);
     await answer(kid, first.runId, 0, { value: 1 }).expect(404);
-    await answer(kid, second.runId, 0, { value: 1 }).expect(200);
+    const [item] = await replay(second.runId);
+    await answer(kid, second.runId, 0, item.solution.answer).expect(200);
   });
 
   it('does not let kid B use kid A’s run', async () => {
