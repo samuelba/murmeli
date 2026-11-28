@@ -99,9 +99,11 @@ export interface BadgeShelfData {
 
     .badge {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: var(--mu-space-3);
+      gap: var(--mu-space-2);
       padding: var(--mu-space-3);
+      text-align: center;
       border: 2px dashed var(--mu-color-border-strong);
       border-radius: var(--mu-radius-md);
       background: var(--mu-color-surface-alt);
@@ -115,7 +117,8 @@ export interface BadgeShelfData {
 
     .badge__text {
       flex: 1;
-      min-width: 0;
+      width: 100%;
+      overflow-wrap: break-word;
     }
 
     .badge__text p {
