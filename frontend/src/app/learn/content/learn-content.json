@@ -494,6 +494,10 @@
       "de-CH": "Schau die Nachbarzahlen an.",
       "en-US": "Look at the numbers next to it."
     },
+    "look-at-the-sky": {
+      "de-CH": "Schau den Himmel an. Wo steht die Sonne?",
+      "en-US": "Look at the sky. Where is the sun?"
+    },
     "look-at-the-steps": {
       "de-CH": "Wie gross sind die Schritte? Mach den nächsten Schritt.",
       "en-US": "How big are the steps? Take the next step."
@@ -505,6 +509,10 @@
     "match-pairs": {
       "de-CH": "Mach Paare: eins links, eins rechts.",
       "en-US": "Make pairs: one on the left, one on the right."
+    },
+    "month-season": {
+      "de-CH": "Winter ist Dezember, Januar und Februar. Dann kommen je drei Monate Frühling, Sommer und Herbst.",
+      "en-US": "Winter is December, January and February. Then come three months each of spring, summer and fall."
     },
     "parts-make-whole": {
       "de-CH": "Die zwei Zahlen unten sind zusammen die Zahl im Dach.",
@@ -522,6 +530,14 @@
       "de-CH": "Lies Laut für Laut und schleife die Laute zusammen.",
       "en-US": "Read sound by sound, then blend the sounds."
     },
+    "say-the-days": {
+      "de-CH": "Sag die Tage der Reihe nach auf, von Montag an.",
+      "en-US": "Say the days in order, starting with Sunday."
+    },
+    "say-the-months": {
+      "de-CH": "Sag die Monate der Reihe nach auf, von Januar an.",
+      "en-US": "Say the months in order, starting with January."
+    },
     "say-the-pattern": {
       "de-CH": "Sag das Muster laut.",
       "en-US": "Say the pattern out loud."
@@ -529,6 +545,14 @@
     "say-the-word-slowly": {
       "de-CH": "Sprich das Wort langsam. Welchen Laut hörst du zuerst?",
       "en-US": "Say the word slowly. Which sound comes first?"
+    },
+    "season-order": {
+      "de-CH": "Frühling, Sommer, Herbst, Winter. Dann beginnt es wieder von vorne.",
+      "en-US": "Spring, summer, fall, winter. Then it starts all over again."
+    },
+    "season-signs": {
+      "de-CH": "Schau den Baum an. Hat er Blüten, grüne Blätter, bunte Blätter oder Schnee?",
+      "en-US": "Look at the tree. Does it have blossoms, green leaves, colorful leaves or snow?"
     },
     "share-one-by-one": {
       "de-CH": "Verteile eins nach dem anderen auf die Teller.",

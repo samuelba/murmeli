@@ -14,6 +14,7 @@ export const SLOT_KINDS: readonly SlotKind[] = [
   'the-word',
   'carrier',
   'letter',
+  'text',
 ];
 
 export type TemplatePart =
@@ -144,6 +145,8 @@ export function resolveSlot(
       return typeof value === 'string' && lexicon?.letters[value] !== undefined
         ? lexicon.letters[value].text
         : undefined;
+    case 'text':
+      return typeof value === 'string' && value !== '' ? value : undefined;
   }
 }
 

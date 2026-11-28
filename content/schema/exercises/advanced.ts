@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { CALENDAR_ASKS, calendarNames } from '../calendar.ts';
+import type { CalendarRelation } from '../calendar.ts';
 import { clockTimes, timeWords } from '../clock.ts';
 import { currencyFor, denominationsFor } from '../money.ts';
 import type { Currency, MoneyGroup } from '../money.ts';
@@ -187,6 +189,153 @@ export const clock = defineExerciseType({
     p.labels === 'digital'
       ? []
       : clockTimes(p.steps).map((time) => timeWords(time, ctx.locale)),
+});
+
+export const CalendarParamsSchema = z.strictObject({
+  unit: z.enum(['daytime', 'weekday', 'season', 'month']),
+  ask: z.enum(['next', 'before', 'missing', 'relative', 'scene', 'season']),
+  relation: z.enum(['tomorrow', 'yesterday', 'both']).default('both'),
+  strip: z.boolean().default(true),
+  choices: choices(4).default(3),
+});
+export type CalendarParams = z.output<typeof CalendarParamsSchema>;
+
+const NAMED_ASKS: ReadonlySet<CalendarParams['ask']> = new Set([
+  'next',
+  'before',
+  'relative',
+  'season',
+]);
+
+export function calendarRelations(p: CalendarParams): CalendarRelation[] {
+  return p.relation === 'both' ? ['tomorrow', 'yesterday'] : [p.relation];
+}
+
+export function calendarFrameKeys(p: CalendarParams): string[] {
+  return p.ask === 'relative'
+    ? calendarRelations(p).map((relation) => `${p.unit}-${relation}`)
+    : [`${p.unit}-${p.ask}`];
+}
+
+export const calendar = defineExerciseType({
+  id: 'calendar',
+  domain: 'math',
+  description:
+    'Times of day, weekdays, months and seasons: what comes next, before, is missing, or fits the picture.',
+  paramsSchema: CalendarParamsSchema,
+  frames: {
+    'daytime-scene': {
+      speak: {
+        'de-CH': 'Welche Tageszeit ist es?',
+        'en-US': 'What time of day is it?',
+      },
+    },
+    'weekday-next': {
+      speak: {
+        'de-CH': 'Welcher Tag kommt nach {text:name}?',
+        'en-US': 'Which day comes after {text:name}?',
+      },
+    },
+    'weekday-before': {
+      speak: {
+        'de-CH': 'Welcher Tag kommt vor {text:name}?',
+        'en-US': 'Which day comes before {text:name}?',
+      },
+    },
+    'weekday-missing': {
+      speak: {
+        'de-CH': 'Welcher Tag fehlt?',
+        'en-US': 'Which day is missing?',
+      },
+    },
+    'weekday-tomorrow': {
+      speak: {
+        'de-CH': 'Heute ist {text:name}. Welcher Tag ist morgen?',
+        'en-US': 'Today is {text:name}. What day is tomorrow?',
+      },
+    },
+    'weekday-yesterday': {
+      speak: {
+        'de-CH': 'Heute ist {text:name}. Welcher Tag war gestern?',
+        'en-US': 'Today is {text:name}. What day was yesterday?',
+      },
+    },
+    'season-next': {
+      speak: {
+        'de-CH': 'Welche Jahreszeit kommt nach dem {text:name}?',
+        'en-US': 'Which season comes after {text:name}?',
+      },
+    },
+    'season-before': {
+      speak: {
+        'de-CH': 'Welche Jahreszeit kommt vor dem {text:name}?',
+        'en-US': 'Which season comes before {text:name}?',
+      },
+    },
+    'season-missing': {
+      speak: {
+        'de-CH': 'Welche Jahreszeit fehlt?',
+        'en-US': 'Which season is missing?',
+      },
+    },
+    'season-scene': {
+      speak: {
+        'de-CH': 'Welche Jahreszeit ist es?',
+        'en-US': 'Which season is it?',
+      },
+    },
+    'month-next': {
+      speak: {
+        'de-CH': 'Welcher Monat kommt nach dem {text:name}?',
+        'en-US': 'Which month comes after {text:name}?',
+      },
+    },
+    'month-before': {
+      speak: {
+        'de-CH': 'Welcher Monat kommt vor dem {text:name}?',
+        'en-US': 'Which month comes before {text:name}?',
+      },
+    },
+    'month-missing': {
+      speak: {
+        'de-CH': 'Welcher Monat fehlt?',
+        'en-US': 'Which month is missing?',
+      },
+    },
+    'month-season': {
+      speak: {
+        'de-CH': 'Welche Jahreszeit ist im {text:name}?',
+        'en-US': 'Which season is it in {text:name}?',
+      },
+    },
+  },
+  requirements: () => [],
+  issues: (p) => [
+    ...issueIf(
+      !CALENDAR_ASKS[p.unit].includes(p.ask),
+      ['ask'],
+      `${p.unit} can ask ${CALENDAR_ASKS[p.unit].join(', ')}`,
+    ),
+    ...issueIf(
+      p.relation !== 'both' && p.ask !== 'relative',
+      ['relation'],
+      'relation only applies to ask "relative"',
+    ),
+    ...issueIf(
+      !p.strip && p.ask === 'missing',
+      ['strip'],
+      'a missing name needs the strip',
+    ),
+  ],
+  frameUses: (p, ctx) => {
+    const slots: FrameUse['slots'] = NAMED_ASKS.has(p.ask)
+      ? { name: calendarNames(p.unit, ctx.locale) }
+      : {};
+    return calendarFrameKeys(p).map((frame) => ({ frame, slots }));
+  },
+  labels: (p, ctx) => [
+    ...calendarNames(p.ask === 'season' ? 'season' : p.unit, ctx.locale),
+  ],
 });
 
 export const MoneyParamsSchema = z.strictObject({

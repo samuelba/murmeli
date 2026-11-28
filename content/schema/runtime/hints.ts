@@ -106,6 +106,35 @@ export const HINTS = {
       'Der kurze Zeiger zeigt die Stunde. Der lange Zeiger zeigt die Minuten.',
     'en-US': 'The short hand shows the hour. The long hand shows the minutes.',
   },
+  'say-the-days': {
+    'de-CH': 'Sag die Tage der Reihe nach auf, von Montag an.',
+    'en-US': 'Say the days in order, starting with Sunday.',
+  },
+  'say-the-months': {
+    'de-CH': 'Sag die Monate der Reihe nach auf, von Januar an.',
+    'en-US': 'Say the months in order, starting with January.',
+  },
+  'season-order': {
+    'de-CH':
+      'Frühling, Sommer, Herbst, Winter. Dann beginnt es wieder von vorne.',
+    'en-US': 'Spring, summer, fall, winter. Then it starts all over again.',
+  },
+  'look-at-the-sky': {
+    'de-CH': 'Schau den Himmel an. Wo steht die Sonne?',
+    'en-US': 'Look at the sky. Where is the sun?',
+  },
+  'season-signs': {
+    'de-CH':
+      'Schau den Baum an. Hat er Blüten, grüne Blätter, bunte Blätter oder Schnee?',
+    'en-US':
+      'Look at the tree. Does it have blossoms, green leaves, colorful leaves or snow?',
+  },
+  'month-season': {
+    'de-CH':
+      'Winter ist Dezember, Januar und Februar. Dann kommen je drei Monate Frühling, Sommer und Herbst.',
+    'en-US':
+      'Winter is December, January and February. Then come three months each of spring, summer and fall.',
+  },
   'count-the-money': {
     'de-CH': 'Zähle das Geld zusammen. Beginne mit dem grössten Stück.',
     'en-US': 'Add up the money. Start with the biggest piece.',

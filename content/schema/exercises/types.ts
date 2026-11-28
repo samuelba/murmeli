@@ -4,7 +4,7 @@ import type { Locale } from '../locale.ts';
 import type { Picture, PictureField } from '../pictures.ts';
 
 export type SlotKind =
-  'number' | 'word' | 'plural' | 'the-word' | 'carrier' | 'letter';
+  'number' | 'word' | 'plural' | 'the-word' | 'carrier' | 'letter' | 'text';
 export type SlotValue = number | string;
 
 export type LocalizedTemplate = Readonly<Record<Locale, string>>;

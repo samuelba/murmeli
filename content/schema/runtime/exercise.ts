@@ -27,6 +27,7 @@ import {
   tenFrameRuntime,
 } from './math.ts';
 import {
+  calendarRuntime,
   clockRuntime,
   divisionShareRuntime,
   moneyRuntime,
@@ -72,6 +73,7 @@ export const EXERCISE_RUNTIMES = {
   'times-table': timesTableRuntime,
   'division-share': divisionShareRuntime,
   clock: clockRuntime,
+  calendar: calendarRuntime,
   'money-chf': moneyRuntime,
   'trace-letter': traceLetterRuntime,
   'listen-write': listenWriteRuntime,

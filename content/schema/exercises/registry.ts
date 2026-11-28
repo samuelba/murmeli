@@ -1,6 +1,12 @@
 import type { z } from 'zod';
 import type { PathSegment } from '../issues.ts';
-import { clock, divisionShare, moneyChf, timesTable } from './advanced.ts';
+import {
+  calendar,
+  clock,
+  divisionShare,
+  moneyChf,
+  timesTable,
+} from './advanced.ts';
 import {
   buildWord,
   initialSound,
@@ -42,6 +48,7 @@ export const EXERCISE_TYPES = {
   'times-table': timesTable,
   'division-share': divisionShare,
   clock,
+  calendar,
   'money-chf': moneyChf,
   'trace-letter': traceLetter,
   'listen-write': listenWrite,

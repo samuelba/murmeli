@@ -33,6 +33,7 @@ const VALID: Record<ExerciseTypeId, unknown> = {
   'times-table': { rows: [2, 5, 10] },
   'division-share': { divisors: [2, 3], objects: ['apple'] },
   clock: { steps: 'half' },
+  calendar: { unit: 'weekday', ask: 'next' },
   'money-chf': { mode: 'total', maxTotal: 10 },
   'trace-letter': { letters: ['A', 'm', '3'] },
   'listen-write': { words: ['mouse'] },
@@ -168,6 +169,7 @@ const INVALID: [ExerciseTypeId, unknown, RegExp][] = [
   ],
   ['division-share', { divisors: [1], objects: ['apple'] }, /params\.divisors/],
   ['clock', { steps: 'minute' }, /params\.steps/],
+  ['calendar', { unit: 'daytime', ask: 'next' }, /daytime can ask scene/],
   [
     'money-chf',
     { mode: 'total', minItems: 5, maxItems: 2, maxTotal: 10 },
@@ -196,7 +198,7 @@ const INVALID: [ExerciseTypeId, unknown, RegExp][] = [
 
 describe('exercise type registry', () => {
   it('has all exercise types with schemas, frames and descriptions', () => {
-    assert.equal(EXERCISE_TYPE_IDS.length, 22);
+    assert.equal(EXERCISE_TYPE_IDS.length, 23);
     for (const id of EXERCISE_TYPE_IDS) {
       assert.equal(EXERCISE_TYPES[id].id, id);
       assert.equal(
