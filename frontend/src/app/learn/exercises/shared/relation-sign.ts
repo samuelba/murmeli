@@ -47,6 +47,12 @@ export type Relation = 'lt' | 'eq' | 'gt';
       stroke-width: 6;
     }
 
+    .teeth,
+    .eye,
+    .pupil {
+      opacity: 0.35;
+    }
+
     .teeth {
       fill: currentColor;
       stroke-width: 1.5;
