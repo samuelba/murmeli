@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.2.0](https://github.com/samuelba/murmeli/compare/v0.1.0...v0.2.0) (2026-11-28)
+
+
 ## 0.1.0 (2026-11-28)
 
 
