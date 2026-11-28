@@ -1,4 +1,4 @@
-import { Dialog, DialogRef } from '@angular/cdk/dialog';
+import { DIALOG_DATA, Dialog, DialogRef } from '@angular/cdk/dialog';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
@@ -15,7 +15,7 @@ import {
   settle,
 } from '../../../testing/app-testing';
 import { resetDocumentState } from '../../../testing/browser';
-import { run } from '../../../testing/learn-testing';
+import { exercise, run } from '../../../testing/learn-testing';
 import { BADGE_STORAGE_KEY } from '../badges/kid-badges.service';
 import { LearnApi } from '../learn-api.service';
 import type { FinishRunResponse } from '../learn.models';
@@ -24,7 +24,7 @@ import { ExitDialog } from './exit-dialog';
 import { Player } from './player';
 import { PlayerStore } from './player-store';
 import { ProgressDots } from './progress-dots';
-import { Results } from './results';
+import { Results, stepChange, stepLineKey } from './results';
 
 const FINISHED: FinishRunResponse = {
   score: 1,
@@ -51,6 +51,7 @@ describe('Player', () => {
     dialogResult = true;
     narrate = vi.fn().mockResolvedValue(undefined);
     api = {
+      practiceCatalog: vi.fn(),
       map: vi.fn().mockResolvedValue({ tracks: [] }),
       startLevel: vi.fn().mockResolvedValue(run()),
       startPractice: vi.fn().mockResolvedValue(run({ demo: undefined, demoSeen: true })),
@@ -102,6 +103,7 @@ describe('Player', () => {
 
     expect(byTestId(element, 'prompt-text').textContent?.trim()).toBe('Aufgabe 1');
     expect(document.activeElement).toBe(byTestId(element, 'prompt-text'));
+    expect(byTestId(element, 'prompt-text').getAttribute('aria-describedby')).toBeNull();
     expect(byTestId(element, 'progress-text').textContent).toContain('Aufgabe 1 von 2');
     byTestId(element, 'choice-c3').click();
     await settle(fixture);
@@ -278,6 +280,92 @@ describe('Player', () => {
     expect(element.querySelector('[data-testid="show-demo"]')).toBeNull();
   });
 
+  it('runs a practice topic from the route and offers other topics at the end', async () => {
+    params.next(convertToParamMap({ topicId: 'plus' }));
+    api.startPractice.mockResolvedValue(
+      run({
+        demoSeen: true,
+        items: [run().items[0]!],
+        practice: { topic: 'plus', level: 2, maxLevel: 4 },
+      }),
+    );
+    api.finish.mockResolvedValue({
+      ...FINISHED,
+      passed: false,
+      unlocked: { levels: [], worlds: [] },
+      practice: {
+        topics: [{ id: 'plus', title: 'Plus rechnen', levelBefore: 2, level: 3, maxLevel: 4 }],
+        reviewsSolved: 1,
+        reviewsSaved: 2,
+      },
+    });
+    const { element, fixture } = await open();
+    expect(api.startPractice).toHaveBeenCalledWith('plus');
+    expect(byTestId(element, 'show-demo')).toBeTruthy();
+    byTestId(element, 'choice-c3').click();
+    await settle(fixture);
+    byTestId(element, 'next').click();
+    await settle(fixture);
+
+    const step = byTestId(element, 'practice-step-plus');
+    expect(step.getAttribute('data-change')).toBe('up');
+    expect(step.textContent).toContain('Plus rechnen');
+    expect(step.textContent).toContain('Stufe 3 von 4');
+    expect(step.textContent).toContain('Eine Stufe höher');
+    expect(byTestId(element, 'practice-step-line').textContent).toContain(
+      'Beim nächsten Mal wird es ein bisschen kniffliger.',
+    );
+    expect(byTestId(element, 'reviews-solved')).toBeTruthy();
+    expect(byTestId(element, 'reviews-saved').textContent).toContain(
+      'Murmeli merkt sich die kniffligen Aufgaben für später.',
+    );
+    expect(narrate).toHaveBeenCalledWith([
+      'Schön, dass du geübt hast!',
+      'Super! Beim nächsten Mal wird es ein bisschen kniffliger.',
+      'Toll! Du hast knifflige Aufgaben von früher geschafft.',
+      'Murmeli merkt sich die kniffligen Aufgaben für später.',
+    ]);
+    expect(element.querySelector('[data-testid="results-next"]')).toBeNull();
+    byTestId(element, 'results-practice').click();
+    expect(navigateByUrl).toHaveBeenCalledWith('/learn/practice');
+    byTestId(element, 'results-again').click();
+    await settle(fixture);
+    expect(api.startPractice).toHaveBeenLastCalledWith('plus');
+    expect(api.startPractice).toHaveBeenCalledTimes(2);
+  });
+
+  it('marks items that come again', async () => {
+    params.next(convertToParamMap({}));
+    api.startPractice.mockResolvedValue(
+      run({
+        demo: undefined,
+        demoSeen: true,
+        items: [{ ...exercise('count-objects', 0), again: 'review' }],
+      }),
+    );
+    const { element } = await open();
+    expect(api.startPractice).toHaveBeenCalledWith(null);
+    const again = byTestId(element, 'again');
+    expect(again.getAttribute('data-again')).toBe('review');
+    expect(again.textContent).toContain('Diese Aufgabe kennst du schon.');
+    const prompt = byTestId(element, 'prompt-text');
+    expect(prompt.getAttribute('aria-describedby')).toBe(again.id);
+    expect(document.activeElement).toBe(prompt);
+  });
+
+  it('leaves a practice run to the practice ground', async () => {
+    params.next(convertToParamMap({ topicId: 'plus' }));
+    const dialog = TestBed.inject(Dialog);
+    const openDialog = vi.spyOn(dialog, 'open');
+    const { element, fixture } = await open();
+    byTestId(element, 'exit').click();
+    await settle(fixture);
+    expect(openDialog.mock.calls[0]![1]).toEqual(
+      expect.objectContaining({ data: { confirmKey: 'learn.player.exitPractice' } }),
+    );
+    expect(navigateByUrl).toHaveBeenCalledWith('/learn/practice');
+  });
+
   it('asks before leaving', async () => {
     api.startLevel.mockResolvedValue(run({ demoSeen: true }));
     const { element, fixture } = await open();
@@ -358,6 +446,52 @@ describe('player pieces', () => {
     fixture.componentRef.setInput('mode', 'practice');
     await fixture.whenStable();
     expect(element.querySelector('[data-testid="results-next"]')).toBeNull();
+  });
+
+  it('Results says one gentle line for the whole practice run', () => {
+    const topic = { id: 'plus' as const, title: 'Plus', levelBefore: 2, level: 2, maxLevel: 4 };
+    expect(stepChange(topic)).toBe('same');
+    expect(stepChange({ ...topic, level: 1 })).toBe('down');
+    expect(stepLineKey([])).toBeNull();
+    expect(stepLineKey([topic])).toBe('kid.practice.levelSame');
+    expect(stepLineKey([topic, { ...topic, level: 1 }])).toBe('kid.practice.levelDown');
+    expect(
+      stepLineKey([
+        { ...topic, level: 1 },
+        { ...topic, level: 3 },
+      ]),
+    ).toBe('kid.practice.levelUp');
+  });
+
+  it('Results shows a gentle step down and no practice part for levels', async () => {
+    const practice = {
+      topics: [{ id: 'minus' as const, title: 'Minus', levelBefore: 3, level: 2, maxLevel: 5 }],
+      reviewsSolved: 0,
+      reviewsSaved: 0,
+    };
+    const { element, fixture } = await renderComponent(Results, {
+      results: { ...FINISHED, practice },
+      mode: 'practice',
+    });
+    expect(byTestId(element, 'practice-step-minus').textContent).toContain('Etwas leichter');
+    expect(byTestId(element, 'practice-step-line').textContent).toContain(
+      'Wir üben das noch etwas leichter.',
+    );
+    expect(element.querySelector('[data-testid="reviews-saved"]')).toBeNull();
+    fixture.componentRef.setInput('mode', 'level');
+    await fixture.whenStable();
+    expect(element.querySelector('[data-testid="practice-steps"]')).toBeNull();
+    expect(element.querySelector('[data-testid="results-practice"]')).toBeNull();
+  });
+
+  it('ExitDialog names where leaving goes', async () => {
+    TestBed.overrideProvider(DialogRef, { useValue: { close: vi.fn() } });
+    TestBed.overrideProvider(DIALOG_DATA, {
+      useValue: { confirmKey: 'learn.player.exitPractice' },
+    });
+    TestBed.inject(AuthService).setActiveKid(KID);
+    const { element } = await renderComponent(ExitDialog);
+    expect(byTestId(element, 'exit-confirm').textContent?.trim()).toBe('Ja, zum Übungsplatz');
   });
 
   it('ExitDialog closes with the kid’s choice', async () => {

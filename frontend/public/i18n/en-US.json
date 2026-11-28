@@ -118,7 +118,9 @@
     "LEVEL_LOCKED": "This level is still locked. Play the level before it first.",
     "LEVEL_NOT_FOUND": "This level doesn’t exist. Back to the map!",
     "NOTHING_TO_PRACTICE": "There is nothing to practice right now. How about a new level?",
-    "RUN_NOT_FOUND": "This round is over. Just start it again."
+    "RUN_NOT_FOUND": "This round is over. Just start it again.",
+    "TOPIC_NOT_FOUND": "This practice topic does not exist.",
+    "TOPIC_LOCKED": "This practice topic is still locked. Play further along the trail first."
   },
   "parentGate": {
     "title": "Parent area",
@@ -308,13 +310,21 @@
       "hintLabel": "Tip",
       "breakContinue": "Keep playing",
       "breakPause": "Take a break",
-      "outdated": "This level needs a newer version of the app. Tap \"Try again\" to reload it."
+      "outdated": "This level needs a newer version of the app. Tap \"Try again\" to reload it.",
+      "exitPractice": "Yes, back to practice"
     },
     "results": {
       "stars": "{{stars}} of 3 stars",
       "newWorld": "New world: {{title}}",
       "again": "Play again",
-      "map": "Back to the map"
+      "map": "Back to the map",
+      "otherPractice": "Practice something else",
+      "practice": {
+        "level": "Step {{level}} of {{max}}",
+        "up": "One step up",
+        "down": "A bit easier",
+        "same": "Same step"
+      }
     },
     "rest": {
       "back": "Back to the profiles"
@@ -441,6 +451,16 @@
         "under": "under",
         "next-to": "next to"
       }
+    },
+    "practice": {
+      "loading": "Loading the practice ground …",
+      "error": "The practice ground could not be loaded.",
+      "empty": "There is nothing to practice yet. Play on the trail first.",
+      "level": "Step {{level}}",
+      "levelOf": "Step {{level}} of {{max}}",
+      "ahead": "New to try",
+      "locked": "Still locked",
+      "reviews": "{{count}} to review"
     }
   },
   "avatarBuilder": {
@@ -501,6 +521,20 @@
       "starCollectorHint": "Get all three stars five times.",
       "firstPractice": "First Practice",
       "firstPracticeHint": "Practice for the first time."
+    },
+    "practice": {
+      "title": "What do you want to practice?",
+      "mix": "Murmeli picks",
+      "mixHint": "Murmeli picks something just right for you.",
+      "locked": "That comes later on your trail.",
+      "mixLocked": "Play a level on the trail first.",
+      "againReview": "You have seen this one before. Try it again!",
+      "againRepeat": "One more time. Now you know how it goes!",
+      "levelUp": "Great! Next time it gets a little trickier.",
+      "levelDown": "We will practice this a bit easier. That makes you really sure.",
+      "levelSame": "Keep going! You are getting surer every time.",
+      "reviewsSolved": "Great! You solved tricky ones from before.",
+      "reviewsSaved": "Murmeli keeps the tricky ones for later."
     }
   },
   "kidForm": {
@@ -570,8 +604,9 @@
         "title": "Good to know",
         "stars": "Stars: each level gives up to 3 stars. With 2 stars (usually 80% right) it is passed and the next level opens. 3 stars mean everything was right on the first try.",
         "mastery": "Confidence: how solid a skill is, worked out from the rounds played. Recent rounds count more. Below 60% it still needs practice.",
-        "review": "Review: what was learned comes back at growing intervals so it sticks. In “Practice” mode, what is due comes first.",
-        "noStreaks": "There are no streaks, and nothing is lost when a day is skipped."
+        "review": "Review: what was learned comes back at growing intervals so it sticks. In “{{brand}} picks” on the practice ground, due mistakes come first.",
+        "noStreaks": "There are no streaks, and nothing is lost when a day is skipped.",
+        "practice": "Practice: on the practice ground your child picks a topic such as adding, subtracting or syllables, or lets {{brand}} pick. Each topic has steps taken from the trail. All right on the first try means the next step, many mistakes a step easier. Mistakes come back later."
       },
       "activity": {
         "title": "The last 14 days",
@@ -602,7 +637,7 @@
         "nextReview": "Next review: {{date}}",
         "due": "Due for review now",
         "weakTitle": "Needs practice right now",
-        "weakHint": "These skills were practiced in the last 14 days and are not solid yet. They come up more often in “Practice” mode."
+        "weakHint": "These skills were practiced in the last 14 days and are not solid yet. They are worth practicing on the trail and on the practice ground."
       },
       "tracks": {
         "title": "Learning paths",
@@ -616,6 +651,37 @@
         "unlocked": "Open",
         "passed": "Passed",
         "skipped": "Skipped"
+      },
+      "practice": {
+        "title": "Practice ground",
+        "empty": "Nothing practiced yet. On the practice ground your child can pick topics such as adding, subtracting or syllables.",
+        "recentTitle": "Last 14 days",
+        "recentItems": "Exercises",
+        "recentFirstTry": "Right on the first try",
+        "recentDays": "Days with practice",
+        "percent": "{{percent}}%",
+        "noPercent": "–",
+        "level": "Step {{level}} of {{max}}",
+        "levels": "{{levels}} steps in all",
+        "recent": "14 days: {{items}} exercises, {{percent}}% on the first try",
+        "recentNone": "Not practiced in the last 14 days",
+        "total": "In all: {{items}} exercises in {{runs}} rounds",
+        "lastPracticed": "Last practiced: {{date}}",
+        "never": "Not practiced on the practice ground yet",
+        "state": {
+          "open": "Open",
+          "ahead": "Ahead of the trail",
+          "locked": "Still locked"
+        },
+        "mistakes": "Open mistakes: {{count}}",
+        "mistakesHint": "{{brand}} asks these again later.",
+        "misses": "wrong {{count}}×",
+        "recentOne": "14 days: 1 exercise, {{percent}}% on the first try",
+        "totalOneRound": "In all: {{items}} exercises in 1 round",
+        "totalOne": "In all: 1 exercise in 1 round",
+        "answerLabel": "Right answer:",
+        "missesLabel": "wrong {{count}} times",
+        "missesLabelOne": "wrong once"
       }
     }
   },

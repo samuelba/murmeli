@@ -15,11 +15,32 @@ import { BadgeIcon } from '../badges/badge-icon';
 import { BadgeId, badgeNameKey, knownBadges } from '../badges/badges';
 import { Mascot, MascotPose } from '../../shared/mascot/mascot';
 import { Speak } from '../../shared/speak/speak';
-import { FinishRunResponse, RunMode } from '../learn.models';
+import { FinishRunResponse, PracticeTopicResult, RunMode } from '../learn.models';
 import { Confetti } from './confetti';
 import { Unlocked } from './player-store';
 
 const STAR_DELAY_MS = 450;
+
+export type StepChange = 'up' | 'down' | 'same';
+
+export function stepChange(topic: PracticeTopicResult): StepChange {
+  if (topic.level > topic.levelBefore) {
+    return 'up';
+  }
+  return topic.level < topic.levelBefore ? 'down' : 'same';
+}
+
+/** One spoken line for the whole run: a step up wins, a step down is said gently. */
+export function stepLineKey(topics: readonly PracticeTopicResult[]): string | null {
+  if (topics.length === 0) {
+    return null;
+  }
+  const changes = topics.map(stepChange);
+  if (changes.includes('up')) {
+    return 'kid.practice.levelUp';
+  }
+  return changes.includes('down') ? 'kid.practice.levelDown' : 'kid.practice.levelSame';
+}
 
 /** Stars (never a percentage), what got unlocked, and where to go next. */
 @Component({
@@ -74,6 +95,53 @@ const STAR_DELAY_MS = 450;
           </p>
         }
       }
+      @if (practice(); as practice) {
+        @if (stepLine(); as line) {
+          <div class="step-line">
+            <p data-testid="practice-step-line">{{ line | transloco }}</p>
+            <mu-speak [text]="line | transloco" />
+          </div>
+          <ul class="steps" role="list" data-testid="practice-steps">
+            @for (topic of practice.topics; track topic.id) {
+              <li
+                class="step"
+                [attr.data-change]="change(topic)"
+                [attr.data-testid]="'practice-step-' + topic.id"
+              >
+                <span class="step__title">{{ topic.title }}</span>
+                <span class="step__level">
+                  {{
+                    'learn.results.practice.level'
+                      | transloco: { level: topic.level, max: topic.maxLevel }
+                  }}
+                </span>
+                <span class="step__change">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    @if (change(topic) === 'up') {
+                      <path d="M12 4l7 8h-4v8H9v-8H5z" />
+                    } @else {
+                      <path d="M4 9h16v2H4zm0 4h16v2H4z" />
+                    }
+                  </svg>
+                  {{ 'learn.results.practice.' + change(topic) | transloco }}
+                </span>
+              </li>
+            }
+          </ul>
+        }
+        @if (practice.reviewsSolved > 0) {
+          <p class="unlock" data-testid="reviews-solved">
+            <mu-icon name="success" />
+            {{ 'kid.practice.reviewsSolved' | transloco }}
+          </p>
+        }
+        @if (practice.reviewsSaved > 0) {
+          <p class="note" data-testid="reviews-saved">
+            <mu-icon name="refresh" />
+            {{ 'kid.practice.reviewsSaved' | transloco }}
+          </p>
+        }
+      }
       @if (newBadges().length > 0) {
         <div class="badges" data-testid="new-badges">
           <p class="badges__title">{{ 'kid.badges.new' | transloco }}</p>
@@ -109,6 +177,17 @@ const STAR_DELAY_MS = 450;
           <mu-icon name="refresh" />
           {{ 'learn.results.again' | transloco }}
         </button>
+        @if (mode() === 'practice') {
+          <button
+            type="button"
+            class="mu-button mu-button--sun"
+            data-testid="results-practice"
+            (click)="otherTopic.emit()"
+          >
+            <mu-icon name="next" />
+            {{ 'learn.results.otherPractice' | transloco }}
+          </button>
+        }
         <button
           type="button"
           class="mu-button mu-button--ghost"
@@ -193,6 +272,77 @@ const STAR_DELAY_MS = 450;
       font-weight: 800;
     }
 
+    .note {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--mu-space-2);
+      margin: 0;
+      padding: var(--mu-space-2) var(--mu-space-4);
+      border: 3px dashed var(--mu-color-sky-strong);
+      border-radius: var(--mu-radius-pill);
+      font-weight: 800;
+    }
+
+    .step-line {
+      display: flex;
+      align-items: center;
+      gap: var(--mu-space-3);
+      font-size: var(--mu-font-size-lg);
+      font-weight: 800;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: var(--mu-space-2);
+      width: min(100%, 480px);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: var(--mu-space-1) var(--mu-space-3);
+      padding: var(--mu-space-2) var(--mu-space-4);
+      border: 3px solid var(--mu-color-border);
+      border-radius: var(--mu-radius-md);
+      text-align: start;
+
+      &[data-change='up'] {
+        border-color: var(--mu-color-meadow-strong);
+      }
+    }
+
+    .step__title {
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .step__level {
+      font-weight: 700;
+    }
+
+    .step__change {
+      display: inline-flex;
+      grid-column: 1 / -1;
+      align-items: center;
+      gap: var(--mu-space-1);
+      font-weight: 700;
+
+      svg {
+        width: 24px;
+        height: 24px;
+        fill: currentColor;
+      }
+    }
+
     .badges {
       display: flex;
       flex-direction: column;
@@ -260,6 +410,7 @@ export class Results {
   readonly mode = input<RunMode>('level');
   readonly next = output<string>();
   readonly again = output<void>();
+  readonly otherTopic = output<void>();
   readonly map = output<void>();
 
   protected readonly starDelay = STAR_DELAY_MS;
@@ -275,6 +426,11 @@ export class Results {
     ][this.results().stars]!;
   });
   protected readonly newBadges = computed(() => knownBadges(this.results().newBadges));
+  protected readonly practice = computed(() =>
+    this.mode() === 'practice' ? (this.results().practice ?? null) : null,
+  );
+  protected readonly stepLine = computed(() => stepLineKey(this.practice()?.topics ?? []));
+  protected readonly change = stepChange;
   protected readonly nameKey = badgeNameKey;
   protected readonly pose = computed<MascotPose>(() =>
     this.results().stars >= 2 ? 'cheering' : this.results().stars === 1 ? 'happy' : 'encouraging',
@@ -295,6 +451,17 @@ export class Results {
       lines.push(this.transloco.translate('kid.feedback.newWorld'));
     } else if (unlocked?.newLevels) {
       lines.push(this.transloco.translate('kid.feedback.newLevel'));
+    }
+    const practice = this.practice();
+    const stepLine = this.stepLine();
+    if (stepLine) {
+      lines.push(this.transloco.translate(stepLine));
+    }
+    if (practice?.reviewsSolved) {
+      lines.push(this.transloco.translate('kid.practice.reviewsSolved'));
+    }
+    if (practice?.reviewsSaved) {
+      lines.push(this.transloco.translate('kid.practice.reviewsSaved'));
     }
     const badges: readonly BadgeId[] = this.newBadges();
     if (badges.length > 0) {

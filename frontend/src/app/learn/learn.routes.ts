@@ -14,6 +14,17 @@ export const LEARN_ROUTES: Routes = [
   },
   {
     path: 'practice',
+    pathMatch: 'full',
+    title: 'learn.practiceTitle',
+    loadComponent: () => import('./practice/practice-ground').then((m) => m.PracticeGround),
+  },
+  {
+    path: 'practice/mix',
+    title: 'learn.practiceTitle',
+    loadComponent: () => import('./player/player').then((m) => m.Player),
+  },
+  {
+    path: 'practice/:topicId',
     title: 'learn.practiceTitle',
     loadComponent: () => import('./player/player').then((m) => m.Player),
   },

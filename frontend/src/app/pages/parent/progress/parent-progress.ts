@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Kid } from '../../../core/api/models';
+import { BRAND_NAME } from '../../../core/brand';
 import { ErrorMessage, errorMessage } from '../../../core/errors/error-message';
 import { LanguageService } from '../../../core/i18n/language.service';
 import { KidsService } from '../../../core/kids/kids.service';
@@ -9,10 +10,12 @@ import { AvatarView } from '../../../shared/avatar/avatar';
 import { FormError } from '../../../shared/form-error/form-error';
 import { Icon } from '../../../shared/icon/icon';
 import { ActivityChartView } from './activity-chart';
+import { ProgressPractice } from './progress-practice';
 import { ProgressSkills } from './progress-skills';
 import { ProgressTracks } from './progress-tracks';
 import { ParentProgressService } from './parent-progress.service';
 import type { ParentProgressResponse } from './parent-progress.types';
+import { practiceRows } from './practice-view';
 import { activityChart, skillRows, summarize } from './progress-view';
 
 type State = 'loading' | 'ready' | 'error';
@@ -27,6 +30,7 @@ type State = 'loading' | 'ready' | 'error';
     AvatarView,
     FormError,
     Icon,
+    ProgressPractice,
     ProgressSkills,
     ProgressTracks,
   ],
@@ -60,6 +64,10 @@ export class ParentProgress {
     const progress = this.progress();
     return progress ? skillRows(progress, this.language()) : [];
   });
+  protected readonly brand = { brand: BRAND_NAME };
+  protected readonly practiceTopics = computed(() =>
+    practiceRows(this.progress()?.practice, this.language()),
+  );
   protected readonly hasActivity = computed(() => (this.summary()?.runs ?? 0) > 0);
   private readonly dateFormat = computed(
     () =>

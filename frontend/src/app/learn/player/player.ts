@@ -23,13 +23,16 @@ import { ExerciseHost } from '../exercises/exercise-host';
 import { AnyAnswer, RunMode } from '../learn.models';
 import { BreakReminder } from './break-reminder';
 import { Confetti } from './confetti';
-import { ExitDialog } from './exit-dialog';
+import { ExitDialog, ExitDialogData } from './exit-dialog';
 import { PlayerStore } from './player-store';
 import { ProgressDots } from './progress-dots';
 import { Rest } from './rest';
 import { Results } from './results';
 
-/** `/learn/level/:levelId` and `/learn/practice`: one run, from the demo to the stars. */
+/**
+ * `/learn/level/:levelId`, `/learn/practice/mix` and `/learn/practice/:topicId`: one run,
+ * from the demo to the stars.
+ */
 @Component({
   selector: 'mu-player',
   imports: [
@@ -59,10 +62,17 @@ export class Player {
   protected readonly store = inject(PlayerStore);
 
   private readonly params = toSignal(
-    inject(ActivatedRoute).paramMap.pipe(map((params) => params.get('levelId'))),
-    { initialValue: null },
+    inject(ActivatedRoute).paramMap.pipe(
+      map((params) => ({ levelId: params.get('levelId'), topicId: params.get('topicId') })),
+    ),
+    { initialValue: { levelId: null, topicId: null } },
   );
-  private readonly mode = computed<RunMode>(() => (this.params() ? 'level' : 'practice'));
+  private readonly mode = computed<RunMode>(() => (this.params().levelId ? 'level' : 'practice'));
+  /** The level of a level run, or the topic of a practice run (null: Murmeli wählt). */
+  private readonly target = computed(() => {
+    const { levelId, topicId } = this.params();
+    return levelId ?? topicId;
+  });
 
   protected readonly busy = computed(() => this.store.phase() === 'checking');
   protected readonly exercises = computed(() => {
@@ -72,8 +82,8 @@ export class Player {
 
   constructor() {
     effect(() => {
-      const levelId = this.params();
-      untracked(() => void this.store.start(this.mode(), levelId));
+      const target = this.target();
+      untracked(() => void this.store.start(this.mode(), target));
     });
     afterRenderEffect(() => {
       this.store.itemKey();
@@ -96,14 +106,20 @@ export class Player {
   }
 
   protected async exit(): Promise<void> {
-    const ref = this.dialog.open<boolean>(ExitDialog, {
+    const practice = this.mode() === 'practice';
+    const ref = this.dialog.open<boolean, ExitDialogData>(ExitDialog, {
+      data: { confirmKey: practice ? 'learn.player.exitPractice' : 'learn.player.exitConfirm' },
       ariaLabelledBy: 'exit-title',
       backdropClass: 'mu-dialog-backdrop',
       autoFocus: 'first-tabbable',
     });
     if (await firstValueFrom(ref.closed)) {
-      await this.toMap();
+      await (practice ? this.toPractice() : this.toMap());
     }
+  }
+
+  protected toPractice(): Promise<boolean> {
+    return this.router.navigateByUrl('/learn/practice');
   }
 
   protected toMap(): Promise<boolean> {
@@ -125,7 +141,7 @@ export class Player {
   }
 
   protected again(): void {
-    void this.store.start(this.mode(), this.params());
+    void this.store.start(this.mode(), this.target());
   }
 
   private focus(selector: string): void {

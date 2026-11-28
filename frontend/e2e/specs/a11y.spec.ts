@@ -10,6 +10,7 @@ const DARK_TOO = new Set([
   'profile picker',
   'PIN view',
   'learn',
+  'practice ground',
   'player',
   'demo',
   'parent progress',

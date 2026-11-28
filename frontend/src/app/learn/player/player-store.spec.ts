@@ -6,7 +6,7 @@ import { provideAppTesting } from '../../../testing/app-testing';
 import { exercise, run } from '../../../testing/learn-testing';
 import { LearnApi } from '../learn-api.service';
 import type { MapResponse } from '../learn.models';
-import { PlayerStore, nextPlayable } from './player-store';
+import { PlayerStore, againKey, nextPlayable } from './player-store';
 
 const MAP: MapResponse = {
   tracks: [
@@ -84,6 +84,7 @@ describe('PlayerStore', () => {
 
   beforeEach(() => {
     api = {
+      practiceCatalog: vi.fn(),
       map: vi.fn().mockResolvedValue(MAP),
       startLevel: vi.fn().mockResolvedValue(run()),
       startPractice: vi.fn().mockResolvedValue(run({ demo: undefined, demoSeen: true })),
@@ -304,6 +305,102 @@ describe('PlayerStore', () => {
     await store.retry();
     expect(api.startLevel).toHaveBeenCalledTimes(2);
     expect(store.phase()).toBe('playing');
+  });
+
+  it('starts topic runs with their demo and restarts the same topic', async () => {
+    api.startPractice.mockResolvedValue(
+      run({ demoSeen: false, practice: { topic: 'plus', level: 2, maxLevel: 4 } }),
+    );
+    await store.start('practice', 'plus');
+    expect(api.startPractice).toHaveBeenCalledWith('plus');
+    expect(store.mode()).toBe('practice');
+    expect(store.topic()).toBe('plus');
+    expect(store.levelId()).toBeNull();
+    expect(store.practice()).toEqual({ topic: 'plus', level: 2, maxLevel: 4 });
+    expect(store.phase()).toBe('demo');
+    expect(audio.prefetch).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        'Diese Aufgabe kennst du schon. Probier es nochmal!',
+        'Gleich nochmal. Jetzt weisst du, wie es geht!',
+      ]),
+    );
+    store.closeDemo();
+    api.answer.mockRejectedValueOnce(apiError('RUN_NOT_FOUND', 404));
+    await store.submit({ value: 3 });
+    await store.retry();
+    expect(api.startPractice).toHaveBeenLastCalledWith('plus');
+  });
+
+  it('starts "Murmeli wählt" without a topic', async () => {
+    await store.start('practice', null);
+    expect(api.startPractice).toHaveBeenCalledWith(null);
+    expect(store.topic()).toBeNull();
+    await store.start('level');
+    expect(api.startPractice).toHaveBeenCalledTimes(2);
+    expect(store.mode()).toBe('practice');
+  });
+
+  it('says why an item comes again before its prompt', async () => {
+    const review = { ...exercise('count-objects', 0), again: 'review' as const };
+    api.startPractice.mockResolvedValue(
+      run({ demo: undefined, demoSeen: true, items: [review, exercise('letter-sound', 1)] }),
+    );
+    await store.start('practice', 'count');
+    expect(store.againText()).toBe('Diese Aufgabe kennst du schon. Probier es nochmal!');
+    expect(audio.narrate).toHaveBeenLastCalledWith([
+      'Diese Aufgabe kennst du schon. Probier es nochmal!',
+      'Aufgabe 1',
+    ]);
+    api.answer.mockResolvedValueOnce({ correct: true, attempt: 1 });
+    await store.submit({ value: 3 });
+    store.next();
+    expect(store.againText()).toBe('');
+    expect(audio.narrate).toHaveBeenLastCalledWith(['Aufgabe 2']);
+    expect(againKey(undefined)).toBeNull();
+    expect(againKey('repeat')).toBe('kid.practice.againRepeat');
+  });
+
+  it('appends a missed practice item to the end of the run and plays it', async () => {
+    api.startPractice.mockResolvedValue(
+      run({ demo: undefined, demoSeen: true, items: [exercise('count-objects', 0)] }),
+    );
+    await store.start('practice', 'count');
+    const repeat = { ...exercise('count-objects', 1), again: 'repeat' as const };
+    api.answer
+      .mockResolvedValueOnce({ correct: false, attempt: 1 })
+      .mockResolvedValueOnce({ correct: false, attempt: 2, solution: { value: 3 }, repeat });
+    await store.submit({ value: 1 });
+    await store.submit({ value: 2 });
+    expect(store.total()).toBe(2);
+    expect(store.outcomes()).toEqual(['missed', null]);
+    expect(store.feedback()?.kind).toBe('solution');
+
+    store.next();
+    expect(store.index()).toBe(1);
+    expect(store.item()).toEqual(repeat);
+    expect(audio.narrate).toHaveBeenLastCalledWith([
+      'Gleich nochmal. Jetzt weisst du, wie es geht!',
+      'Aufgabe 2',
+    ]);
+    api.answer.mockResolvedValueOnce({ correct: true, attempt: 1 });
+    await store.submit({ value: 3 });
+    expect(api.answer).toHaveBeenLastCalledWith('r1', 1, { value: 3 });
+    expect(store.outcomes()).toEqual(['missed', 'first']);
+  });
+
+  it('ignores a repeat of an exercise type this app cannot show', async () => {
+    api.startPractice.mockResolvedValue(
+      run({ demo: undefined, demoSeen: true, items: [exercise('count-objects', 0)] }),
+    );
+    await store.start('practice', 'count');
+    api.answer.mockResolvedValueOnce({
+      correct: false,
+      attempt: 2,
+      solution: { value: 3 },
+      repeat: { ...exercise('count-objects', 1), type: 'future-type' },
+    });
+    await store.submit({ value: 1 });
+    expect(store.total()).toBe(1);
   });
 
   it('starts practice runs without a next level', async () => {

@@ -14,9 +14,18 @@ import { ActivityChartView, columnPath } from './activity-chart';
 import { ParentProgress } from './parent-progress';
 import type {
   ParentActivityDay,
+  ParentPractice,
   ParentProgressResponse,
   ParentSkillMastery,
 } from './parent-progress.types';
+import {
+  firstTryPercent,
+  missesKey,
+  practiceRows,
+  practiceSummary,
+  recentKey,
+  totalKey,
+} from './practice-view';
 import {
   activityChart,
   axisTicks,
@@ -49,6 +58,63 @@ function skill(id: string, mastery: number, nextReviewAt = '2026-12-01T08:00:00.
     lastPracticedAt: '2026-11-25T08:00:00.000Z',
   } satisfies ParentSkillMastery;
 }
+
+const PRACTICE: ParentPractice = {
+  topics: [
+    {
+      id: 'plus',
+      title: 'Plus rechnen',
+      trackId: 'math',
+      state: 'open',
+      level: 3,
+      maxLevel: 4,
+      levels: 12,
+      runs: 5,
+      items: 48,
+      firstTry: 40,
+      recentItems: 20,
+      recentFirstTry: 17,
+      lastPracticedAt: '2026-11-25T08:00:00.000Z',
+      openMistakes: 2,
+      mistakes: [
+        {
+          question: 'Wie viel ist 8 plus 7?',
+          answer: '15',
+          misses: 2,
+          dueAt: '2026-11-26T08:00:00.000Z',
+        },
+        {
+          question: 'A. Fahre den Buchstaben nach.',
+          answer: null,
+          misses: 1,
+          dueAt: '2026-11-26T08:00:00.000Z',
+        },
+      ],
+    },
+    {
+      id: 'compare',
+      title: 'Vergleichen',
+      trackId: 'math',
+      state: 'ahead',
+      level: 1,
+      maxLevel: 2,
+      levels: 5,
+      runs: 0,
+      items: 0,
+      firstTry: 0,
+      recentItems: 0,
+      recentFirstTry: 0,
+      lastPracticedAt: null,
+      openMistakes: 0,
+      mistakes: [],
+    },
+  ],
+  days: [
+    { day: '2026-11-24', items: 0, firstTry: 0 },
+    { day: '2026-11-25', items: 12, firstTry: 10 },
+    { day: '2026-11-26', items: 8, firstTry: 7 },
+  ],
+};
 
 const PROGRESS: ParentProgressResponse = {
   kidId: KID.id,
@@ -112,6 +178,7 @@ const PROGRESS: ParentProgressResponse = {
   ],
   skills: [skill('solid', 0.9), skill('weak', 0.4, '2020-01-01T00:00:00.000Z'), skill('mid', 0.7)],
   weakSkills: [skill('weak', 0.4)],
+  practice: PRACTICE,
 };
 
 describe('progress view', () => {
@@ -188,6 +255,53 @@ describe('progress view', () => {
       'M10,60 L10,24 Q10,20 14,20 L18,20 Q22,20 22,24 L22,60 Z',
     );
     expect(columnPath(0, 0, 4, 1)).toContain('Q0,0 1,0');
+  });
+});
+
+describe('practice view', () => {
+  it('rounds first-try shares and has none without items', () => {
+    expect(firstTryPercent(17, 20)).toBe(85);
+    expect(firstTryPercent(5, 3)).toBe(100);
+    expect(firstTryPercent(0, 0)).toBeNull();
+  });
+
+  it('turns topics into rows with a step share and a date', () => {
+    const rows = practiceRows(PRACTICE, 'de-CH');
+    expect(rows[0]).toMatchObject({
+      levelPercent: 75,
+      recentPercent: 85,
+      lastPracticed: '25. November',
+    });
+    expect(rows[1]).toMatchObject({ levelPercent: 50, recentPercent: null, lastPracticed: '' });
+    const odd = practiceRows(
+      {
+        ...PRACTICE,
+        topics: [{ ...PRACTICE.topics[0]!, maxLevel: 0, lastPracticedAt: 'nope' }],
+      },
+      'de-CH',
+    );
+    expect(odd[0]).toMatchObject({ levelPercent: 0, lastPracticed: '' });
+    expect(practiceRows(undefined, 'de-CH')).toEqual([]);
+  });
+
+  it('picks the singular wording for one exercise, round or miss', () => {
+    expect(recentKey(1)).toBe('parent.progress.practice.recentOne');
+    expect(recentKey(2)).toBe('parent.progress.practice.recent');
+    expect(totalKey(1, 1)).toBe('parent.progress.practice.totalOne');
+    expect(totalKey(8, 1)).toBe('parent.progress.practice.totalOneRound');
+    expect(totalKey(8, 2)).toBe('parent.progress.practice.total');
+    expect(missesKey(1)).toBe('parent.progress.practice.missesLabelOne');
+    expect(missesKey(3)).toBe('parent.progress.practice.missesLabel');
+  });
+
+  it('sums the 14 days', () => {
+    expect(practiceSummary(PRACTICE.days)).toEqual({
+      items: 20,
+      firstTry: 17,
+      percent: 85,
+      activeDays: 2,
+    });
+    expect(practiceSummary([]).percent).toBeNull();
   });
 });
 
@@ -284,7 +398,7 @@ describe('ParentProgress', () => {
     expect(byTestId(element, 'progress-badge-first-level').textContent).toContain(
       'seit 14. November 2026',
     );
-    expect(byTestId(element, 'progress-explain').querySelectorAll('li')).toHaveLength(4);
+    expect(byTestId(element, 'progress-explain').querySelectorAll('li')).toHaveLength(5);
     expect(element.querySelector('[data-testid="activity-empty"]')).toBeNull();
   });
 
@@ -336,6 +450,81 @@ describe('ParentProgress', () => {
     expect(byTestId(element, 'skill-mid').textContent).toContain('Nächste Wiederholung: 1.');
   });
 
+  it('shows the practice ground per topic with its step, first tries and open mistakes', async () => {
+    const { element } = await open();
+    const panel = byTestId(element, 'progress-practice');
+    expect(panel.querySelector('h2')?.textContent?.trim()).toBe('Übungsplatz');
+    expect(byTestId(element, 'practice-items').textContent?.trim()).toBe('20');
+    expect(byTestId(element, 'practice-first-try').textContent?.trim()).toBe('85\u00a0%');
+    expect(byTestId(element, 'practice-days').textContent?.trim()).toBe('2');
+    const plus = byTestId(element, 'practice-topic-plus');
+    expect(plus.querySelector('[data-testid="practice-level"]')?.textContent).toContain(
+      'Übungsstufe 3 von 4',
+    );
+    expect(plus.textContent).toContain('12 Übungsstufen insgesamt');
+    expect(plus.querySelector('[data-testid="practice-recent"]')?.textContent).toContain(
+      '14 Tage: 20 Aufgaben, 85\u00a0% beim ersten Versuch',
+    );
+    expect(plus.textContent).toContain('Insgesamt: 48 Aufgaben in 5 Runden');
+    expect(plus.textContent).toContain('Zuletzt geübt: 25. November');
+    expect(plus.querySelector('[data-testid="practice-state"]')).toBeNull();
+    const mistakes = plus.querySelector('[data-testid="practice-mistakes"]')!;
+    expect(mistakes.querySelector('summary')?.textContent).toContain('Offene Fehler: 2');
+    expect(mistakes.textContent).toContain('Murmeli fragt diese Aufgaben später nochmal.');
+    const visible = (li: Element) => {
+      const copy = li.cloneNode(true) as Element;
+      copy.querySelectorAll('.mu-visually-hidden').forEach((hidden) => hidden.remove());
+      return copy.textContent?.replace(/\s+/g, ' ').trim();
+    };
+    const spoken = (li: Element) => {
+      const copy = li.cloneNode(true) as Element;
+      copy.querySelectorAll('[aria-hidden="true"]').forEach((hidden) => hidden.remove());
+      return copy.textContent?.replace(/\s+/g, ' ').trim();
+    };
+    const listed = [...mistakes.querySelectorAll('[data-testid="practice-mistake"]')];
+    expect(listed.map(visible)).toEqual([
+      'Wie viel ist 8 plus 7? → 15 2× falsch',
+      'A. Fahre den Buchstaben nach. 1× falsch',
+    ]);
+    expect(listed.map(spoken)).toEqual([
+      'Wie viel ist 8 plus 7? Richtige Antwort: 15 2 Mal falsch',
+      'A. Fahre den Buchstaben nach. 1 Mal falsch',
+    ]);
+    const compare = byTestId(element, 'practice-topic-compare');
+    expect(compare.querySelector('[data-testid="practice-state"]')?.textContent).toContain(
+      'Vor dem Bergpfad',
+    );
+    expect(compare.textContent).toContain('In den letzten 14 Tagen nicht geübt');
+    expect(compare.textContent).toContain('Noch nicht im Übungsplatz geübt');
+    expect(compare.querySelector('[data-testid="practice-mistakes"]')).toBeNull();
+    expect(byTestId(element, 'progress-explain').textContent).toContain(
+      'oder lässt Murmeli wählen',
+    );
+  });
+
+  it('uses the singular for one exercise in one round', async () => {
+    const one = {
+      ...PRACTICE.topics[0]!,
+      items: 1,
+      firstTry: 1,
+      runs: 1,
+      recentItems: 1,
+      recentFirstTry: 1,
+      openMistakes: 0,
+      mistakes: [],
+    };
+    const { element } = await open({ ...PROGRESS, practice: { ...PRACTICE, topics: [one] } });
+    const plus = byTestId(element, 'practice-topic-plus');
+    expect(plus.textContent).toContain('14 Tage: 1 Aufgabe, 100\u00a0% beim ersten Versuch');
+    expect(plus.textContent).toContain('Insgesamt: 1 Aufgabe in 1 Runde');
+  });
+
+  it('explains an empty practice ground', async () => {
+    const { element } = await open({ ...PROGRESS, practice: { topics: [], days: PRACTICE.days } });
+    expect(byTestId(element, 'practice-empty')).toBeTruthy();
+    expect(element.querySelector('[data-testid="practice-summary"]')).toBeNull();
+  });
+
   it('shows tracks with collapsible worlds, stars as text and level states', async () => {
     const { element } = await open();
     const done = byTestId<HTMLDetailsElement>(element, 'progress-world-w1');
@@ -359,8 +548,10 @@ describe('ParentProgress', () => {
       tracks: [],
       skills: [],
       weakSkills: [],
+      practice: undefined,
     });
     expect(byTestId(element, 'activity-empty')).toBeTruthy();
+    expect(element.querySelector('[data-testid="progress-practice"]')).toBeNull();
     expect(byTestId(element, 'skills-empty')).toBeTruthy();
     expect(byTestId(element, 'progress-no-badges')).toBeTruthy();
     expect(element.querySelector('[data-testid="weak-skills"]')).toBeNull();
