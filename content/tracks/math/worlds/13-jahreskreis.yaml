@@ -1,0 +1,114 @@
+# Jahreskreis: the seasons, the months and which season a month belongs to (2nd class).
+id: math-jahreskreis
+order: 13
+grade: '2'
+requires: [math-wochenweg, math-hundertergipfel]
+title: { de-CH: Jahreskreis, en-US: Year Wheel }
+scene: orchard
+skills:
+  - id: math.calendar.year
+    lp21: MA.3.A.1
+    title: { de-CH: Jahreszeiten und Monate, en-US: Seasons and months }
+levels:
+  - id: math-jahreskreis-01
+    title: { de-CH: Die Jahreszeiten, en-US: The Seasons }
+    skill: math.calendar.year
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: calendar, params: { unit: season, ask: scene, choices: 3 } }
+      target: 0
+      steps:
+        - say: { de-CH: "Der Baum sieht in jeder Jahreszeit anders aus.", en-US: "The tree looks different in every season." }
+          action: { highlight: calendar }
+        - say: { de-CH: "Er hat rosa Blüten. Es ist Frühling!", en-US: "It has pink blossoms. It is spring!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: calendar, weight: 1, params: { unit: season, ask: scene, choices: 3 } }
+
+  - id: math-jahreskreis-02
+    title: { de-CH: Was kommt nach dem Winter?, en-US: What Comes After Winter? }
+    skill: math.calendar.year
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: calendar, params: { unit: season, ask: next, choices: 3 } }
+      target: 3
+      steps:
+        - say: { de-CH: "Frühling, Sommer, Herbst, Winter.", en-US: "Spring, summer, fall, winter." }
+          action: { countAlong: true }
+        - say: { de-CH: "Dann geht es wieder von vorne los. Nach dem Winter kommt der Frühling.", en-US: "Then it starts all over again. After winter comes spring." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: calendar, weight: 1, params: { unit: season, ask: next, choices: 3 } }
+      - { type: calendar, weight: 1, params: { unit: season, ask: before, choices: 3 } }
+      - { type: calendar, weight: 1, params: { unit: season, ask: missing, choices: 3 } }
+
+  - id: math-jahreskreis-03
+    title: { de-CH: Die Monate, en-US: The Months }
+    skill: math.calendar.year
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: calendar, params: { unit: month, ask: next, choices: 4 } }
+      target: 0
+      steps:
+        - say: { de-CH: "Ein Jahr hat zwölf Monate. Das Jahr beginnt im Januar.", en-US: "A year has twelve months. It starts with January." }
+          action: { highlight: calendar }
+        - say: { de-CH: "Nach dem Januar kommt der Februar.", en-US: "After January comes February." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: calendar, weight: 2, params: { unit: month, ask: next, choices: 4 } }
+      - { type: calendar, weight: 1, params: { unit: month, ask: before, choices: 4 } }
+
+  - id: math-jahreskreis-04
+    title: { de-CH: Welcher Monat fehlt?, en-US: Which Month Is Missing? }
+    skill: math.calendar.year
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: calendar, params: { unit: month, ask: missing, choices: 3 } }
+      target: 4
+      steps:
+        - say: { de-CH: "Januar, Februar, März, April, und dann?", en-US: "January, February, March, April, and then?" }
+          action: { countAlong: true }
+        - say: { de-CH: "Hier fehlt der Mai.", en-US: "May is missing here." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: calendar, weight: 2, params: { unit: month, ask: missing, choices: 3 } }
+      - { type: calendar, weight: 1, params: { unit: month, ask: before, choices: 3 } }
+
+  - id: math-jahreskreis-05
+    title: { de-CH: Monat und Jahreszeit, en-US: Months and Seasons }
+    skill: math.calendar.year
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: calendar, params: { unit: month, ask: season, choices: 3 } }
+      target: 6
+      steps:
+        - say: { de-CH: "Im Juli ist es heiss und wir gehen baden.", en-US: "In July it is hot and we go swimming." }
+          action: { highlight: calendar }
+        - say: { de-CH: "Der Juli ist im Sommer.", en-US: "July is in summer." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: calendar, weight: 1, params: { unit: month, ask: season, choices: 3 } }
+
+  - id: math-jahreskreis-06
+    title: { de-CH: Jahres-Profi, en-US: Year Pro }
+    skill: math.calendar.year
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: calendar, params: { unit: month, ask: before, strip: false, choices: 4 } }
+      target: 0
+      steps:
+        - say: { de-CH: "Jetzt ohne Hilfe. Sag die Monate im Kopf auf.", en-US: "No help now. Say the months in your head." }
+          action: { highlight: calendar }
+        - say: { de-CH: "Vor dem Januar kommt der Dezember. Der war noch im alten Jahr.", en-US: "Before January comes December. That was still last year." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: calendar, weight: 1, params: { unit: month, ask: next, strip: false, choices: 4 } }
+      - { type: calendar, weight: 1, params: { unit: month, ask: before, strip: false, choices: 4 } }
+      - { type: calendar, weight: 1, params: { unit: month, ask: season, strip: false, choices: 4 } }
+      - { type: calendar, weight: 1, params: { unit: season, ask: scene, choices: 4 } }

@@ -19,3 +19,5 @@ frontend/public/audio
 **/lighthouse-reports
 frontend/public/audio.tmp-*
 frontend/public/audio.old-*
+content/audio.tmp-*
+content/audio.old-*

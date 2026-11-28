@@ -229,6 +229,10 @@ export type {
   BuildWordPayload,
 } from './runtime/types.ts';
 export {
+  calendar,
+  calendarFrameKeys,
+  CalendarParamsSchema,
+  calendarRelations,
   clock,
   ClockParamsSchema,
   divisionShare,
@@ -242,6 +246,7 @@ export {
   TimesTableParamsSchema,
 } from './exercises/advanced.ts';
 export type {
+  CalendarParams,
   MoneyParams,
   TimesProblem,
   TimesTableParams,
@@ -256,6 +261,20 @@ export {
   TraceLetterParamsSchema,
 } from './exercises/writing.ts';
 export type { SentencePictureParams } from './exercises/writing.ts';
+export {
+  CALENDAR_ASKS,
+  calendarNames,
+  calendarSize,
+  calendarStep,
+  displayOrder,
+  isSeasonCore,
+  seasonOfMonth,
+} from './calendar.ts';
+export type {
+  CalendarAsk,
+  CalendarRelation,
+  CalendarUnit,
+} from './calendar.ts';
 export { clockTimes, digitalTime, timeWords } from './clock.ts';
 export type { ClockStep, ClockTime } from './clock.ts';
 export {
@@ -284,6 +303,9 @@ export {
 export type { TraceOptions, TraceResult } from './runtime/trace.ts';
 export { greedyCoins } from './runtime/advanced.ts';
 export type {
+  CalendarCard,
+  CalendarChoice,
+  CalendarPayload,
   ClockChoice,
   ClockPayload,
   DivisionSharePayload,

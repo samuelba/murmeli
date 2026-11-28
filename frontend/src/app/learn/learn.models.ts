@@ -85,6 +85,7 @@ export const EXERCISE_TYPE_IDS = [
   'times-table',
   'division-share',
   'clock',
+  'calendar',
   'money-chf',
   'trace-letter',
   'listen-write',

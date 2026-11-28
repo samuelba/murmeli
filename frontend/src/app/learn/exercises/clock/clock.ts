@@ -20,6 +20,7 @@ import { ClockFace } from './clock-face';
           [class.mu-cue]="highlighted('clock', 'picture')"
           [hour]="payload().hour"
           [minute]="payload().minute"
+          [counting]="countingAlong()"
         />
       </div>
       <ul

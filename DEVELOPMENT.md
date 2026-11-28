@@ -60,3 +60,6 @@ cd tools/audio
 1. Listen to the flagged clips in `tools/audio/out/review.html`, then `approve` or `reroll` them.
 2. Human recordings in `tools/audio/human/` always take precedence over generated clips.
 3. Edit lexicon words in `content/lexicon/`. `tools/audio/lexicon` is only a fallback copy.
+4. Publish the set with `npm run audio:publish` (needs a signed-in `gh`). It uploads the clips as the GitHub release asset `audio-<manifest version>` and updates `content/audio.lock.json`. Commit the lock file. The clips stay out of Git, because jj does not support Git LFS.
+
+To get the published set on another machine, run `npm run audio:fetch`. It downloads the locked set into `content/audio` (gitignored), and `npm run content:sync` in `frontend/` copies it into the app. CI does the same before it builds the frontend image. `audio:fetch` skips the download when `content/audio` already has the locked version, so delete `content/audio` to force a fresh copy.

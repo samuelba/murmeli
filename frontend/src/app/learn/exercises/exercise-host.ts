@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import type { AnyAnswer, DemoAction, HintKey, PublicExercise } from '../learn.models';
 import { AddSub } from './add-sub/add-sub';
 import { BuildWord } from './build-word/build-word';
+import { Calendar } from './calendar/calendar';
 import { Clock } from './clock/clock';
 import { Compare } from './compare/compare';
 import { CountObjects } from './count-objects/count-objects';
@@ -34,6 +35,7 @@ export type ExerciseView = Pick<PublicExercise, 'type' | 'payload'> & {
   imports: [
     AddSub,
     BuildWord,
+    Calendar,
     Clock,
     Compare,
     CountObjects,
@@ -214,6 +216,15 @@ export type ExerciseView = Pick<PublicExercise, 'type' | 'payload'> & {
       }
       @case ('clock') {
         <mu-clock
+          [payload]="payload()"
+          [locked]="locked()"
+          [reveal]="revealed()"
+          [cue]="cue()"
+          (answered)="answer($event)"
+        />
+      }
+      @case ('calendar') {
+        <mu-calendar
           [payload]="payload()"
           [locked]="locked()"
           [reveal]="revealed()"

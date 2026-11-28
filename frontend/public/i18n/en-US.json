@@ -416,6 +416,27 @@
         "minuteOn": "points to the {{number}}",
         "minuteAt": "points to minute {{minute}}"
       },
+      "calendar": {
+        "strip": {
+          "weekday": "The days of the week",
+          "month": "The months",
+          "season": "The seasons"
+        },
+        "gap": "missing",
+        "today": "today",
+        "daytime": {
+          "morning": "The sun is low in the sky, on the left. The sky is light.",
+          "noon": "The sun is high up in the blue sky.",
+          "evening": "The sun is low in the sky, on the right. The sky is orange.",
+          "night": "The sky is dark. The moon and the stars are shining."
+        },
+        "season": {
+          "spring": "A tree with pink blossoms and light green leaves.",
+          "summer": "A tree with lots of dark green leaves. The sun is shining.",
+          "fall": "A tree with yellow and red leaves. Leaves are falling.",
+          "winter": "A tree with no leaves. There is snow on the ground and it is snowing."
+        }
+      },
       "money": {
         "money": "Money",
         "tray": "Paid",

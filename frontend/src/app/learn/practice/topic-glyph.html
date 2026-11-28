@@ -186,6 +186,16 @@
       <circle class="ink" cx="32" cy="35" r="2" />
       <ellipse class="hl" cx="17" cy="27" rx="2.2" ry="4.5" transform="rotate(30 17 27)" />
     }
+    @case ('calendar') {
+      <rect class="c-white" x="9" y="13" width="46" height="45" rx="5" />
+      <path class="c-red" d="M9 25v-7a5 5 0 0 1 5-5h36a5 5 0 0 1 5 5v7z" />
+      @for (d of calendarDays; track $index) {
+        <rect [attr.class]="d.fill" [attr.x]="d.x" [attr.y]="d.y" width="10" height="6" rx="1.5" />
+      }
+      <circle cx="32" cy="41" r="7.5" fill="none" stroke-width="2.5" />
+      <path d="M21 8v10M43 8v10" stroke-width="3.5" />
+      <ellipse class="hl" cx="15" cy="18" rx="3" ry="1.6" />
+    }
     @case ('money') {
       <rect class="c-rose" x="17" y="45" width="7" height="11" rx="2" />
       <rect class="c-rose" x="35" y="45" width="7" height="11" rx="2" />

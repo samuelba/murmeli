@@ -1,0 +1,113 @@
+# Wochenweg: times of day, the days of the week, yesterday, today and tomorrow (Kindergarten 2, into 1st class).
+id: math-wochenweg
+order: 5
+grade: KG2
+requires: [math-zahlenwiese]
+title: { de-CH: Wochenweg, en-US: Week Path }
+scene: park
+skills:
+  - id: math.calendar.days
+    lp21: MA.3.A.1
+    title: { de-CH: Tageszeiten und Wochentage, en-US: Times of day and days of the week }
+levels:
+  - id: math-wochenweg-01
+    title: { de-CH: "Morgen, Mittag, Abend, Nacht", en-US: "Morning, Noon, Evening, Night" }
+    skill: math.calendar.days
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: calendar, params: { unit: daytime, ask: scene, choices: 2 } }
+      target: 0
+      steps:
+        - say: { de-CH: "Schau, wo die Sonne steht.", en-US: "Look where the sun is." }
+          action: { highlight: calendar }
+        - say: { de-CH: "Die Sonne geht gerade auf. Es ist Morgen!", en-US: "The sun is just coming up. It is morning!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: calendar, weight: 1, params: { unit: daytime, ask: scene, choices: 2 } }
+
+  - id: math-wochenweg-02
+    title: { de-CH: Die Wochentage, en-US: The Days of the Week }
+    skill: math.calendar.days
+    items: 6
+    passRatio: 0.8
+    demo:
+      exercise: { type: calendar, params: { unit: weekday, ask: next, choices: 2 } }
+      target: 2
+      steps:
+        - say: { de-CH: "Eine Woche hat sieben Tage. Wir sagen sie der Reihe nach.", en-US: "A week has seven days. We say them in order." }
+          action: { highlight: calendar }
+        - say: { de-CH: "Montag, Dienstag, Mittwoch.", en-US: "Sunday, Monday, Tuesday, Wednesday." }
+          action: { countAlong: true }
+        - say: { de-CH: "Nach Mittwoch kommt Donnerstag.", en-US: "After Wednesday comes Thursday." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: calendar, weight: 1, params: { unit: weekday, ask: next, choices: 2 } }
+
+  - id: math-wochenweg-03
+    title: { de-CH: Welcher Tag kommt davor?, en-US: Which Day Comes Before? }
+    skill: math.calendar.days
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: calendar, params: { unit: weekday, ask: before, choices: 3 } }
+      target: 4
+      steps:
+        - say: { de-CH: "Davor heisst: einen Tag zurück.", en-US: "Before means one day back." }
+          action: { highlight: calendar }
+        - say: { de-CH: "Vor Freitag kommt Donnerstag.", en-US: "Before Friday comes Thursday." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: calendar, weight: 2, params: { unit: weekday, ask: before, choices: 3 } }
+      - { type: calendar, weight: 1, params: { unit: weekday, ask: next, choices: 3 } }
+
+  - id: math-wochenweg-04
+    title: { de-CH: Welcher Tag fehlt?, en-US: Which Day Is Missing? }
+    skill: math.calendar.days
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: calendar, params: { unit: weekday, ask: missing, choices: 3 } }
+      target: 3
+      steps:
+        - say: { de-CH: "Montag, Dienstag, Mittwoch, und dann?", en-US: "Sunday, Monday, Tuesday, Wednesday, and then?" }
+          action: { countAlong: true }
+        - say: { de-CH: "Nach Mittwoch fehlt der Donnerstag.", en-US: "Thursday is missing after Wednesday." }
+          action: { tapAnswer: true }
+    generators:
+      - { type: calendar, weight: 1, params: { unit: weekday, ask: missing, choices: 3 } }
+
+  - id: math-wochenweg-05
+    title: { de-CH: "Gestern, heute, morgen", en-US: "Yesterday, Today, Tomorrow" }
+    skill: math.calendar.days
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: calendar, params: { unit: weekday, ask: relative, relation: tomorrow, choices: 3 } }
+      target: 1
+      steps:
+        - say: { de-CH: "Heute ist Dienstag. Morgen ist der Tag danach.", en-US: "Today is Tuesday. Tomorrow is the day after." }
+          action: { highlight: calendar }
+        - say: { de-CH: "Morgen ist Mittwoch!", en-US: "Tomorrow is Wednesday!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: calendar, weight: 1, params: { unit: weekday, ask: relative, choices: 3 } }
+
+  - id: math-wochenweg-06
+    title: { de-CH: Wochen-Profi, en-US: Week Pro }
+    skill: math.calendar.days
+    items: 8
+    passRatio: 0.8
+    demo:
+      exercise: { type: calendar, params: { unit: weekday, ask: next, strip: false, choices: 4 } }
+      target: 5
+      steps:
+        - say: { de-CH: "Jetzt siehst du die Tage nicht mehr. Sag sie im Kopf auf.", en-US: "Now the days are hidden. Say them in your head." }
+          action: { highlight: calendar }
+        - say: { de-CH: "Nach Samstag kommt Sonntag. Wochenende!", en-US: "After Saturday comes Sunday. Weekend!" }
+          action: { tapAnswer: true }
+    generators:
+      - { type: calendar, weight: 1, params: { unit: weekday, ask: next, strip: false, choices: 4 } }
+      - { type: calendar, weight: 1, params: { unit: weekday, ask: before, strip: false, choices: 4 } }
+      - { type: calendar, weight: 1, params: { unit: weekday, ask: relative, strip: false, choices: 4 } }
+      - { type: calendar, weight: 1, params: { unit: daytime, ask: scene, choices: 4 } }

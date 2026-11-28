@@ -16,7 +16,7 @@ A **track** is a subject. A kid only sees the tracks of their learning language:
 | `reading-de` (Lesen und Schreiben) | de-CH | sounds and letters in the order of the initial-sound charts used in Swiss schools, syllables, reading and building words |
 | `reading-en` (Reading and Phonics) | en-US | phonics in the order s a t p i n m d g o c k e u r h b f l j v w x y z qu, syllables, reading and spelling short words |
 
-Each track is a trail of **worlds**, and each world has 6 to 8 **levels**. Every level practices one skill with a mix of exercise types. The tables below are generated from `content/tracks/*/worlds/*.yaml`. "Class" is the class a world is meant for and drives the [start-class placement](#start-class-placement).
+Each track is a trail of **worlds**, and each world has 5 to 8 **levels**. Every level practices one skill with a mix of exercise types. The tables below are generated from `content/tracks/*/worlds/*.yaml`. "Class" is the class a world is meant for and drives the [start-class placement](#start-class-placement).
 
 ### math
 
@@ -25,12 +25,18 @@ Each track is a trail of **worlds**, and each world has 6 to 8 **levels**. Every
 | 1 | Zahlenwiese (Number Meadow) | KG1 | open from the start | 7 | Counting to 5; Counting to 10; Numbers to 10 | `count-objects`, `number-recognition` | MA.1.A.1 |
 | 2 | Formenwald (Shape Forest) | KG1 | open from the start | 7 | Recognizing shapes; Continuing patterns | `shape-pick`, `sequence` | MA.2.A.1, MA.2.B.1 |
 | 3 | Zahlenbach (Number Brook) | KG2 | Zahlenwiese | 7 | Comparing amounts and numbers; Counting on and back; Number line to 20 | `compare`, `sequence`, `number-line` | MA.1.A.1, MA.1.C.1 |
-| 4 | Zehnerhütte (Ten Hut) | 1st | Zahlenbach | 7 | Ten-frame and twenty-frame; Number bonds to 10 | `ten-frame`, `number-bond` | MA.1.C.1, MA.1.B.1 |
-| 5 | Plusbrücke (Plus Bridge) | 1st | Zehnerhütte | 7 | Adding within 10; Subtracting within 10 | `add-sub` | MA.1.A.2 |
-| 6 | Rechenberg (Calculation Mountain) | 1st | Plusbrücke | 8 | Adding and subtracting within 20; Crossing ten; Number walls | `add-sub`, `number-wall` | MA.1.A.2, MA.1.B.1 |
-| 7 | Hundertergipfel (Hundred Peak) | 2nd | Rechenberg | 8 | Numbers to 100; Adding and subtracting tens; Adding and subtracting within 100 | `sequence`, `number-line`, `number-recognition`, `compare`, `add-sub`, `number-wall` | MA.1.A.1, MA.1.A.2 |
+| 4 | Uhrenturm (Clock Tower) | KG2 | Zahlenwiese | 5 | Hours and half hours | `clock` | MA.3.A.1 |
+| 5 | Wochenweg (Week Path) | KG2 | Zahlenwiese | 6 | Times of day and days of the week | `calendar` | MA.3.A.1 |
+| 6 | Zehnerhütte (Ten Hut) | 1st | Zahlenbach | 7 | Ten-frame and twenty-frame; Number bonds to 10 | `ten-frame`, `number-bond` | MA.1.C.1, MA.1.B.1 |
+| 7 | Plusbrücke (Plus Bridge) | 1st | Zehnerhütte | 7 | Adding within 10; Subtracting within 10 | `add-sub` | MA.1.A.2 |
+| 8 | Rechenberg (Calculation Mountain) | 1st | Plusbrücke | 8 | Adding and subtracting within 20; Crossing ten; Number walls | `add-sub`, `number-wall` | MA.1.A.2, MA.1.B.1 |
+| 9 | Hundertergipfel (Hundred Peak) | 2nd | Rechenberg | 8 | Numbers to 100; Adding and subtracting tens; Adding and subtracting within 100 | `sequence`, `number-line`, `number-recognition`, `compare`, `add-sub`, `number-wall` | MA.1.A.1, MA.1.A.2 |
+| 10 | Märtplatz (Market Square) | 2nd | Rechenberg | 6 | Counting whole dollars; Counting cents | `money-chf` | MA.3.A.1 |
+| 11 | Einmaleinsalp (Times Table Alp) | 2nd | Hundertergipfel | 7 | Times tables 2, 5 and 10; Times tables 3 and 4; Sharing fairly | `times-table`, `division-share` | MA.1.A.2 |
+| 12 | Uhrenturm-Spitze (Clock Tower Top) | 2nd | Uhrenturm, Hundertergipfel | 5 | Quarter hours; Five-minute steps | `clock` | MA.3.A.1 |
+| 13 | Jahreskreis (Year Wheel) | 2nd | Wochenweg, Hundertergipfel | 6 | Seasons and months | `calendar` | MA.3.A.1 |
 
-The Zehnerhütte (structured quantities and splitting numbers) comes before the Plusbrücke, because the addition strategies of the 1st class build on them.
+The Zehnerhütte (structured quantities and splitting numbers) comes before the Plusbrücke, because the addition strategies of the 1st class build on them. Time has its own strand next to the numbers: the Uhrenturm and the Wochenweg in kindergarten, the Uhrenturm-Spitze and the Jahreskreis in the 2nd class.
 
 ### reading-de
 
@@ -41,6 +47,9 @@ The Zehnerhütte (structured quantities and splitting numbers) comes before the 
 | 3 | Buchstabenbach | 1st | Silbenwald | 8 | Weitere Buchstaben erkennen; Weitere Anlaute hören; Buchstabengruppen: Sch, Ei, Au | `letter-sound`, `initial-sound` | D.2.A.1, D.1.A.1 |
 | 4 | Wörterhaus | 1st | Buchstabenbach | 6 | Wörter in Grossbuchstaben lesen; Einfache Wörter lesen | `word-picture` | D.2.A.1 |
 | 5 | Wörterwerkstatt | 1st | Wörterhaus | 6 | Gehörte Wörter mit Buchstaben bauen; Wörter zum Bild bauen | `build-word` | D.5.E.1 |
+| 6 | Schreibwiese | 1st | Lautwiese | 8 | Grosse Buchstaben schreiben; Kleine Buchstaben schreiben | `trace-letter` | D.4.A.1 |
+| 7 | Hörwerkstatt | 1st | Wörterwerkstatt | 6 | Gehörte Wörter schreiben; Wörter genau aufbauen | `listen-write` | D.5.E.1 |
+| 8 | Satzgarten | 1st | Wörterhaus | 6 | Kurze Sätze lesen; Sätze lesen und verstehen | `sentence-picture` | D.2.B.1 |
 
 ### reading-en
 
@@ -50,8 +59,11 @@ The Zehnerhütte (structured quantities and splitting numbers) comes before the 
 | 2 | Syllable Park | KG2 | Sound Garden | 6 | Syllables: short words; Syllables: long words | `syllables` | RF.K.2b |
 | 3 | Blending Bay | 1st | Syllable Park | 6 | Read short words; Tell similar words apart | `word-picture` | RF.1.3b, RF.K.3d |
 | 4 | Word Workshop | 1st | Blending Bay | 6 | Spell words you hear; Spell words for a picture | `build-word` | L.K.2d |
+| 5 | Tracing Trail | 1st | Sound Garden | 8 | Writing small letters; Writing capital letters | `trace-letter` | L.K.1a |
+| 6 | Listening Lab | 1st | Word Workshop | 6 | Spelling words you hear; Spelling with extra letters | `listen-write` | L.K.2d |
+| 7 | Sentence Garden | 1st | Blending Bay | 6 | Reading short sentences; Reading sentences with understanding | `sentence-picture` | RF.K.4, RF.1.4 |
 
-**Not there yet:** the reading tracks end in the 1st class, and the math track reaches the 2nd class with numbers to 100. Times tables, the clock, money (CHF and USD), handwriting (letter tracing in Basisschrift), dictation and reading sentences are planned.
+**Not there yet:** the reading tracks end in the 1st class. Measuring (lengths and weights) is planned for math.
 
 ### Exercise types
 | Type | What the kid does |
@@ -71,6 +83,14 @@ The Zehnerhütte (structured quantities and splitting numbers) comes before the 
 | `syllables` | hears a word and taps the drum once per syllable |
 | `word-picture` | reads a word and taps the matching picture |
 | `build-word` | builds a word from letter tiles, for a picture or a spoken word |
+| `times-table` | solves a times table, finds a missing factor or completes a row |
+| `division-share` | shares objects fairly onto plates |
+| `clock` | reads an analog clock and picks the time, as words ("halb drei"), digital (2:30) or both |
+| `calendar` | names the time of day or season in a picture, the day or month before or after another, the missing day or month, tomorrow or yesterday, or the season of a month |
+| `money-chf` | adds up coins and notes, pays an amount or compares two purses (CHF, USD in en-US) |
+| `trace-letter` | traces a letter or digit along its strokes |
+| `listen-write` | hears a word and builds it from letter tiles |
+| `sentence-picture` | reads a sentence and taps the matching picture |
 
 Every exercise is generated fresh from rules in the content files, so replaying a level gives new exercises. The server generates the exercises and checks the answers; the browser never gets the solutions in advance.
 
@@ -97,7 +117,7 @@ Every exercise is generated fresh from rules in the content files, so replaying 
 ### Start-class placement
 Each kid profile has a starting level: Kindergarten 1, Kindergarten 2, 1st class or 2nd class. Worlds meant for an earlier class are marked as **skipped**: all their levels are open, and they count as completed for the worlds that require them. Skipped worlds can still be played, but don't have to be.
 
-For example, a kid starting in the 1st class finds the Zahlenwiese, the Formenwald and the Zahlenbach skipped, and the Zehnerhütte open. In German reading, the Lautwiese and the Silbenwald are skipped and the Buchstabenbach is open.
+For example, a kid starting in the 1st class finds the Zahlenwiese, the Formenwald, the Zahlenbach, the Uhrenturm and the Wochenweg skipped, and the Zehnerhütte open. In German reading, the Lautwiese and the Silbenwald are skipped and the Buchstabenbach is open.
 
 To check content without playing through the trail, a test instance can set `LEARNING_UNLOCK_ALL=true`, which opens every world and level for every kid (see [Configuration](../reference/configuration.md)). The parent view and practice then treat every level as open too, and no "new world" celebration appears, because nothing is locked. It is refused in production.
 
@@ -111,9 +131,9 @@ The same exercise is never asked twice in one round, as long as the level has en
 ## The practice ground
 "Üben" opens the **practice ground**. Kids pick a topic, or tap "Murmeli wählt" and let Murmeli choose.
 
-**Topics.** Every exercise belongs to one of 24 topics: counting, numbers, ten frames, comparing, the number line, number sequences, number bonds, plus, minus, number walls, times tables, sharing, shapes, patterns, the clock and money in math, and letters, first sounds, syllables, reading words, building words, writing, listen and write, and reading sentences in reading. A kid sees the topics of their own tracks. Mixed plus-and-minus levels feed both the plus and the minus topic.
+**Topics.** Every exercise belongs to one of 25 topics: counting, numbers, ten frames, comparing, the number line, number sequences, number bonds, plus, minus, number walls, times tables, sharing, shapes, patterns, the clock, days and months, and money in math, and letters, first sounds, syllables, reading words, building words, writing, listen and write, and reading sentences in reading. A kid sees the topics of their own tracks. Mixed plus-and-minus levels feed both the plus and the minus topic.
 
-**Steps.** Each topic has a ladder of steps, made from the trail's levels that train it, in trail order: the further along the trail, the harder. Plus has 12 steps (from "plus up to 5 with pictures" to "plus up to 100"), minus 11, the clock 10. New levels in the content extend the ladders automatically.
+**Steps.** Each topic has a ladder of steps, made from the trail's levels that train it, in trail order: the further along the trail, the harder. Plus has 12 steps (from "plus up to 5 with pictures" to "plus up to 100"), minus 11, the clock 10, days and months 12. New levels in the content extend the ladders automatically.
 
 **What a kid can reach.** A topic is *open* once the trail opened one of its levels, and reaches 2 steps beyond the trail. Topics of the next world on the trail are already *ahead*: their first 2 steps can be tried before the trail gets there. Everything further away is *locked* and shown dimmed.
 

@@ -62,6 +62,12 @@
   --sc-hill2: #79c25d;
 }
 
+:host([data-scene='orchard']) {
+  --sc-sky-bottom: #fff4e6;
+  --sc-hill: #a6d977;
+  --sc-hill2: #8cc663;
+}
+
 :host([data-scene='market']) {
   --sc-sky-bottom: #fff0d6;
   --sc-hill2: #d9c7a3;
@@ -181,6 +187,25 @@ svg {
 
 .leaf {
   fill: var(--sc-leaf);
+}
+
+.crown .leaf {
+  fill: inherit;
+}
+
+.branches,
+.snowcap {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.branches {
+  stroke: var(--sc-trunk);
+}
+
+.snowcap {
+  stroke: var(--sc-snow);
 }
 
 .trunk,

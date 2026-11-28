@@ -416,6 +416,27 @@
         "minuteOn": "zeigt auf die {{number}}",
         "minuteAt": "zeigt auf Minute {{minute}}"
       },
+      "calendar": {
+        "strip": {
+          "weekday": "Die Wochentage",
+          "month": "Die Monate",
+          "season": "Die Jahreszeiten"
+        },
+        "gap": "Lücke",
+        "today": "heute",
+        "daytime": {
+          "morning": "Die Sonne steht tief am Himmel, auf der linken Seite. Der Himmel ist hell.",
+          "noon": "Die Sonne steht ganz oben am blauen Himmel.",
+          "evening": "Die Sonne steht tief am Himmel, auf der rechten Seite. Der Himmel ist orange.",
+          "night": "Der Himmel ist dunkel. Der Mond und die Sterne leuchten."
+        },
+        "season": {
+          "spring": "Ein Baum mit rosa Blüten und hellgrünen Blättern.",
+          "summer": "Ein Baum mit vielen dunkelgrünen Blättern. Die Sonne scheint.",
+          "fall": "Ein Baum mit gelben und roten Blättern. Blätter fallen herunter.",
+          "winter": "Ein Baum ohne Blätter. Es liegt Schnee und es schneit."
+        }
+      },
       "money": {
         "money": "Geld",
         "tray": "Hingelegt",

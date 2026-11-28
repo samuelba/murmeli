@@ -16,10 +16,12 @@ export const SCENES = [
   'tower',
   'alp',
   'market',
+  'orchard',
 ] as const;
 export type Scene = (typeof SCENES)[number];
 
-type PropKind = 'fir' | 'tree' | 'bush' | 'stone' | 'flower' | 'chalet' | 'cow' | 'stall' | 'fence';
+type PropKind =
+  'fir' | 'tree' | 'bare-tree' | 'bush' | 'stone' | 'flower' | 'chalet' | 'cow' | 'stall' | 'fence';
 
 interface Prop {
   readonly kind: PropKind;
@@ -35,6 +37,8 @@ const PINK = '#ff9ecd';
 const WHITE = '#ffffff';
 const YELLOW = '#f7c600';
 const VIOLET = '#b48cff';
+const SUMMER = '#3f9b45';
+const AUTUMN = '#f2a52e';
 
 function flowers(spots: readonly (readonly [number, number])[], colors: readonly string[]): Prop[] {
   return spots.map(([x, y], index) => ({
@@ -192,6 +196,19 @@ const PROPS: Record<Scene, readonly Prop[]> = {
     { kind: 'tree', x: 40, y: 480, scale: 0.8 },
     { kind: 'tree', x: 770, y: 485, scale: 0.85 },
   ],
+  orchard: [
+    { kind: 'tree', x: 110, y: 515, scale: 1.1, color: PINK },
+    { kind: 'tree', x: 270, y: 480, scale: 0.9, color: SUMMER },
+    { kind: 'tree', x: 540, y: 480, scale: 0.9, color: AUTUMN },
+    { kind: 'bare-tree', x: 700, y: 515, scale: 1.1 },
+    ...flowers(
+      [
+        [190, 580],
+        [620, 588],
+      ],
+      [YELLOW, RED],
+    ),
+  ],
 };
 
 const RIVER: ReadonlySet<Scene> = new Set(['bay', 'bridge']);
@@ -324,9 +341,16 @@ const BUNTING = [130, 210, 290, 370, 450, 530, 610, 690].map((x) => {
             }
             @case ('tree') {
               <rect class="trunk" x="-5" y="-34" width="10" height="34" />
-              <circle class="leaf" cx="0" cy="-58" r="30" />
-              <circle class="leaf" cx="-20" cy="-44" r="18" />
-              <circle class="leaf" cx="20" cy="-46" r="20" />
+              <g [attr.fill]="prop.color ?? null" [class.crown]="!!prop.color">
+                <circle class="leaf" cx="0" cy="-58" r="30" />
+                <circle class="leaf" cx="-20" cy="-44" r="18" />
+                <circle class="leaf" cx="20" cy="-46" r="20" />
+              </g>
+            }
+            @case ('bare-tree') {
+              <rect class="trunk" x="-5" y="-40" width="10" height="40" />
+              <path class="branches" d="M0 -36 L-22 -70 M0 -46 L24 -78 M0 -40 L2 -90" />
+              <path class="snowcap" d="M-26 -72 L-18 -70 M20 -80 L28 -78 M-2 -92 L6 -90" />
             }
             @case ('bush') {
               <circle class="leaf" cx="-14" cy="-12" r="14" />

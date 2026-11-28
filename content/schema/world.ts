@@ -69,6 +69,7 @@ export const HIGHLIGHT_TARGETS = [
   'drum',
   'signs',
   'clock',
+  'calendar',
   'money',
   'plates',
   'sentence',

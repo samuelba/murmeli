@@ -124,6 +124,7 @@ The validator reports every problem at once, as `file: path: message`:
 | `times-table` | `rows` (e.g. [2, 5, 10]), `mode` product / missing-factor / row (Einmaleins-Reihe), `minFactor`/`maxFactor`, `commute`, `answerMode` (keypad by default) |
 | `division-share` | `divisors` (number of plates), `minQuotient`/`maxQuotient`, `objects` (pictures with a plural) |
 | `clock` | `steps` hour / half / quarter / five, `labels` words / digital / both, `choices` |
+| `calendar` | `unit` daytime / weekday / season / month, `ask` (see below), `relation` tomorrow / yesterday / both (only for `relative`), `strip` (show the week strip or year wheel, default true), `choices` (2-4) |
 | `money-chf` | `mode` total / pay / compare, `currency` auto (CHF in de-CH, USD in en-US) / CHF / USD, `group` major (Franken, dollars) / minor (Rappen, cents), `minItems`/`maxItems`, `maxTotal` (in units of the group) |
 | `trace-letter` | `letters` (A-Z, a-z, Ä Ö Ü ä ö ü, 0-9), `tolerance` (0.5-3), `strictOrder`, `strictDirection`, `showModel` |
 | `listen-write` | `words` (pictures with a regular first sound), `extraTiles`, `case`, `maxLength` (2-6) |
@@ -154,6 +155,7 @@ A placeholder is `{kind:name}`. The kind decides where the words come from, so e
 A carrier or digraph is a string, or `{text, speak}` when the TTS needs a spelling for the letter name
 (`{text: "M wie Maus", speak: "Em wie Maus"}`). The screen shows `text`; the audio pipeline reads `speak`.
 | `letter` | grapheme | `M` (spoken "Em") | `lexicon.letters` |
+| `text` | finished text | `Montag` | the exercise type (used for calendar names) |
 
 `speakSegments()` splits a template at its placeholders. Text pieces are trimmed, leading punctuation is dropped, and pieces
 without letters or digits are left out. `"Wie viel ist {number:a} plus {number:b}?"` becomes
@@ -220,6 +222,7 @@ const result = parsed.success ? checkAnswer(item.solution, parsed.answer) : { co
 | times-table | `mode`, `a`, `b`, `product` (null for the unknown); row mode: `row`, `items` with a null gap | `{ value }` |
 | division-share | `total`, `groups`, `pictureId`, `answerMode`, `choices?` | `{ value }` (per plate) |
 | clock | `hour` (1-12), `minute` for the analog face, `choices[{id, label, digital?}]` | `{ choiceId }` |
+| calendar | `unit`, `ask`, `ring[{index, label}]` (the cycle in display order, the gap's label is null, empty without strip), `focus` and `name` (the named item, also without strip), `gap`, `scene` (time of day or season to draw), `relation`, `choices[{id, label}]`. Indices are canonical: Monday, January and spring are 0 | `{ choiceId }` |
 | money-chf | total: `items[{denomination, label, kind, file}]`; pay: `amount` + `wallet` (one of each denomination); compare: `left`/`right` purses. Always `currency` and `group` | total `{ value }`, pay `{ coins: denominationId[] }` (any set with the right sum), compare `{ relation }` |
 | trace-letter | `char`, `strokes` (model points, see below), `guides`, `showModel` | `{ strokes: [x, y][][] }` (max 6 strokes, 200 points each) |
 | listen-write | `length`, `tiles[{id, letter}]` (no picture: the word is only heard; replay = play `prompt.speak` again) | `{ letters }` |
@@ -243,6 +246,17 @@ const result = parsed.success ? checkAnswer(item.solution, parsed.answer) : { co
 **Money pictures.** `pictures/money/<denomination>.svg` are self-drawn generic coins and notes with the value written on them, with no national symbols. Denominations are listed in `DENOMINATIONS`: CHF 5, 10, 20 and 50 Rp, 1, 2 and 5 Fr. as coins, and 10 and 20 Fr. as notes. USD: 1, 5, 10 and 25¢ as coins, and $1, $5, $10 and $20 as bills. The validator checks that every denomination has a safe SVG.
 
 **Clock phrasing.** `timeWords()` uses Swiss German school phrasing ("halb drei" = 2:30, "Viertel nach drei", "Viertel vor drei", "fünf vor halb vier"). American English uses "half past two", "quarter to three", "twenty-five past five". Digital labels look like `2:30`. Distractors include the typical confusions (the next or previous hour, mirrored minutes, and the "halb" trap).
+
+**Calendar.** `calendar.ts` holds the names in canonical order (the week starts on Monday, the seasons on spring), `displayOrder()` (en-US shows Sunday first), and `seasonOfMonth()` (meteorological: December to February is winter). Month-to-season questions skip March, June, September and December, because many classes start the seasons on the 21st. The questions per unit:
+
+| `unit` | `ask` | Example (de-CH) |
+|---|---|---|
+| `daytime` | `scene` | "Welche Tageszeit ist es?" with a drawn sky (morning, noon, evening, night) |
+| `weekday` | `next`, `before`, `missing`, `relative` | "Welcher Tag kommt nach Montag?", "Welcher Tag fehlt?", "Heute ist Freitag. Welcher Tag ist morgen?" |
+| `season` | `next`, `before`, `missing`, `scene` | "Welche Jahreszeit kommt nach dem Winter?", "Welche Jahreszeit ist es?" with a drawn tree |
+| `month` | `next`, `before`, `missing`, `season` | "Welcher Monat kommt vor dem Januar?", "In welcher Jahreszeit ist der Juli?" |
+
+Next and before wrap around (the day after Sunday is Monday). Distractors are the named item itself and its neighbour on the wrong side (for next and before), or the neighbours of the answer. The demo `target` is the canonical index of the named item, the gap or the scene. Names are spoken from `label:calendar` and the `text` slot.
 
 **Sentences.** `sceneSentence()` builds "Die Maus ist auf dem Bett." (dative article from `article`), "The mouse is on the bed." and "Ich sehe drei Äpfel." / "I see three apples." from picture words. The frontend draws a scene from two pictures and a relation, or from N copies of one picture. All clock labels and sentences are listed by `npm run speakables` (sources `label:clock`, `label:sentence-picture`).
 

@@ -77,7 +77,7 @@ The layout mirrors dmarc-report-visualizer: separate `backend/` and `frontend/` 
 backend/    NestJS 11, TypeORM, Postgres 16, Redis (BullMQ + rate limiting + caching)
 frontend/   Angular (latest stable: standalone, signals, zoneless) + Angular Material M3 + custom kid theme
 content/    curriculum YAML: tracks/worlds/levels/exercises, de-CH + en-US, validated by a zod schema
-tools/audio offline TTS pipeline (Python, GPU Docker image, not part of runtime stack) → content/audio/{de-CH,en-US}/*.opus + manifest
+tools/audio offline TTS pipeline (Python, GPU Docker image, not part of runtime stack) → {de-CH,en-US}/*.opus + manifest, published as a GitHub release asset pinned by content/audio.lock.json, fetched into content/audio (gitignored)
 docker-compose.yml / docker-compose.dev.yml (dev adds Mailpit)
 .github/workflows  ci.yml + release.yml (release-please via samuelba/actions, GHCR images): see §3a
 release-please-config.json / .release-please-manifest.json / CHANGELOG.md

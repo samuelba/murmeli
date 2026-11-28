@@ -17,6 +17,7 @@ export const TOPIC_GLYPHS = [
   'shapes',
   'patterns',
   'clock',
+  'calendar',
   'money',
   'letters',
   'initial-sound',
@@ -55,6 +56,11 @@ export class TopicGlyph {
     { x: 51, n: 3, fill: 'c-yellow' },
   ];
   protected readonly tenFrame = [0, 1, 2, 3, 4, 5, 6];
+  protected readonly calendarDays = [0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => ({
+    x: 15 + (i % 3) * 12,
+    y: 30 + Math.floor(i / 3) * 8,
+    fill: i === 4 ? 'c-yellow' : i % 3 === 2 ? 'c-blue' : 'c-cream',
+  }));
   protected readonly stairs = [
     { x: 4, y: 40, n: 2, fill: 'c-orange' },
     { x: 24, y: 30, n: 4, fill: 'c-red' },

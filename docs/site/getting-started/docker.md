@@ -123,4 +123,4 @@ For good deliverability, send from a domain with SPF, DKIM and DMARC records (yo
 - [Reverse proxy and HTTPS](../deployment/reverse-proxy.md)
 - [Security checklist](../deployment/security.md#operator-checklist)
 - [Backups](../deployment/backups.md)
-- [Narration audio](../learning/audio.md): the read-aloud buttons stay hidden until a rendered narration set is in place.
+- [Narration audio](../learning/audio.md): the published frontend image includes the read-aloud clips. Read this if you build the image yourself or want to use your own set.

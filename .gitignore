@@ -21,6 +21,9 @@ coverage
 *.sql
 *.sql.gz
 
+/content/audio
+/content/audio.tmp-*
+/content/audio.old-*
 /tools/audio/.venv
 /tools/audio/.cache
 /tools/audio/models

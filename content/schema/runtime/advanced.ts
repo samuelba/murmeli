@@ -1,3 +1,16 @@
+import {
+  calendarNames,
+  calendarSize,
+  calendarStep,
+  displayOrder,
+  isSeasonCore,
+  seasonOfMonth,
+} from '../calendar.ts';
+import type {
+  CalendarAsk,
+  CalendarRelation,
+  CalendarUnit,
+} from '../calendar.ts';
 import { clockTimes, digitalTime, timeWords } from '../clock.ts';
 import type { ClockTime } from '../clock.ts';
 import {
@@ -22,6 +35,7 @@ import type {
   RelationAnswer,
   ValueAnswer,
 } from './answers.ts';
+import type { HintKey } from './hints.ts';
 import { near, numberChoices, pickFocus, withIds } from './helpers.ts';
 import type { Rng } from './rng.ts';
 import type {
@@ -259,6 +273,137 @@ export const clockRuntime: ExerciseRuntime<
         hint: 'clock-hands',
       },
       focus: targetKey,
+    };
+  },
+};
+
+export interface CalendarCard {
+  readonly index: number;
+  /** null for the gap the kid has to fill */
+  readonly label: string | null;
+}
+
+export interface CalendarChoice extends Choice {
+  readonly label: string;
+}
+
+export interface CalendarPayload {
+  readonly unit: CalendarUnit;
+  readonly ask: CalendarAsk;
+  /** The whole cycle in display order, or empty when the strip is hidden */
+  readonly ring: readonly CalendarCard[];
+  /** The named day, month or season the question starts from */
+  readonly focus: number | null;
+  readonly name: string | null;
+  readonly gap: number | null;
+  /** The time of day or season to draw */
+  readonly scene: number | null;
+  readonly relation: CalendarRelation | null;
+  readonly choices: readonly CalendarChoice[];
+}
+
+function calendarHint(unit: CalendarUnit, ask: CalendarAsk): HintKey {
+  if (ask === 'season') {
+    return 'month-season';
+  }
+  if (unit === 'season') {
+    return ask === 'scene' ? 'season-signs' : 'season-order';
+  }
+  return unit === 'daytime'
+    ? 'look-at-the-sky'
+    : unit === 'weekday'
+      ? 'say-the-days'
+      : 'say-the-months';
+}
+
+function calendarDelta(
+  ask: CalendarAsk,
+  relation: CalendarRelation | null,
+): number {
+  if (ask === 'next' || relation === 'tomorrow') {
+    return 1;
+  }
+  return ask === 'before' || relation === 'yesterday' ? -1 : 0;
+}
+
+export const calendarRuntime: ExerciseRuntime<
+  Params<'calendar'>,
+  CalendarPayload,
+  ChoiceAnswer
+> = {
+  answerSchema: ChoiceAnswerSchema,
+  generate(rng, p, ctx) {
+    const subjects = range(0, calendarSize(p.unit) - 1).filter(
+      (index) => p.ask !== 'season' || isSeasonCore(index),
+    );
+    const subject = pickFocus(rng, subjects, ctx);
+    const relation: CalendarRelation | null =
+      p.ask !== 'relative'
+        ? null
+        : p.relation === 'both'
+          ? rng.pick(['tomorrow', 'yesterday'] as const)
+          : p.relation;
+    const delta = calendarDelta(p.ask, relation);
+    const answerUnit: CalendarUnit = p.ask === 'season' ? 'season' : p.unit;
+    const wrap = (index: number) => calendarStep(answerUnit, index, 0);
+    const answer =
+      p.ask === 'season'
+        ? seasonOfMonth(subject)
+        : calendarStep(p.unit, subject, delta);
+    const confusable =
+      delta === 0
+        ? [answer - 1, answer + 1, answer + 2]
+        : [subject, subject - delta, answer + delta];
+    const nearby = unique(confusable.map(wrap)).filter((i) => i !== answer);
+    const rest = range(0, calendarSize(answerUnit) - 1).filter(
+      (i) => i !== answer && !nearby.includes(i),
+    );
+    const others = [...rng.shuffle(nearby), ...rng.shuffle(rest)].slice(
+      0,
+      p.choices - 1,
+    );
+    const options = rng.shuffle([answer, ...others]);
+    const answerNames = calendarNames(answerUnit, ctx.locale);
+    const choices = withIds(
+      rng,
+      options.map((index) => ({ label: answerNames[index]! })),
+    );
+    const names = calendarNames(p.unit, ctx.locale);
+    const gap = p.ask === 'missing' ? subject : null;
+    const ring =
+      p.strip && p.ask !== 'scene'
+        ? displayOrder(p.unit, ctx.locale).map((index) => ({
+            index,
+            label: index === gap ? null : names[index]!,
+          }))
+        : [];
+    const named = p.ask !== 'missing' && p.ask !== 'scene';
+    const frame =
+      relation === null ? `${p.unit}-${p.ask}` : `${p.unit}-${relation}`;
+    return {
+      prompt: renderPrompt(
+        ctx.content,
+        'calendar',
+        frame,
+        ctx.locale,
+        named ? { name: names[subject]! } : {},
+      ),
+      payload: {
+        unit: p.unit,
+        ask: p.ask,
+        ring,
+        focus: named ? subject : null,
+        name: named ? names[subject]! : null,
+        gap,
+        scene: p.ask === 'scene' ? subject : null,
+        relation,
+        choices,
+      },
+      solution: {
+        answer: { choiceId: choices[options.indexOf(answer)]!.id },
+        hint: calendarHint(p.unit, p.ask),
+      },
+      focus: subject,
     };
   },
 };

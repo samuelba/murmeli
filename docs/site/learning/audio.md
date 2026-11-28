@@ -20,7 +20,18 @@ Nothing is synthesized while the app runs, and no text is sent to a speech servi
 - The frontend serves the clips from `/audio/`. `manifest.json` is checked on every visit, and the clips are cached by the browser for a year.
 
 ## Getting the audio into your installation
-The frontend image contains the narration when it was built with a rendered set in `content/audio`. Without it, Murmeli works normally, but the speaker buttons stay hidden. To add or update a set without rebuilding the image, mount it into the frontend container. In `docker-compose.override.yml`:
+The published `murmeli-frontend` image already contains the narration, so there is nothing to do.
+
+The rendered clips are not in the Git repository. They are published as a GitHub release asset (tag `audio-<version>`), and `content/audio.lock.json` pins that asset by URL and SHA-256. The image build in CI downloads it into `content/audio` before building the frontend. If you build the image yourself, run this first:
+
+```bash
+npm run audio:fetch    # downloads and checks the locked set into content/audio
+docker compose build frontend
+```
+
+Without `content/audio`, Murmeli works normally, but the speaker buttons stay hidden.
+
+To use a different set without rebuilding the image, for example your own render, mount it into the frontend container. In `docker-compose.override.yml`:
 
 ```yaml
 services:
@@ -44,7 +55,7 @@ The pipeline collects every text a kid can hear from `content/` and the app's tr
 
 1. Open `tools/audio/out/review.html` and listen to the flagged and new clips.
 2. Keep a clip with `./run.sh approve <key>`, or render it again with `./run.sh reroll <key>`. The app never plays a flagged clip, so a prompt that uses one has a gap. `./run.sh check` lists what is still missing or flagged and fails until nothing is left; `all`, `reroll` and `approve` run it at the end.
-3. Copy the result into your installation as shown above.
+3. Publish the set so the next image build contains it: `npm run audio:publish` (from the repository root, with the GitHub CLI signed in). It packs the manifest and every clip that isn't flagged from `tools/audio/out/`, uploads them as the release asset `audio-<manifest version>`, updates `content/audio.lock.json` and installs the set into `content/audio`. Commit the lock file. `npm run audio:publish -- --dry-run` only packs the set and shows its size. For a single installation, you can instead mount the result as shown above.
 
 To change the narrator, generate candidates with `./run.sh design-voice --count 3`, pick one in `tools/audio/voices/selected.json`, and run `./run.sh all` again. A new voice renders every clip again. If a voice sounds right but speaks too choppily, a copy of it in timbre-only mode keeps the voice and drops the rhythm of its reference clip (see the tool README).
 
