@@ -304,7 +304,7 @@ export const calendar = defineExerciseType({
     },
     'month-season': {
       speak: {
-        'de-CH': 'Welche Jahreszeit ist im {text:name}?',
+        'de-CH': 'In welcher Jahreszeit ist der {text:name}?',
         'en-US': 'Which season is it in {text:name}?',
       },
     },

@@ -1,7 +1,7 @@
 # Märtplatz: counting money, paying and comparing (2nd class). The currency follows the kid's
 # locale: Franken and Rappen in de-CH, dollars and cents in en-US (currency: auto).
 id: math-maertplatz
-order: 9
+order: 10
 grade: '2'
 requires: [math-rechenberg]
 title: { de-CH: Märtplatz, en-US: Market Square }

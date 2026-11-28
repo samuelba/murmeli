@@ -247,14 +247,14 @@ const result = parsed.success ? checkAnswer(item.solution, parsed.answer) : { co
 
 **Clock phrasing.** `timeWords()` uses Swiss German school phrasing ("halb drei" = 2:30, "Viertel nach drei", "Viertel vor drei", "fünf vor halb vier"). American English uses "half past two", "quarter to three", "twenty-five past five". Digital labels look like `2:30`. Distractors include the typical confusions (the next or previous hour, mirrored minutes, and the "halb" trap).
 
-**Calendar.** `calendar.ts` holds the names in canonical order (the week starts on Monday, the seasons on spring), `displayOrder()` (en-US shows Sunday first), and `seasonOfMonth()` (meteorological: December to February is winter). The questions per unit:
+**Calendar.** `calendar.ts` holds the names in canonical order (the week starts on Monday, the seasons on spring), `displayOrder()` (en-US shows Sunday first), and `seasonOfMonth()` (meteorological: December to February is winter). Month-to-season questions skip March, June, September and December, because many classes start the seasons on the 21st. The questions per unit:
 
 | `unit` | `ask` | Example (de-CH) |
 |---|---|---|
 | `daytime` | `scene` | "Welche Tageszeit ist es?" with a drawn sky (morning, noon, evening, night) |
 | `weekday` | `next`, `before`, `missing`, `relative` | "Welcher Tag kommt nach Montag?", "Welcher Tag fehlt?", "Heute ist Freitag. Welcher Tag ist morgen?" |
 | `season` | `next`, `before`, `missing`, `scene` | "Welche Jahreszeit kommt nach dem Winter?", "Welche Jahreszeit ist es?" with a drawn tree |
-| `month` | `next`, `before`, `missing`, `season` | "Welcher Monat kommt vor dem Januar?", "Welche Jahreszeit ist im Juli?" |
+| `month` | `next`, `before`, `missing`, `season` | "Welcher Monat kommt vor dem Januar?", "In welcher Jahreszeit ist der Juli?" |
 
 Next and before wrap around (the day after Sunday is Monday). Distractors are the named item itself and its neighbour on the wrong side (for next and before), or the neighbours of the answer. The demo `target` is the canonical index of the named item, the gap or the scene. Names are spoken from `label:calendar` and the `text` slot.
 

@@ -1,6 +1,6 @@
 # Einmaleinsalp: the core times tables (2, 5, 10, then 3 and 4) and fair sharing (2nd class).
 id: math-einmaleinsalp
-order: 10
+order: 11
 grade: '2'
 requires: [math-hundertergipfel]
 title: { de-CH: Einmaleinsalp, en-US: Times Table Alp }

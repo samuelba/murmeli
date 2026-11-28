@@ -267,6 +267,7 @@ export {
   calendarSize,
   calendarStep,
   displayOrder,
+  isSeasonCore,
   seasonOfMonth,
 } from './calendar.ts';
 export type {

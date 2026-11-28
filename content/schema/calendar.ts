@@ -109,6 +109,11 @@ export function displayOrder(unit: CalendarUnit, locale: Locale): number[] {
   return Array.from({ length: size }, (_, i) => (start + i) % size);
 }
 
+/** Months that clearly lie inside one season, whichever start date a class teaches. */
+export function isSeasonCore(month: number): boolean {
+  return month % 3 !== 2;
+}
+
 /** Meteorological seasons: March to May is spring, December to February winter. */
 export function seasonOfMonth(month: number): number {
   return Math.floor(((month + 10) % 12) / 3);

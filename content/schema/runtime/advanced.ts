@@ -3,6 +3,7 @@ import {
   calendarSize,
   calendarStep,
   displayOrder,
+  isSeasonCore,
   seasonOfMonth,
 } from '../calendar.ts';
 import type {
@@ -332,7 +333,10 @@ export const calendarRuntime: ExerciseRuntime<
 > = {
   answerSchema: ChoiceAnswerSchema,
   generate(rng, p, ctx) {
-    const subject = pickFocus(rng, range(0, calendarSize(p.unit) - 1), ctx);
+    const subjects = range(0, calendarSize(p.unit) - 1).filter(
+      (index) => p.ask !== 'season' || isSeasonCore(index),
+    );
+    const subject = pickFocus(rng, subjects, ctx);
     const relation: CalendarRelation | null =
       p.ask !== 'relative'
         ? null

@@ -506,6 +506,7 @@ describe('SceneView', () => {
       garden: '.wood',
       hut: '.smoke',
       workshop: '.gear',
+      orchard: '.branches',
     };
     for (const scene of SCENES) {
       fixture.componentRef.setInput('scene', scene);

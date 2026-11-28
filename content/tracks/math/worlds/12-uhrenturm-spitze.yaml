@@ -1,6 +1,6 @@
 # Uhrenturm-Spitze: quarter hours and five-minute steps (2nd class).
 id: math-uhrenturm-spitze
-order: 11
+order: 12
 grade: '2'
 requires: [math-uhrenturm, math-hundertergipfel]
 title: { de-CH: Uhrenturm-Spitze, en-US: Clock Tower Top }

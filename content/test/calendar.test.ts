@@ -240,6 +240,28 @@ describe('calendar exercises', () => {
     assert.equal(answerLabel(g), 'summer');
   });
 
+  it('asks month to season only for months inside one season', () => {
+    const months = new Set<number>();
+    for (let seed = 0; seed < 200; seed += 1) {
+      const g = generateExercise(
+        spec({ unit: 'month', ask: 'season' }),
+        createRng(seed),
+        { locale: 'de-CH', content },
+      );
+      months.add(g.focus as number);
+    }
+    assert.deepEqual(
+      [...months].sort((a, b) => a - b),
+      [0, 1, 3, 4, 6, 7, 9, 10],
+    );
+    const july = generateExercise(
+      spec({ unit: 'month', ask: 'season' }),
+      createRng(1),
+      { locale: 'de-CH', content, demo: { target: 6 } },
+    );
+    assert.equal(july.prompt.text, 'In welcher Jahreszeit ist der Juli?');
+  });
+
   it('hides the strip when asked to', () => {
     const g = generateExercise(
       spec({ unit: 'month', ask: 'next', strip: false }),
