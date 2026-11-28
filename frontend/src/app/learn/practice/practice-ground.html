@@ -81,9 +81,9 @@
             (click)="chooseTrack(item.id)"
             (keydown)="onTabKey($event, i)"
           >
-            <span class="tab__icon" aria-hidden="true">{{
-              item.icon === 'math' ? '1 2 3' : 'A b c'
-            }}</span>
+            <span class="tab__icon">
+              <mu-topic-glyph [topic]="item.icon === 'math' ? 'count' : 'letters'" />
+            </span>
             <span class="tab__title">{{ item.title }}</span>
           </button>
         }

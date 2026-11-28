@@ -1,0 +1,198 @@
+:host {
+  --ink: var(--mu-color-ink);
+
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.t {
+  fill: var(--ink);
+  stroke: none;
+  font-family: var(--mu-font-learn);
+  font-weight: 800;
+  text-anchor: middle;
+  dominant-baseline: central;
+
+  &--light {
+    fill: #fffdf8;
+  }
+
+  &--navy {
+    fill: #1f6fb8;
+  }
+}
+
+.hl {
+  fill: #fff;
+  stroke: none;
+  opacity: 0.6;
+}
+
+.shadow {
+  fill: var(--ink);
+  stroke: none;
+  opacity: 0.14;
+}
+
+.tint {
+  fill: #fff;
+  stroke: none;
+  opacity: 0.35;
+}
+
+.shade {
+  fill: var(--ink);
+  stroke: none;
+  opacity: 0.18;
+}
+
+.ink {
+  fill: var(--ink);
+  stroke: none;
+}
+
+.thin {
+  stroke-width: 1.5;
+}
+
+.dash {
+  stroke-width: 2;
+  stroke-dasharray: 2.5 3.5;
+}
+
+.bare {
+  stroke: none;
+}
+
+.c-red {
+  fill: #f06a52;
+}
+
+.c-blue {
+  fill: #5bb8e8;
+}
+
+.c-navy {
+  fill: #1f6fb8;
+}
+
+.c-yellow {
+  fill: #f7c600;
+}
+
+.c-orange {
+  fill: #f59e0b;
+}
+
+.c-green {
+  fill: #4fa84a;
+}
+
+.c-lime {
+  fill: #bfe6a0;
+}
+
+.c-brown {
+  fill: #a86f3e;
+}
+
+.c-dbrown {
+  fill: #7f4f2c;
+}
+
+.c-cream {
+  fill: #f8e7cc;
+}
+
+.c-white {
+  fill: #fffdf8;
+}
+
+.c-pink {
+  fill: #f7a1b5;
+}
+
+.c-rose {
+  fill: #e9768f;
+}
+
+.c-purple {
+  fill: #9b7ad8;
+}
+
+.c-grey {
+  fill: #c9d2de;
+}
+
+.c-card {
+  fill: #dcc29a;
+}
+
+.c-card-dark {
+  fill: #c2a577;
+}
+
+.arc-red {
+  stroke: #f06a52;
+}
+
+.arc-blue {
+  stroke: #1f6fb8;
+}
+
+.arc-green {
+  stroke: #4fa84a;
+}
+
+.arc-red,
+.arc-blue,
+.arc-green {
+  stroke-width: 3.5;
+}
+
+.ray {
+  stroke: #f59e0b;
+  stroke-width: 2.5;
+}
+
+.lines {
+  stroke: #8ec5ff;
+  stroke-width: 1.6;
+}
+
+.scribble {
+  stroke: #1f6fb8;
+  stroke-width: 2.2;
+}
+
+.stem {
+  stroke: #7f4f2c;
+  stroke-width: 3.5;
+}
+
+.band {
+  stroke-width: 8;
+}
+
+.band-in {
+  stroke: #1f6fb8;
+  stroke-width: 4;
+}
+
+.on-light {
+  stroke: #fffdf8;
+  stroke-width: 3.2;
+}

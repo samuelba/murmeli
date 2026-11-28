@@ -1,0 +1,306 @@
+<svg viewBox="0 0 64 64" [attr.data-glyph]="picture()">
+  @switch (picture()) {
+    @case ('count') {
+      @for (m of marbles; track m.x) {
+        <ellipse class="shadow" [attr.cx]="m.x" cy="38.5" rx="8" ry="2" />
+        <circle [attr.class]="m.fill" [attr.cx]="m.x" cy="27" r="9.5" />
+        <circle class="hl" [attr.cx]="m.x - 3.2" cy="23.6" r="2.8" />
+        <text class="t" [attr.x]="m.x" y="51" font-size="14">{{ m.n }}</text>
+      }
+    }
+    @case ('numbers') {
+      <ellipse class="shadow" cx="34" cy="55" rx="22" ry="3" />
+      <path class="c-yellow" d="M14 22l8-8h30l-8 8z" />
+      <path class="tint" d="M14 22l8-8h30l-8 8z" />
+      <path class="c-orange" d="M44 22l8-8v30l-8 8z" />
+      <rect class="c-yellow" x="14" y="22" width="30" height="30" rx="3" />
+      <text class="t t--navy" x="29" y="38" font-size="24">7</text>
+      <path class="c-yellow thin" d="M9 1l2.2 5.8L17 9l-5.8 2.2L9 17l-2.2-5.8L1 9l5.8-2.2z" />
+    }
+    @case ('ten-frame') {
+      <rect class="c-navy" x="2" y="13" width="60" height="36" rx="6" />
+      <rect class="c-white" x="5" y="16" width="54" height="30" rx="3" />
+      <path class="thin" d="M15.8 16v30M26.6 16v30M37.4 16v30M48.2 16v30M5 31h54" />
+      @for (cell of tenFrame; track cell) {
+        <circle
+          [attr.class]="cell < 5 ? 'c-red' : 'c-blue'"
+          [attr.cx]="10.4 + (cell % 5) * 10.8"
+          [attr.cy]="cell < 5 ? 23.5 : 38.5"
+          r="4.2"
+        />
+      }
+    }
+    @case ('compare') {
+      <circle class="c-yellow" cx="6.5" cy="32" r="5" />
+      @for (y of [20, 32, 44]; track y) {
+        <circle class="c-yellow" cx="57" [attr.cy]="y" r="5" />
+      }
+      <path class="c-pink bare" d="M20 32 47 18v27z" />
+      <path class="c-white" d="M29 29.1l2 2.3 2-4.7 2 2.2 2-4.7 2 2.3 2-4.8z" />
+      <path class="c-white" d="M29 38l2-2.8 2 4.1 2-2.8 2 4.2 2-2.9 2 4.2z" />
+      <path class="c-green" d="M14 31c0-9 8-13 14-11l16-6c3-1 5 2 3 4L26 31z" />
+      <path class="c-green" d="M14 33l33 11c2 2 0 5-3 4l-16-4c-6 2-14-2-14-11z" />
+      <circle class="c-green" cx="22" cy="19" r="5" />
+      <circle class="c-white bare" cx="22.6" cy="18.4" r="3" />
+      <circle class="ink" cx="23.4" cy="18.6" r="1.5" />
+      <circle class="ink" cx="43.5" cy="15.8" r="0.9" />
+    }
+    @case ('number-line') {
+      <path d="M2 54h60M6 50v8M18 50v8M30 50v8M58 50v8" />
+      <path class="dash" d="M6 47Q12 30 18 47M18 47Q24 30 30 47" />
+      <ellipse class="c-green" cx="37" cy="52" rx="5" ry="2.2" />
+      <ellipse class="c-green" cx="55" cy="52" rx="5" ry="2.2" />
+      <ellipse class="c-green" cx="46" cy="42" rx="13" ry="10" />
+      <ellipse class="c-lime bare" cx="46" cy="46" rx="8" ry="4.5" />
+      <circle class="c-green" cx="39" cy="31" r="5.5" />
+      <circle class="c-green" cx="53" cy="31" r="5.5" />
+      <circle class="c-white bare" cx="39" cy="30.6" r="3.4" />
+      <circle class="c-white bare" cx="53" cy="30.6" r="3.4" />
+      <circle class="ink" cx="39.8" cy="30.8" r="1.7" />
+      <circle class="ink" cx="53.8" cy="30.8" r="1.7" />
+      <path d="M41 40q5 3.5 10 0" />
+    }
+    @case ('sequence') {
+      <path class="dash" d="M12 37Q20 20 31 27M32 27Q40 10 51 17" />
+      @for (s of stairs; track s.n) {
+        <rect
+          [attr.class]="s.fill"
+          [attr.x]="s.x"
+          [attr.y]="s.y"
+          width="16"
+          [attr.height]="56 - s.y"
+          rx="3"
+        />
+        <text class="t t--light" [attr.x]="s.x + 8" [attr.y]="s.y + 8.5" font-size="13">
+          {{ s.n }}
+        </text>
+      }
+      <path d="M2 56h60" />
+    }
+    @case ('bonds') {
+      <rect class="c-dbrown" x="42" y="9" width="7" height="14" rx="1" />
+      <path class="c-red" d="M5 31 32 8l27 23z" />
+      <text class="t t--light" x="32" y="23" font-size="10.5">10</text>
+      <rect class="c-cream" x="10" y="31" width="44" height="23" />
+      <rect class="c-white" x="14" y="35" width="16" height="15" rx="2" />
+      <rect class="c-white" x="34" y="35" width="16" height="15" rx="2" />
+      <text class="t" x="22" y="42.8" font-size="12">3</text>
+      <text class="t" x="42" y="42.8" font-size="12">7</text>
+      <rect class="c-green" x="3" y="54" width="58" height="5" rx="2.5" />
+    }
+    @case ('plus') {
+      @for (x of apples; track x) {
+        <g [attr.transform]="'translate(' + x + ' 36)'">
+          <path class="stem" d="M0-6q1-5 3-7" />
+          <path class="c-green" d="M2-10q6-5 9 0-5 3-9 0z" />
+          <path class="c-red" d="M0-6c-5-4-13-1-12 7 1 8 7 11 12 9 5 2 11-1 12-9 1-8-7-11-12-7z" />
+          <ellipse class="hl" cx="-6" cy="-1" rx="2" ry="3.5" />
+        </g>
+      }
+      <circle class="c-green" cx="32" cy="36" r="9" />
+      <path class="on-light" d="M27 36h10M32 31v10" />
+    }
+    @case ('minus') {
+      <path class="thin" d="M16 33q2 13 10 25M31 37q-3 11-5 21" />
+      <path class="thin" d="M50 22q-3 4 0 7t-1 8" />
+      <path class="c-red" d="M14.5 31.5 16 34l1.5-2.5z" />
+      <path class="c-blue" d="M29.5 35.5 31 38l1.5-2.5z" />
+      <ellipse class="c-red" cx="16" cy="21" rx="9" ry="11" />
+      <ellipse class="c-blue" cx="31" cy="25" rx="9" ry="11" />
+      <ellipse class="c-yellow" cx="51" cy="13" rx="7" ry="8.5" transform="rotate(15 51 13)" />
+      <ellipse class="hl" cx="12.5" cy="16" rx="2" ry="3.5" />
+      <ellipse class="hl" cx="27.5" cy="20" rx="2" ry="3.5" />
+      <ellipse class="hl" cx="48.5" cy="9.5" rx="1.6" ry="2.8" />
+      <circle class="c-navy" cx="50" cy="47" r="9" />
+      <path class="on-light" d="M45 47h10" />
+    }
+    @case ('wall') {
+      @for (b of bricks; track $index) {
+        <rect [attr.class]="b.fill" [attr.x]="b.x" [attr.y]="b.y" width="20" height="14" rx="2" />
+        <text class="t" [attr.x]="b.x + 10" [attr.y]="b.y + 7.5" font-size="10">{{ b.n }}</text>
+      }
+      <rect class="c-green" x="0" y="54" width="64" height="5" rx="2.5" />
+    }
+    @case ('times') {
+      <rect class="c-card-dark" x="4" y="6" width="56" height="10" rx="3" />
+      <rect class="c-card" x="4" y="12" width="56" height="44" rx="6" />
+      @for (e of eggs; track $index) {
+        <circle class="c-card-dark bare" [attr.cx]="e.x" [attr.cy]="e.y + 1" r="7.5" />
+        <ellipse
+          [attr.class]="$index % 2 ? 'c-cream' : 'c-white'"
+          [attr.cx]="e.x"
+          [attr.cy]="e.y - 1"
+          rx="6"
+          ry="7"
+        />
+      }
+    }
+    @case ('division') {
+      @for (x of chocolate; track x) {
+        <rect class="c-dbrown" [attr.x]="x" y="10" width="17" height="16" rx="2" />
+        <rect class="c-brown bare" [attr.x]="x + 3.5" y="13.5" width="10" height="9" rx="1.5" />
+      }
+      <g transform="rotate(7 32 40) translate(2 6)">
+        @for (x of chocolate; track x) {
+          <rect class="c-dbrown" [attr.x]="x" y="28" width="17" height="16" rx="2" />
+          <rect class="c-brown bare" [attr.x]="x + 3.5" y="31.5" width="10" height="9" rx="1.5" />
+        }
+      </g>
+      <circle class="c-dbrown thin" cx="10" cy="55" r="1.6" />
+      <circle class="c-dbrown thin" cx="16" cy="57" r="1.2" />
+    }
+    @case ('shapes') {
+      <rect
+        class="c-blue"
+        x="24"
+        y="5"
+        width="20"
+        height="20"
+        rx="2"
+        transform="rotate(-10 34 15)"
+      />
+      <circle class="c-red" cx="17" cy="42" r="12" />
+      <path class="c-yellow" d="M33 55 46 31l13 24z" />
+      <ellipse class="hl" cx="12" cy="37" rx="2.4" ry="4" />
+    }
+    @case ('patterns') {
+      <path d="M2 48q30-32 60 0" />
+      <circle class="c-red" cx="9.2" cy="41.2" r="7" />
+      <rect class="c-blue" x="14.1" y="27.8" width="13" height="13" rx="2.5" />
+      <circle class="c-red" cx="32" cy="32" r="7" />
+      <rect class="c-blue" x="36.9" y="27.8" width="13" height="13" rx="2.5" />
+      <circle class="c-white dash" cx="54.8" cy="41.2" r="7" />
+      <text class="t" x="54.8" y="41.4" font-size="10">?</text>
+      <circle class="hl" cx="6.8" cy="38.8" r="1.8" />
+      <circle class="hl" cx="29.6" cy="29.6" r="1.8" />
+    }
+    @case ('clock') {
+      <path d="M19 51l-4 7M45 51l4 7" stroke-width="3" />
+      <circle class="c-yellow" cx="15" cy="15" r="7" />
+      <circle class="c-yellow" cx="49" cy="15" r="7" />
+      <path d="M32 14V9" stroke-width="3" />
+      <circle class="c-red" cx="32" cy="35" r="21" />
+      <circle class="c-white" cx="32" cy="35" r="15.5" />
+      <path d="M32 22v3M45 35h-3M32 48v-3M19 35h3" stroke-width="2" />
+      <path d="M32 35V25M32 35h8" stroke-width="3" />
+      <circle class="ink" cx="32" cy="35" r="2" />
+      <ellipse class="hl" cx="17" cy="27" rx="2.2" ry="4.5" transform="rotate(30 17 27)" />
+    }
+    @case ('money') {
+      <rect class="c-rose" x="17" y="45" width="7" height="11" rx="2" />
+      <rect class="c-rose" x="35" y="45" width="7" height="11" rx="2" />
+      <path d="M10 36c-6-1-6-8-1-7 3 1 1 5-2 3" />
+      <ellipse class="c-pink" cx="29" cy="38" rx="20" ry="15" />
+      <path class="c-rose" d="M19 27l2-10 9 7z" />
+      <path d="M25 25h10" stroke-width="3" />
+      <ellipse class="c-rose" cx="49" cy="40" rx="5" ry="6" />
+      <ellipse class="ink" cx="47.6" cy="40" rx="0.9" ry="1.7" />
+      <ellipse class="ink" cx="50.4" cy="40" rx="0.9" ry="1.7" />
+      <circle class="ink" cx="40" cy="33" r="2" />
+      <ellipse class="hl" cx="20" cy="33" rx="5" ry="2.6" />
+      <circle class="c-yellow" cx="30" cy="11" r="7" />
+      <circle class="thin" cx="30" cy="11" r="4.2" />
+    }
+    @case ('letters') {
+      @for (c of cubes; track c.letter) {
+        <path [attr.class]="c.fill" [attr.d]="'M' + c.x + ' ' + c.y + 'l6-6h22l-6 6z'" />
+        <path class="tint" [attr.d]="'M' + c.x + ' ' + c.y + 'l6-6h22l-6 6z'" />
+        <path [attr.class]="c.fill" [attr.d]="'M' + (c.x + 22) + ' ' + c.y + 'l6-6v22l-6 6z'" />
+        <path class="shade" [attr.d]="'M' + (c.x + 22) + ' ' + c.y + 'l6-6v22l-6 6z'" />
+        <rect [attr.class]="c.fill" [attr.x]="c.x" [attr.y]="c.y" width="22" height="22" rx="2" />
+        <text class="t t--light" [attr.x]="c.x + 11" [attr.y]="c.y + 11.5" font-size="15">
+          {{ c.letter }}
+        </text>
+      }
+    }
+    @case ('initial-sound') {
+      <g transform="rotate(-6 21 29)">
+        <rect class="c-white" x="4" y="8" width="34" height="42" rx="5" />
+        @for (a of sunRays; track a) {
+          <path class="ray" d="M21 19v-4" [attr.transform]="'rotate(' + a + ' 21 29)'" />
+        }
+        <circle class="c-yellow" cx="21" cy="29" r="8" />
+        <circle class="ink" cx="18.5" cy="28" r="0.9" />
+        <circle class="ink" cx="23.5" cy="28" r="0.9" />
+        <path d="M18 31.5q3 2.5 6 0" stroke-width="1.5" />
+      </g>
+      <path class="dash" d="M38 10q14 0 14 15" />
+      <path d="M49 22l3 4 3-4" stroke-width="2" />
+      <g transform="rotate(8 50 41)">
+        <rect class="c-green" x="40" y="30" width="20" height="22" rx="4" />
+        <text class="t t--light" x="50" y="41.5" font-size="16">S</text>
+      </g>
+    }
+    @case ('syllables') {
+      <path class="c-yellow" d="M5 14q25 42 54-2-27 24-54 2z" />
+      <path class="hl" d="M15 24q17 15 34 2-17 8-34-2z" />
+      <path class="stem" d="M59 12l3-5" />
+      <circle class="c-dbrown thin" cx="5" cy="14" r="1.8" />
+      @for (a of syllableArcs; track a.x) {
+        <path [attr.class]="a.stroke" [attr.d]="'M' + a.x + ' 46q7.5 12 15 0'" />
+      }
+    }
+    @case ('read-words') {
+      <path
+        class="c-red"
+        d="M32 22c-8-6-22-6-29-3v34c9-3 21-3 29 2 8-5 20-5 29-2V19c-7-3-21-3-29 3z"
+      />
+      <path class="c-white" d="M32 19c-8-6-20-6-26-3v32c6-3 18-3 26 2z" />
+      <path class="c-white" d="M32 19c8-6 20-6 26-3v32c-6-3-18-3-26 2z" />
+      <path class="lines" d="M11 23h15M11 29h13M11 35h15M11 41h10M38 23h15M38 29h11M38 35h15" />
+      <path class="c-yellow" d="M47 14v16l3-3 3 3V14z" />
+      <path class="c-yellow thin" d="M57 0l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" />
+    }
+    @case ('build-words') {
+      <rect class="c-orange" x="5" y="38" width="16" height="18" rx="3" />
+      <text class="t t--light" x="13" y="47" font-size="13">h</text>
+      <rect class="c-green" x="24" y="38" width="16" height="18" rx="3" />
+      <text class="t t--light" x="32" y="47" font-size="13">u</text>
+      <rect class="dash" x="43" y="38" width="16" height="18" rx="3" />
+      <path class="thin" d="M47 30v3M51 31v3M55 30v3" />
+      <g transform="rotate(12 51 17)">
+        <rect class="c-navy" x="43" y="8" width="16" height="18" rx="3" />
+        <text class="t t--light" x="51" y="17" font-size="13">t</text>
+      </g>
+      <path d="M3 60h58" />
+    }
+    @case ('writing') {
+      <g transform="rotate(-6 26 34)">
+        <rect class="c-white" x="6" y="10" width="40" height="48" rx="3" />
+        <path class="lines" d="M11 22h30M11 32h30M11 42h30M11 52h30" />
+        <path class="scribble" d="M12 31c2-6 4-8 5-5s-3 6-1 6 4-6 6-6-1 6 1 6 3-3 5-5" />
+      </g>
+      <g transform="translate(53.5 12.6) rotate(124.4)">
+        <rect class="c-pink" x="-8" y="-4.5" width="7" height="9" rx="2" />
+        <rect class="c-grey" x="-2" y="-4.5" width="4" height="9" />
+        <rect class="c-yellow" x="2" y="-4.5" width="26" height="9" />
+        <path class="c-cream" d="M28-4.5 38 0l-10 4.5z" />
+        <path class="ink" d="M34.5-1.6 38 0l-3.5 1.6z" />
+      </g>
+    }
+    @case ('dictation') {
+      <path class="band" d="M12 36c0-24 40-24 40 0" />
+      <path class="band-in" d="M12 36c0-24 40-24 40 0" />
+      <rect class="c-red" x="5" y="32" width="13" height="20" rx="6" />
+      <rect class="c-red" x="46" y="32" width="13" height="20" rx="6" />
+      <path d="M22 38q-2 5 0 10M42 38q2 5 0 10" stroke-width="2" />
+      <circle class="c-white" cx="32" cy="43" r="8" />
+      <text class="t t--navy" x="32" y="42" font-size="14">a</text>
+    }
+    @case ('sentences') {
+      <path class="c-white" d="M12 52l-3 9 12-9z" />
+      <rect class="c-white" x="5" y="10" width="54" height="44" rx="5" />
+      @for (w of words; track $index) {
+        <rect
+          [attr.class]="w.fill + ' bare'"
+          [attr.x]="w.x"
+          [attr.y]="w.y"
+          [attr.width]="w.w"
+          height="6"
+          rx="3"
+        />
+      }
+      <circle class="ink" cx="45" cy="42" r="2.6" />
+    }
+  }
+</svg>

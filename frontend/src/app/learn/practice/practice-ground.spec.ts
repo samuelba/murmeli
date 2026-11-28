@@ -1,4 +1,5 @@
 import { HttpTestingController } from '@angular/common/http/testing';
+import { PRACTICE_TOPIC_IDS } from '@murmeli/content';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { AudioService } from '../../core/audio/audio.service';
@@ -16,7 +17,7 @@ import {
 import { resetDocumentState } from '../../../testing/browser';
 import type { PracticeCatalogResponse, PracticeTopicView } from '../learn.models';
 import { PRACTICE_TRACK_STORAGE_KEY, PracticeGround } from './practice-ground';
-import { TopicGlyph } from './topic-glyph';
+import { TOPIC_GLYPHS, TopicGlyph } from './topic-glyph';
 
 function topic(overrides: Partial<PracticeTopicView> & Pick<PracticeTopicView, 'id'>) {
   return {
@@ -163,6 +164,16 @@ describe('PracticeGround', () => {
     expect(byTestId(element, 'practice-track-math').getAttribute('aria-controls')).toBe(
       'practice-panel',
     );
+    expect(
+      byTestId(element, 'practice-track-math')
+        .querySelector('mu-topic-glyph')
+        ?.getAttribute('data-topic'),
+    ).toBe('count');
+    expect(
+      byTestId(element, 'practice-track-reading-de')
+        .querySelector('mu-topic-glyph')
+        ?.getAttribute('data-topic'),
+    ).toBe('letters');
     expect(byTestId(element, 'practice-topics').hasAttribute('aria-labelledby')).toBe(false);
     byTestId(element, 'topic-times').click();
     await fixture.whenStable();
@@ -222,33 +233,17 @@ describe('PracticeGround', () => {
 describe('TopicGlyph', () => {
   beforeEach(() => TestBed.configureTestingModule({ providers: provideAppTesting() }));
 
-  it('draws text or a small picture for every topic, and something for unknown ones', async () => {
+  it('draws an illustration for every topic, and a fallback for unknown ones', async () => {
+    expect([...TOPIC_GLYPHS].sort()).toEqual([...PRACTICE_TOPIC_IDS].sort());
     const { element, fixture } = await renderComponent(TopicGlyph, { topic: 'plus' });
     expect(element.getAttribute('aria-hidden')).toBe('true');
-    expect(element.querySelector('.text--big')?.textContent).toBe('+');
-    for (const id of [
-      'ten-frame',
-      'number-line',
-      'bonds',
-      'wall',
-      'shapes',
-      'patterns',
-      'clock',
-      'money',
-      'read-words',
-      'writing',
-      'dictation',
-      'sentences',
-    ]) {
+    for (const id of TOPIC_GLYPHS) {
       fixture.componentRef.setInput('topic', id);
       await fixture.whenStable();
-      expect(element.querySelector('svg')?.getAttribute('data-glyph')).toBe(id);
-      expect(element.querySelector('svg')?.children.length).toBeGreaterThan(0);
+      const svg = element.querySelector('svg');
+      expect(svg?.getAttribute('data-glyph')).toBe(id);
+      expect(svg?.children.length).toBeGreaterThan(1);
     }
-    fixture.componentRef.setInput('topic', 'syllables');
-    await fixture.whenStable();
-    expect(element.querySelector('.text')?.textContent).toBe('Ba-na');
-    expect(element.querySelector('.text--big')).toBeNull();
     fixture.componentRef.setInput('topic', 'future-topic');
     await fixture.whenStable();
     expect(element.querySelector('svg')?.getAttribute('data-glyph')).toBe('sentences');

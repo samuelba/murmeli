@@ -61,7 +61,7 @@ There are no streaks and nothing is ever taken away.
 **Practice** on the trail map opens the practice ground. It asks **What do you want to practice?** and offers two ways:
 
 - **Murmeli picks** builds a mixed round from topics your kid already knows from the trail. It prefers topics that haven't been practiced for a while, topics that went less well, and tricky exercises from earlier rounds. The card shows how many of those are waiting.
-- **Topics** are tiles such as **Adding**, **Subtracting**, **Counting**, **Number line**, **Shapes** or **Clock** in math, and **Syllables**, **Reading words** or **Writing** in reading. The tabs switch between the subjects. Each tile has a speaker button that reads its name.
+- **Topics** are tiles such as **Adding**, **Subtracting**, **Counting**, **Number line**, **Shapes** or **Clock** in math, and **Syllables**, **Reading words** or **Writing** in reading. Each tile has a colorful picture of its topic, for example a crocodile for comparing, a frog hopping along the number line or a piggy bank for money. The tabs switch between the subjects. Each tile has a speaker button that reads its name.
 
 Each tile shows the topic's current **step**. A topic's steps follow the trail: adding, for example, starts with sums up to 5 with pictures and climbs to sums up to 100. A tile can be in one of three states:
 
